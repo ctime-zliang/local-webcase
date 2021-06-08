@@ -1,5 +1,5 @@
 /* 冒泡排序 基础版 */
-function ven$cbubbleSort(arr = []) {
+function ven$bubbleSort(arr = []) {
     let res = arr.slice(0)
     let len = res.length
     let swap = 0
@@ -15,7 +15,7 @@ function ven$cbubbleSort(arr = []) {
     return res
 }
 /* 冒泡排序 优化版 */
-function ven$cbubbleSortOptimi(arr = []) {
+function ven$bubbleSortOptimi(arr = []) {
     let arrCopy = arr.slice(0)
     let len = arrCopy.length
     let swap = 0
@@ -40,7 +40,7 @@ function ven$cbubbleSortOptimi(arr = []) {
 }
 
 /* 选择排序 */
-function ven$cselectionSort(arr = []) {
+function ven$selectionSort(arr = []) {
     let arrCopy = arr.slice(0)
     let len = arrCopy.length
     let minIndexPos = 0
@@ -65,7 +65,7 @@ function ven$cselectionSort(arr = []) {
 }
 
 /* 快速顺排序 */
-function ven$cquickSeqSort(arr = []) {
+function ven$quickSeqSort(arr = []) {
     let arrCopy = arr.slice(0)
     return recursion(arrCopy)
 
@@ -93,7 +93,7 @@ function ven$cquickSeqSort(arr = []) {
 }
 
 /* 快速逆排序 */
-function ven$cquickInvSort(arr = []) {
+function ven$quickInvSort(arr = []) {
     let arrCopy = arr.slice(0)
     return recursion(arrCopy)
 
@@ -120,7 +120,7 @@ function ven$cquickInvSort(arr = []) {
 }
 
 /* 插入排序 */
-function ven$cinsertSort(arr = []){
+function ven$insertSort(arr = []){
     let arrCopy = arr.slice(0)
     let len = arrCopy.length
     /* 标记索引 & 标记值 */
@@ -157,7 +157,7 @@ function ven$cinsertSort(arr = []){
 }
 
 /* 归并排序 */
-function ven$cmergeSort(arr = []){
+function ven$mergeSort(arr = []){
     /* 调用分组递归函数 */
     return groupRecursion(arr)
      
@@ -204,11 +204,11 @@ function ven$cmergeSort(arr = []){
 
 
 window.Sort = {
-    ven$cbubbleSort,
-    ven$cbubbleSortOptimi,
-    ven$cselectionSort,
-    ven$cquickSeqSort,
-    ven$cquickInvSort,
-    ven$cinsertSort,
-    ven$cmergeSort
+    ven$bubbleSort,
+    ven$bubbleSortOptimi,
+    ven$selectionSort,
+    ven$quickSeqSort,
+    ven$quickInvSort,
+    ven$insertSort,
+    ven$mergeSort
 }
