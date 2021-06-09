@@ -1,12 +1,9 @@
 ;(function(){
     const RuntimeVariable = {
-        /* URL 参数 */
         url: window.location.href,
-        /* DOM 节点 */
         className: '_fps-container',
         element: null,
         isSetShow: false,
-        /* 样式 */
         insertStyleText: `
             ._fps-container{
                 display: none;
@@ -34,7 +31,6 @@
             }
         `,
         insertStyleError: false,
-        /* 帧率 */
         frame: 0,
         allFrameCount: 0,
         lastTime: performance.now(),
@@ -46,12 +42,10 @@
         warning: [20, 39]
     }
 
-    /* 插入 <style /> */
     const insertStyle = function(cssText) {
         const style = document.createElement('style')
         const head = document.head || document.getElementsByTagName('head')[0]
-        let insertStyleError = false
-        
+        let insertStyleError = false        
         style.type = 'text/css'
         if( style.styleSheet ){ 
             try{
@@ -65,8 +59,7 @@
         head.appendChild(style)
         return insertStyleError
     }
-
-    /* 插入 DOM */
+    
     const insertElement = function(className) {
         const el =document.createElement('div')
         const body = document.body || document.documentElement
@@ -74,8 +67,7 @@
         body.appendChild(el)
         return el
     }
-
-    /* 获取定时器 */
+    
     const getRAF = function(){
         return (
             window.requestAnimationFrame ||
@@ -86,26 +78,20 @@
         )
     }
 
-    /* 帧率计算器 */
     const loop = function() {
         let now = performance.now()
         let fps = Math.round(1000 / (now - RuntimeVariable.lastFrameTime))
-
         RuntimeVariable.lastFrameTime = now
-        RuntimeVariable.frame++
-        
+        RuntimeVariable.frame++        
         if (now - RuntimeVariable.lastTime >= RuntimeVariable.interval) {
             fps = Math.round((RuntimeVariable.frame * 1000) / (now - RuntimeVariable.lastTime))
             RuntimeVariable.callback(fps)
-            // 重置 & 缓存
             RuntimeVariable.frame = 0
             RuntimeVariable.lastTime = now
         }
-
         RAF(loop)
     }
-
-    /* 帧率显示回调 */
+    
     const showCallback = function(fps = 0) {
         if (RuntimeVariable.lastFPSNumber === fps) {
             return
@@ -134,10 +120,7 @@
     RuntimeVariable.insertStyleError = insertStyle(RuntimeVariable.insertStyleText)
     RuntimeVariable.element = insertElement(RuntimeVariable.className)
     if (!RuntimeVariable.insertStyleError) { 
-        // 异步
-        window.setTimeout(()=>{
-            loop()
-        }) 
+        loop()
     }
 })()
 

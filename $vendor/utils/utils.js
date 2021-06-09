@@ -4,12 +4,12 @@
  * @returns {undefined}
  */
 function ven$choke(delay = 1000) {
-    console.log('start choke while...')
+    console.log('%c start choke while...', 'color: green; font-size: 18px;') 
     const start = performance.now()
     while(performance.now() - start <= delay) {
         /* ... */    
     }
-    console.log('end choke while...')
+    console.log('%c end choke while...', 'color: green; font-size: 18px;') 
 }
 
 /**

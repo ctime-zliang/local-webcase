@@ -1,4 +1,6 @@
-/* 冒泡排序 基础版 */
+/**
+ * 冒泡排序 基础版
+ */
 function ven$bubbleSort(arr = []) {
     let res = arr.slice(0)
     let len = res.length
@@ -14,7 +16,10 @@ function ven$bubbleSort(arr = []) {
     }
     return res
 }
-/* 冒泡排序 优化版 */
+
+/**
+ * 冒泡排序 优化版
+ */
 function ven$bubbleSortOptimi(arr = []) {
     let arrCopy = arr.slice(0)
     let len = arrCopy.length
@@ -39,7 +44,9 @@ function ven$bubbleSortOptimi(arr = []) {
     return arrCopy
 }
 
-/* 选择排序 */
+/**
+ * 选择排序
+ */
 function ven$selectionSort(arr = []) {
     let arrCopy = arr.slice(0)
     let len = arrCopy.length
@@ -60,11 +67,12 @@ function ven$selectionSort(arr = []) {
         arrCopy[minIndexPos] = arrCopy[i]
         arrCopy[i] = swap
     } 
-
     return arrCopy
 }
 
-/* 快速顺排序 */
+/**
+ * 快速顺排序
+ */
 function ven$quickSeqSort(arr = []) {
     let arrCopy = arr.slice(0)
     return recursion(arrCopy)
@@ -85,19 +93,18 @@ function ven$quickSeqSort(arr = []) {
          */
         for (let i = 0; i < arr.length; i++) {
             arr[i] < middleValue ? leftArr.push(arr[i]) : rightArr.push(arr[i])
-        }     
-
-        // 递归
+        }  
         return recursion(leftArr).concat([middleValue], recursion(rightArr))
     }
 }
 
-/* 快速逆排序 */
+/**
+ * 快速逆排序
+ */
 function ven$quickInvSort(arr = []) {
     let arrCopy = arr.slice(0)
     return recursion(arrCopy)
 
-    // 递归函数
     function recursion(arr = []){        
         if (arr.length <= 1) {
             return arr
@@ -119,7 +126,9 @@ function ven$quickInvSort(arr = []) {
     }
 }
 
-/* 插入排序 */
+/**
+ * 插入排序
+ */
 function ven$insertSort(arr = []){
     let arrCopy = arr.slice(0)
     let len = arrCopy.length
@@ -128,8 +137,7 @@ function ven$insertSort(arr = []){
     let tagIndex = 0
     for (let i = 1; i < len; i++) {
         /* 缓存 标记值 & 标记索引 */
-        tagValue = arrCopy[tagIndex = i, tagIndex]
-        
+        tagValue = arrCopy[tagIndex = i, tagIndex]        
         /* 
             依次判断内层遍历各项与标记值得大小
             从标记索引开始 向前遍历 
@@ -147,21 +155,19 @@ function ven$insertSort(arr = []){
             } else {
                 break
             }
-        }
-        
+        }        
         /* 内层遍历结束后, 将标记值写入到新的索引位置(tagIndex的值可能没有变化) */
         arrCopy[tagIndex] = tagValue
     }
-
     return arrCopy
 }
 
-/* 归并排序 */
+/**
+ * 归并排序
+ */
 function ven$mergeSort(arr = []){
-    /* 调用分组递归函数 */
     return groupRecursion(arr)
      
-    /* 分组递归函数 */
     function groupRecursion(arr = []){
         /* 递归终止条件 */
         if (arr.length <= 1) {
