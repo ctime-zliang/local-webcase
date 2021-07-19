@@ -1,6 +1,6 @@
-const HEADE_VALUE = '$head'
+const HEADE_VALUE_OF_SGL = '$head'
 
-class Node {
+class NodeOfSL {
     constructor(data) {
         this.data = data
         this.prev = null
@@ -11,7 +11,7 @@ class Node {
 class SingleList {
     constructor() {
         this.length = 0
-        this.head = new Node(HEADE_VALUE)
+        this.head = new NodeOfSL(HEADE_VALUE_OF_SGL)
         this.current = this.head
     }
 
@@ -40,8 +40,16 @@ class SingleList {
         return string
     }
 
-    queryFirst(value) {
-        if (!value) {
+    findLast() {
+        let curr = this.head
+        while(curr.next) {
+            curr = curr.next
+        }
+        return curr
+    }
+
+    findFirstByValue(value) {
+        if (typeof value == 'undefined') {
             return null
         }
         let curr = this.head
@@ -51,39 +59,37 @@ class SingleList {
         return curr
     }
 
-    findLast() {
-        let curr = this.head
-        while(curr.next) {
-            curr = curr.next
-        }
-        return curr
+    append(value) {
+        const lastItem = this.findLast()
+        const newItem = new NodeOfSL(value)
+        lastItem.next = newItem
+        this.length++
     }
 
     advance(step = 0, curr = this.head) {
-        let tmp = curr
-        while(step-- && tmp.next){
-            tmp = tmp.next
+        while(step-- && curr.next){
+            curr = curr.next
         }
-        return this.current = tmp
+        return this.current = curr
     }
 
     insertAfter(posValue, value) {
-        let posItem = this.queryFirst(posValue)
+        let posItem = this.findFirstByValue(posValue)
         if (!posItem) {
             return
         }
-        const newItem = new Node(value)
+        const newItem = new NodeOfSL(value)
         newItem.next = posItem.next
         posItem.next = newItem
         this.length++
     }
 
     removeValue(value) {
-        let posItem = this.queryFirst(value)
-        if (!posItem) {
+        let vItem = this.findFirstByValue(value)
+        if (!vItem) {
             return
         }
-        if (value === HEADE_VALUE) {
+        if (vItem.data === HEADE_VALUE_OF_SGL) {
             throw new Error(`The Head Node cannot be removed`)
         }
         let curr = this.head
@@ -99,13 +105,6 @@ class SingleList {
         this.length--
     }
 
-    append(value) {
-        const lastItem = this.findLast()
-        const newItem = new Node(value)
-        lastItem.next = newItem
-        this.length++
-    }
-
     clear() {
         this.head.next = null
         this.length = 0
@@ -113,11 +112,21 @@ class SingleList {
 }
 
 /* ... */
-const list = [1, 2, 3, 4, 5]
+const list1_1 = [1, 2, 3, 4, 5, 6, 4, 10]
 const singleList = new SingleList()
 
-list.forEach((item, index) => {
+list1_1.forEach((item, index) => {
     singleList.append(item)
 })
+
 singleList.insertAfter(4, 100)
-console.log(singleList.display())
+console.log('singleList.display() ==> ', singleList.display())
+console.log('singleList.findFirstByValue(5) ==> ', singleList.findFirstByValue(5))
+console.log('singleList.now() ==> ', singleList.now())
+singleList.advance(3)
+console.log('singleList.now() ==> ', singleList.now())
+console.log('singleList.size() ==> ', singleList.size())
+console.log('singleList ==> ', singleList)
+
+console.log(`======================================`)
+console.log(`\n`)
