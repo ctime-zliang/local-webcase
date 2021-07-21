@@ -29,7 +29,7 @@ class CircleSingleList {
     }
 
     display() {
-        let string = ``
+        let string = `...->`
         let curr = this.head
         let count = 0
         while (count <= this.length) {
@@ -37,7 +37,7 @@ class CircleSingleList {
             curr = curr.next
             count++
         }
-        string += this.head.data + '->...'
+        string += curr.data + '->...'
         return string
     }
 
@@ -96,18 +96,17 @@ class CircleSingleList {
         }
         let curr = this.head
         let prev = null
-        while (curr && curr.data !== value) {
+        let count = 0
+        while (count <= this.length && curr.data !== value) {
             prev = curr
             curr = curr.next
+            count++
         }
-        if (!curr) {
-            return
-        } 
         prev.next = curr.next
         this.length--
     }
 
-    advance(step = 0, curr = this.head) {
+    forward(step = 0, curr = this.head) {
         while(step-- && curr.next){
             curr = curr.next
         }
@@ -125,9 +124,10 @@ list2_1.forEach((item, index) => {
 
 circleSingleList.insertAfter(4, 100)
 circleSingleList.removeValue(5)
-console.log('circleSingleList.display() ==> ', circleSingleList.display())
+console.log('circleSingleList.display() ==> \n', circleSingleList.display())
+console.log('circleSingleList.findLast() ==> ', circleSingleList.findLast())
 console.log('circleSingleList.now() ==> ', circleSingleList.now())
-circleSingleList.advance(list2_1.length + 3)
+circleSingleList.forward(list2_1.length + 3)
 console.log('circleSingleList.now() ==> ', circleSingleList.now())
 console.log('circleSingleList.size() ==> ', circleSingleList.size())
 console.log('circleSingleList ==> ', circleSingleList)

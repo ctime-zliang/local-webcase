@@ -66,7 +66,7 @@ class SingleList {
         this.length++
     }
 
-    advance(step = 0, curr = this.head) {
+    forward(step = 0, curr = this.head) {
         while(step-- && curr.next){
             curr = curr.next
         }
@@ -120,10 +120,10 @@ list1_1.forEach((item, index) => {
 })
 
 singleList.insertAfter(4, 100)
-console.log('singleList.display() ==> ', singleList.display())
+console.log('singleList.display() ==> \n', singleList.display())
 console.log('singleList.findFirstByValue(5) ==> ', singleList.findFirstByValue(5))
 console.log('singleList.now() ==> ', singleList.now())
-singleList.advance(3)
+singleList.forward(3)
 console.log('singleList.now() ==> ', singleList.now())
 console.log('singleList.size() ==> ', singleList.size())
 console.log('singleList ==> ', singleList)
