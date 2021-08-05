@@ -1,16 +1,29 @@
-async function fn() {
-    console.log(0)
-    return new Promise((_, rj) => {
-        console.log(1)
-        window.setTimeout(() => {
-            _(123)
-        }, 1000)
-    })
+const MAX_LENGTH = 30000
+
+const innerHtml = (count = 0) => {
+    let html = ``
+    for (let i = 0; i < MAX_LENGTH; i++) {
+        html += `<li>${i} - ${count}</li>`
+    }
+    ulist.innerHTML = html
 }
 
-async function run() {
-    const res = await fn()
-    console.log(res)
+const appendChild = (count) => {
+    let li = null
+    let text = null
+    for (let i = 0; i < MAX_LENGTH; i++) {
+        text = document.createTextNode(`${i} - ${count}`)
+        li = document.createElement('li')
+        li.appendChild(text)
+        ulist.appendChild(li)
+    }
 }
 
-run()
+let c1 = 0
+btn1.onclick = () => {
+    innerHtml(c1++)
+}
+let c2 = 0
+btn2.onclick = () => {
+    appendChild(c2++)
+}
