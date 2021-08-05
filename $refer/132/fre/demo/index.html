@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="data:" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fre App</title>
+    <script>
+      function main() {
+          const area = document.querySelector(`#area`)
+      
+          let count = 0
+          let fn = () => {
+              count++
+              area.textContent = count >= 100000000 ? 0 : count
+          }
+          interval(fn)    
+      }
+      
+      function interval(callback) {
+          window.setTimeout(() => {
+              callback()
+              interval(callback)
+          })
+      }
+      
+      window.addEventListener('DOMContentLoaded', () => {
+          main()
+      })
+      </script>
+  </head>
+  <body>
+    <section id="area"></section>
+    <div id="app"></div>
+    <div id="app2"></div>
+    <script type="module" src="/src/fragment.tsx"></script>
+  </body>
+</html>
