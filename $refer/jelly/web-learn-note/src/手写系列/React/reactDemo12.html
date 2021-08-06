@@ -176,7 +176,7 @@
 
 			function useState(initial) {
 				const oldHook = wipFiber.alternate && wipFiber.alternate.hooks && wipFiber.alternate.hooks[hookIndex]
-
+				console.log(oldHook)
 				const hook = {
 					state: oldHook ? oldHook.state : initial,
 					queue: [],
@@ -272,13 +272,31 @@
 			/** @jsx myReact.createElement */
 			const container = document.getElementById('container')
 
+			function Child1() {
+				const [count, setCount] = myReact.useState(1)
+				return (
+					<div>
+						<h1 onClick={() => setCount(count => count + 1)}>Count: {count}</h1>
+					</div>
+				)
+			}
+
+			function Child2() {
+				const [count, setCount] = myReact.useState(1)
+				return (
+					<div>
+						<h1 onClick={() => setCount(count => count + 1)}>Count: {count}</h1>
+					</div>
+				)
+			}
+
 			function Counter() {
 				const [count, setCount] = myReact.useState(1)
 				const [count2, setCount2] = myReact.useState(1)
 				return (
 					<div id="container">
-						<h1 onClick={() => setCount(count => count + 1)}>Count: {count}</h1>
-						<h1 onClick={() => setCount2(count => count + 1)}>Count: {count2}</h1>
+						<Child1 />
+						<Child1 />
 					</div>
 				)
 			}

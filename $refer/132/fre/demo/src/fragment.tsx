@@ -4,22 +4,21 @@ function View() {
 	const [key, setKey] = useState([])
 	const modifyList = () => {
 		const array = []
-		for (let i = 0; i < 50000; i++) {
+		for (let i = 0; i < 20000; i++) {
 			array.push(Math.random())
 		}
 		setKey(array)
     console.log(key, array)
 	}
 	return (
-		<div className="row-view">
-			<div onClick={() => { modifyList() }}>Modify List {key.length}</div>
+		<main>
+			<button onClick={() => { modifyList() }}> Modify List {key.length}</button>
 			<ul>
 				{key.map((item, index) => {
 					return <li>{item}</li>
 				})}
 			</ul>
-		</div>
+		</main>
 	)
 }
 render(<View />, document.getElementById('app'))
-render(<View />, document.getElementById('app2'))
