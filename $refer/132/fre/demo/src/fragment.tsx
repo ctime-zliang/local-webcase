@@ -1,24 +1,28 @@
 import { render, Fragment, h, useState } from '../../src/index'
 
 function View() {
-	const [key, setKey] = useState([])
+	const [number, setNumber] = useState(0)
+	const [list, setList] = useState([])
 	const modifyList = () => {
+		setNumber(number + 1)
 		const array = []
-		for (let i = 0; i < 20000; i++) {
-			array.push(Math.random())
+		for (let i = 0; i < number; i++) {
+			array.push(i)
 		}
-		setKey(array)
-    console.log(key, array)
+		setList(array)
 	}
 	return (
-		<main>
-			<button onClick={() => { modifyList() }}> Modify List {key.length}</button>
+		<div className="row-view">
+			<div onClick={modifyList}>
+				Modify List {list.length} - {number}
+			</div>
 			<ul>
-				{key.map((item, index) => {
+				<li>Initial Li</li>
+				{list.map((item, index) => {
 					return <li>{item}</li>
 				})}
 			</ul>
-		</main>
+		</div>
 	)
 }
 render(<View />, document.getElementById('app'))
