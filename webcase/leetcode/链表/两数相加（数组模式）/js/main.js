@@ -18,26 +18,66 @@ function ListNode(val, next) {
     this.next = (next === undefined ? null : next)
 }
 
+function setList2Array(list) {
+    const arr = []
+    arr.push(list.val)
+    while (list.next) {        
+        list = list.next
+        arr.push(list.val)
+    }
+    return arr
+}
+
+function setArray2List(arr) {
+    const head = new ListNode(arr[0], null)
+    let p = head
+    for (let i = 1; i < arr.length; i++) {
+        const node = new ListNode(arr[i], null)
+        p.next = node
+        p = node
+    }
+    return head
+}
+
 function addTwoNumbers (list1, list2) {
-    const maxLength = Math.max(list1.length, list2.length)
+    const arr1 = setList2Array(list1).reverse()
+    const arr2 = setList2Array(list2).reverse()
+    /* 
+        获取两个数组的最大长度
+     */
+    const maxLength = Math.max(arr1.length, arr2.length)
+    /* 
+        数组前导补位
+     */
     const temp = []
-    if (list1.length < maxLength) {
-        const len = list1.length
+    if (arr1.length < maxLength) {
+        const len = arr1.length
         for (let i = 0; i < maxLength - len; i++) {
-            list1.unshift(0)
+            arr1.unshift(0)
         }
     }
-    if (list2.length < maxLength) {
-        const len = list2.length
+    if (arr2.length < maxLength) {
+        const len = arr2.length
         for (let i = 0; i < maxLength - len; i++) {
-            list2.unshift(0)
+            arr2.unshift(0)
         }
     }
+    /*
+        初始化临时数组, 以 0 填充
+     */
     for (let i = 0; i < maxLength + 1; i++) {
         temp[i] = 0
     }
+    /*
+        l1:    [0, 2, 4, 9]
+        l2:    [5, 6, 4, 9]
+        tp: [0, 0, 0, 0, 0] 
+        maxLength = 4
+
+        从 arr1/arr2 的最末尾开始倒叙遍历
+     */
     for (let i = maxLength - 1, j = i + 1; i >= 0; i--) {
-        const sum = list1[i] + list2[i] + temp[j]
+        const sum = arr1[i] + arr2[i] + temp[j]
         if (sum >= 10) {
             temp[j] = sum - 10
             temp[j - 1] = 1
@@ -46,6 +86,10 @@ function addTwoNumbers (list1, list2) {
         }        
         j--
     }
+    console.log(temp)
+    /* 
+        移除数组开头的所有 0 位并反向该数组
+     */
     let res = []
     let flag = false
     for (let i = 0; i < temp.length; i++) {
@@ -56,6 +100,10 @@ function addTwoNumbers (list1, list2) {
         }
         res.unshift(temp[i])
     }
+    console.log(res)
+    /*
+        将数组转换成链表 
+     */
     const head = new ListNode(res[0], null)
     let p = head
     for (let i = 1; i < res.length; i++) {
@@ -66,7 +114,10 @@ function addTwoNumbers (list1, list2) {
     return head
 }
 
-const list1 = [2, 4, 3]
-const list2 = [5, 6, 4]
+const arr1 = [2, 4, 9]
+const arr2 = [5, 6, 4, 9]
+
+const list1 = setArray2List(arr1)
+const list2 = setArray2List(arr2)
 
 console.log(addTwoNumbers(list1, list2))
