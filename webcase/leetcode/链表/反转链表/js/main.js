@@ -30,19 +30,23 @@ function setArray2List(arr) {
  *     this.next = (next===undefined ? null : next)
  * }
  */
+/**
+ * 链表节点
+ * @param {any} val 链表节点值
+ * @param {ListNode} next 下一个链表节点
+ * @return {undefined} 
+ */
 function ListNode(val, next) {
     this.val = (val === undefined ? 0 : val)
     this.next = (next === undefined ? null : next)
 }
 
-function isEmptyObject(obj) {
-    for (let attr in obj) {
-        return false
-    }
-    return true
-}
-
-function reverseList(head) {
+/**
+ * 链表反转
+ * @param {ListNode} head 单项链表的起始节点(头节点)
+ * @return {ListNode} 单项链表
+ */
+ function reverseList(head) {
     if (isEmptyObject(head)) {
         return null
     }
@@ -56,6 +60,15 @@ function reverseList(head) {
     }
     return pre
 }
+
+function isEmptyObject(obj) {
+    for (let attr in obj) {
+        return false
+    }
+    return true
+}
+
+
 
 const arr = [1, 2, 3, 4, 5]
 const list = setArray2List(arr)
