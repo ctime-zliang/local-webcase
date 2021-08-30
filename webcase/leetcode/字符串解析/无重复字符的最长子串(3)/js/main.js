@@ -1,6 +1,12 @@
 /*
     给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串 的长度。
  */
+
+/**
+ * 求字符串中最长的连续不重复子串长度
+ * @param {string} s 被检测字符串
+ * @return {number} 
+ */
 function lengthOfLongestSubstring (s) {
     if (!s || !s.length || s.length <= 1) {
         return (s || '').length || 0

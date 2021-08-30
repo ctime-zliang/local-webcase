@@ -1,6 +1,8 @@
 /**
- * 冒泡排序 基础版
- */
+ * 冒泡排序(基础版)
+ * @param {array} arr 被排序数组
+ * @return {array} 
+ */ 
 function ven$bubbleSort(arr = []) {
     let res = arr.slice(0)
     let len = res.length
@@ -18,7 +20,9 @@ function ven$bubbleSort(arr = []) {
 }
 
 /**
- * 冒泡排序 优化版
+ * 冒泡排序(优化版)
+ * @param {array} arr 被排序数组
+ * @return {array} 
  */
 function ven$bubbleSortOptimi(arr = []) {
     let arrCopy = arr.slice(0)
@@ -46,6 +50,8 @@ function ven$bubbleSortOptimi(arr = []) {
 
 /**
  * 选择排序
+ * @param {array} arr 被排序数组
+ * @return {array} 
  */
 function ven$selectionSort(arr = []) {
     let arrCopy = arr.slice(0)
@@ -72,6 +78,8 @@ function ven$selectionSort(arr = []) {
 
 /**
  * 快速顺排序
+ * @param {array} arr 被排序数组
+ * @return {array} 
  */
 function ven$quickSeqSort(arr = []) {
     let arrCopy = arr.slice(0)
@@ -100,6 +108,8 @@ function ven$quickSeqSort(arr = []) {
 
 /**
  * 快速逆排序
+ * @param {array} arr 被排序数组
+ * @return {array} 
  */
 function ven$quickInvSort(arr = []) {
     let arrCopy = arr.slice(0)
@@ -128,6 +138,8 @@ function ven$quickInvSort(arr = []) {
 
 /**
  * 插入排序
+ * @param {array} arr 被排序数组
+ * @return {array} 
  */
 function ven$insertSort(arr = []){
     let arrCopy = arr.slice(0)
@@ -164,6 +176,8 @@ function ven$insertSort(arr = []){
 
 /**
  * 归并排序
+ * @param {array} arr 被排序数组
+ * @return {array} 
  */
 function ven$mergeSort(arr = []){
     return groupRecursion(arr)
@@ -196,17 +210,16 @@ function ven$mergeSort(arr = []){
             }
         }  
         /* 将左数组剩余项压入结果集 */
-        while(leftArr.length){
+        while (leftArr.length) {
             array.push(leftArr.shift())
         }
         /* 将右数组剩余项压入结果集 */
-        while(rightArr.length){
+        while (rightArr.length) {
             array.push(rightArr.shift())
         }
         return array
     }
 }
-
 
 
 window.Sort = {

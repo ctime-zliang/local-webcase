@@ -8,7 +8,7 @@ window.$handler = {
      * @desc 鼠标按下时 获取各类尺寸/坐标信息((需要设置)内部this指向当前的事件对象)
      * @param {Event} evte 事件对象
 	 * @param {Object} canvasRect SVG画布的坐标&尺寸数据
-     * @returns {Object}
+     * @return {Object}
      */
 	getMouseDownRect(
 		evte,
@@ -41,7 +41,7 @@ window.$handler = {
      * @desc 获取鼠标移动时的实时坐标(相对于SVG画布)
      * @param {Event} evte 事件对象
 	 * @param {Object} posRect 鼠标按下时获取的各类尺寸/坐标信息
-     * @returns {Object}
+     * @return {Object}
      */
 	getMousePositionOfRealTime(
 		evte,
@@ -65,7 +65,7 @@ window.$handler = {
      * @param {Object} movePoint 动点坐标
 	 * @param {Object} fixedPoint 定点坐标
 	 * @param {Boolen} reverseDirection 是否需要反向
-     * @returns {Number}
+     * @return {Number}
      */
 	getAngleOfXAxial(
 		movePoint = {x: 0, y: 0},
@@ -90,7 +90,7 @@ window.$handler = {
      * @desc 获取旋转中心点坐标&旋转控制点坐标&旋转控制参数
 	 * @param {Number} index 点击点的索引
      * @param {Array} pathPoints path的路径坐标组
-     * @returns {Object}
+     * @return {Object}
      */
 	getRotateCenterRect(
 		index = 0,
@@ -137,7 +137,7 @@ window.$handler = {
      * @desc 获取鼠标移动时的基于条件限制计算后的path坐标组(相对于SVG画布)
 	 * @param {Object} posRect 鼠标按下时获取的各类尺寸/坐标信息
 	 * @param {Object} pathPoints 鼠标按下时获取的path坐标组
-     * @returns {Object}
+     * @return {Object}
      */
 	getPathPointsWhenMove(
 		posRect = {},

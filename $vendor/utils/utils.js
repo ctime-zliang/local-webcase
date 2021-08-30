@@ -1,7 +1,7 @@
 /**
  * 同步进程阻塞
  * @param {number} delay 阻塞时长
- * @returns {undefined}
+ * @return {undefined}
  */
 function ven$choke(delay = 1000) {
     console.log('%c start choke while...', 'color: green; font-size: 18px;') 
@@ -15,7 +15,7 @@ function ven$choke(delay = 1000) {
 /**
  * 异步等待阻塞
  * @param {number} delay 阻塞时长
- * @returns {undefined}
+ * @return {undefined}
  */
 async function ven$sleep(delay = 1000) {
     return Promise((_, reject) => {
@@ -25,9 +25,10 @@ async function ven$sleep(delay = 1000) {
 
 /**
  * 数组分组
+ *      获取由各项子数组构成的输出数组
  * @param {array} array 被切割的数组
  * @param {number} size 每组尺寸长度
- * @returns {array} 由各项子数组构成的输出数组
+ * @return {array} 
  */ 
 function ven$chunk(array, size) {
     const res = []

@@ -5,11 +5,11 @@ class Ven$OpsHistory {
         this.index = -1
     }
 
-    get allowRedo() {
+    allowRedo() {
         return this.snapshots.length > this.index + 1
     }
 
-    get allowUndo() {
+    allowUndo() {
         return this.index > 0
     }
 
@@ -18,7 +18,7 @@ class Ven$OpsHistory {
     }
 
     undo() {
-        if (this.allowUndo) {
+        if (this.allowUndo()) {
             this.index -= 1
             return this.snapshots[this.index]
         }
@@ -26,7 +26,7 @@ class Ven$OpsHistory {
     }
     
     redo() {
-        if (this.allowRedo) {
+        if (this.allowRedo()) {
             this.index += 1
             return this.snapshots[this.index]
         }

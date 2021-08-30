@@ -7,7 +7,7 @@ window.$util = {
      * @method jsonDeepCopy
      * @desc 拷贝JSON数据
      * @param {Object} data JSON-Data
-     * @returns {Object|Null}
+     * @return {Object|Null}
      */
     jsonDeepCopy(
         data = {}
@@ -30,7 +30,7 @@ window.$util = {
      * @desc 渲染提示项
      * @param {Element} el 目标元素
      * @param {String} text 需要提示的文本
-     * @returns {Undefined}
+     * @return {Undefined}
      */
     renderOprTips(
         el,
@@ -46,7 +46,7 @@ window.$util = {
      * @desc 合并参数
      * @param {Object} defaultOptions 默认参数配置项
      * @param {Object} options 导入参数项
-     * @returns {Object}
+     * @return {Object}
      */
     mergeOptions( 
         defaultOptions = {},
@@ -68,7 +68,7 @@ window.$util = {
      * @method getBoundingClientRect
      * @desc 获取元素位置属性
      * @param {Element} element 目标元素
-     * @returns {Object}
+     * @return {Object}
      */
     getBoundingClientRect(
         element
@@ -80,7 +80,7 @@ window.$util = {
      * @desc 派发客户端事件
      * @param {String} dispatchEventName 需要派发的事件名
      * @param {Object} data 附带参数
-     * @returns {Undefined}
+     * @return {Undefined}
      */
     emitCustomEvent(
         dispatchEventName,
@@ -103,7 +103,7 @@ window.$util = {
      * @desc 分割数组
      * @param {Array} array 需要切割的数组
      * @param {Number} len 分割份数
-     * @returns {Array}
+     * @return {Array}
      */
     groupArray(
         array,

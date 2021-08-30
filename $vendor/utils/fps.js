@@ -47,13 +47,13 @@
         const head = document.head || document.getElementsByTagName('head')[0]
         let insertStyleError = false        
         style.type = 'text/css'
-        if( style.styleSheet ){ 
-            try{
+        if (style.styleSheet) { 
+            try {
                 style.styleSheet.cssText = cssText
-            }catch( e ){
+            } catch (e) {
                 insertStyleError = true
             }           
-        }else{
+        } else {
             style.appendChild(document.createTextNode(cssText))
         }
         head.appendChild(style)
@@ -72,7 +72,7 @@
         return (
             window.requestAnimationFrame ||
             window.webkitRequestAnimationFrame ||
-            function( callback ){
+            function (callback) {
                 window.setTimeout(callback, 1000 / 60)
             }
         )

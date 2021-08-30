@@ -8,7 +8,7 @@ window.$form = {
      * @desc 初始化表单SELECT控件OPTIONS选项
      * @param {Element} formEl 目标节点对象
      * @param {Object} select 所有需要初始化的SELECT合集
-     * @returns {Undefined}
+     * @return {Undefined}
      */
     initFormSelect(
         formEl,
@@ -40,7 +40,7 @@ window.$form = {
      * @desc 初始化表单数据
      * @param {Element} formEl 目标节点对象
      * @param {Object} data 表单初始化时传入的JSON
-     * @returns {Undefined}
+     * @return {Undefined}
      */
     initFormData(
         formEl,
@@ -72,7 +72,7 @@ window.$form = {
      * @param {Element} formEl 目标节点对象
      * @param {String} eventType 目标事件类型名称
      * @param {String} dispatchEventName 派发的事件名称
-     * @returns {Undefined}
+     * @return {Undefined}
      */
     bindFormEvent(
         formEl,
@@ -113,7 +113,7 @@ window.$form = {
      * @param {Element} el 目标节点对象
      * @param {Object} formData 表单数据对象
      * @param {Object} tipsData Tips数据对象
-     * @returns {Undefined}
+     * @return {Undefined}
      */
     initSelectTips(
         el,

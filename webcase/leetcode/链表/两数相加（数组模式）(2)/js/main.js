@@ -18,30 +18,9 @@ function ListNode(val, next) {
     this.next = (next === undefined ? null : next)
 }
 
-function setList2Array(list) {
-    const arr = []
-    arr.push(list.val)
-    while (list.next) {        
-        list = list.next
-        arr.push(list.val)
-    }
-    return arr
-}
-
-function setArray2List(arr) {
-    const head = new ListNode(arr[0], null)
-    let p = head
-    for (let i = 1; i < arr.length; i++) {
-        const node = new ListNode(arr[i], null)
-        p.next = node
-        p = node
-    }
-    return head
-}
-
 function addTwoNumbers (list1, list2) {
-    const arr1 = setList2Array(list1).reverse()
-    const arr2 = setList2Array(list2).reverse()
+    const arr1 = $setList2Array(list1).reverse()
+    const arr2 = $setList2Array(list2).reverse()
     /* 
         获取两个数组的最大长度
      */
@@ -117,7 +96,7 @@ function addTwoNumbers (list1, list2) {
 const arr1 = [2, 4, 9]
 const arr2 = [5, 6, 4, 9]
 
-const list1 = setArray2List(arr1)
-const list2 = setArray2List(arr2)
+const list1 = $setArray2List(arr1)
+const list2 = $setArray2List(arr2)
 
 console.log(addTwoNumbers(list1, list2))

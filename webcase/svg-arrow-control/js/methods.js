@@ -6,7 +6,7 @@ window.$methods = {
      * @method getPointsOfPath
      * @desc 获取path的所有坐标
      * @param {Element} el path元素
-     * @returns {Array}
+     * @return {Array}
      */
 	getPointsOfPath(
 		el
@@ -39,7 +39,7 @@ window.$methods = {
      * @desc 为path添加<circle />型控制点
      * @param {Element} container path的父元素
 	 * @param {Array} points path坐标组
-     * @returns {Array}
+     * @return {Array}
      */
 	createCircleControlDots(
 		container,
@@ -76,7 +76,7 @@ window.$methods = {
      * @desc 为path设置坐标组
      * @param {Element} el path元素
 	 * @param {Array} points path坐标组
-     * @returns {Array}
+     * @return {Array}
      */
 	setPointsOfPath(
 		el,
@@ -103,7 +103,7 @@ window.$methods = {
      * @desc 为circle设置坐标(基于DOM数组遍历)
      * @param {Elements} el circle元素数组
 	 * @param {Array} points path坐标组
-     * @returns {Undefined}
+     * @return {Undefined}
      */
 	setCenterOfCirclesToAllCircles(
 		circles,
@@ -123,7 +123,7 @@ window.$methods = {
      * @desc 为circle设置坐标(基于pointObj对象遍历)
      * @param {Elements} el circle元素数组
 	 * @param {Object} points path坐标组
-     * @returns {Undefined}
+     * @return {Undefined}
      */
 	setCenterOfCirclesToPartCircles(
 		circles,

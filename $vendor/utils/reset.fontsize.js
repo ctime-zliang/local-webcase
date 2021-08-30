@@ -1,6 +1,6 @@
 ;(function() {
     function __resetFontSizeClac(){
-		var _fontSize = document.documentElement.clientWidth / 3.75
+		const _fontSize = document.documentElement.clientWidth / 3.75
 		return _fontSize > 200 ? 200 : _fontSize
 	}
 	document.documentElement.style.fontSize = __resetFontSizeClac() + 'px'

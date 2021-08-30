@@ -7,7 +7,7 @@ window.$svg = {
      * @desc 创建SVG元素
      * @param {String} svgNS SVG格式
      * @param {String} geometryType SVG元素类型
-     * @returns {DOM}
+     * @return {DOM}
      */
     createSVGElement(
         svgNS,
@@ -20,7 +20,7 @@ window.$svg = {
      * @desc 追加SVG元素
      * @param {Element} element 子节点
      * @param {Element} canvasDom 父节点
-     * @returns {Undefined}
+     * @return {Undefined}
      */
     appendSVGElement(
         svgElement,
@@ -33,7 +33,7 @@ window.$svg = {
      * @desc 设置SVG元素的描边样式
      * @param {Element} svgElement SVG节点
      * @param {Object} options 描边参数项
-     * @returns {Undefined}
+     * @return {Undefined}
      */
     setStroke(
         svgElement,
@@ -73,7 +73,7 @@ window.$svg = {
      * @desc 设置SVG元素的填充样式
      * @param {Element} svgElement SVG节点
      * @param {String} fill 填充样式
-     * @returns {Undefined}
+     * @return {Undefined}
      */
     setFill(
         svgElement,
@@ -86,7 +86,7 @@ window.$svg = {
      * @desc 获取SVG元素节点属性
      * @param {Element} svgElement SVG节点
      * @param {String} attr 属性
-     * @returns {Undefined}
+     * @return {Undefined}
      */
     getSVGElementAttr(
         svgElement,
@@ -100,7 +100,7 @@ window.$svg = {
      * @param {Element} svgElement SVG节点
      * @param {String} axial 轴向
      * @param {Number} value 参数值
-     * @returns {Undefined}
+     * @return {Undefined}
      */
     setEllipseCenterPosition(
         svgElement, 
@@ -120,7 +120,7 @@ window.$svg = {
      * @param {Element} svgElement SVG节点
      * @param {String} axial 轴向
      * @param {Number} value 参数值
-     * @returns {Undefined}
+     * @return {Undefined}
      */
     setEllipseRadius(
         svgElement, 
@@ -140,7 +140,7 @@ window.$svg = {
      * @param {Element} svgElement SVG节点
      * @param {String} axial 轴向
      * @param {Number} value 参数值
-     * @returns {Undefined}
+     * @return {Undefined}
      */
     setRectStartPosition(
         svgElement, 
@@ -160,7 +160,7 @@ window.$svg = {
      * @param {Element} svgElement SVG节点
      * @param {String} axial 轴向
      * @param {Number} value 参数值
-     * @returns {Undefined}
+     * @return {Undefined}
      */
     setRectLength(
         svgElement, 
@@ -179,7 +179,7 @@ window.$svg = {
      * @desc 获取SVG多边形顶点坐标列表
      * @param {Element} svgElement SVG节点
      * @param {Array} points 顶点坐标列表
-     * @returns {Undefined}
+     * @return {Undefined}
      */
     setPolygonPointsList(
         svgElement, 
@@ -198,7 +198,7 @@ window.$svg = {
      * @desc 获取SVG折线端点坐标列表
      * @param {Element} svgElement SVG节点
      * @param {Array} points 端点坐标列表
-     * @returns {Undefined}
+     * @return {Undefined}
      */
     setPolylinePointsList(
         svgElement, 
@@ -217,7 +217,7 @@ window.$svg = {
      * @desc 获取SVG 3次贝塞尔曲线坐标列表
      * @param {Element} svgElement SVG节点
      * @param {Array} points 坐标列表
-     * @returns {Undefined}
+     * @return {Undefined}
      */
     setPath3PointsList(
         svgElement, 

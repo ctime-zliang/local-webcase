@@ -7,7 +7,7 @@ window.$math = {
      * @desc 求不在同一直线上的三点所构成的线段的夹角
      * @param {Object} pA A点坐标
 	 * @param {Object} pB B点坐标
-     * @returns {Number}
+     * @return {Number}
      */
 	getAngle(
 		pA = {x: 0, y: 0},
@@ -23,7 +23,7 @@ window.$math = {
      * @desc 求A-B线段所在直线与X轴的夹角
      * @param {Object} pA A点坐标
 	 * @param {Object} pB B点坐标
-     * @returns {Number}
+     * @return {Number}
      */
 	getAngleOfXAxial(
 		pA = {x: 0, y: 0},
@@ -37,7 +37,7 @@ window.$math = {
      * @param {Array} dots 需要转换的坐标组
 	 * @param {Array} dots 需要转换的坐标组
 	 * @param {Object} center 旋转中心点坐标
-     * @returns {Array}
+     * @return {Array}
      */
 	getDotsAfterRotate(		
 		angle = 0,

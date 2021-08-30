@@ -6,7 +6,7 @@ window.$util = {
      * @method nodeIndexOf
      * @desc 获取el在兄弟元素中的索引
      * @param {Element} el DOM元素
-     * @returns {Object}
+     * @return {Object}
      */
 	nodeIndexOf(
 		el
@@ -17,7 +17,7 @@ window.$util = {
      * @method getBoundingClientRect
      * @desc 获取el的尺寸/坐标数据
      * @param {Element} el DOM元素
-     * @returns {Object}
+     * @return {Object}
      */
 	getBoundingClientRect(
 		el
@@ -31,7 +31,7 @@ window.$util = {
 	 * @param {String} eventName 事件类型
 	 * @param {String} attribute 指定的属性(选择器)
 	 * @param {Function} callback 事件回调
-     * @returns {Undefined}
+     * @return {Undefined}
      */
 	entrustEventBinding(
 		container,
