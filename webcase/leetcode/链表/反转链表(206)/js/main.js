@@ -27,7 +27,7 @@ function ListNode(val, next) {
  * @param {ListNode} head 单项链表的起始节点(头节点)
  * @return {ListNode} 单项链表
  */
- function reverseList(head) {
+function reverseList(head) {
     if ($isEmptyObject(head)) {
         return null
     }

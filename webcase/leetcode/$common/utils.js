@@ -73,3 +73,24 @@ function $nativeSortSeq(arr) {
         return +a - +b
     })
 }
+
+/**
+ * 链表反转
+ * @param {ListNode} head 单项链表的起始节点(头节点)
+ * @return {ListNode} 单项链表
+ */
+ function $reverseList(head) {
+    if ($isEmptyObject(head)) {
+        return null
+    }
+    let target = head
+    let pre = null
+    let next = null
+    while (target != null) {
+        next = target.next
+        target.next = pre
+        pre = target
+        target = next
+    }
+    return pre
+}

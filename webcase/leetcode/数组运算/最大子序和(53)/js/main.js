@@ -52,7 +52,7 @@ function loopDynamicProgramming(nums) {
     let tmpSum = ans
     for (let i = 0; i < nums.length; i++) {
         /*
-            sum 为遍历到当前元素为止的一个计算和(由已遍历过的所有元素中的部分元素累加计算后的结果) 
+            tmpSum 为遍历到当前元素为止的一个计算和(由已遍历过的所有元素中的部分元素累加计算后的结果) 
             如果
                 该值为负数
             则
