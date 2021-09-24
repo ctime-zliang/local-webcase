@@ -6,18 +6,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="./css/main.css" />
-<title>居中设置</title>
+<title>Code Case</title>
 <style>
 .layout-container{
     width: 100%;
     /* 关键样式 */
-    display: flex;
-    display: -webkit-flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    align-items: flex-start;
-    align-content: flex-start;        
+    position: relative;
+    padding: 0 200px 0 200px;        
     overflow: hidden;
 
     /* 其他 */
@@ -26,7 +21,10 @@
 .layout-left{
     /* 关键样式 */
     position: relative;
-    width: 200px;        
+    left: -200px;
+    float: left;
+    width: 200px;    
+    margin-left: -100%;    
 
     /* 辅助UI */
     background-color: antiquewhite;
@@ -34,7 +32,10 @@
 .layout-right{
     /* 关键样式 */
     position: relative;
-    width: 200px;      
+    right: -200px;  
+    float: left;
+    width: 200px;
+    margin-left: -200px;        
 
     /* 辅助UI */
     background-color: darksalmon;
@@ -42,6 +43,7 @@
 .layout-middle{
     /* 关键样式 */
     position: relative;
+    float: left;
     width: 100%;        
 
     /* 辅助UI */
@@ -51,11 +53,12 @@
 </head>
 
 <body>
-<div class="layout-container">    
-    <div class="layout-left"> Left Area </div>   
+<div class="layout-container">
     <div class="layout-middle"> Middle Area </div>
+    <div class="layout-left"> Left Area </div>    
     <div class="layout-right"> Right Area </div>
 </div>
 </body>
+<script type="text/javascript" src="../../$dependence/vue/vue.js"></script>
 <script type="text/javascript" src="./js/main.js"></script>
 </html>
