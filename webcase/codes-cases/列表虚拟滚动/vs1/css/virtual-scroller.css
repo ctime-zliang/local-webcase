@@ -1,0 +1,33 @@
+.virtual-scroller-container {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.virtual-scroller-wrapper {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: auto;
+    scroll-behavior: auto;
+}
+.virtual-scroller-content {
+    display: block;
+}
+.virtual-scroller-ulist {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.virtual-scroller-ulist .virtual-scroller-item {
+    width: 100%;
+    height: 50px;
+}
+
+.virtual-scroller-item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+    flex-wrap: nowrap;
+}
