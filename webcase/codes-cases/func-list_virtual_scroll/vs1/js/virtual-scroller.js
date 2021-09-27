@@ -17,19 +17,37 @@ const virtualScrollerFragmentTemplate = () => {
 const virtualScrollerItemTemplate = (itemData = {}) => {
     return `<div data-itemid="${itemData.id}" class="virtual-scroller-item">${itemData.content}</div>`
 }
-const defaultRuntimeConfig = {
-    lastIndex: 0,
-    scrollTop: 0,
+const defaultConfig = {
+    /* 滚动过程中渲染在可视区域的第一个元素数据在总列表中的索引 */
+    viewStartIndex: 0,
+    /* scroller-content 元素的内顶边距 */
+    contentAreaPaddingTop: 0,
+    /* 单行元素的高度 */
     rowItemHeight: 30,
-    rowsViewCount: 20,
-    rowsAllCount: 0,
-    rowsData: []
+    /* 列表总高度 */
+    rowsAllHeight: 0,
+    /* 列表总长度 */
+    dataAllCount: 0,
+    /* 列表数据集 */
+    listData: [],
+    /* 其他 */
+    _timer: null
+}
+const defaultProfile = {
+    /* 滚动过程中渲染出的真实 DOM 个数 */
+    viewRenderCount: 20,
+}
+
+const EVENT_NAME_CONFIG = {
+    SCROLL_TO_TOP: 'SCROLL_TO_TOP',
+    SCROLL_TO_BOTTOM: 'SCROLL_TO_BOTTOM'
 }
 
 class VirtualScroller {
     constructor(el, option = {}) {
-        this.RuntimeConfig = { ...defaultRuntimeConfig, ...option }
+        this.RuntimeConfig = { ...defaultProfile, ...option, ...defaultConfig }
         this.RuntimeConfig.outerContainer = el
+        this.eventHandlers = {}
         this._init()
         this._initFragment()
         this._bindEvent()
@@ -37,10 +55,21 @@ class VirtualScroller {
 
     setData(list) {
         const RuntimeConfig = this.RuntimeConfig
-        RuntimeConfig.rowsData = list
-        RuntimeConfig.rowsAllCount = list.length
+        RuntimeConfig.listData = list
+        RuntimeConfig.dataAllCount = list.length
+        RuntimeConfig.rowsAllHeight = RuntimeConfig.dataAllCount * RuntimeConfig.rowItemHeight
         this._setContentRect()
-        this._insertHtml()
+        this._insertHtml(this._sliceListData())
+    }
+
+    on(eventName, callback) {
+        if (!eventName || typeof eventName != 'string' || typeof callback != 'function') {
+            return
+        }
+        if (!this.eventHandlers[eventName]) {
+            this.eventHandlers[eventName] = []
+        }
+        this.eventHandlers[eventName].push(callback)
     }
 
     _init() {
@@ -67,8 +96,8 @@ class VirtualScroller {
     _setContentRect() {
         const RuntimeConfig = this.RuntimeConfig
         const contentElement = RuntimeConfig.container.querySelector(`.virtual-scroller-content`)
-        contentElement.style.height = `${RuntimeConfig.rowsAllCount * RuntimeConfig.rowItemHeight}px`
-        contentElement.style.paddingTop = `${RuntimeConfig.scrollTop}px`
+        contentElement.style.height = `${RuntimeConfig.dataAllCount * RuntimeConfig.rowItemHeight}px`
+        contentElement.style.paddingTop = `${RuntimeConfig.contentAreaPaddingTop}px`
     }
 
     _bindEvent() {
@@ -76,28 +105,51 @@ class VirtualScroller {
         const RuntimeConfig = this.RuntimeConfig
         const wrapperElement = RuntimeConfig.container.querySelector(`.virtual-scroller-wrapper`)
         const contentElement = RuntimeConfig.container.querySelector(`.virtual-scroller-content`)
+        const scrollMin = 0        
         wrapperElement.addEventListener('scroll', function(evte) {
-            const eventScrollTop = evte.currentTarget.scrollTop
-            if (eventScrollTop > RuntimeConfig.scrollTop && RuntimeConfig.lastIndex + RuntimeConfig.rowsViewCount > RuntimeConfig.rowsAllCount) {
-                return
+            let scrollTop = evte.currentTarget.scrollTop
+            let scrollMax = RuntimeConfig.rowsAllHeight - RuntimeConfig.outerContainerRect.height
+            /* 阈值判断 */
+            if (scrollTop <= scrollMin) {
+                self._emit(EVENT_NAME_CONFIG.SCROLL_TO_TOP)
+                scrollTop = scrollMin
             }
-            RuntimeConfig.scrollTop = eventScrollTop
-            RuntimeConfig.lastIndex = ~~((RuntimeConfig.scrollTop / RuntimeConfig.rowItemHeight) | 0)
-            contentElement.style.paddingTop = `${RuntimeConfig.scrollTop}px`
-            self._insertHtml()
+            if (scrollTop >= scrollMax) {
+                self._emit(EVENT_NAME_CONFIG.SCROLL_TO_BOTTOM)               
+                scrollTop = scrollMax
+            }
+            /* 修改视图 */
+            RuntimeConfig.contentAreaPaddingTop = scrollTop
+            contentElement.style.paddingTop = `${RuntimeConfig.contentAreaPaddingTop}px`
+            /* 计算截取开始位所以你 */
+            RuntimeConfig.viewStartIndex = Math.floor((RuntimeConfig.contentAreaPaddingTop / RuntimeConfig.rowItemHeight)) || 0
+            /* 渲染列表 */       
+            self._insertHtml(self._sliceListData())
         })
     }
 
-    _insertHtml() {
+    _sliceListData() {
+        const RuntimeConfig = this.RuntimeConfig
+        return RuntimeConfig.listData.slice(RuntimeConfig.viewStartIndex, RuntimeConfig.viewStartIndex + RuntimeConfig.viewRenderCount)
+    }
+
+    _insertHtml(data) {
         const RuntimeConfig = this.RuntimeConfig
         const ulistElement = RuntimeConfig.container.querySelector(`.virtual-scroller-ulist`)
-        const sliceData = RuntimeConfig.rowsData.slice(RuntimeConfig.lastIndex, RuntimeConfig.lastIndex + RuntimeConfig.rowsViewCount)
         const htmlString = 
-            sliceData
-            .map((item, index) => {
+            data
+            .map(item => {
                 return virtualScrollerItemTemplate(item)
             })
             .join('\n')
         ulistElement.innerHTML = htmlString
     }
+
+    _emit(eventName, ...args) {
+        const events = this.eventHandlers[eventName]
+        for (let i = 0; i < events.length; i++) {
+            events[i](...args)
+        } 
+    }
 }
+VirtualScroller.EVENT_NAME_CONFIG = EVENT_NAME_CONFIG
