@@ -113,7 +113,6 @@ class VirtualScroller {
         const ulistElement = RuntimeConfig.container.querySelector(`.virtual-scroller-ulist`)
         wrapperElement.addEventListener('scroll', function(evte) {
             let scrollTop = evte.currentTarget.scrollTop
-            console.log(scrollTop)
             /* 阈值判断 */
             if (scrollTop <= RuntimeConfig.contentAreaYOffsetMin) {
                 self._emit(EVENT_NAME_CONFIG.SCROLL_TO_TOP)
