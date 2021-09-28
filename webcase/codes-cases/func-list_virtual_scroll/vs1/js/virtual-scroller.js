@@ -124,9 +124,7 @@ class VirtualScroller {
             }
             /* 修改视图 */
             RuntimeConfig.contentAreaYOffset = scrollTop
-            // contentElement.style.paddingTop = `${RuntimeConfig.contentAreaYOffset}px`
             ulistElement.style.transform = `translate3d(0, ${RuntimeConfig.contentAreaYOffset}px, 5px)`
-            /* 计算截取开始位所以你 */
             RuntimeConfig.viewStartIndex = Math.floor((RuntimeConfig.contentAreaYOffset / RuntimeConfig.rowItemHeight)) || 0
             /* 渲染列表 */       
             self._insertHtml(self._sliceListData())
