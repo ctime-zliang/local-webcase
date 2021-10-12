@@ -62,8 +62,8 @@ function mergeTwoLists(l1, l2) {
 const arr1 = []
 const arr2 = []
 
-const head1 = $setArray2List(arr1)
-const head2 = $setArray2List(arr2)
+const head1 = ven$setArray2List(arr1)
+const head2 = ven$setArray2List(arr2)
 
 console.log(head1, head2)
 

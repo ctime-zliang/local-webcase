@@ -106,7 +106,7 @@ function slowAndFast(head) {
 
 const arr = [3, 2, 0, -4]
 const pos = 1
-const head = $setArray2List(arr)
+const head = ven$setArray2List(arr)
 
 linkNode(head, pos)
 console.log(head)

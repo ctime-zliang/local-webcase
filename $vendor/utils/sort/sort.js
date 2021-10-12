@@ -115,7 +115,7 @@ function ven$quickInvSort(arr = []) {
     let arrCopy = arr.slice(0)
     return recursion(arrCopy)
 
-    function recursion(arr = []){        
+    function recursion(arr = []){
         if (arr.length <= 1) {
             return arr
         }

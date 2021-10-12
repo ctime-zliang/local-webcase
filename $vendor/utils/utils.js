@@ -12,6 +12,7 @@ function ven$choke(delay = 1000) {
     console.log('%c end choke while...', 'color: green; font-size: 18px;') 
 }
 
+
 /**
  * 异步等待阻塞
  * @param {number} delay 阻塞时长
@@ -22,6 +23,7 @@ async function ven$sleep(delay = 1000) {
         window.setTimeout(_, delay)
     })
 }
+
 
 /**
  * 数组分组
@@ -36,4 +38,49 @@ function ven$chunk(array, size) {
 		res.push(array.slice(+value * size, (index + 1) * size))
 	})
 	return res 
+}
+
+
+/**
+ * 判断对象是否为空
+ * @param {object} obj 被检测对象
+ * @return {boolean}
+ */
+function ven$isEmptyObject(obj) {
+    for (let attr in obj) {
+        return false
+    }
+    return true
+}
+
+
+/**
+ * 原生 sort 实现对数字数组升序安排序
+ * @param {array} arr 目标数组
+ * @return {array}
+ */
+function ven$nativeSortSeq(arr) {
+    return arr.sort((a, b) => {
+        return +a - +b
+    })
+}
+
+
+/**
+ * 移除数组前面所有的 0 项
+ * @param {array} arr 目标数组
+ * @return {array}
+ */
+function ven$removeAllFrontZero(arr) {
+    let res = []
+    let flag = false
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i] === 0 && !flag) {
+            continue
+        } else {
+            flag = true
+        }
+        res.push(arr[i])
+    }
+    return res
 }

@@ -42,9 +42,9 @@ const coms =          [8, 4, 5]
 const arr1 =    [4, 1]
 const arr2 = [5, 0, 1]
 
-const head = $setArray2List(coms)
-const head1 = $setArray2List(arr1)
-const head2 = $setArray2List(arr2)
+const head = ven$setArray2List(coms)
+const head1 = ven$setArray2List(arr1)
+const head2 = ven$setArray2List(arr2)
 const last1 = findLast(head1)
 const last2 = findLast(head2)
 

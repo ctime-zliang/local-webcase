@@ -28,7 +28,7 @@ function ListNode(val, next) {
  * @return {ListNode} 单项链表
  */
 function reverseList(head) {
-    if ($isEmptyObject(head)) {
+    if (ven$isEmptyObject(head)) {
         return null
     }
     let pre = null
@@ -44,6 +44,6 @@ function reverseList(head) {
 
 
 const arr = [1, 2, 3, 4, 5]
-const list = $setArray2List(arr)
+const list = ven$setArray2List(arr)
 
 console.log(reverseList(list))
