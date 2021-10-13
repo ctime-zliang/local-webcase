@@ -1,0 +1,32 @@
+body {
+    padding: 35px 35px;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    outline: 0;
+    box-sizing: border-box;
+}
+
+.canvas-container {
+    width: 100%;
+    height: 100%;
+    padding: 10px 10px;
+    border: 1px solid #dcdcdc;
+}
+.canvas-content-wrapper {
+    width: 100%;
+    height: 500px;
+    border: 1px solid #dcdcdc;
+}
+.canvas-content-wrapper canvas {
+    width: 100%;
+    height: 100%;
+}
+.canvas-menu-wrapper {
+    width: 100%;
+    min-height: 30px;
+    margin-top: 10px;
+    border-top: 1px solid #dcdcdc;
+}
