@@ -1,7 +1,7 @@
 ﻿const DEFAULT_BRUSH_CONFIG = {
     strokeStyle: '#000000',
     fillStyle: '#ffff00',
-    lineWidth: 10
+    lineWidth: 4
 }
 
 const CANVAS_STATE = {
@@ -9,8 +9,9 @@ const CANVAS_STATE = {
     SELECT: 'SELECT'
 }
 
-class Scene {
+class Scene extends Events {
     constructor(canvasElement) {
+        super()
         if (!canvasElement || canvasElement.nodeName.toUpperCase() !== 'CANVAS') {
             return
         }
@@ -26,11 +27,12 @@ class Scene {
     }
 
     _init() {
-        this.config.canvasRect = this._setCanvasElementRect()
-        this.toolState = this._initToolState()       
-        this.config.state = CANVAS_STATE.DRAWING
-        this.mouseState = this._initMouseState()
         this.offScreen = this._createOffScreenCanvas()
+        this.config.state = CANVAS_STATE.DRAWING
+        this.config.canvasRect = this._createCanvasRect()
+        this.toolState = this._initToolState()
+        this.mouseState = this._initMouseState()
+        this.setCanvasElementRect()
         /* 绑定事件 */
         this._bindWindowResizeEvent()
         this._bindRightClickEvent()
@@ -41,6 +43,17 @@ class Scene {
 
     setGeometryConstructor(geometryConstructor) {
         this.geometryConstructor = geometryConstructor
+    }
+
+    setCanvasElementRect(rect = {}) {
+        const canvasRect = { ...this.config.canvasRect, ...rect }
+        const offScreen = this.offScreen
+        this.canvasElement.width = canvasRect.width
+        this.canvasElement.height = canvasRect.height
+        offScreen.cacheCanvasElement.width = canvasRect.width
+        offScreen.cacheCanvasElement.height = canvasRect.height
+        offScreen.outCanvasFrontElement.width = canvasRect.width
+        offScreen.outCanvasFrontElement.height = canvasRect.height
     }
 
     _initToolState() {
@@ -61,29 +74,26 @@ class Scene {
         }
     }
 
-    _setCanvasElementRect() {
-        const rect = this.canvasElement.getBoundingClientRect()
-        this.canvasElement.width = rect.width
-        this.canvasElement.height = rect.height
+    _createCanvasRect() {
+        const domRect = this.canvasElement.getBoundingClientRect()
+        const rect = {}
+        for (let attr in domRect) {
+            rect[attr] = domRect[attr]
+        }
         return rect
     }
 
     _createOffScreenCanvas() {
-        const canvasRect = this.config.canvasRect
         const offScreen = {
-            outCanvasElement: document.createElement('canvas'),
+            cacheCanvasElement: document.createElement('canvas'),
             outCanvasFrontElement: document.createElement('canvas')
         }
-        offScreen.outCanvasElement.width = canvasRect.width
-        offScreen.outCanvasElement.height = canvasRect.height
-        offScreen.outCanvasCtx = offScreen.outCanvasElement.getContext('2d')
-        offScreen.outCanvasFrontElement.width = canvasRect.width
-        offScreen.outCanvasFrontElement.height = canvasRect.height
+        offScreen.cacheCanvasCtx = offScreen.cacheCanvasElement.getContext('2d')
         offScreen.outCanvasFrontCtx = offScreen.outCanvasFrontElement.getContext('2d')
         /*
             测试 
          */
-        document.getElementById(`t_c_1`).appendChild(offScreen.outCanvasElement)
+        document.getElementById(`t_c_1`).appendChild(offScreen.cacheCanvasElement)
         document.getElementById(`t_c_2`).appendChild(offScreen.outCanvasFrontElement)
         return offScreen
     }
@@ -105,9 +115,9 @@ class Scene {
     }
 
     _bindMousedownEvent() {
-        this.canvasElement.addEventListener('mousedown', (evte) => {
+        this.canvasElement.addEventListener('mousedown', (evte) => {            
+            evte.preventDefault()            
             let geometryTarget = null
-            evte.preventDefault()
             if (evte.button !== 0) {
                 return
             }
@@ -126,20 +136,20 @@ class Scene {
                 /* ... */
             }
             this.mouseState.target = geometryTarget
-            this.offScreen.outCanvasCtx.clearRect(0, 0, this.config.canvasRect.width, this.config.canvasRect.height)
-            for (let i = 0; i < this.geometries.length; i++) {
-                if (this.geometries[i] === geometryTarget) {
-                    break
-                }
-                this.geometries[i].draw(this.offScreen.outCanvasCtx)
-            }
-            this.offScreen.outCanvasFrontCtx.clearRect(0, 0, this.config.canvasRect.width, this.config.canvasRect.height)
-            for (let i = 0; i < this.geometries.length; i++) {
-                this.geometries[i].draw(this.offScreen.outCanvasFrontCtx)
-            }
-            if (geometryTarget) {
-                this._render()
-            }
+            // this.offScreen.cacheCanvasCtx.clearRect(0, 0, this.config.canvasRect.width, this.config.canvasRect.height)
+            // for (let i = 0; i < this.geometries.length; i++) {
+            //     if (this.geometries[i] === geometryTarget) {
+            //         console.log(`pass render of cache canvas.`)
+            //         continue
+            //     }
+            //     this.geometries[i].draw(this.offScreen.cacheCanvasCtx)
+            // }
+            // this.offScreen.outCanvasFrontCtx.clearRect(0, 0, this.config.canvasRect.width, this.config.canvasRect.height)
+            // for (let i = 0; i < this.geometries.length; i++) {
+            //     this.geometries[i].draw(this.offScreen.outCanvasFrontCtx)
+            // }
+            this._continuedRender()
+            this.emit(EVENT_NS.DRAW_START, { action: EVENT_NS.DRAW_START })
         })
     }
 
@@ -163,27 +173,50 @@ class Scene {
             if (this.mouseState.down) {
                 /* 绘制模式 */
                 if (this.config.state === CANVAS_STATE.DRAWING) {
-                    this.geometries.push(this.mouseState.target)
+                    if (this.mouseState.target.validate(10)) {
+                        this.geometries.push(this.mouseState.target)
+                    }                    
                 }
             }
             this.mouseState.down = false
             this.mouseState.target = null
+            /*
+                在绘制结束(鼠标抬起)时
+                    1. 需要清空输出画布
+                    2. 将所有几何图元重新绘制到输出画布中
+                    3. 将所有几何图元重新绘制到缓存画布中
+             */
+            this.canvasCtx.clearRect(0, 0, this.config.canvasRect.width, this.config.canvasRect.height)
+            for (let i = 0; i < this.geometries.length; i++) {
+                this.geometries[i].draw(this.canvasCtx)
+            }
+            this.offScreen.cacheCanvasCtx.clearRect(0, 0, this.config.canvasRect.width, this.config.canvasRect.height)
+            for (let i = 0; i < this.geometries.length; i++) {
+                this.geometries[i].draw(this.offScreen.cacheCanvasCtx)
+            }
+            if (evte.button !== 0) {
+                return
+            }
+            this.emit(EVENT_NS.DRAW_FINISHED, { action: EVENT_NS.DRAW_FINISHED })
         })
     }
 
-    _render() {
+    _continuedRender() {
         window.requestAnimationFrame(() => {
             this.canvasCtx.clearRect(0, 0, this.config.canvasRect.width, this.config.canvasRect.height)
-            this._paint(this.offScreen.outCanvasElement)
+            /* 
+                1. 将缓存画布中的图像数据绘制到输出画布中
+                2. 在输出画布中绘制当前正在绘制的几何图形
+             */
+            this._paintWith(this.offScreen.cacheCanvasElement)
             if (this.mouseState.target) {
                 this.mouseState.target.draw(this.canvasCtx)
-            }            
-            this._paint(this.offScreen.outCanvasFrontElement)
-            if (this.mouseState.down) {
-                this._render()
-            } else {
-                this._reset()
             }
+            // this._paintWith(this.offScreen.outCanvasFrontElement)
+            if (this.mouseState.down) {
+                this._continuedRender()
+                return
+            }             
         })
     }
 
@@ -191,14 +224,7 @@ class Scene {
         this.canvasCtx.clearRect(0, 0, this.config.canvasRect.width, this.config.canvasRect.height)
     }
 
-    _reset() {
-        this.canvasCtx.clearRect(0, 0, this.config.canvasRect.width, this.config.canvasRect.height)
-        for (let i = 0; i < this.geometries.length; i++) {
-            this.geometries[i].draw(this.canvasCtx)
-        }
-    }
-
-    _paint(canvas, x = 0, y = 0) {
+    _paintWith(canvas, x = 0, y = 0) {
         this.canvasCtx.drawImage(canvas, x, y, this.config.canvasRect.width, this.config.canvasRect.height)
     }
 

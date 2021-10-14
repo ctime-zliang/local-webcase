@@ -1,5 +1,8 @@
 const EVENT_NS = {
-    WINDOW_RESIZE: 'WINDOW_RESIZE'
+    WINDOW_RESIZE: 'WINDOW_RESIZE',
+    DRAW_START: 'DRAW_START',
+    DRAW_DOING: 'DRAW_DOING',
+    DRAW_FINISHED: 'DRAW_FINISHED'
 }
 
 class Events {
@@ -21,9 +24,9 @@ class Events {
         if (!arguments.length || typeof name !== 'string' || !this.events[name]) {
             return
         }
-        const params = arguments.splice(1)
+        const params = Array.from(arguments).splice(1)
         this.events[name].forEach((item, index) => {
-            item(params)
+            item(...params)
         })
     }
 }

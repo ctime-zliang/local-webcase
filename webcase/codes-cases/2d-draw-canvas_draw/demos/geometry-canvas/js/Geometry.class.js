@@ -57,4 +57,8 @@ class Circle extends Element {
         ctx.stroke()
         ctx.fill()
     }
+
+    validate(minRadius = 2) {
+        return this.r >= minRadius
+    }
 }
