@@ -3,20 +3,27 @@ const DEFAULT_ELEMENT_CONFIG = {
     lineWidth: 1,
     strokeStyle: 'rgba(0, 0, 0, 255)'
 }
+const DEFAULT_HIGHLIGHT_CONFIG = {
+    strokeStyle: 'rgba(255, 0, 0, 255)'
+}
 
 class Element {
-    constructor(options) {
-        this.config = { ...DEFAULT_ELEMENT_CONFIG, ...options }
+    constructor() {
+        this.config = {
+            normal: { ...DEFAULT_ELEMENT_CONFIG },
+            hightlight: { ...DEFAULT_ELEMENT_CONFIG, ...DEFAULT_HIGHLIGHT_CONFIG }
+        }
+        this.isHighlight = false
     }
 
     setPaintStyle(options) {
-        this.config = { ...this.config, ...options }
+        this.config.normal = { ...this.config.normal, ...options }
     }
 }
 
 class Circle extends Element {
-    constructor(x, y, r = 0, options = {}) {
-        super(options)
+    constructor(x, y, r = 0) {
+        super()
         this.x = x
         this.y = y
         this.r = r
@@ -48,14 +55,22 @@ class Circle extends Element {
     }
 
     draw(ctx) {
-        const drawConfig = this.config
+        const brushConfig = this.isHighlight ? this.config.hightlight : this.config.normal
         ctx.beginPath()
-        ctx.fillStyle = drawConfig.fillStyle
-        ctx.strokeStyle = drawConfig.strokeStyle
-        ctx.lineWidth = drawConfig.lineWidth
+        ctx.fillStyle = brushConfig.fillStyle
+        ctx.strokeStyle = brushConfig.strokeStyle
+        ctx.lineWidth = brushConfig.lineWidth
         ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI)
         ctx.stroke()
         ctx.fill()
+    }
+
+    setHighlight() {
+        this.isHighlight = true
+    }
+
+    cancelHighlight() {
+        this.isHighlight = false
     }
 
     validate(minRadius = 2) {

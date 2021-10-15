@@ -12,13 +12,29 @@
 <body>
     <div class="canvas-container">
         <div class="canvas-content-wrapper"><canvas></canvas></div>
-        <div class="canvas-menu-wrapper"></div>
+        <div class="canvas-menu-wrapper">
+            <div class="menu-form-control">
+                <span>画布模式: </span>
+                <label><input type="radio" name="canvas-mode" data-forminput-name="canvasMode" value="drawing" /> 绘制</label>
+                <label><input type="radio" name="canvas-mode" data-forminput-name="canvasMode" value="select" /> 选择</label>
+            </div>
+            <div class="menu-form-control">
+                <span>几何图形: </span>
+                <select name="geometry-type" data-forminput-name="geometryType">
+                    <option value="-" disabled="disabled">-</option>
+                    <option value="circle">Circle</option>
+                    <option value="rectangle">Rectangle</option>
+                </select>  
+            </div>
+        </div>
     </div>
     <div id="t_c_1"></div>
     <div id="t_c_2"></div>
 </body>
+<script type="text/javascript" src="./js/FormControl.js"></script>
 <script type="text/javascript" src="./js/Events.class.js"></script>
 <script type="text/javascript" src="./js/Geometry.class.js"></script>
 <script type="text/javascript" src="./js/Scene.class.js"></script>
+<script type="text/javascript" src="./js/CanvasController.js"></script>
 <script type="text/javascript" src="./js/main.js"></script>
 </html>

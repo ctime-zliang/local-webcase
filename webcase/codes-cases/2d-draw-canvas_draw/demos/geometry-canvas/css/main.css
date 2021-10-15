@@ -12,7 +12,7 @@ body {
 .canvas-container {
     width: 100%;
     height: 100%;
-    padding: 10px 10px;
+    padding: 10px 10px 0 10px;
     border: 1px solid #dcdcdc;
 }
 .canvas-content-wrapper {
@@ -26,7 +26,32 @@ body {
 }
 .canvas-menu-wrapper {
     width: 100%;
-    min-height: 30px;
-    margin-top: 10px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+    min-height: 40px;
+    margin: 10px 0 0 0;
     border-top: 1px solid #dcdcdc;
+    font-size: 12px;
+}
+.menu-form-control {
+    padding: 0 10px 0 10px;
+    border-right: 1px solid #dcdcdc;  
+}
+.menu-form-control:first-child {
+    padding-left: 0;
+}
+.menu-form-control:last-child {
+    border-right: 0;
+}
+.menu-form-control label {    
+    padding: 0 10px 0 0;
+    cursor: pointer;
+}
+.menu-form-control label input {
+    transform: translate3d(0px, 2px, 0px);
+}
+.menu-form-control span {
+    padding: 0 5px 0 0;
 }
