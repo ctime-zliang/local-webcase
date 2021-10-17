@@ -110,6 +110,7 @@ function modifyCanvasControl(canvasHandler, key, value, formControl) {
             break
         }
         case 'strokeStyle':
+        case 'lineWidth':
         case 'fillStyle': {
             const toolState = canvasHandler.getToolState()
             toolState.paintBrushState[key] = value

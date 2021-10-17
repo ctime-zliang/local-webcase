@@ -126,6 +126,7 @@ class Line extends GeometryBase {
         super()
         this.path = [{x, y}]
         this.smooth = false
+        this.samplingIntervalNumber = 5
     }
 
     setSize(x, y) {
@@ -183,17 +184,23 @@ class Line extends GeometryBase {
             ctx.stroke()
             ctx.closePath()
             return
-        }
+        }        
         if (this.path.length > 3) {
             ctx.beginPath()
             ctx.moveTo(this.path[0].x, this.path[0].y)
             let i = 1
-            for (i = 1; i < this.path.length - 2; i ++) {
-                const xc = (this.path[i].x + this.path[i + 1].x) / 2
-                const yc = (this.path[i].y + this.path[i + 1].y) / 2
-                ctx.quadraticCurveTo(this.path[i].x, this.path[i].y, xc, yc)
+            // let samplingIntervalNumber = this.path.length >= this.samplingIntervalNumber ? this.samplingIntervalNumber : 1
+            for (i = 1; i < this.path.length - 2; i += this.samplingIntervalNumber) {
+                if (this.path[i] && this.path[i + 1]) {
+                    const xc = (this.path[i].x + this.path[i + 1].x) / 2
+                    const yc = (this.path[i].y + this.path[i + 1].y) / 2
+                    ctx.quadraticCurveTo(this.path[i].x, this.path[i].y, xc, yc)
+                }               
             }
-            ctx.quadraticCurveTo(this.path[i].x, this.path[i].y, this.path[i+1].x, this.path[i+1].y)
+            if (i >= this.path.length - 2) {
+                i = this.path.length - 2
+            }
+            ctx.quadraticCurveTo(this.path[i].x, this.path[i].y, this.path[i + 1].x, this.path[i + 1].y)
             ctx.stroke()
             ctx.closePath()
             return
@@ -201,6 +208,6 @@ class Line extends GeometryBase {
     }
       
     validate() {
-        return this.path.length > 5
+        return this.path.length >= 5
     }
 }

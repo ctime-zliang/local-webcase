@@ -37,7 +37,7 @@ class CanvasContoller extends Scene {
 
     _bindMousedownEvent() {
         this.canvasElement.addEventListener('mousedown', (evte) => {
-            evte.preventDefault()
+            evte.stopPropagation()
             window.setTimeout(() => {
                 let geometryTarget = null
                 if (evte.button !== 0) {
@@ -119,8 +119,8 @@ class CanvasContoller extends Scene {
     }
 
     _bindMousemoveEvent() {
-        document.addEventListener('mousemove', (evte) => {
-            evte.preventDefault()
+        document.addEventListener('mousemove', (evte) => {            
+            evte.stopPropagation()
             this.mouseState.x = evte.offsetX
             this.mouseState.y = evte.offsetY
             if (this.mouseState.down && this.mouseState.target) {
@@ -134,13 +134,13 @@ class CanvasContoller extends Scene {
                         this.mouseState.target.moveTo(this.mouseState.x - this.mouseState.targetOffsetX, this.mouseState.y - this.mouseState.targetOffsetY)
                     }
                 }
-            }            
+            } 
         })
     }
 
     _bindMouseupEvent() {
         document.addEventListener('mouseup', (evte) => {
-            evte.preventDefault()
+            evte.stopPropagation()
             window.setTimeout(() => {
                 if (this.mouseState.down) {
                     /* 绘制模式 */

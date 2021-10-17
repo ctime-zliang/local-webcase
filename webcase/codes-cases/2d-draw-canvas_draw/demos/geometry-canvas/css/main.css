@@ -41,6 +41,10 @@ body {
 .menu-form-control {
     padding: 0 10px 0 10px;
     border-right: 1px solid #dcdcdc;  
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
 }
 .menu-form-control:first-child {
     padding-left: 0;
@@ -52,7 +56,7 @@ body {
     padding: 0 10px 0 0;
     cursor: pointer;
 }
-.menu-form-control label input {
+.menu-form-control label input.transform {
     transform: translate3d(0px, 2px, 0px);
 }
 .menu-form-control span {

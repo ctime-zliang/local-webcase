@@ -16,16 +16,16 @@
             <div class="canvas-base-menu">
                 <div class="menu-form-control">
                     <span>画布模式: </span>
-                    <label><input type="radio" name="canvas-mode" data-forminput-name="canvasMode" value="drawing" checked="checked" /> 绘制</label>
-                    <label><input type="radio" name="canvas-mode" data-forminput-name="canvasMode" value="select" /> 选择</label>
+                    <label><input class="transform" type="radio" name="canvas-mode" data-forminput-name="canvasMode" value="drawing" checked="checked" /> 绘制</label>
+                    <label><input class="transform" type="radio" name="canvas-mode" data-forminput-name="canvasMode" value="select" /> 选择</label>
                 </div>
                 <div class="menu-form-control">
                     <span>几何图形: </span>
                     <select name="geometry-type" data-forminput-name="geometryType">
                         <option value="-" disabled="disabled">-</option>
-                        <option value="circle" selected="selected">Circle</option>
-                        <option value="rectangle">Rectangle</option>
-                        <option value="line">Line</option>
+                        <option value="circle" selected="selected">正圆</option>
+                        <option value="rectangle">矩形</option>
+                        <option value="line">线条</option>
                     </select>  
                 </div>
             </div> 
@@ -34,11 +34,15 @@
                     <div class="canvas-extend-menu">
                         <div class="menu-form-control">
                             <span>描边颜色: </span>
-                            <label><input type="color" name="circle-stroke-style" data-forminput-name="strokeStyle" value="#000000" checked="checked" /></label>
+                            <label><input type="color" name="circle-stroke-style" data-forminput-name="strokeStyle" value="#000000" /></label>
+                        </div>
+                        <div class="menu-form-control">
+                            <span>描边宽度: </span>
+                            <label><input type="number" name="circle-line-width" min="1" max="100" data-forminput-name="lineWidth" value="5" /></label>
                         </div>
                         <div class="menu-form-control">
                             <span>填充颜色: </span>
-                            <label><input type="color" name="circle-fill-style" data-forminput-name="fillStyle" value="#ffff00" checked="checked" /></label>
+                            <label><input type="color" name="circle-fill-style" data-forminput-name="fillStyle" value="#ffff00" /></label>
                         </div>
                     </div>
                 </div>
@@ -46,11 +50,15 @@
                     <div class="canvas-extend-menu">
                         <div class="menu-form-control">
                             <span>描边颜色: </span>
-                            <label><input type="color" name="rectangle-stroke-style" data-forminput-name="strokeStyle" value="#000000" checked="checked" /></label>
+                            <label><input type="color" name="rectangle-stroke-style" data-forminput-name="strokeStyle" value="#000000" /></label>
+                        </div>
+                        <div class="menu-form-control">
+                            <span>描边宽度: </span>
+                            <label><input type="number" name="rectangle-line-width" min="1" max="100" data-forminput-name="lineWidth" value="5" /></label>
                         </div>
                         <div class="menu-form-control">
                             <span>填充颜色: </span>
-                            <label><input type="color" name="rectangle-fill-style" data-forminput-name="fillStyle" value="#ff6600" checked="checked" /></label>
+                            <label><input type="color" name="rectangle-fill-style" data-forminput-name="fillStyle" value="#ff6600" /></label>
                         </div>
                     </div>
                 </div>
@@ -58,14 +66,21 @@
                     <div class="canvas-extend-menu">
                         <div class="menu-form-control">
                             <span>线条颜色: </span>
-                            <label><input type="color" name="line-stroke-style" data-forminput-name="strokeStyle" value="#000000" checked="checked" /></label>
+                            <label><input type="color" name="line-stroke-style" data-forminput-name="strokeStyle" value="#000000" /></label>
+                        </div>
+                        <div class="menu-form-control">
+                            <span>描边宽度: </span>
+                            <label><input type="number" name="line-line-width" min="1" max="100" data-forminput-name="lineWidth" value="5" /></label>
                         </div>
                         <div class="menu-form-control">
                             <span>开启平滑: </span>
-                            <label><input type="checkbox" name="line-smooth" data-forminput-name="smooth" value="smooth" disabled="disabled" /></label>
+                            <label><input type="checkbox" name="line-smooth" data-forminput-name="smooth" value="smooth" /></label>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div>
+                <div style="padding: 5px 0; color: #888888;">贴士: 在目标几何图形上右键可删除该图形</div>
             </div>               
         </div>
     </div>
