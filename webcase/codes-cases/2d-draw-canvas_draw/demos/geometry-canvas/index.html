@@ -13,25 +13,65 @@
     <div class="canvas-container">
         <div class="canvas-content-wrapper"><canvas></canvas></div>
         <div class="canvas-menu-wrapper">
-            <div class="menu-form-control">
-                <span>画布模式: </span>
-                <label><input type="radio" name="canvas-mode" data-forminput-name="canvasMode" value="drawing" /> 绘制</label>
-                <label><input type="radio" name="canvas-mode" data-forminput-name="canvasMode" value="select" /> 选择</label>
-            </div>
-            <div class="menu-form-control">
-                <span>几何图形: </span>
-                <select name="geometry-type" data-forminput-name="geometryType">
-                    <option value="-" disabled="disabled">-</option>
-                    <option value="circle">Circle</option>
-                    <option value="rectangle">Rectangle</option>
-                </select>  
-            </div>
+            <div class="canvas-base-menu">
+                <div class="menu-form-control">
+                    <span>画布模式: </span>
+                    <label><input type="radio" name="canvas-mode" data-forminput-name="canvasMode" value="drawing" checked="checked" /> 绘制</label>
+                    <label><input type="radio" name="canvas-mode" data-forminput-name="canvasMode" value="select" /> 选择</label>
+                </div>
+                <div class="menu-form-control">
+                    <span>几何图形: </span>
+                    <select name="geometry-type" data-forminput-name="geometryType">
+                        <option value="-" disabled="disabled">-</option>
+                        <option value="circle" selected="selected">Circle</option>
+                        <option value="rectangle">Rectangle</option>
+                        <option value="line">Line</option>
+                    </select>  
+                </div>
+            </div> 
+            <div>
+                <div data-tagitem-geometry-setting="circle" style="display: block;">
+                    <div class="canvas-extend-menu">
+                        <div class="menu-form-control">
+                            <span>描边颜色: </span>
+                            <label><input type="color" name="circle-stroke-style" data-forminput-name="strokeStyle" value="#000000" checked="checked" /></label>
+                        </div>
+                        <div class="menu-form-control">
+                            <span>填充颜色: </span>
+                            <label><input type="color" name="circle-fill-style" data-forminput-name="fillStyle" value="#ffff00" checked="checked" /></label>
+                        </div>
+                    </div>
+                </div>
+                <div data-tagitem-geometry-setting="rectangle" style="display: none;">
+                    <div class="canvas-extend-menu">
+                        <div class="menu-form-control">
+                            <span>描边颜色: </span>
+                            <label><input type="color" name="rectangle-stroke-style" data-forminput-name="strokeStyle" value="#000000" checked="checked" /></label>
+                        </div>
+                        <div class="menu-form-control">
+                            <span>填充颜色: </span>
+                            <label><input type="color" name="rectangle-fill-style" data-forminput-name="fillStyle" value="#ff6600" checked="checked" /></label>
+                        </div>
+                    </div>
+                </div>
+                <div data-tagitem-geometry-setting="line" style="display: none;">
+                    <div class="canvas-extend-menu">
+                        <div class="menu-form-control">
+                            <span>线条颜色: </span>
+                            <label><input type="color" name="line-stroke-style" data-forminput-name="strokeStyle" value="#000000" checked="checked" /></label>
+                        </div>
+                        <div class="menu-form-control">
+                            <span>开启平滑: </span>
+                            <label><input type="checkbox" name="line-smooth" data-forminput-name="smooth" value="smooth" disabled="disabled" /></label>
+                        </div>
+                    </div>
+                </div>
+            </div>               
         </div>
     </div>
     <div id="t_c_1"></div>
-    <div id="t_c_2"></div>
 </body>
-<script type="text/javascript" src="./js/FormControl.js"></script>
+<script type="text/javascript" src="./js/utils.js"></script>
 <script type="text/javascript" src="./js/Events.class.js"></script>
 <script type="text/javascript" src="./js/Geometry.class.js"></script>
 <script type="text/javascript" src="./js/Scene.class.js"></script>

@@ -1,27 +1,49 @@
 const DEFAULT_ELEMENT_CONFIG = {
-    fillStyle: 'rgba(0, 0, 0, 0)',
+    fillStyle: 'rgba(255, 255, 0, 1)',
     lineWidth: 1,
-    strokeStyle: 'rgba(0, 0, 0, 255)'
+    strokeStyle: 'rgba(0, 0, 0, 1)'
 }
 const DEFAULT_HIGHLIGHT_CONFIG = {
-    strokeStyle: 'rgba(255, 0, 0, 255)'
+    strokeStyle: 'rgba(255, 0, 0, 255)',
+    lineWidth: 5,
+    fillStyle: 'rgba(255, 255, 255, 1)',
 }
 
-class Element {
+class GeometryBase {
     constructor() {
         this.config = {
             normal: { ...DEFAULT_ELEMENT_CONFIG },
             hightlight: { ...DEFAULT_ELEMENT_CONFIG, ...DEFAULT_HIGHLIGHT_CONFIG }
         }
         this.isHighlight = false
+        this.index = -1
     }
 
     setPaintStyle(options) {
         this.config.normal = { ...this.config.normal, ...options }
     }
+
+    setIndex(index = -1) {
+        this.index = index
+    }
+
+    getOffset(x, y) {
+        return {
+            distX: x - this.x,
+            distY: y - this.y
+        }
+    }
+
+    setHighlight() {
+        this.isHighlight = true
+    }
+
+    cancelHighlight() {
+        this.isHighlight = false
+    }
 }
 
-class Circle extends Element {
+class Circle extends GeometryBase {
     constructor(x, y, r = 0) {
         super()
         this.x = x
@@ -33,11 +55,6 @@ class Circle extends Element {
         this.r = Math.sqrt(Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2))
     }
 
-    moveDist(x, y) {
-        this.x += x
-        this.y += y 
-    }
-
     moveTo(x, y) {
         this.x = x
         this.y = y
@@ -45,13 +62,6 @@ class Circle extends Element {
 
     choose(x, y) {
         return Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2) < Math.pow(this.r, 2)
-    }
-
-    getOffset(x, y) {
-        return {
-            distX: x - this.x,
-            distY: y - this.y
-        }
     }
 
     draw(ctx) {
@@ -63,17 +73,134 @@ class Circle extends Element {
         ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI)
         ctx.stroke()
         ctx.fill()
+    }    
+
+    validate() {
+        return this.r >= 5
+    }
+}
+
+class Rect extends GeometryBase {
+    constructor(x, y, w, h) {
+        super()
+        this.x = x
+        this.y = y
+        this.w = w
+        this.h = h
     }
 
-    setHighlight() {
-        this.isHighlight = true
+    setSize(x, y) {
+        this.w = x - this.x
+        this.h = y - this.y
+    }   
+
+    moveTo(x, y) {
+        this.x = x
+        this.y = y
     }
 
-    cancelHighlight() {
-        this.isHighlight = false
+    choose(x, y) {        
+        const absoluteMiddleX = this.x + this.w / 2
+        const absoluteMiddleY = this.y + this.h / 2
+        return (Math.abs(x - absoluteMiddleX) < Math.abs(this.w / 2)) && (Math.abs(y - absoluteMiddleY) < Math.abs(this.h / 2))
     }
 
-    validate(minRadius = 2) {
-        return this.r >= minRadius
+    draw(ctx) {
+        const brushConfig = this.isHighlight ? this.config.hightlight : this.config.normal
+        ctx.beginPath()
+        ctx.fillStyle = brushConfig.fillStyle
+        ctx.strokeStyle = brushConfig.strokeStyle
+        ctx.lineWidth = brushConfig.lineWidth
+        ctx.rect(this.x, this.y, this.w, this.h)       
+        ctx.stroke()
+        ctx.fill()
+    }    
+
+    validate() {
+        return Math.abs(this.w) >= 5 && Math.abs(this.h) >= 5
+    }
+}
+
+class Line extends GeometryBase {
+    constructor(x, y) {
+        super()
+        this.path = [{x, y}]
+        this.smooth = false
+    }
+
+    setSize(x, y) {
+        const lastPoint = this.path[this.path.length - 1]
+        if ((Math.abs(lastPoint.x - x) > 1) || (Math.abs(lastPoint.y - y) > 1)) {
+            this.path.push({ x, y })
+        }
+    }
+
+    setSmooth(smooth = false) {
+        this.smooth = smooth
+    }
+
+    moveTo(x, y) {
+        const startPoint = this.path[0]
+        const startPointOffsetX = x - startPoint.x
+        const startPointOffsetY = y - startPoint.y
+        for (let i = 0; i < this.path.length; i++) {
+            this.path[i].x += startPointOffsetX
+            this.path[i].y += startPointOffsetY
+        }
+    }
+
+    choose(x, y) {
+        const round = this.lineWidth > 10 ? Math.pow(this.lineWidth, 2) : 30
+        for (let i = 0; i < this.path.length; i++) {
+            if ((Math.pow(this.path[i].x - x, 2) + Math.pow(this.path[i].y - y, 2)) < round) {
+                return true
+            }
+        }
+        return false
+    }
+    
+    getOffset(x, y) {
+        return {
+            distX: x - this.path[0].x,
+            distY: y - this.path[0].y
+        }
+    }
+      
+    draw(ctx) {
+        const brushConfig = this.isHighlight ? this.config.hightlight : this.config.normal        
+        ctx.fillStyle = `rgba(0, 0, 0, 0)`
+        ctx.strokeStyle = brushConfig.strokeStyle
+        ctx.lineWidth = brushConfig.lineWidth
+        ctx.lineJoin = 'round' 
+        /* 
+            非平滑曲线
+         */
+        if (!this.smooth) {
+            ctx.beginPath()
+            for (let i = 0; i < this.path.length; i++) {
+                ctx.lineTo(this.path[i].x, this.path[i].y)
+            } 
+            ctx.stroke()
+            ctx.closePath()
+            return
+        }
+        if (this.path.length > 3) {
+            ctx.beginPath()
+            ctx.moveTo(this.path[0].x, this.path[0].y)
+            let i = 1
+            for (i = 1; i < this.path.length - 2; i ++) {
+                const xc = (this.path[i].x + this.path[i + 1].x) / 2
+                const yc = (this.path[i].y + this.path[i + 1].y) / 2
+                ctx.quadraticCurveTo(this.path[i].x, this.path[i].y, xc, yc)
+            }
+            ctx.quadraticCurveTo(this.path[i].x, this.path[i].y, this.path[i+1].x, this.path[i+1].y)
+            ctx.stroke()
+            ctx.closePath()
+            return
+        }
+    }
+      
+    validate() {
+        return this.path.length > 5
     }
 }

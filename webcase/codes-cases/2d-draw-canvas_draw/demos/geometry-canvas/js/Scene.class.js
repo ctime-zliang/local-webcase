@@ -3,7 +3,7 @@
     fillStyle: '#ffff00',
     lineWidth: 4
 }
-
+const DEFAULT_SMOOTH_CURVE = false
 const CANVAS_STATE = {
     DRAWING: 'DRAWING',
     SELECT: 'SELECT'
@@ -33,6 +33,7 @@ class Scene extends Events {
         this.toolState = this._initToolState()
         this.mouseState = this._initMouseState()
         this._setCanvasElementRect()
+        this._continuedRender()
     }
 
     /**
@@ -40,8 +41,25 @@ class Scene extends Events {
      * @return {undefined}
      */
     rerender() {
-        this._rerenderWith(this.canvasCtx)
         this._rerenderWith(this.offScreen.cacheCanvasCtx)
+        this._rerenderWith(this.canvasCtx)        
+    }
+
+    /**
+     * 获取工具设置
+     * @return {object}
+     */
+    getToolState() {
+        return JSON.parse(JSON.stringify(this.toolState))
+    }
+
+    /**
+     * 设置工具
+     * @param {object} paintBrushState 笔刷设置
+     * @return {object}
+     */
+     setToolState(toolState) {
+        this.toolState = JSON.parse(JSON.stringify(toolState))
     }
 
     /**
@@ -57,7 +75,7 @@ class Scene extends Events {
      * 设置画布模式为绘制模式
      * @return {undefined}
      */
-     toggleStateToDrawing() {
+    toggleStateToDrawing() {
         this.config.state = CANVAS_STATE.DRAWING
     }
 
@@ -65,19 +83,19 @@ class Scene extends Events {
      * 设置画布模式为选择模式
      * @return {undefined}
      */
-     toggleStateToSelect() {
+    toggleStateToSelect() {
         this.config.state = CANVAS_STATE.SELECT
     }
 
     /**
-     * 设置已存储的几何图形
+     * 预设几何图形
      * @param {array<geometryConstructor>} geometries 几何图形(类)列表
      * @return {undefined}
      */
     pushGeometries(geometries) {
         geometries.forEach(item => {
             this.geometries.push(item)
-        })        
+        })
     }
 
     _setCanvasElementRect(rect = {}) {
@@ -87,14 +105,13 @@ class Scene extends Events {
         this.canvasElement.height = canvasRect.height
         offScreen.cacheCanvasElement.width = canvasRect.width
         offScreen.cacheCanvasElement.height = canvasRect.height
-        offScreen.outCanvasFrontElement.width = canvasRect.width
-        offScreen.outCanvasFrontElement.height = canvasRect.height
     }
 
     _initToolState() {
-        const paintBrushState = { ...DEFAULT_BRUSH_CONFIG }
+        const paintBrushState = { ...DEFAULT_BRUSH_CONFIG }        
         return {
-            paintBrushState
+            paintBrushState,
+            smooth: DEFAULT_SMOOTH_CURVE
         }
     }
 
@@ -104,6 +121,7 @@ class Scene extends Events {
             y: -1,
             targetOffsetX: 0,
             targetOffsetY: 0,
+            selectedIndexs: [],
             down: false,
             target: null
         }
@@ -124,12 +142,10 @@ class Scene extends Events {
             outCanvasFrontElement: document.createElement('canvas')
         }
         offScreen.cacheCanvasCtx = offScreen.cacheCanvasElement.getContext('2d')
-        offScreen.outCanvasFrontCtx = offScreen.outCanvasFrontElement.getContext('2d')
         /*
             测试 
          */
-        document.getElementById(`t_c_1`).appendChild(offScreen.cacheCanvasElement)
-        document.getElementById(`t_c_2`).appendChild(offScreen.outCanvasFrontElement)
+        // document.getElementById(`t_c_1`).appendChild(offScreen.cacheCanvasElement)
         return offScreen
     }
 
@@ -141,10 +157,11 @@ class Scene extends Events {
             if (this.mouseState.target) {
                 this.mouseState.target.draw(this.canvasCtx)
             }
-            if (this.mouseState.down) {
-                this._continuedRender()
-                return
-            }
+            // if (this.mouseState.down) {
+            //     this._continuedRender()
+            //     return
+            // }
+            this._continuedRender()
         })
     }
 
@@ -156,10 +173,11 @@ class Scene extends Events {
         ctx.drawImage(sourceCanvas, x, y, this.config.canvasRect.width, this.config.canvasRect.height)
     }
 
-    _rerenderWith(ctx) {
+    _rerenderWith(ctx, geometries) {
+        const _geometries = geometries || this.geometries
         this._clearCanvas(ctx)
-        for (let i = 0; i < this.geometries.length; i++) {
-            this.geometries[i].draw(ctx)
+        for (let i = 0; i < _geometries.length; i++) {
+            _geometries[i].draw(ctx)
         }
     }
 
@@ -170,6 +188,5 @@ class Scene extends Events {
 
     _removeGeometryItem(index) {
         this.geometries.splice(index, 1)
-        this._reset()
     }
 }

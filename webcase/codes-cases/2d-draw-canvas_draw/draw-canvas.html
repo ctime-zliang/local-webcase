@@ -46,6 +46,7 @@
         this.ctx = this.canvas.getContext('2d')
         // 离屏canvas
         this.outCanvas = document.createElement('canvas')
+        document.body.appendChild(this.outCanvas)
         this.outCanvas.width = this.width
         this.outCanvas.height = this.height
         this.outCtx = this.outCanvas.getContext('2d')
@@ -53,6 +54,7 @@
         this.outCanvasFront.width = this.width
         this.outCanvasFront.height = this.height
         this.outCtxFront = this.outCanvasFront.getContext('2d')
+        document.body.appendChild(this.outCanvasFront)
         // 画布触笔状态
         this.styles = {
           strokeStyle: '#000',
