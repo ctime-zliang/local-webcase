@@ -23,6 +23,8 @@ class GeometryBase {
         this.config.normal = { ...this.config.normal, ...options }
     }
 
+    setAssistSetting() { /* ... */ }
+
     setIndex(index = -1) {
         this.index = index
     }
@@ -51,7 +53,7 @@ class Circle extends GeometryBase {
         this.r = r
     }
 
-    setSize(x, y) {
+    setShapeParameter(x, y) {
         this.r = Math.sqrt(Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2))
     }
 
@@ -89,7 +91,7 @@ class Rect extends GeometryBase {
         this.h = h
     }
 
-    setSize(x, y) {
+    setShapeParameter(x, y) {
         this.w = x - this.x
         this.h = y - this.y
     }   
@@ -126,17 +128,17 @@ class Line extends GeometryBase {
         super()
         this.path = [{x, y}]
         this.smooth = false
-        this.samplingIntervalNumber = 5
+        this.samplingIntervalNumber = 1
     }
 
-    setSize(x, y) {
+    setShapeParameter(x, y) {
         const lastPoint = this.path[this.path.length - 1]
         if ((Math.abs(lastPoint.x - x) > 1) || (Math.abs(lastPoint.y - y) > 1)) {
             this.path.push({ x, y })
         }
     }
 
-    setSmooth(smooth = false) {
+    setAssistSetting({ smooth }) {
         this.smooth = smooth
     }
 

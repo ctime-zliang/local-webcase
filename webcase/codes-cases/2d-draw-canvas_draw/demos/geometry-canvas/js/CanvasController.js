@@ -28,7 +28,7 @@ class CanvasContoller extends Scene {
                 }
             }
             if (selectedIndex >= 0) {
-                this._removeGeometryItem(selectedIndex)
+                this.geometries.splice(selectedIndex, 1)
                 this.emit(EVENT_NS.DELETE_ONE, { action: EVENT_NS.DELETE_ONE })
             }
             this.mouseState.selectedIndexs = []            
@@ -52,11 +52,9 @@ class CanvasContoller extends Scene {
                     if (this.geometryConstructor) {
                         geometryTarget = new this.geometryConstructor(this.mouseState.x, this.mouseState.y)
                         geometryTarget.setPaintStyle(this.toolState.paintBrushState)
-                        if (geometryTarget.setSmooth) {
-                            geometryTarget.setSmooth(this.toolState.smooth)
-                        }
-                    }
-                    this.mouseState.target = geometryTarget
+                        geometryTarget.setAssistSetting({ smoooth: this.toolState.smooth })
+                    }  
+                    this.mouseState.target = geometryTarget                  
                     if (this.mouseState.selectedIndexs.length) {
                         /* 
                             -. 清空缓存画布
@@ -70,6 +68,7 @@ class CanvasContoller extends Scene {
                         }
                         this.mouseState.selectedIndexs = []
                     }
+                    this.config.dirty = true
                     if (this.config.state === CANVAS_STATE.DRAWING) {
                         this.emit(EVENT_NS.DRAW_START, { action: EVENT_NS.DRAW_START })
                     }
@@ -109,6 +108,7 @@ class CanvasContoller extends Scene {
                         }
                         this.geometries[i].draw(this.offScreen.cacheCanvasCtx)
                     }  
+                    this.config.dirty = true
                     if (!this.mouseState.target) {
                         this.emit(EVENT_NS.CANCEL_SELECT, { action: EVENT_NS.CANCEL_SELECT })
                     }
@@ -126,7 +126,7 @@ class CanvasContoller extends Scene {
             if (this.mouseState.down && this.mouseState.target) {
                 /* 绘制模式 */
                 if (this.config.state === CANVAS_STATE.DRAWING) {
-                    this.mouseState.target.setSize(this.mouseState.x, this.mouseState.y)
+                    this.mouseState.target.setShapeParameter(this.mouseState.x, this.mouseState.y)
                 }
                 /* 选择模式 */
                 if (this.config.state === CANVAS_STATE.SELECT) {
@@ -152,7 +152,7 @@ class CanvasContoller extends Scene {
                     }
                 }
                 this.mouseState.down = false
-                this.mouseState.target = null
+                this.mouseState.target = null                
                 /* 
                     -. 清空缓存画布
                     -. 将所有图形重新绘制到缓存画布
@@ -162,6 +162,7 @@ class CanvasContoller extends Scene {
                 for (let i = 0; i < this.geometries.length; i++) {
                     this.geometries[i].draw(this.offScreen.cacheCanvasCtx)
                 }
+                this.config.dirty = false
                 if (this.config.state === CANVAS_STATE.DRAWING) {
                     this.emit(EVENT_NS.DRAW_FINISHED, { action: EVENT_NS.DRAW_FINISHED })
                 }

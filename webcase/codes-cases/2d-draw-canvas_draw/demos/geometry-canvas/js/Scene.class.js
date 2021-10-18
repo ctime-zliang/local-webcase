@@ -30,9 +30,11 @@ class Scene extends Events {
         this.offScreen = this._createOffScreenCanvas()
         this.config.state = CANVAS_STATE.DRAWING
         this.config.canvasRect = this._createCanvasRect()
+        this.config.dirty = false
         this.toolState = this._initToolState()
         this.mouseState = this._initMouseState()
         this._setCanvasElementRect()
+        /* 启动持续监测渲染 */
         this._continuedRender()
     }
 
@@ -101,6 +103,7 @@ class Scene extends Events {
     _setCanvasElementRect(rect = {}) {
         const canvasRect = { ...this.config.canvasRect, ...rect }
         const offScreen = this.offScreen
+        this.canvasElement.tabIndex = 0
         this.canvasElement.width = canvasRect.width
         this.canvasElement.height = canvasRect.height
         offScreen.cacheCanvasElement.width = canvasRect.width
@@ -151,16 +154,16 @@ class Scene extends Events {
 
     _continuedRender() {
         window.requestAnimationFrame(() => { 
+            if (!this.config.dirty) {
+                this._continuedRender()
+                return
+            }
             this._clearCanvas(this.canvasCtx) 
             /* 读取缓存画布图像并绘制输出 */
             this._paintWith(this.canvasCtx, this.offScreen.cacheCanvasElement)
             if (this.mouseState.target) {
                 this.mouseState.target.draw(this.canvasCtx)
             }
-            // if (this.mouseState.down) {
-            //     this._continuedRender()
-            //     return
-            // }
             this._continuedRender()
         })
     }
@@ -179,14 +182,5 @@ class Scene extends Events {
         for (let i = 0; i < _geometries.length; i++) {
             _geometries[i].draw(ctx)
         }
-    }
-
-    _appendGeometryItem(geometry) {
-        this.geometries.push(geometry)
-        geometry.draw(this.canvasCtx)
-    }
-
-    _removeGeometryItem(index) {
-        this.geometries.splice(index, 1)
     }
 }
