@@ -20,6 +20,7 @@ class Scene extends Events {
         this.config = {}
         this.toolState = {}
         this.mouseState = {}
+        this.keyboardState = {}
         this.offScreen = {}
         this.canvasElement = canvasElement
         this.canvasCtx = this.canvasElement.getContext('2d')
@@ -33,6 +34,7 @@ class Scene extends Events {
         this.config.dirty = false
         this.toolState = this._initToolState()
         this.mouseState = this._initMouseState()
+        this.keyboardState = this._initKeyboardState()
         this._setCanvasElementRect()
         /* 启动持续监测渲染 */
         this._continuedRender()
@@ -126,7 +128,14 @@ class Scene extends Events {
             targetOffsetY: 0,
             selectedIndexs: [],
             down: false,
-            target: null
+            target: null,
+            isMove: false
+        }
+    }
+
+    _initKeyboardState() {
+        return {
+            keys: []
         }
     }
 
@@ -148,7 +157,7 @@ class Scene extends Events {
         /*
             测试 
          */
-        // document.getElementById(`t_c_1`).appendChild(offScreen.cacheCanvasElement)
+        document.getElementById(`t_c_1`).appendChild(offScreen.cacheCanvasElement)
         return offScreen
     }
 

@@ -62,6 +62,11 @@ class Circle extends GeometryBase {
         this.y = y
     }
 
+    moveDist(distX, distY) {
+        this.x += distX
+        this.y += distY
+    }
+
     choose(x, y) {
         return Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2) < Math.pow(this.r, 2)
     }
