@@ -217,11 +217,13 @@ class CanvasContoller extends Scene {
             }
             /* 删除图形对象 */
             if (evte.keyCode === KEYCODE_DELETE && this.mouseState.selectedIndexs.length) {
+                const geometries = []
                 for (let i = 0; i < this.geometries.length; i++) {
-                    if (this.mouseState.selectedIndexs.includes(i)) {
-                        this.geometries.splice(i, 1)
+                    if (!this.mouseState.selectedIndexs.includes(i)) {
+                        geometries.push(this.geometries[i])
                     }
                 }
+                this.geometries = geometries
                 this._clearCanvas(this.offScreen.cacheCanvasCtx)
                 for (let i = 0; i < this.geometries.length; i++) {
                     this.geometries[i].draw(this.offScreen.cacheCanvasCtx)
