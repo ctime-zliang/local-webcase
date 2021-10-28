@@ -9,34 +9,35 @@ const CANVAS_STATE = {
     SELECT: 'SELECT'
 }
 
-class Scene extends Events {
+class Scene {
     constructor(canvasElement) {
-        super()
         if (!canvasElement || canvasElement.nodeName.toUpperCase() !== 'CANVAS') {
             return
         }
         this.geometryConstructor = null
-        this.geometries = []
+        this.geometries = []        
         this.config = {}
+        this.toolStore = {}
         this.toolState = {}
         this.mouseState = {}
         this.keyboardState = {}
         this.offScreen = {}
         this.canvasElement = canvasElement
         this.canvasCtx = this.canvasElement.getContext('2d')
-        this._initScene()
     }
 
     _initScene() {
+        this._bindWindowResizeEvent()
         this.offScreen = this._createOffScreenCanvas()
         this.config.state = CANVAS_STATE.DRAWING
         this.config.canvasRect = this._createCanvasRect()
         this.config.dirty = false
+        this.config.reDrawByResizeTimer = null
         this.toolState = this._initToolState()
+        this.toolStore = this._initToolStore()
         this.mouseState = this._initMouseState()
         this.keyboardState = this._initKeyboardState()
         this._setCanvasElementRect()
-        /* 启动持续监测渲染 */
         this._continuedRender()
     }
 
@@ -67,8 +68,8 @@ class Scene extends Events {
     }
 
     /**
-     * 设置当前需要绘制的几何图形
-     * @param {constructor} geometryConstructor 几何图形(类)
+     * 设置当前需要绘制的图形
+     * @param {constructor} geometryConstructor 图形(类)
      * @return {undefined}
      */
     setGeometryConstructor(geometryConstructor) {
@@ -92,8 +93,8 @@ class Scene extends Events {
     }
 
     /**
-     * 预设几何图形
-     * @param {array<geometryConstructor>} geometries 几何图形(类)列表
+     * 预设图形
+     * @param {array<geometryConstructor>} geometries 图形(类)列表
      * @return {undefined}
      */
     pushGeometries(geometries) {
@@ -113,10 +114,17 @@ class Scene extends Events {
     }
 
     _initToolState() {
-        const paintBrushState = { ...DEFAULT_BRUSH_CONFIG }        
+        const paintBrushState = { ...DEFAULT_BRUSH_CONFIG }
         return {
             paintBrushState,
             smooth: DEFAULT_SMOOTH_CURVE
+        }
+    }
+
+    _initToolStore() {
+        const boxSelector = new BoxSelectTool(0, 0, 0, 0)
+        return {
+            boxSelector
         }
     }
 
@@ -128,7 +136,8 @@ class Scene extends Events {
             targetOffsetY: 0,
             selectedIndexs: [],
             down: false,
-            target: null,
+            pointTarget: null,
+            toolTarget: null,
             isMove: false
         }
     }
@@ -170,8 +179,18 @@ class Scene extends Events {
             this._clearCanvas(this.canvasCtx) 
             /* 读取缓存画布图像并绘制输出 */
             this._paintWith(this.canvasCtx, this.offScreen.cacheCanvasElement)
-            if (this.mouseState.target) {
-                this.mouseState.target.draw(this.canvasCtx)
+            if (this.mouseState.toolTarget) {
+                this.mouseState.toolTarget.draw(this.canvasCtx)
+            }
+            if (this.mouseState.pointTarget) {
+                this.mouseState.pointTarget.draw(this.canvasCtx)
+            }
+            for (let i = this.mouseState.selectedIndexs.length - 1; i >= 0; i--) {
+                const geometry = this.geometries[this.mouseState.selectedIndexs[i]]
+                // if (geometry === this.mouseState.pointTarget) {
+                //     continue
+                // }
+                geometry.draw(this.canvasCtx)
             }
             this._continuedRender()
         })
@@ -191,5 +210,36 @@ class Scene extends Events {
         for (let i = 0; i < _geometries.length; i++) {
             _geometries[i].draw(ctx)
         }
+    }
+
+    _findClickedTarget(x, y) {
+        let geometryTarget = null
+        let geometryTargetIndex = -1
+        for (let i = this.geometries.length - 1; i >= 0; i--) {
+            if (this.geometries[i].choose(x, y) && !geometryTarget) {
+                geometryTarget = this.geometries[i]
+                geometryTargetIndex = i
+                break
+            }  
+        }
+        return {
+            geometryTarget,
+            geometryTargetIndex
+        }
+    }
+
+    _bindWindowResizeEvent() {
+        window.addEventListener('resize', (evte) => {
+            window.clearTimeout(this.config.reDrawByResizeTimer)          
+            this.config.reDrawByResizeTimer = window.setTimeout(() => {
+                this.config.canvasRect = this._createCanvasRect()
+                this._setCanvasElementRect()
+                /* 重绘输出画布 */
+                this._clearCanvas(this.canvasCtx)
+                for (let i = this.geometries.length - 1; i >= 0; i--) {
+                    this.geometries[i].draw(this.canvasCtx)
+                }
+            }, 300)            
+        })
     }
 }

@@ -15,7 +15,8 @@ class GeometryBase {
             normal: { ...DEFAULT_ELEMENT_CONFIG },
             hightlight: { ...DEFAULT_ELEMENT_CONFIG, ...DEFAULT_HIGHLIGHT_CONFIG }
         }
-        this.isHighlight = false
+        this.highlight = false
+        this.checked = false
         this.index = -1
     }
 
@@ -25,8 +26,26 @@ class GeometryBase {
 
     setAssistSetting() { /* ... */ }
 
+    moveDist(distX, distY) { /* ... */ }
+
     setIndex(index = -1) {
         this.index = index
+    }
+
+    getIndex() {
+        return this.index
+    }
+
+    setChecked() {
+        this.checked = true
+    }
+
+    cancelChecked() {
+        this.checked = false
+    }
+
+    isChecked() {
+        return this.checked
     }
 
     getOffset(x, y) {
@@ -37,11 +56,15 @@ class GeometryBase {
     }
 
     setHighlight() {
-        this.isHighlight = true
+        this.highlight = true
     }
 
     cancelHighlight() {
-        this.isHighlight = false
+        this.highlight = false
+    }
+
+    isHighlight() {
+        return this.highlight
     }
 }
 
@@ -57,11 +80,6 @@ class Circle extends GeometryBase {
         this.r = Math.sqrt(Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2))
     }
 
-    moveTo(x, y) {
-        this.x = x
-        this.y = y
-    }
-
     moveDist(distX, distY) {
         this.x += distX
         this.y += distY
@@ -72,7 +90,7 @@ class Circle extends GeometryBase {
     }
 
     draw(ctx) {
-        const brushConfig = this.isHighlight ? this.config.hightlight : this.config.normal
+        const brushConfig = this.highlight ? this.config.hightlight : this.config.normal
         ctx.beginPath()
         ctx.fillStyle = brushConfig.fillStyle
         ctx.strokeStyle = brushConfig.strokeStyle
@@ -80,6 +98,7 @@ class Circle extends GeometryBase {
         ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI)
         ctx.stroke()
         ctx.fill()
+        ctx.closePath()
     }    
 
     validate() {
@@ -99,11 +118,11 @@ class Rect extends GeometryBase {
     setShapeParameter(x, y) {
         this.w = x - this.x
         this.h = y - this.y
-    }   
+    }
 
-    moveTo(x, y) {
-        this.x = x
-        this.y = y
+    moveDist(distX, distY) {
+        this.x += distX
+        this.y += distY
     }
 
     choose(x, y) {        
@@ -113,7 +132,7 @@ class Rect extends GeometryBase {
     }
 
     draw(ctx) {
-        const brushConfig = this.isHighlight ? this.config.hightlight : this.config.normal
+        const brushConfig = this.highlight ? this.config.hightlight : this.config.normal
         ctx.beginPath()
         ctx.fillStyle = brushConfig.fillStyle
         ctx.strokeStyle = brushConfig.strokeStyle
@@ -121,6 +140,7 @@ class Rect extends GeometryBase {
         ctx.rect(this.x, this.y, this.w, this.h)       
         ctx.stroke()
         ctx.fill()
+        ctx.closePath()
     }    
 
     validate() {
@@ -157,6 +177,13 @@ class Line extends GeometryBase {
         }
     }
 
+    moveDist(distX, distY) {
+        for (let i = 0; i < this.path.length; i++) {
+            this.path[i].x += distX
+            this.path[i].y += distY
+        }
+    }
+
     choose(x, y) {
         const round = this.lineWidth > 10 ? Math.pow(this.lineWidth, 2) : 30
         for (let i = 0; i < this.path.length; i++) {
@@ -175,7 +202,7 @@ class Line extends GeometryBase {
     }
       
     draw(ctx) {
-        const brushConfig = this.isHighlight ? this.config.hightlight : this.config.normal        
+        const brushConfig = this.highlight ? this.config.hightlight : this.config.normal        
         ctx.fillStyle = `rgba(0, 0, 0, 0)`
         ctx.strokeStyle = brushConfig.strokeStyle
         ctx.lineWidth = brushConfig.lineWidth

@@ -16,8 +16,8 @@
             <div class="canvas-base-menu">
                 <div class="menu-form-control">
                     <span>画布模式: </span>
-                    <label><input class="transform" type="radio" name="canvas-mode" data-forminput-name="canvasMode" value="drawing" checked="checked" /> 绘制</label>
-                    <label><input class="transform" type="radio" name="canvas-mode" data-forminput-name="canvasMode" value="select" /> 选择</label>
+                    <label><input class="transform" type="radio" name="canvas-mode" data-forminput-name="canvasMode" value="drawing" /> 绘制</label>
+                    <label><input class="transform" type="radio" name="canvas-mode" data-forminput-name="canvasMode" value="select" checked="checked" /> 选择</label>
                 </div>
                 <div class="menu-form-control">
                     <span>几何图形: </span>
@@ -81,10 +81,11 @@
             </div>            
         </div>
     </div>
-    <div id="t_c_1"></div>
+    <div id="t_c_1" style="position: absolute; top: 0; right: 0; transform: scale(0.30); transform-origin: right top; background-color: white; border: 1px solid #666666;"></div>
 </body>
 <script type="text/javascript" src="./js/utils.js"></script>
 <script type="text/javascript" src="./js/Events.class.js"></script>
+<script type="text/javascript" src="./js/Tool.class.js"></script>
 <script type="text/javascript" src="./js/Geometry.class.js"></script>
 <script type="text/javascript" src="./js/Scene.class.js"></script>
 <script type="text/javascript" src="./js/CanvasController.js"></script>

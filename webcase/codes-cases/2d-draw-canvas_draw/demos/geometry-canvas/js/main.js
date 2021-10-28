@@ -133,8 +133,10 @@ function modifyCanvasControl(canvasHandler, key, value, formControl) {
 window.onload = function() {
     function createGeometries() {
         const arr = []
-        for (let i = 0; i < 1000 * 50; i++) {
-            arr.push(new Circle(utils.getRandom(50, 1100), getRandom(50, 500), getRandom(50, 100)))
+        const len = 5
+        for (let i = 0; i < len; i++) {
+            // arr.push(new Circle(utils.getRandom(100, 1000), utils.getRandom(100, 400), utils.getRandom(50, 80)))
+            arr.push(new Circle((i + 1) * 120, 100, (i + 1) + 50))
         }
         return arr
     }
@@ -143,42 +145,28 @@ window.onload = function() {
 
 
 
-    const ccer = new CanvasContoller(document.querySelector('canvas'))
-    ccer.setGeometryConstructor(Circle)
-    ccer.toggleStateToDrawing()
-    ccer.on(EVENT_NS.DRAW_START, (res) => {
-        // console.log(res, ccer)
-    })
-    ccer.on(EVENT_NS.DRAW_FINISHED, (res) => {
-        // console.log(res, ccer)
-    })
-    ccer.on(EVENT_NS.SELECT_ONE, (res) => {
-        console.log(res, ccer)
-    })
-    ccer.on(EVENT_NS.CANCEL_SELECT, (res) => {
-        console.log(res, ccer)
-    })
-    ccer.on(EVENT_NS.DELETE_ONE, (res) => {
-        console.log(res, ccer)
-    })
-    console.log(ccer)
+    const canvasContoller = new CanvasContoller(document.querySelector('canvas'))
+    canvasContoller.init()
+    canvasContoller.setGeometryConstructor(Circle)
+    canvasContoller.toggleStateToSelect()
+    console.log(canvasContoller)
 
     
 
 
 
     window.setTimeout(() => {
-        // ccer.pushGeometries(createGeometries())
-        // console.time('CanvasRerender')
-        // ccer.rerender()
-        // console.timeEnd('CanvasRerender')
+        canvasContoller.pushGeometries(createGeometries())
+        console.time('CanvasRerender')
+        canvasContoller.rerender()
+        console.timeEnd('CanvasRerender')
     })
 
 
 
     formControl.container = document.querySelector('.canvas-menu-wrapper')
     formControl.changeCallback = (key, value) => {
-        modifyCanvasControl(ccer, key, value, formControl)
+        modifyCanvasControl(canvasContoller, key, value, formControl)
     }
     formControl.init()
 }
