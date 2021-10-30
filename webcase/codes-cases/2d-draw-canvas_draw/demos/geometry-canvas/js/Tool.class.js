@@ -3,8 +3,7 @@ const drawDashLine = (ctx, [x1, y1], [x2, y2], step = 5) => {
     const y = y2 - y1
     const count = Math.floor(Math.sqrt(x * x + y * y) / step)
     const xv = x / count
-    const yv = y / count
-    ctx.beginPath()
+    const yv = y / count    
     for (let i = 0; i < count; i ++) {
         if (i % 2 === 0) {
             ctx.moveTo(x1, y1)
@@ -22,7 +21,6 @@ class BoxSelectTool {
         this.brushConfig = {
             fillStyle: 'rgba(255, 255, 255, 0)',
             lineWidth: 1,
-            linDash: [3],
             strokeStyle: 'rgba(0, 0, 0, 1)'
         }
         this.x = x
@@ -53,7 +51,6 @@ class BoxSelectTool {
         ctx.fillStyle = this.brushConfig.fillStyle
         ctx.strokeStyle = this.brushConfig.strokeStyle
         ctx.lineWidth = this.brushConfig.lineWidth
-        ctx.linDash = this.brushConfig.linDash
         this.drawDashRect(ctx, this.x, this.y, this.w, this.h)
         ctx.closePath()
     }

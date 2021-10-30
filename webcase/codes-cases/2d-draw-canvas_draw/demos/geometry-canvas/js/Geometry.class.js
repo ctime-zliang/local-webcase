@@ -125,7 +125,7 @@ class Rect extends GeometryBase {
         this.y += distY
     }
 
-    choose(x, y) {        
+    choose(x, y) {
         const absoluteMiddleX = this.x + this.w / 2
         const absoluteMiddleY = this.y + this.h / 2
         return (Math.abs(x - absoluteMiddleX) < Math.abs(this.w / 2)) && (Math.abs(y - absoluteMiddleY) < Math.abs(this.h / 2))
@@ -137,11 +137,11 @@ class Rect extends GeometryBase {
         ctx.fillStyle = brushConfig.fillStyle
         ctx.strokeStyle = brushConfig.strokeStyle
         ctx.lineWidth = brushConfig.lineWidth
-        ctx.rect(this.x, this.y, this.w, this.h)       
+        ctx.rect(this.x, this.y, this.w, this.h)
         ctx.stroke()
         ctx.fill()
         ctx.closePath()
-    }    
+    }
 
     validate() {
         return Math.abs(this.w) >= 5 && Math.abs(this.h) >= 5
@@ -153,7 +153,7 @@ class Line extends GeometryBase {
         super()
         this.path = [{x, y}]
         this.smooth = false
-        this.samplingIntervalNumber = 1
+        this.samplingIntervalNumber = 2
     }
 
     setShapeParameter(x, y) {
@@ -202,7 +202,7 @@ class Line extends GeometryBase {
     }
       
     draw(ctx) {
-        const brushConfig = this.highlight ? this.config.hightlight : this.config.normal        
+        const brushConfig = this.highlight ? this.config.hightlight : this.config.normal
         ctx.fillStyle = `rgba(0, 0, 0, 0)`
         ctx.strokeStyle = brushConfig.strokeStyle
         ctx.lineWidth = brushConfig.lineWidth
@@ -218,7 +218,7 @@ class Line extends GeometryBase {
             ctx.stroke()
             ctx.closePath()
             return
-        }        
+        }
         if (this.path.length > 3) {
             ctx.beginPath()
             ctx.moveTo(this.path[0].x, this.path[0].y)
@@ -229,7 +229,7 @@ class Line extends GeometryBase {
                     const xc = (this.path[i].x + this.path[i + 1].x) / 2
                     const yc = (this.path[i].y + this.path[i + 1].y) / 2
                     ctx.quadraticCurveTo(this.path[i].x, this.path[i].y, xc, yc)
-                }               
+                }
             }
             if (i >= this.path.length - 2) {
                 i = this.path.length - 2

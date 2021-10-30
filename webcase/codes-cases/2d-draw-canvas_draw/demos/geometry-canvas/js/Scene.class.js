@@ -17,7 +17,7 @@ class Scene {
         this.geometryConstructor = null
         this.geometries = []        
         this.config = {}
-        this.toolStore = {}
+        this.tools = {}
         this.toolState = {}
         this.mouseState = {}
         this.keyboardState = {}
@@ -34,7 +34,7 @@ class Scene {
         this.config.dirty = false
         this.config.reDrawByResizeTimer = null
         this.toolState = this._initToolState()
-        this.toolStore = this._initToolStore()
+        this.tools = this._initTools()
         this.mouseState = this._initMouseState()
         this.keyboardState = this._initKeyboardState()
         this._setCanvasElementRect()
@@ -121,7 +121,7 @@ class Scene {
         }
     }
 
-    _initToolStore() {
+    _initTools() {
         const boxSelector = new BoxSelectTool(0, 0, 0, 0)
         return {
             boxSelector
@@ -220,7 +220,7 @@ class Scene {
                 geometryTarget = this.geometries[i]
                 geometryTargetIndex = i
                 break
-            }  
+            }
         }
         return {
             geometryTarget,
@@ -239,7 +239,7 @@ class Scene {
                 for (let i = this.geometries.length - 1; i >= 0; i--) {
                     this.geometries[i].draw(this.canvasCtx)
                 }
-            }, 300)            
+            }, 300)
         })
     }
 }

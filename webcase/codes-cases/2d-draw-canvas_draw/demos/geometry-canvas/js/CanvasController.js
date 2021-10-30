@@ -4,7 +4,7 @@ const KEYCODE_CTRL = 17
 class CanvasContoller extends Scene {
     constructor(canvasElement) {
         super(canvasElement)
-        this.variablesPool = { /* ... */ }        
+        this.variablesPool = { /* ... */ }
         this.eventsHandler = new Events()
     }
 
@@ -29,7 +29,7 @@ class CanvasContoller extends Scene {
 
     _bindRightClickEvent() {
         this.canvasElement.addEventListener('contextmenu', (evte) => {
-            // evte.preventDefault()      
+            // evte.preventDefault()
         })
     }    
 
@@ -38,7 +38,7 @@ class CanvasContoller extends Scene {
             evte.stopPropagation()
             this.mouseState.down = true
             this.mouseState.x = evte.offsetX
-            this.mouseState.y = evte.offsetY            
+            this.mouseState.y = evte.offsetY
             Promise.resolve().then(() => {
                 if (evte.button !== 0) {
                     return
@@ -50,7 +50,7 @@ class CanvasContoller extends Scene {
                     if (this.geometryConstructor) {
                         this.variablesPool.geometryTarget = new this.geometryConstructor(this.mouseState.x, this.mouseState.y)
                         this.variablesPool.geometryTarget.setPaintStyle(this.toolState.paintBrushState)
-                        this.variablesPool.geometryTarget.setAssistSetting({ smoooth: this.toolState.smooth })                        
+                        this.variablesPool.geometryTarget.setAssistSetting({ smooth: this.toolState.smooth })
                     }
                     /* 将新创建的实例标注为鼠标动态跟踪对象  */  
                     this.mouseState.pointTarget = this.variablesPool.geometryTarget
@@ -68,7 +68,6 @@ class CanvasContoller extends Scene {
                 }
                 /* 选择模式 */
                 if (this.config.state === CANVAS_STATE.SELECT) {
-                    console.time(`findTargets`)
                     this.variablesPool.targetResult = this._findClickedTarget(this.mouseState.x, this.mouseState.y)
                     if (!this.variablesPool.targetResult.geometryTarget) {
                         this.mouseState.selectedIndexs = []
@@ -76,12 +75,12 @@ class CanvasContoller extends Scene {
                             this.geometries[i].cancelChecked()
                             this.geometries[i].cancelHighlight()
                         }
-                        this.mouseState.toolTarget = this.toolStore.boxSelector
+                        this.mouseState.toolTarget = this.tools.boxSelector
                         this.mouseState.toolTarget.setStartCoordinate(this.mouseState.x, this.mouseState.y)
                     } else {
                         const inIndex = this.mouseState.selectedIndexs.indexOf(this.variablesPool.targetResult.geometryTargetIndex)
                         if (this.mouseState.selectedIndexs.length >= 2 && inIndex >= 0) {
-                            if (this._isOnlyCtrlKeydown()) {                            
+                            if (this._isOnlyCtrlKeydown()) {
                                 if (inIndex >= 0) {
                                     this.mouseState.selectedIndexs.splice(inIndex, 1)
                                     this.variablesPool.targetResult.geometryTarget.cancelChecked()
@@ -93,7 +92,7 @@ class CanvasContoller extends Scene {
                                 }
                             }
                         } else {
-                            if (this._isOnlyCtrlKeydown()) {                            
+                            if (this._isOnlyCtrlKeydown()) {
                                 if (inIndex >= 0) {
                                     this.mouseState.selectedIndexs.splice(inIndex, 1)
                                     this.variablesPool.targetResult.geometryTarget.cancelChecked()
@@ -115,11 +114,9 @@ class CanvasContoller extends Scene {
                                 this.variablesPool.targetResult.geometryTarget.setChecked()
                                 this.variablesPool.targetResult.geometryTarget.setHighlight()
                             }
-                        }                        
+                        }
                     }
-                    console.timeEnd(`findTargets`)
                     /* 重绘离屏画布 */
-                    console.time(`rerenderCacheCanvas`)
                     this._clearCanvas(this.offScreen.cacheCanvasCtx)
                     for (let i = 0; i < this.geometries.length; i++) {
                         if (this.mouseState.selectedIndexs.includes(i)) {
@@ -127,7 +124,6 @@ class CanvasContoller extends Scene {
                         }
                         this.geometries[i].draw(this.offScreen.cacheCanvasCtx)
                     }
-                    console.timeEnd(`rerenderCacheCanvas`)
                     /* ... */
                     this.config.dirty = true
                 }
@@ -136,13 +132,21 @@ class CanvasContoller extends Scene {
     }
 
     _bindMousemoveEvent() {
-        document.addEventListener('mousemove', (evte) => {            
+        document.addEventListener('mousemove', (evte) => {
             evte.stopPropagation()
-            this.variablesPool.moveDistX = evte.offsetX - this.mouseState.x
-            this.variablesPool.moveDistY = evte.offsetY - this.mouseState.y
-            if (!this.mouseState.down) {
+            if (!this.mouseState.down || this._isOnlyCtrlKeydown()) {
                 return
             }
+            if (
+                evte.clientX - this.config.canvasRect.left <= 0 
+                || evte.clientY - this.config.canvasRect.top <= 0
+                || evte.clientX >= this.config.canvasRect.right
+                || evte.clientY >= this.config.canvasRect.bottom
+            ) {
+                return
+            }
+            this.variablesPool.moveDistX = evte.offsetX - this.mouseState.x
+            this.variablesPool.moveDistY = evte.offsetY - this.mouseState.y
             this.mouseState.x = evte.offsetX
             this.mouseState.y = evte.offsetY
             this.mouseState.isMove = true
@@ -159,7 +163,7 @@ class CanvasContoller extends Scene {
                     const geometry = this.geometries[this.mouseState.selectedIndexs[i]]
                     geometry.moveDist(this.variablesPool.moveDistX, this.variablesPool.moveDistY)
                 }
-            }           
+            }
         })
     }
 
@@ -197,8 +201,8 @@ class CanvasContoller extends Scene {
                     }
                     this.mouseState.pointTarget = null 
                     /* ... */
-                    this.config.dirty = false                    
-                }                
+                    this.config.dirty = false
+                }
             }
         })
     }
@@ -229,7 +233,7 @@ class CanvasContoller extends Scene {
                     this.geometries[i].draw(this.offScreen.cacheCanvasCtx)
                 }
                 this.config.dirty = true
-                this.mouseState.selectedIndexs = []       
+                this.mouseState.selectedIndexs = []
             }        
         })
     }
@@ -242,7 +246,7 @@ class CanvasContoller extends Scene {
             }
             if (!this.mouseState.down && !this.keyboardState.keys.length) {
                 this.config.dirty = false
-            }            
+            }
         })
     }
 }

@@ -12,16 +12,39 @@
 <body>
     <div class="canvas-container">
         <div class="canvas-content-wrapper"><canvas></canvas></div>
-        <div class="canvas-menu-wrapper">
+        <form class="canvas-menu-wrapper">
             <div class="canvas-base-menu">
                 <div class="menu-form-control">
                     <span>画布模式: </span>
-                    <label><input class="transform" type="radio" name="canvas-mode" data-forminput-name="canvasMode" value="drawing" /> 绘制</label>
-                    <label><input class="transform" type="radio" name="canvas-mode" data-forminput-name="canvasMode" value="select" checked="checked" /> 选择</label>
+                    <label>
+                        <input 
+                            class="transform" 
+                            type="radio" 
+                            name="canvas-mode" 
+                            data-namespace="control"
+                            data-forminput="canvasMode" 
+                            value="drawing" 
+                        /> 绘制
+                    </label>
+                    <label>
+                        <input 
+                            class="transform" 
+                            type="radio" 
+                            name="canvas-mode" 
+                            data-namespace="control"
+                            data-forminput="canvasMode" 
+                            value="select" 
+                            checked="checked" 
+                        /> 选择
+                    </label>
                 </div>
                 <div class="menu-form-control">
                     <span>几何图形: </span>
-                    <select name="geometry-type" data-forminput-name="geometryType">
+                    <select 
+                        name="geometry-type" 
+                        data-namespace="control"
+                        data-forminput="geometryType"
+                    >
                         <option value="-" disabled="disabled">-</option>
                         <option value="circle" selected="selected">正圆</option>
                         <option value="rectangle">矩形</option>
@@ -34,15 +57,41 @@
                     <div class="canvas-extend-menu">
                         <div class="menu-form-control">
                             <span>描边颜色: </span>
-                            <label><input type="color" name="circle-stroke-style" data-forminput-name="strokeStyle" value="#000000" /></label>
+                            <label>
+                                <input 
+                                    type="color" 
+                                    name="circle-stroke-style"
+                                    data-namespace="brushStyle" 
+                                    data-forminput="strokeStyle" 
+                                    value="#000000" 
+                                />
+                            </label>
                         </div>
                         <div class="menu-form-control">
                             <span>描边宽度: </span>
-                            <label><input type="number" name="circle-line-width" min="1" max="100" data-forminput-name="lineWidth" value="5" /></label>
+                            <label>
+                                <input 
+                                    type="number" 
+                                    name="circle-line-width" 
+                                    min="1" 
+                                    max="100" 
+                                    data-namespace="brushStyle" 
+                                    data-forminput="lineWidth" 
+                                    value="5" 
+                                />
+                            </label>
                         </div>
                         <div class="menu-form-control">
                             <span>填充颜色: </span>
-                            <label><input type="color" name="circle-fill-style" data-forminput-name="fillStyle" value="#ffff00" /></label>
+                            <label>
+                                <input 
+                                    type="color" 
+                                    name="circle-fill-style"
+                                    data-namespace="brushStyle" 
+                                    data-forminput="fillStyle" 
+                                    value="#ffff00" 
+                                />
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -50,15 +99,41 @@
                     <div class="canvas-extend-menu">
                         <div class="menu-form-control">
                             <span>描边颜色: </span>
-                            <label><input type="color" name="rectangle-stroke-style" data-forminput-name="strokeStyle" value="#000000" /></label>
+                            <label>
+                                <input 
+                                    type="color" 
+                                    name="rectangle-stroke-style" 
+                                    data-namespace="brushStyle" 
+                                    data-forminput="strokeStyle" 
+                                    value="#000000" 
+                                />
+                            </label>
                         </div>
                         <div class="menu-form-control">
                             <span>描边宽度: </span>
-                            <label><input type="number" name="rectangle-line-width" min="1" max="100" data-forminput-name="lineWidth" value="5" /></label>
+                            <label>
+                                <input 
+                                    type="number" 
+                                    name="rectangle-line-width" 
+                                    min="1" 
+                                    max="100" 
+                                    data-namespace="brushStyle" 
+                                    data-forminput="lineWidth" 
+                                    value="5" 
+                                />
+                            </label>
                         </div>
                         <div class="menu-form-control">
                             <span>填充颜色: </span>
-                            <label><input type="color" name="rectangle-fill-style" data-forminput-name="fillStyle" value="#ff6600" /></label>
+                            <label>
+                                <input 
+                                    type="color" 
+                                    name="rectangle-fill-style"
+                                    data-namespace="brushStyle"  
+                                    data-forminput="fillStyle" 
+                                    value="#ff6600" 
+                                />
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -66,20 +141,46 @@
                     <div class="canvas-extend-menu">
                         <div class="menu-form-control">
                             <span>线条颜色: </span>
-                            <label><input type="color" name="line-stroke-style" data-forminput-name="strokeStyle" value="#000000" /></label>
+                            <label>
+                                <input 
+                                    type="color" 
+                                    name="line-stroke-style" 
+                                    data-namespace="brushStyle" 
+                                    data-forminput="strokeStyle" 
+                                    value="#000000" 
+                                />
+                            </label>
                         </div>
                         <div class="menu-form-control">
                             <span>描边宽度: </span>
-                            <label><input type="number" name="line-line-width" min="1" max="100" data-forminput-name="lineWidth" value="5" /></label>
+                            <label>
+                                <input 
+                                    type="number" 
+                                    name="line-line-width" 
+                                    min="1" 
+                                    max="100" 
+                                    data-namespace="brushStyle" 
+                                    data-forminput="lineWidth" 
+                                    value="5" 
+                                />
+                            </label>
                         </div>
                         <div class="menu-form-control">
                             <span>开启平滑: </span>
-                            <label><input type="checkbox" name="line-smooth" data-forminput-name="smooth" value="smooth" /></label>
+                            <label>
+                                <input 
+                                    type="checkbox" 
+                                    name="line-smooth" 
+                                    data-namespace="brushStyle" 
+                                    data-forminput="smooth" 
+                                    value="smooth" 
+                                />
+                            </label>
                         </div>
                     </div>
                 </div>
             </div>            
-        </div>
+        </form>
     </div>
     <div id="t_c_1" style="position: absolute; top: 0; right: 0; transform: scale(0.30); transform-origin: right top; background-color: white; border: 1px solid #666666;"></div>
 </body>
