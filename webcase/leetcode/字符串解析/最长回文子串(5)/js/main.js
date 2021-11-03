@@ -11,17 +11,17 @@ function longestPalindrome(s) {
 }
 
 function getByGetLCS(string) {
-    return getLCS(string, string.split('').reverse().join('')).string
+    return ven$getLCS(string, string.split('').reverse().join('')).string
 }
 
 /****************************************************************************************************/
 /****************************************************************************************************/
 /****************************************************************************************************/
 /**
- * 求最长公共子串
+ * 求最长公共回文子串
  * @param {string} stringA 字符串 A
  * @param {string} stringB 字符串 B
- * @return {number} 
+ * @return {string} 
  */
 function getLCS(stringA, stringB) {
     const res = { count: -1, string: `` }
@@ -32,7 +32,7 @@ function getLCS(stringA, stringB) {
     const [longString, shortString] = swap(stringA, stringB)
     let maxSubstringLength = 0
     let maxRightEndIndex = 0
-    for (let i = 0; i < longString.length; i++) {      
+    for (let i = 0; i < longString.length; i++) {
         if (!array[i]) {
             array[i] = []
         }
@@ -48,11 +48,6 @@ function getLCS(stringA, stringB) {
                 array[i][j] = 0
             }
             if (array[i][j] > maxSubstringLength) {
-                /* 
-                    求最长公共子序列
-                 */
-                // maxSubstringLength = array[i][j]
-                // maxRightEndIndex = i
                 /*
                     求最长公共回文子序列 
                  */
