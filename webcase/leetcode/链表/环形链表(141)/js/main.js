@@ -49,8 +49,8 @@ function ListNode(val, next) {
 
 /**
  * 链表反转
- * @param {ListNode} head 单项链表的起始节点(头节点)
- * @return {ListNode} 单项链表
+ * @param {ListNode} head 单向链表的起始节点(头节点)
+ * @return {ListNode} 单向链表
  */
 function hasCycle(head) {
     return slowAndFast(head)

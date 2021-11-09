@@ -49,7 +49,7 @@ function ven$setArray2List(arr) {
  */
 function ven$reverseList(head) {
     if (!head || !head.next) {
-        return null
+        return head
     }
     let target = head
     let pre = null
