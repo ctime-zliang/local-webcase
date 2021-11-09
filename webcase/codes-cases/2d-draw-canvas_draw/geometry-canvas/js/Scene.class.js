@@ -150,11 +150,7 @@ class Scene {
 
     _createCanvasRect() {
         const domRect = this.canvasElement.getBoundingClientRect()
-        const rect = {}
-        for (let attr in domRect) {
-            rect[attr] = domRect[attr]
-        }
-        return rect
+        return domRect.toJSON()
     }
 
     _createOffScreenCanvas() {
