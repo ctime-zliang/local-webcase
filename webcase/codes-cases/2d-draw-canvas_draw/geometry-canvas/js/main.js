@@ -50,10 +50,10 @@ function modifyCanvasControl(canvasHandler, data) {
 window.onload = function() {
     function createGeometries() {
         const arr = []
-        const len = 5
+        const len = 100
         for (let i = 0; i < len; i++) {
-            // arr.push(new Circle(utils.getRandom(100, 1000), utils.getRandom(100, 400), utils.getRandom(50, 80)))
-            arr.push(new Circle((i + 1) * 120, 100, (i + 1) + 50))
+            arr.push(new Circle(utils.getRandom(100, 1000), utils.getRandom(100, 400), utils.getRandom(50, 80)))
+            // arr.push(new Circle((i + 1) * 120, 100, (i + 1) + 50))
         }
         return arr
     }
@@ -73,10 +73,25 @@ window.onload = function() {
 
 
     window.setTimeout(() => {
-        canvasContoller.pushGeometries(createGeometries())
-        console.time('CanvasRerender')
-        canvasContoller.rerender()
-        console.timeEnd('CanvasRerender')
+        const ges = createGeometries()
+        const arr = []
+        const interval = window.setInterval(() => {
+            if (!ges.length) {
+                window.clearInterval(interval)
+                return
+            }
+            const item = ges.pop()
+            canvasContoller.clearAllGeometries()
+            canvasContoller.pushGeometries((arr.push(item), arr))
+            console.time('CanvasRerender')
+            canvasContoller.rerender()
+            console.timeEnd('CanvasRerender')
+        }, 75)
+        // canvasContoller.clearAllGeometries()
+        // canvasContoller.pushGeometries(createGeometries())
+        // console.time('CanvasRerender')
+        // canvasContoller.rerender()
+        // console.timeEnd('CanvasRerender')
     })
 
 

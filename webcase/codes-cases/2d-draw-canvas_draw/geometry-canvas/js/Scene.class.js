@@ -93,6 +93,14 @@ class Scene {
     }
 
     /**
+     * 清除全部图形
+     * @return {undefined}
+     */
+    clearAllGeometries() {
+        this.geometries = []
+    }
+
+    /**
      * 预设图形
      * @param {array<geometryConstructor>} geometries 图形(类)列表
      * @return {undefined}
