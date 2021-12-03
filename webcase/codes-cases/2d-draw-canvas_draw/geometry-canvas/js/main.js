@@ -50,7 +50,7 @@ function modifyCanvasControl(canvasHandler, data) {
 window.onload = function() {
     function createGeometries() {
         const arr = []
-        const len = 100
+        const len = 500
         for (let i = 0; i < len; i++) {
             arr.push(new Circle(utils.getRandom(100, 1000), utils.getRandom(100, 400), utils.getRandom(50, 80)))
             // arr.push(new Circle((i + 1) * 120, 100, (i + 1) + 50))
@@ -73,19 +73,18 @@ window.onload = function() {
 
 
     window.setTimeout(() => {
+        canvasContoller.clearAllGeometries()
         const ges = createGeometries()
-        const arr = []
         const interval = window.setInterval(() => {
             if (!ges.length) {
                 window.clearInterval(interval)
                 return
-            }
-            const item = ges.pop()
-            canvasContoller.clearAllGeometries()
-            canvasContoller.pushGeometries((arr.push(item), arr))
+            }            
+            canvasContoller.addGeometry(ges.pop())
             console.time('CanvasRerender')
             canvasContoller.rerender()
             console.timeEnd('CanvasRerender')
+            document.getElementById('gCount').innerHTML = ges.length
         }, 75)
         // canvasContoller.clearAllGeometries()
         // canvasContoller.pushGeometries(createGeometries())

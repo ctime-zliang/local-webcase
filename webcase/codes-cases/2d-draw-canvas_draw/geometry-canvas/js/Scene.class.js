@@ -93,7 +93,7 @@ class Scene {
     }
 
     /**
-     * 清除全部图形
+     * 清除全部图形实例
      * @return {undefined}
      */
     clearAllGeometries() {
@@ -101,8 +101,29 @@ class Scene {
     }
 
     /**
-     * 预设图形
-     * @param {array<geometryConstructor>} geometries 图形(类)列表
+     * 删除单个图形实例
+     * @param {number} index 图形实例索引
+     * @return {undefined}
+     */
+    removeGeometry(index) {
+        if (String(+index) === 'NaN' || index < 0) {
+            return
+        }
+        this.geometries.splice(index, 1)
+    }
+
+    /**
+     * 增加单个图形实例
+     * @param {geometryConstructor} geometry 图形实例
+     * @return {undefined}
+     */
+    addGeometry(geometry) {
+        this.geometries.push(geometry)
+    }
+
+    /**
+     * 批量增加图形实例
+     * @param {array<geometryConstructor>} geometries 图形实例列表
      * @return {undefined}
      */
     pushGeometries(geometries) {
