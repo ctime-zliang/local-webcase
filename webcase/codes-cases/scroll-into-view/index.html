@@ -5,15 +5,20 @@
 <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../$vendor/css/comm.preset.css" />
 <link rel="stylesheet" type="text/css" href="./css/main.css" />
-<link rel="stylesheet" type="text/css" href="./css/virtual-scroller.css" />
-<script type="text/javascript" src="../../../../$vendor/utils/fps.js"></script>
 <title>Code Case</title>
 </head>
 
 <body>
-<div style="width: 300px; height: 500px;" data-tagitem="virtual-scroller"></div>
+	<div id="container" class="container">
+		<ul class="ulist" id="ulist"></ul>
+		<div><input data-tagitem="index-range" id="range" type="range" min="0", max="100", step="1" value="0" style="width: 100%;" /></div>
+		<div id="rangeValue">0</div>
+		<div id="selectedPostion">unkown</div>
+	</div>
 </body>
-<script type="text/javascript" src="./js/virtual-scroller.js"></script>
+<script type="text/javascript" src="../../../$vendor//utils/event.js"></script>
 <script type="text/javascript" src="./js/main.js"></script>
+<script type="text/javascript" src="./js/index.js"></script>
 </html>
