@@ -14,7 +14,7 @@
                 let icur = parseFloat(this.cache[jsonKeys[i]] || 0)
                 let speed = (+targetData - icur) * sp
                 speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed)
-                if(icur != targetData){
+                if (icur != targetData) {
                     flag = false
                 } 
                 this.cache[jsonKeys[i]] = icur + speed * rate
