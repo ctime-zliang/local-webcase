@@ -20,7 +20,7 @@
                 this.cache[jsonKeys[i]] = icur + speed * rate
                 runningCallback && runningCallback(jsonKeys[i], this.cache[jsonKeys[i]])                
             }
-            if(flag){
+            if (flag) {
                 window.clearInterval(this.timer)
                 finishedCallback && finishedCallback(this.cache)
             }
