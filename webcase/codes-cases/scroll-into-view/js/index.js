@@ -1,5 +1,35 @@
 const MAX_LENGTH = 300
 
+const Cache = {
+    value: 0,
+    set(value) {
+        this.value = value
+    },
+    get() {
+        return value
+    }
+}
+
+function move(obj, target, speed, callback) {
+    clearInterval(obj.timer)
+    let current = parseInt(Cache.get())
+    if(current > target) {
+        speed = -speed
+    }
+    obj.timer = setInterval(() => {
+        let oldValue = parseInt(Cache.get())
+        let newValue = oldValue + speed
+        if((speed < 0 && newValue < target) || (speed > 0 && newValue > target)) {
+            newValue = target
+        }
+        Cache.set(newValue)
+        if(newValue == target) {
+            clearInterval(obj.timer)
+            callback && callback()
+        }
+    }, 16.67)
+}
+
 function createItems() {
     let html = ``
     for (let i = 0; i < MAX_LENGTH; i++) {
