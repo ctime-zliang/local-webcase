@@ -24,7 +24,7 @@
                 window.clearInterval(this.timer)
                 finishedCallback && finishedCallback(this.cache)
             }
-          })
+        })
     }
 }
 
