@@ -1,4 +1,14 @@
 /**
+ * 类型检测
+ * @param {any} target 被检测数据
+ * @return {string}
+ */
+ async function ven$classOf(target) {
+    return Object.prototype.toString.call(target).slice(8, -1).toLowerCase()
+}
+
+
+/**
  * 同步进程阻塞
  * @param {number} delay 阻塞时长
  * @return {undefined}
@@ -16,7 +26,7 @@ function ven$choke(delay = 1000) {
 /**
  * 异步等待阻塞
  * @param {number} delay 阻塞时长
- * @return {undefined}
+ * @return {promise<undefined>}
  */
 async function ven$sleep(delay = 1000) {
     return Promise((_, reject) => {
@@ -30,7 +40,7 @@ async function ven$sleep(delay = 1000) {
  *      获取由各项子数组构成的输出数组
  * @param {array} array 被切割的数组
  * @param {number} size 每组尺寸长度
- * @return {array} 
+ * @return {array<any>} 
  */ 
 function ven$chunk(array, size) {
     const res = []
@@ -57,7 +67,7 @@ function ven$isEmptyObject(obj) {
 /**
  * 原生 sort 实现对数字数组升序安排序
  * @param {array} arr 目标数组
- * @return {array}
+ * @return {array<any>}
  */
 function ven$nativeSortSeq(arr) {
     return arr.sort((a, b) => {
@@ -69,7 +79,7 @@ function ven$nativeSortSeq(arr) {
 /**
  * 移除数组前面所有的 0 项
  * @param {array} arr 目标数组
- * @return {array}
+ * @return {array<any>}
  */
 function ven$removeAllFrontZero(arr) {
     let res = []
@@ -106,6 +116,65 @@ function ven$sortBy(keys, seq = true) {
         }
     }
 }
+
+
+/**
+ * 在指定上下限范围内生成随机数
+ * @param {number} min 指定下限
+ * @param {number} max 指定上限
+ * @return {number} 
+ */
+function ven$getRandomInArea(min = 0, max = Number.MAX_SAFE_INTEGER) {
+    return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+
+/**
+ * 生成指定长度的数组并以固定值填充各位
+ * @param {any} value 默认填充值
+ * @return {array<any>} 
+ */
+function ven$createArray(length, value = undefined) {
+    return new Array(length + 1).join(value).split('')
+}
+
+
+/**
+ * 以 0 补全数值位数
+ * @param {number} number 数值
+ * @param {number} allLength 位数
+ * @return {number} 
+ */
+function ven$padNumber(number, allLength) {
+    let len = String( number ).length
+    return Array(allLength > len ? allLength - len + 1 || 0 : 0).join(0) + number
+}
+
+
+/**
+ * 在数组插入另一数组的指定位置
+ * @param {array<any>} operaArr 需要插入的数组
+ * @param {array<any>} targetArr 被插入的数组
+ * @param {number} insertIndex 索引位置
+ * @return {undefined} 
+ */
+function ven$padNumber(operaArr, targetArr, insertIndex) {
+    /* 将 operaArr 插入到 targetArr 的 insertIndex 处 */
+    targetArr.splice.apply(targetArr, Array.concat(insertIndex, 0, operaArr))
+}
+
+/**
+ * 依据 HTML 字符串生成 DOM 片段
+ * @param {string} htmlString HTML 字符串
+ * @return {Element} 
+ */
+ function ven$createElementFragment(htmlString, useDOMParser = false) {
+    if (useDOMParser) {
+        return new DOMParser().parseFromString(htmlString, 'text/html')
+    }
+    return document.createRange().createContextualFragment(htmlString)
+}
+
 
 
 /**

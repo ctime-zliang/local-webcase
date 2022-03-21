@@ -222,7 +222,7 @@ function ven$mergeSort(arr = []){
 }
 
 
-window.Sort = {
+window.ArraySort = {
     ven$bubbleSort,
     ven$bubbleSortOptimi,
     ven$selectionSort,
