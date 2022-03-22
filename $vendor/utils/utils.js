@@ -164,13 +164,13 @@ function ven$padNumber(number, allLength) {
 
 /**
  * @description 在数组插入另一数组的指定位置
- * @function ven$padNumber
+ * @function ven$insertArray2Array
  * @param {array<any>} operaArr 需要插入的数组
  * @param {array<any>} targetArr 被插入的数组
  * @param {number} insertIndex 索引位置
  * @return {undefined} 
  */
-function ven$padNumber(operaArr, targetArr, insertIndex) {
+function ven$insertArray2Array(operaArr, targetArr, insertIndex) {
     /* 将 operaArr 插入到 targetArr 的 insertIndex 处 */
     targetArr.splice.apply(targetArr, Array.concat(insertIndex, 0, operaArr))
 }
@@ -209,12 +209,12 @@ function ven$naturalSort(array, key = '') {
         itemArray[i] = string.toUpperCase().match(/\D+|\d+(?:\.\d+)?/g)
         typeArray[i] = []
         if (itemArray[i]) {
-            for (let j = 0; j < itemArray[i].length; i++) {
+            for (let j = 0; j < itemArray[i].length; j++) {
                 typeArray[i][j] = itemArray[i][j].match(/\d+/) ? digit : letter
             }
         }
     }
-    indexArray.sort(__ven$naturalSort__naturalCompare(itemArray, typeArray, digit, lettter))
+    indexArray.sort(__ven$naturalSort__naturalCompare(itemArray, typeArray, digit, letter))
     const result = []
     for (let i = 0; i < array.length; i++) {
         result[i] = array[indexArray[i]]
