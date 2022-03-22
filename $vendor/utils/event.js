@@ -1,5 +1,6 @@
 /**
- * 绑定事件
+ * @description 绑定事件
+ * @function ven$bindEvent
  * @param {htmllement | string} host 事件的真实宿主元素或用于捕获宿主的选择器
  * @param {string} eventName 事件名称
  * @param {string} selector 触发事件的元素选择器(可选) * 
@@ -28,13 +29,13 @@ async function ven$bindEvent(host, eventName, selector = null, callback = null, 
             _callback && _callback.call(this, e)
             return
         }
-        const targetCapture = _captureTargetElement(_selector, e.target, hostElement)
+        const targetCapture = __captureTargetElement(_selector, e.target, hostElement)
         if (targetCapture) {
             _callback && _callback.call(targetCapture, e)
         }
     }, _capture)
 }
-function _captureTargetElement(selector, startChildElement, endParentElemet) {
+function __captureTargetElement(selector, startChildElement, endParentElemet) {
     try {
         const targetElementsArray = Array.from(endParentElemet.querySelectorAll(selector))
         if (!targetElementsArray.length) {
@@ -52,6 +53,7 @@ function _captureTargetElement(selector, startChildElement, endParentElemet) {
         }
         return startFindElement
     } catch (e) {
+        console.warn(`[ven$bindEvent]: Error finding Element element.`)
         console.warn(e)
         return null
     }

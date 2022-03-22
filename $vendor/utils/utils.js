@@ -1,15 +1,17 @@
 /**
- * 类型检测
+ * @description 类型检测
+ * @function ven$classOf
  * @param {any} target 被检测数据
  * @return {string}
  */
- async function ven$classOf(target) {
+async function ven$classOf(target) {
     return Object.prototype.toString.call(target).slice(8, -1).toLowerCase()
 }
 
 
 /**
- * 同步进程阻塞
+ * @description 同步阻塞
+ * @function ven$choke
  * @param {number} delay 阻塞时长
  * @return {undefined}
  */
@@ -24,7 +26,8 @@ function ven$choke(delay = 1000) {
 
 
 /**
- * 异步等待阻塞
+ * @description 异步等待阻塞
+ * @function ven$sleep
  * @param {number} delay 阻塞时长
  * @return {promise<undefined>}
  */
@@ -36,8 +39,9 @@ async function ven$sleep(delay = 1000) {
 
 
 /**
- * 数组分组
+ * @description 数组分组
  *      获取由各项子数组构成的输出数组
+ * @function ven$chunk
  * @param {array} array 被切割的数组
  * @param {number} size 每组尺寸长度
  * @return {array<any>} 
@@ -52,7 +56,8 @@ function ven$chunk(array, size) {
 
 
 /**
- * 判断对象是否为空
+ * @description 判断对象是否为空
+ * @function ven$isEmptyObject
  * @param {object} obj 被检测对象
  * @return {boolean}
  */
@@ -65,7 +70,8 @@ function ven$isEmptyObject(obj) {
 
 
 /**
- * 原生 sort 实现对数字数组升序安排序
+ * @description 原生 sort 实现对数字数组升序安排序
+ * @function ven$nativeSortSeq
  * @param {array} arr 目标数组
  * @return {array<any>}
  */
@@ -77,7 +83,8 @@ function ven$nativeSortSeq(arr) {
 
 
 /**
- * 移除数组前面所有的 0 项
+ * @description 移除数组前面所有的 0 项
+ * @function ven$removeAllFrontZero
  * @param {array} arr 目标数组
  * @return {array<any>}
  */
@@ -97,12 +104,13 @@ function ven$removeAllFrontZero(arr) {
 
 
 /**
- * 将数组依据指定的 keys 排序
+ * @description 将 json 依据指定的 keys 排序
+ * @function ven$sortJsonByKeys
  * @param {array} keys 参考字段数组
  * @param {boolean} seq 升序 or 降序
  * @return {number}
  */
-function ven$sortBy(keys, seq = true) {
+function ven$sortJsonByKeys(keys, seq = true) {
     const rev = !!seq ? 1 : -1
     return (a, b) => {
         for (let i = 0; i < keys.length; i++) {
@@ -119,7 +127,8 @@ function ven$sortBy(keys, seq = true) {
 
 
 /**
- * 在指定上下限范围内生成随机数
+ * @description 在指定上下限范围内生成随机数
+ * @function ven$getRandomInArea
  * @param {number} min 指定下限
  * @param {number} max 指定上限
  * @return {number} 
@@ -130,7 +139,8 @@ function ven$getRandomInArea(min = 0, max = Number.MAX_SAFE_INTEGER) {
 
 
 /**
- * 生成指定长度的数组并以固定值填充各位
+ * @description 生成指定长度的数组并以固定值填充各位
+ * @function ven$createArray
  * @param {any} value 默认填充值
  * @return {array<any>} 
  */
@@ -140,19 +150,21 @@ function ven$createArray(length, value = undefined) {
 
 
 /**
- * 以 0 补全数值位数
+ * @description 以 0 补全数值位数
+ * @function ven$padNumber
  * @param {number} number 数值
  * @param {number} allLength 位数
  * @return {number} 
  */
 function ven$padNumber(number, allLength) {
-    let len = String( number ).length
-    return Array(allLength > len ? allLength - len + 1 || 0 : 0).join(0) + number
+    let len = String(number).length
+    return Array(allLength > len ? allLength - len + 1 || 0 : 0).join('') + number
 }
 
 
 /**
- * 在数组插入另一数组的指定位置
+ * @description 在数组插入另一数组的指定位置
+ * @function ven$padNumber
  * @param {array<any>} operaArr 需要插入的数组
  * @param {array<any>} targetArr 被插入的数组
  * @param {number} insertIndex 索引位置
@@ -164,11 +176,13 @@ function ven$padNumber(operaArr, targetArr, insertIndex) {
 }
 
 /**
- * 依据 HTML 字符串生成 DOM 片段
+ * @description 依据 HTML 字符串生成 DOM 片段
+ * @function ven$createElementFragment
  * @param {string} htmlString HTML 字符串
+ * @param {boolean} useDOMParser 是否使用 DOMParser API
  * @return {Element} 
  */
- function ven$createElementFragment(htmlString, useDOMParser = false) {
+function ven$createElementFragment(htmlString, useDOMParser = false) {
     if (useDOMParser) {
         return new DOMParser().parseFromString(htmlString, 'text/html')
     }
@@ -176,50 +190,65 @@ function ven$padNumber(operaArr, targetArr, insertIndex) {
 }
 
 
-
 /**
- * 求最长公共子串
- * @param {string} stringA 字符串 A
- * @param {string} stringB 字符串 B
- * @return {string} 
+ * @description 按照自然排序规律重排数组(简单数组或 json)元素
+ * @function ven$naturalSort
+ * @param {array<string|number|object>} array 被排序数组
+ * @param {string} key 当 array 是 json 时, 指定一个排序依据键
+ * @return {array<string|number|object>} 
  */
-function ven$getLCS(stringA, stringB) {
-    const res = { count: -1, string: `` }
-    if (!stringA || !stringA.length || !stringB || !stringB.length) {
-        return res
-    }
-    const matrix = []
-    let maxSubstringLength = 0
-    let maxRightEndIndex = 0
-    const [longString, shortString] = __ven$getLCS__swap(stringA, stringB)
-    for (let i = 0; i < longString.length; i++) {
-        if (!matrix[i]) {
-            matrix[i] = []
-        }
-        for (let j = 0; j < shortString.length; j++) {
-            if (longString[i] === shortString[j]) {
-                if (i === 0 || j === 0) {
-                    matrix[i][j] = 1
-                } else {
-                    matrix[i][j] = matrix[i - 1][j - 1] + 1                    
-                }
-                res.count = matrix[i][j]
-            } else {
-                matrix[i][j] = 0
-            }
-            if (matrix[i][j] > maxSubstringLength) {
-                maxSubstringLength = matrix[i][j]
-                maxRightEndIndex = i
+function ven$naturalSort(array, key = '') {
+    const indexArray = []
+    const itemArray = []
+    const typeArray = []
+    const digit = 1
+    const letter = 2
+    for (let i =0; i< array.length; i++) {
+        indexArray[i] = i
+        const string = key ? (array[i][key] || '') : array[i]
+        itemArray[i] = string.toUpperCase().match(/\D+|\d+(?:\.\d+)?/g)
+        typeArray[i] = []
+        if (itemArray[i]) {
+            for (let j = 0; j < itemArray[i].length; i++) {
+                typeArray[i][j] = itemArray[i][j].match(/\d+/) ? digit : letter
             }
         }
     }
-    res.string = longString.substring(maxRightEndIndex - maxSubstringLength + 1, maxRightEndIndex + 1)
-    console.log(matrix)
-    return res
+    indexArray.sort(__ven$naturalSort__naturalCompare(itemArray, typeArray, digit, lettter))
+    const result = []
+    for (let i = 0; i < array.length; i++) {
+        result[i] = array[indexArray[i]]
+    }
+    return result
 }
-function __ven$getLCS__swap(stringA, stringB) {
-    if (stringA.length >= stringB.length) {
-        return [stringA, stringB]
+function __ven$naturalSort__naturalCompare(itemArray, typeArray, digit, lettter) {
+    return (a, b) => {
+        const itemA = itemArray[a]
+        const itemB = itemArray[b]
+        const typeA = typeArray[a]
+        const typeB = typeArray[b]
+        if (!itemA || !itemB) {
+            return itemA === itemB ? 0 : (itemA ? 1 : -1)
+        }
+        const len = Math.max(itemA.length, itemB.length)
+        for (let i = 0; i < len; i++) {
+            if (!itemA[i]) {
+                return -1
+            }
+            if (!itemB[i]) {
+                return 1
+            }
+            if (itemA[i] === itemB[i]) {
+                continue
+            }
+            if (typeA[i] !== typeB[i]) {
+                return typeA[i] === digit ? -1 : 1
+            }
+            if (typeA[i] === digit) {
+                return itemA[i] -  itemB[i]
+            }
+            return itemA[i] < itemB[i] ? -1 : 1
+        }
+        return 0
     }
-    return [stringB, stringA]
 }

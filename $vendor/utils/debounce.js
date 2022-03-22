@@ -1,5 +1,6 @@
 /**
- * debounce 防抖
+ * @description debounce 防抖
+ * @function ven$debounce
  * @param {function} fn 高频函数
  * @param {number} delay 延迟时间
  * @param {object} option 配置项
@@ -12,7 +13,7 @@ function ven$debounce(
     fn,
     delay = 500,
     option = { immediate: false, trailing: false }
-){
+) {
     let timer = null   
     return function() {
         if (timer) {
@@ -27,7 +28,7 @@ function ven$debounce(
                 fn.apply(this, arguments)
             }
             timer = window.setTimeout(() => {
-                timer = null;
+                timer = null
                 if (option.trailing) {
                     fn.apply(this, arguments)
                 }

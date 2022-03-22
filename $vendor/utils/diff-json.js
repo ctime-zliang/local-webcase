@@ -13,14 +13,14 @@ const ven$jsonDiff = {
         if (this.isValue(obj1) || this.isValue(obj2)) {
             return {
                 type: this.compareValues(obj1, obj2),
-                data: ( obj1 === undefined ) ? obj2 : obj1
+                data: obj1 === undefined ? obj2 : obj1
             }
         }
         for (key in obj1) {
             if (this.isFunction(obj1[key])) {
                 continue
             }                
-            valueOfObj2 = undefined;
+            valueOfObj2 = undefined
             if ('undefined' !== typeof obj2[key]) {
                 valueOfObj2 = obj2[key]
             }                

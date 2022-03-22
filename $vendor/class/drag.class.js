@@ -3,7 +3,6 @@ class Ven$DragElement {
         this.element = element
         this.options = options
         this._cache = {}
-
         this._cache.handleMouseDownEvent = this._bindMouseDownEvent.bind(this)
         this._cache.handleMouseMoveEvent = this._bindMouseMoveEvent.bind(this)
         this._cache.handleMouseUpEvent = this._bindMouseUpEvenet.bind(this)

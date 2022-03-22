@@ -1,5 +1,6 @@
 /**
- * 冒泡排序(基础版)
+ * @description 冒泡排序(基础版)
+ * @function ven$bubbleSort
  * @param {array} arr 被排序数组
  * @return {array} 
  */ 
@@ -19,8 +20,9 @@ function ven$bubbleSort(arr = []) {
     return res
 }
 
-/**
- * 冒泡排序(优化版)
+/** 
+ * @description 冒泡排序(优化版)
+ * @function ven$bubbleSortOptimi
  * @param {array} arr 被排序数组
  * @return {array} 
  */
@@ -49,7 +51,8 @@ function ven$bubbleSortOptimi(arr = []) {
 }
 
 /**
- * 选择排序
+ * @description 选择排序
+ * @function ven$selectionSort
  * @param {array} arr 被排序数组
  * @return {array} 
  */
@@ -77,7 +80,8 @@ function ven$selectionSort(arr = []) {
 }
 
 /**
- * 快速顺排序
+ * @description 快速顺排序
+ * @function ven$quickSeqSort
  * @param {array} arr 被排序数组
  * @return {array} 
  */
@@ -107,7 +111,8 @@ function ven$quickSeqSort(arr = []) {
 }
 
 /**
- * 快速逆排序
+ * @description 快速逆排序
+ * @function ven$quickInvSort
  * @param {array} arr 被排序数组
  * @return {array} 
  */
@@ -137,7 +142,8 @@ function ven$quickInvSort(arr = []) {
 }
 
 /**
- * 插入排序
+ * @description 插入排序
+ * @function ven$insertSort
  * @param {array} arr 被排序数组
  * @return {array} 
  */
@@ -175,7 +181,8 @@ function ven$insertSort(arr = []){
 }
 
 /**
- * 归并排序
+ * @description 归并排序
+ * @function ven$mergeSort
  * @param {array} arr 被排序数组
  * @return {array} 
  */

@@ -1,5 +1,6 @@
 /**
- * JSON 深拷贝
+ * @description JSON 深拷贝
+ * @function ven$deepClone
  * @param {object|array} json 被深拷贝的 JSON 数据
  * @return {object|array}
  */

@@ -1,5 +1,6 @@
 /**
- * 深度优先遍历
+ * @description 深度优先遍历
+ * @function ven$dfs1
  * @param {object} node 起始节点
  * @return {array<object>}
  */
@@ -10,7 +11,7 @@ function ven$dfs1(node = null) {
     
     function traverse(node, nodelist) {
         const children = []
-        if (node){
+        if (node) {
             nodelist.push(node)
             children = node.children
             for (let i = 0; i < children.length; i++) {
@@ -21,7 +22,8 @@ function ven$dfs1(node = null) {
 }
 
 /**
- * 深度优先遍历
+ * @description 深度优先遍历
+ * @function ven$dfs2
  * @param {object} node 起始节点
  * @return {array<object>}
  */
@@ -46,7 +48,7 @@ function ven$dfs2(node = null) {
 
 
 /**
- * 广度优先遍历
+ * @function 广度优先遍历
  * @param {object} node 起始节点
  * @return {array<object>}
  */

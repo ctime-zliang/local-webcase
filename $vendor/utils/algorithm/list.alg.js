@@ -1,5 +1,6 @@
 /**
- * 链表节点
+ * @description 链表节点
+ * @class ListNode
  * @param {any} val 链表节点值
  * @param {ListNode} next 下一个链表节点
  * @return {undefined} 
@@ -11,7 +12,8 @@ function ListNode(val, next) {
 
 
 /**
- * 将链表转换成数组
+ * @description 将链表转换成数组
+ * @function ven$setList2Array
  * @param {ListNode} list 链表
  * @return {array} 
  */
@@ -27,7 +29,8 @@ function ven$setList2Array(list) {
 
 
 /**
- * 将数组转换成链表
+ * @description 将数组转换成链表
+ * @function ven$setArray2List
  * @param {array} arr 数组
  * @return {ListNode} 
  */
@@ -43,7 +46,8 @@ function ven$setArray2List(arr) {
 } 
 
 /**
- * 链表反转
+ * @description 链表反转
+ * @function ven$reverseList
  * @param {ListNode} head 单项链表的起始节点(头节点)
  * @return {ListNode} 单项链表
  */
