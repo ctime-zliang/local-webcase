@@ -8,11 +8,11 @@ const createArray = (length) => {
 
 
 function main() {
-    const array = createArray(1000)
-    console.log(array)
-    console.time(`natural-sort`)
-    console.log(ven$naturalSort(array))
-    console.timeEnd(`natural-sort`)
+    // const array = createArray(1000)
+    // console.log(array)
+    // console.time(`natural-sort`)
+    // console.log(ven$naturalSort(array))
+    // console.timeEnd(`natural-sort`)
 }
 
 document.addEventListener('DOMContentLoaded', function() {
