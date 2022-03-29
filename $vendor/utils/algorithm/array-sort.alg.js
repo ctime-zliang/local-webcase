@@ -10,7 +10,7 @@ function ven$bubbleSort(arr = []) {
     let swap = 0
     for (let i = 0; i < len; i++) {
         for (let j = 0; j < len - 1 - i; j++) {
-            if( res[j] > res[j+1] ){
+            if (res[j] > res[j+1]) {
                 swap = res[j+1]
                 res[j+1] = res[j]
                 res[j] = swap
@@ -19,6 +19,7 @@ function ven$bubbleSort(arr = []) {
     }
     return res
 }
+
 
 /** 
  * @description 冒泡排序(优化版)
@@ -50,6 +51,7 @@ function ven$bubbleSortOptimi(arr = []) {
     return arrCopy
 }
 
+
 /**
  * @description 选择排序
  * @function ven$selectionSort
@@ -78,6 +80,7 @@ function ven$selectionSort(arr = []) {
     } 
     return arrCopy
 }
+
 
 /**
  * @description 快速顺排序
@@ -110,6 +113,7 @@ function ven$quickSeqSort(arr = []) {
     }
 }
 
+
 /**
  * @description 快速逆排序
  * @function ven$quickInvSort
@@ -140,6 +144,7 @@ function ven$quickInvSort(arr = []) {
         return recursion(leftArr).concat([middleValue], recursion(rightArr))
     }
 }
+
 
 /**
  * @description 插入排序
@@ -180,6 +185,7 @@ function ven$insertSort(arr = []){
     return arrCopy
 }
 
+
 /**
  * @description 归并排序
  * @function ven$mergeSort
@@ -209,10 +215,10 @@ function ven$mergeSort(arr = []){
         /* 输出结果集 */
         let array = []       
         /* 遍历并对比左数组和右数组 */
-        while(leftArr.length && rightArr.length){
-            if(leftArr[0] <= rightArr[0]){
+        while (leftArr.length && rightArr.length) {
+            if (leftArr[0] <= rightArr[0]) {
                 array.push(leftArr.shift())
-            }else{
+            } else {
                 array.push(rightArr.shift())
             }
         }  

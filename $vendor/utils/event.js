@@ -8,7 +8,13 @@
  * @param {boolean} capture 设定以在冒泡/捕获阶段执行事件
  * @return {undefined}
  */
-async function ven$bindEvent(host, eventName, selector = null, callback = null, capture = false) {
+async function ven$bindEvent(
+    host, 
+    eventName, 
+    selector = null, 
+    callback = null, 
+    capture = false
+) {
     let hostElement = host
     if (typeof host === 'string') {
         hostElement = document.querySelector(host)
@@ -29,13 +35,13 @@ async function ven$bindEvent(host, eventName, selector = null, callback = null, 
             _callback && _callback.call(this, e)
             return
         }
-        const targetCapture = __captureTargetElement(_selector, e.target, hostElement)
+        const targetCapture = __ven$bindEvent__captureTargetElement(_selector, e.target, hostElement)
         if (targetCapture) {
             _callback && _callback.call(targetCapture, e)
         }
     }, _capture)
 }
-function __captureTargetElement(selector, startChildElement, endParentElemet) {
+function __ven$bindEvent__captureTargetElement(selector, startChildElement, endParentElemet) {
     try {
         const targetElementsArray = Array.from(endParentElemet.querySelectorAll(selector))
         if (!targetElementsArray.length) {

@@ -16,6 +16,7 @@ function ven$throttleStamp(fn, delay = 500) {
     }
 }
 
+
 /**
  * @description throttle 节流
  * @function ven$throttleTimeout

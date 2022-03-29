@@ -19,7 +19,7 @@ function ven$choke(delay = 1000) {
     console.log('%c start choke while...', 'color: green; font-size: 18px;') 
     const start = performance.now()
     while (performance.now() - start <= delay) {
-        /* ... */    
+        /* ... */
     }
     console.log('%c end choke while...', 'color: green; font-size: 18px;') 
 }
@@ -174,6 +174,7 @@ function ven$insertArray2Array(operaArr, targetArr, insertIndex) {
     /* 将 operaArr 插入到 targetArr 的 insertIndex 处 */
     targetArr.splice.apply(targetArr, Array.concat(insertIndex, 0, operaArr))
 }
+
 
 /**
  * @description 依据 HTML 字符串生成 DOM 片段
