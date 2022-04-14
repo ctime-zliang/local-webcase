@@ -10,7 +10,7 @@ window.$util = {
      */
 	nodeIndexOf(
 		el
-	){
+	) {
 		return [].indexOf.call(el.parentNode.children, el)
 	},
 	/**
@@ -21,7 +21,7 @@ window.$util = {
      */
 	getBoundingClientRect(
 		el
-	){
+	) {
 		return el.getBoundingClientRect()
 	},
 	/**
@@ -38,18 +38,17 @@ window.$util = {
 		eventName,
 		attribute,
 		callback
-	){
-		container.addEventListener(eventName, function( evte ){
-			let tar = evte.target
-			
-			while( !tar.getAttribute( attribute ) ){
-				if( tar === container ){
+	) {
+		container.addEventListener(eventName, function (evte){
+			let tar = evte.target			
+			while (!tar.getAttribute(attribute)) {
+				if (tar === container) {
 					tar = null
 					break
 				}
 				tar = tar.parentNode
 			}
-			if( tar ){
+			if (tar) {
 				callback && callback.call(tar, evte)
 			}
 		}, false)

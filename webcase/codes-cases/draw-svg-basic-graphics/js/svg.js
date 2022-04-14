@@ -12,7 +12,7 @@ window.$svg = {
     createSVGElement(
         svgNS,
         geometryType
-    ){
+    ) {
         return document.createElementNS(svgNS, geometryType)
     },
     /**
@@ -25,8 +25,8 @@ window.$svg = {
     appendSVGElement(
         svgElement,
         canvasDom
-    ){
-        canvasDom.appendChild( svgElement )
+    ) {
+        canvasDom.appendChild(svgElement)
     },
     /**
      * @method setStroke
@@ -38,8 +38,8 @@ window.$svg = {
     setStroke(
         svgElement,
         options = {}
-    ){
-        Object.keys( options ).forEach((item, index)=>{
+    ) {
+        Object.keys(options).forEach((item, index) => {
             this.setStrokeItem(
                 svgElement,
                 item,
@@ -51,20 +51,17 @@ window.$svg = {
         svgElement,
         type,
         value
-    ){
-        switch( String( type ) ){
+    ) {
+        switch (String(type)) {
             case 'strokeColor':
                     svgElement.setAttribute('stroke', value)
-                break
-    
+                break    
             case 'strokeWidth':
                     svgElement.setAttribute('stroke-width', value)
-                break
-    
+                break    
             case 'strokeOpacity':
                     svgElement.setAttribute('stroke-opacity', value)
-                break
-    
+                break    
             default:;
         }
     },
@@ -78,7 +75,7 @@ window.$svg = {
     setFill(
         svgElement,
         fill
-    ){
+    ) {
         svgElement.setAttribute('fill', fill)
     },
     /**
@@ -91,8 +88,8 @@ window.$svg = {
     getSVGElementAttr(
         svgElement,
         attr
-    ){
-        return svgElement.getAttribute( attr ) || ''
+    ) {
+        return svgElement.getAttribute(attr) || ''
     },
     /**
      * @method setEllipseCenterPosition
@@ -106,11 +103,11 @@ window.$svg = {
         svgElement, 
         axial,
         value = 0
-    ){
-        if( axial === 'x' ){
+    ) {
+        if (axial === 'x') {
             svgElement.setAttribute('cx', value)
         }
-        if( axial === 'y' ){
+        if (axial === 'y') {
             svgElement.setAttribute('cy', value)
         }
     },
@@ -126,11 +123,11 @@ window.$svg = {
         svgElement, 
         axial,
         value = 0
-    ){
-        if( axial === 'x' ){
+    ) {
+        if (axial === 'x') {
             svgElement.setAttribute('rx', value)
         }
-        if( axial === 'y' ){
+        if (axial === 'y') {
             svgElement.setAttribute('ry', value)
         }
     },
@@ -146,11 +143,11 @@ window.$svg = {
         svgElement, 
         axial,
         value = 0
-    ){
-        if( axial === 'x' ){
+    ) {
+        if (axial === 'x') {
             svgElement.setAttribute('x', value)
         }
-        if( axial === 'y' ){
+        if (axial === 'y') {
             svgElement.setAttribute('y', value)
         }
     },
@@ -166,11 +163,11 @@ window.$svg = {
         svgElement, 
         axial,
         value = 0
-    ){
-        if( axial === 'x' ){
+    ) {
+        if (axial === 'x') {
             svgElement.setAttribute('width', value)
         }
-        if( axial === 'y' ){
+        if (axial === 'y') {
             svgElement.setAttribute('height', value)
         }
     },
@@ -184,13 +181,11 @@ window.$svg = {
     setPolygonPointsList(
         svgElement, 
         points = []
-    ){
-        let string = ''
-    
-        points.forEach((item, index)=>{
+    ) {
+        let string = ''    
+        points.forEach((item, index) => {
             string += `${item.x},${item.y} `
-        })
-    
+        })    
         svgElement.setAttribute('points', string)
     },
     /**
@@ -203,13 +198,11 @@ window.$svg = {
     setPolylinePointsList(
         svgElement, 
         points = []
-    ){
-        let string = ''
-    
-        points.forEach((item, index)=>{
+    ) {
+        let string = ''    
+        points.forEach((item, index) => {
             string += `${item.x},${item.y} `
-        })
-    
+        })    
         svgElement.setAttribute('points', string)
     },
     /**
@@ -222,31 +215,30 @@ window.$svg = {
     setPath3PointsList(
         svgElement, 
         points = []
-    ){
+    ) {
         let string = ''
         // 拷贝一份副本
-        let array = points.slice( 0 )
+        let array = points.slice(0)
         // 截取前面4项
         let arr1 = array.splice(0, 4)
         // 将剩余的部分等分，每份3项
         let arr2 = window.$util.groupArray(array, 3)
 
         string += this.getDValue(arr1, 0)
-        arr2.forEach((item, index)=>{
+        arr2.forEach((item, index) => {
             string += this.getDValue(item, index + 1)
         })
         // 过滤
-        string = string.replace(/[\r\n]/g, "").replace(/\s+/g, " ").trim()
-        
+        string = string.replace(/[\r\n]/g, "").replace(/\s+/g, " ").trim()        
         // 写入属性
         svgElement.setAttribute('d', string)
     },
     getDValue(
         points = [],
         sIndex = 0
-    ){
+    ) {
         let string = ''
-        if( points.length === 1 ){
+        if (points.length === 1) {
             string += 
                 sIndex <= 0 ? 
                 `
@@ -258,7 +250,7 @@ window.$svg = {
                     ${points[0].x} ${points[0].y} 
                 `
         }
-        if( points.length === 2 ){
+        if (points.length === 2) {
             string += 
                 sIndex <= 0 ? 
                 `
@@ -271,7 +263,7 @@ window.$svg = {
                     ${points[1].x} ${points[1].y} 
                 `
         }
-        if( points.length === 3 ){
+        if (points.length === 3) {
             string += 
                 sIndex <= 0 ? 
                 `
@@ -285,14 +277,13 @@ window.$svg = {
                     ${points[2].x} ${points[2].y}
                 `
         }
-        if( points.length === 4 ){
+        if (points.length === 4) {
             string += `
                 M${points[0].x} ${points[0].y} 
                 C${points[1].x} ${points[1].y} ${points[2].x} ${points[2].y}
                 ${points[3].x} ${points[3].y} 
             `
         }
-
         return string
     }
 }

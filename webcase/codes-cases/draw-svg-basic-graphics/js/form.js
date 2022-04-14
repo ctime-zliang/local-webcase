@@ -13,20 +13,18 @@ window.$form = {
     initFormSelect(
         formEl,
         select = {}
-    ){
-        if( !formEl || +formEl.nodeType !== 1 ){            
+    ) {
+        if (!formEl || +formEl.nodeType !== 1) {            
             return
         }
-
         let selectEl
         let string
-
         // 遍历
-        Object.keys( select ).forEach((outerItem, outerIndex)=>{
+        Object.keys(select).forEach((outerItem, outerIndex) => {
             string = ''
             selectEl = formEl.querySelector( `[name="${outerItem}"]` )
-            if( selectEl ){
-                Object.keys( select[outerItem] ).forEach((innerItem, innerIndex)=>{
+            if (selectEl) {
+                Object.keys(select[outerItem]).forEach((innerItem, innerIndex) => {
                     string += `
                         <option value="${innerItem}">${ select[outerItem][innerItem]['label'] }</option>
                     `
@@ -45,22 +43,22 @@ window.$form = {
     initFormData(
         formEl,
         data = {}
-    ){
-        if( !formEl || +formEl.nodeType !== 1 ){            
+    ) {
+        if (!formEl || +formEl.nodeType !== 1) {            
             return
         }
 
         let el
 
         // 遍历
-        Object.keys( data || {} ).forEach((item, index)=>{
-            el = formEl.querySelector( `[name="${item}"]` )
-            if( el ){
+        Object.keys(data || {}).forEach((item, index) => {
+            el = formEl.querySelector(`[name="${item}"]`)
+            if (el) {
                 el.value = data[item]['value']
-                if( data[item]['_readonly'] ){
+                if (data[item]['_readonly']) {
                     el.setAttribute('readonly', 'readonly')
                 }
-                if( data[item]['_eventName'] ){
+                if (data[item]['_eventName']) {
                     el.setAttribute('data-eventName', data[item]['_eventName'])
                 }
             }
@@ -78,22 +76,21 @@ window.$form = {
         formEl,
         eventType,
         dispatchEventName
-    ){
-        if( 
+    ) {
+        if ( 
             !formEl || +formEl.nodeType !== 1
             || !eventType
             || !dispatchEventName
-        ){            
+        ) {            
             return
         }
 
-        let els = formEl.querySelectorAll( `[data-eventName]` ) || []
-
-        if( els && els.length ){
-            els.forEach((item, index)=>{
-                if( item ){                    
+        let els = formEl.querySelectorAll(`[data-eventName]`) || []
+        if (els && els.length) {
+            els.forEach((item, index) => {
+                if (item) {                    
                     // 监听事件
-                    item.addEventListener(eventType, function( evte ){
+                    item.addEventListener(eventType, function(evte) {
                         // 派发自定义的客户端事件
                         window.$util.emitCustomEvent(
                             dispatchEventName, 
@@ -119,18 +116,17 @@ window.$form = {
         el,
         formData = {},
         tipsData = {}
-    ){
-        if( !el || +el.nodeType !== 1 ){            
+    ) {
+        if (!el || +el.nodeType !== 1) {            
             return
         }
 
         let value
-
         // 遍历
-        Object.keys( tipsData ).forEach((item, index)=>{
-            if( formData[item] ){
+        Object.keys(tipsData).forEach((item, index) => {
+            if (formData[item]) {
                 value = formData[item]['value']
-                el.textContent = ( tipsData[item][String( value )] || '' ).trim()
+                el.textContent = (tipsData[item][String(value)] || '').trim()
             }
         })
     },

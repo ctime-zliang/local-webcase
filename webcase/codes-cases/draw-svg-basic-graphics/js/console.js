@@ -8,64 +8,64 @@
 const _console = console
 
 console = {
-    log( content ){
+    log(content) {
         // 其他操作
-        _console.info( '提示：' )
-        _console.log( content )
+        _console.info('提示：')
+        _console.log(content)
     },
-    warn( content ){
+    warn(content) {
         // 其他操作
-        _console.info( '提示：' )
-        _console.warn( content )
+        _console.info('提示：')
+        _console.warn(content)
     },
-    info( content ){
+    info(content) {
         // 其他操作
-        _console.info( '提示：' )
-        _console.info( content )
+        _console.info('提示：')
+        _console.info(content)
     },
-    error( content ){
+    error(content) {
         // 其他操作
-        _console.info( '提示：' )
-        _console.error( content )
+        _console.info('提示：')
+        _console.error(content)
     },
-    time( content ){
+    time(content) {
         // 其他操作
-        _console.info( '提示：' )
-        _console.time( content )
+        _console.info('提示：')
+        _console.time(content)
     },
-    timeEnd( content ){
+    timeEnd(content) {
         // 其他操作
-        _console.info( '提示：' )
-        _console.timeEnd( content )
+        _console.info('提示：')
+        _console.timeEnd(content)
     },
-    table( content ){
+    table(content) {
         // 其他操作
-        _console.info( '提示：' )
-        _console.table( content )
+        _console.info('提示：')
+        _console.table(content)
     },
-    trace( content ){
+    trace(content) {
         // 其他操作
-        _console.info( '提示：' )
-        _console.trace( content )
+        _console.info('提示：')
+        _console.trace(content)
     },
-    count( content ){
+    count(content) {
         // 其他操作
-        _console.info( '提示：' )
-        _console.count( content )
+        _console.info('提示：')
+        _console.count( content)
     },
-    assert( content ){
+    assert(content) {
         // 其他操作
-        _console.info( '提示：' )
-        _console.assert( content )
+        _console.info('提示：')
+        _console.assert(content)
     },
-    group( content ){
+    group(content) {
         // 其他操作
-        _console.info( '提示：' )
-        _console.group( content )
+        _console.info('提示：')
+        _console.group(content)
     },
-    groupEnd( content ){
+    groupEnd(content) {
         // 其他操作
-        _console.info( '提示：' )
-        _console.groupEnd( content )
+        _console.info('提示：')
+        _console.groupEnd(content)
     }
 }

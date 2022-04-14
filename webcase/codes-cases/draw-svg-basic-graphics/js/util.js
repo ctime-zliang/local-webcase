@@ -11,16 +11,15 @@ window.$util = {
      */
     jsonDeepCopy(
         data = {}
-    ){
+    ) {
         let res = null
-
         /* 防止拷贝出错时中断脚本 */
         try{
-            res = JSON.parse( JSON.stringify( data ) )
-        }catch( e ){
+            res = JSON.parse(JSON.stringify(data))
+        } catch (e) {
             res = null
             // 调用console接口即可完成其他操作
-            console.error( e ) 
+            console.error(e) 
         }
 
         return res
@@ -35,11 +34,11 @@ window.$util = {
     renderOprTips(
         el,
         text = ``
-    ){
-        if( !el || el.nodeType !== 1 ){
+    ) {
+        if (!el || el.nodeType !== 1) {
             return
         }
-        el.textContent = ( text || '' ).trim()
+        el.textContent = (text || '').trim()
     },
     /**
      * @method mergeOptions
@@ -51,14 +50,13 @@ window.$util = {
     mergeOptions( 
         defaultOptions = {},
         options = {}
-    ){
-        let opts = {}
-    
+    ) {
+        let opts = {}    
         /*
             这里不采用{...}运算符
             即不允许在this.options中写入额外的key 
          */
-        Object.keys( defaultOptions ).forEach((item, index)=>{
+        Object.keys(defaultOptions).forEach((item, index) => {
             opts[item] = typeof options[item] !== 'undefined' ? options[item] : defaultOptions[item]
         })
     
@@ -72,7 +70,7 @@ window.$util = {
      */
     getBoundingClientRect(
         element
-    ){
+    ) {
         return element.getBoundingClientRect()
     },
     /**
@@ -85,7 +83,7 @@ window.$util = {
     emitCustomEvent(
         dispatchEventName,
         data = {}
-    ){
+    ) {
         let event = new CustomEvent(
             dispatchEventName, 
             {
@@ -94,7 +92,6 @@ window.$util = {
                 }
             }
         )
-
         // 派发
         document.dispatchEvent( event )
     },
@@ -108,14 +105,12 @@ window.$util = {
     groupArray(
         array,
         len
-    ){
+    ) {
         let index = 0
         let newArray = []
-
-        while( index < array.length ){
-            newArray.push( array.slice(index, index += len) )
+        while (index < array.length) {
+            newArray.push( array.slice(index, index += len))
         }
-
         return newArray
     }
 }

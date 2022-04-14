@@ -34,12 +34,12 @@ const DEFAULT_OPTIONS = {
 function DrawSVG(
     canvasDom,
     options = {}
-){    
-    if( 
+) {    
+    if ( 
         !canvasDom || canvasDom.nodeType !== 1
-        || Object.prototype.toString.call( options ).slice(8, -1).toLowerCase() !== 'object'
-    ){
-        throw new Error( 'Illegal parameter.' )
+        || Object.prototype.toString.call(options).slice(8, -1).toLowerCase() !== 'object'
+    ) {
+        throw new Error('Illegal parameter.')
     }
     
     // 初始化属性
@@ -47,7 +47,7 @@ function DrawSVG(
     this.cnsRect = {}
     this.options = window.$util.mergeOptions(DEFAULT_OPTIONS, options)
     // 修改 几何类型 参数项
-    this.modifyGeometryType( options.type )
+    this.modifyGeometryType(options.type)
     // 标记属性
     this.hasBindMousemoveEvent = false
 
@@ -56,14 +56,14 @@ function DrawSVG(
     this.targetDom = null 
 
     // 修改this指向并返回一个新的事件句柄函数
-    this.handlerMousedown = handlerMousedown.bind( this )
-    this.handlerMousemove = handlerMousemove.bind( this )
-    this.handlerMouseup = handlerMouseup.bind( this )
-    this.handlerContextMenu = handlerContextMenu.bind( this )
+    this.handlerMousedown = handlerMousedown.bind(this)
+    this.handlerMousemove = handlerMousemove.bind(this)
+    this.handlerMouseup = handlerMouseup.bind(this)
+    this.handlerContextMenu = handlerContextMenu.bind(this)
 }
 
 /************************************ 类 原型方法 ************************************/ 
-DrawSVG.prototype.init = function(){
+DrawSVG.prototype.init = function() {
     this.canvasDom.addEventListener(
         'mousedown', 
         this.handlerMousedown, 
@@ -83,32 +83,32 @@ DrawSVG.prototype.init = function(){
 /* 修改几何类型 */
 DrawSVG.prototype.modifyGeometryType = function( 
     geometryType
-){
-    this.options.geometryType = DEFAULT_TYPE_ARR.indexOf( geometryType ) <= -1 ? DEFAULT_TYPE_ARR[0] : geometryType
+) {
+    this.options.geometryType = DEFAULT_TYPE_ARR.indexOf(geometryType) <= -1 ? DEFAULT_TYPE_ARR[0] : geometryType
 }
 /* 修改填充样式 */
 DrawSVG.prototype.modifyFill = function( 
     fill
-){
-    this.options.fill = String( fill ) || DEFAULT_OPTIONS.fill
+) {
+    this.options.fill = String(fill) || DEFAULT_OPTIONS.fill
 }
 /* 修改描边颜色 */
 DrawSVG.prototype.modifyStrokeColor = function( 
     strokeColor
-){
-    this.options.strokeColor = String( strokeColor ) || DEFAULT_OPTIONS.strokeColor
+) {
+    this.options.strokeColor = String(strokeColor) || DEFAULT_OPTIONS.strokeColor
 }
 /* 修改描边宽度 */
 DrawSVG.prototype.modifyStrokeWidth = function( 
     strokeWidth
-){
-    this.options.strokeWidth = String( strokeWidth ) || DEFAULT_OPTIONS.strokeWidth
+) {
+    this.options.strokeWidth = String(strokeWidth) || DEFAULT_OPTIONS.strokeWidth
 }
 /* 修改描边透明度 */
 DrawSVG.prototype.modifyStrokeOpacity = function( 
     strokeOpacity
-){
-    this.options.strokeOpacity = String( strokeOpacity ) || DEFAULT_OPTIONS.strokeOpacity
+) {
+    this.options.strokeOpacity = String(strokeOpacity) || DEFAULT_OPTIONS.strokeOpacity
 }
 
 

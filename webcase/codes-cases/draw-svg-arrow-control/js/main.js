@@ -1,8 +1,8 @@
 ﻿/* 
     main.js
  */
-const ArrowPath = document.getElementById( 'arrowPath' )
-const SourcePointsOfPath = window.$methods.getPointsOfPath( ArrowPath )
+const ArrowPath = document.getElementById('arrowPath')
+const SourcePointsOfPath = window.$methods.getPointsOfPath(ArrowPath)
 
 // 添加控制点
 const CirclesArr = window.$methods.createCircleControlDots(ArrowPath.parentNode, SourcePointsOfPath)
@@ -30,14 +30,14 @@ let POSRECT = {}
 // mousedown
 function handlerMouseDown(
 	evte 
-){		
+) {		
 	// 获取鼠标按下时的尺寸&坐标参数
-	let mouseDownRect = window.$handler.getMouseDownRect.bind( this )(
+	let mouseDownRect = window.$handler.getMouseDownRect.bind(this)(
 		evte,
 		CanvasRect
 	)
 	// 获取点击时的坐标组
-	let initControlPoints = window.$methods.getPointsOfPath( ArrowPath )
+	let initControlPoints = window.$methods.getPointsOfPath(ArrowPath)
 	// 获取点击时的鼠标坐标
 	let initCursorPosition = window.$handler.getMousePositionOfRealTime(
 		evte, 
@@ -67,7 +67,7 @@ function handlerMouseDown(
 	document.addEventListener('mousemove', handlerMouseMove, false)
 }
 // mousemove
-function handlerMouseMove( evte ){
+function handlerMouseMove(evte) {
 	let realTimeControlPoints
 	
 	// 获取鼠标实时坐标
@@ -79,7 +79,7 @@ function handlerMouseMove( evte ){
 	POSRECT.newX = realTimeCursorPosition.newX
 	POSRECT.newY = realTimeCursorPosition.newY
 	
-	if( POSRECT.isCanRotate ){
+	if (POSRECT.isCanRotate) {
 		// 获取鼠标的实时旋转角度
 		POSRECT.newAngle = window.$handler.getAngleOfXAxial(
 			{x: POSRECT.newX, y: POSRECT.newY},
@@ -92,13 +92,13 @@ function handlerMouseMove( evte ){
 			POSRECT.initControlPoints,
 			{x: POSRECT.rotateCenterPoint.x, y: POSRECT.rotateCenterPoint.y}
 		)
-	}else{
+	} else {
 		realTimeControlPoints = POSRECT.initControlPoints
 	}	
 	POSRECT.rotateAngle = POSRECT.isCanRotate ? POSRECT.newAngle : POSRECT.initAngle
 
 	// 异步 - 下一轮EventLoop
-	window.setTimeout(()=>{	
+	window.setTimeout(() => {	
 		// 计算复位后的鼠标坐标
 		let reductionMousePoints = window.$math.getDotsAfterRotate(
 			-POSRECT.rotateAngle,
@@ -133,11 +133,10 @@ function handlerMouseMove( evte ){
 // mouseup
 function handlerMouseUp(
 	evte 
-){	
+) {	
 	// 移除mousemove
 	document.removeEventListener('mousemove', handlerMouseMove)
-
-	console.log( POSRECT )
+	console.log(POSRECT)
 }
 
 
