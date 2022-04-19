@@ -12,26 +12,13 @@
 <body>
 <div class="container"></div>
 </body>
+<script type="text/javascript" src="./js/inherit.js"></script>
 <script type="text/javascript" src="./js/main.js"></script>
 <script>
 {
 
 
 console.log('%c=> 组合继承(借用构造函数继承+原型链继承)', 'color: #ff0000;')
-function Animal(type) {
-    this.type = type
-    /* 引用类型的属性 */
-    this.features = [`move`]
-    /* 本地方法 */
-    this.talk = function() {
-        return `I can talk.`
-    }
-}
-Animal.prototype.phyComposition = [`heart*1`]
-Animal.prototype.ptt = `Animal PTT`
-Animal.prototype.eat = function() {
-    return `A(n) ${this.type} his name is ${this.name || '-'} is eating.`
-}
 
 /* 
     组合继承(借用构造函数继承+原型链继承) 
@@ -40,40 +27,39 @@ Animal.prototype.eat = function() {
             2. 子类的实例将共享父类中 prototype 所有引用属性/方法
             3. 子类实例对继承自父类 prototype 上的引用属性做修改时将影响到子类和父类的实例
 */
-function Person(name) {
-    Animal.call(this, 'human')
+function Human(name) {
+    Biological.call(this, 'human')
     this.name = name
     this.hobbies = []
 }
-
-Person.prototype = new Animal('human')
-Person.prototype.constructor = Person
-Person.prototype.work = function() {
+Human.prototype = new Biological('human')
+Human.prototype.constructor = Human
+Human.prototype.work = function() {
     return `${this.name} is working.`
 }
 
-const dog = new Animal('dog')
+const dog = new Biological('dog')
 console.log(`\n··· dog >>>`)
 console.log(dog)
 console.log(dog.eat())
 dog.features.push(`fly`)
 
-const alex = new Person('alex')
+const alex = new Human('alex')
 console.log(`\n··· alex >>>`)
 console.log(alex)
 console.log(alex.eat())
 console.log(alex.work())
-console.log(alex instanceof Person, alex instanceof Animal)
+console.log(alex instanceof Human, alex instanceof Biological)
 alex.phyComposition.push(`kidney*3`)
 
-const json = new Person(`json`)
+const json = new Human(`json`)
 json.features.push(`swim`)
 json.hobbies.push(`read`)
 console.log(`\n··· json >>>`)
 console.log(json)
 console.log(json.eat())
 console.log(json.work())
-console.log(json instanceof Person, json instanceof Animal)
+console.log(json instanceof Human, json instanceof Biological)
 
 
 }
