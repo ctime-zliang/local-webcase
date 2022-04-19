@@ -17,7 +17,7 @@
 {
 
 
-console.log('%c=> 原型链继承', 'color: #ff0000;')
+console.log('%c=> 原型式继承', 'color: #ff0000;')
 function Animal(type) {
     this.type = type
     /* 引用类型的属性 */
@@ -33,22 +33,24 @@ Animal.prototype.eat = function() {
     return `A(n) ${this.type} his name is ${this.name || '-'} is eating.`
 }
 
-function Person(name) {
-    this.name = name
-    this.hobbies = []
-}
-
 /* 
-    原型链继承
+    原型式继承
+        实际上是将"原型链继承"方式包装成"工厂函数"形式
         缺点:
-            1. 实际上子类将共享同一个父类的属性和方法
-                因此子类的实例将共享父类中所有本地引用属性/方法和 prototype 所有引用属性/方法
+            1. 子类的实例将共享父类中 prototype 所有引用属性/方法
             2. 子类实例对继承自父类 prototype 上的引用属性做修改时将影响到子类和父类的实例
 */
-Person.prototype = new Animal('human')
-Person.prototype.constructor = Person
-Person.prototype.work = function() {
-    return `${this.name} is working.`
+function createChildInstance(ParentInstance, name) {
+    function Child() {
+        this.name = name
+        this.hobbies = []
+    }
+    Child.prototype = ParentInstance
+    Child.prototype.constructor = Child
+    Child.prototype.work = function() {
+        return `${this.name} is working.`
+    }
+    return new Child()
 }
 
 const dog = new Animal('dog')
@@ -57,22 +59,18 @@ console.log(dog)
 console.log(dog.eat())
 dog.features.push(`fly`)
 
-const alex = new Person('alex')
+const alex = createChildInstance(new Animal('human'), 'alex')
 console.log(`\n··· alex >>>`)
 console.log(alex)
 console.log(alex.eat())
-console.log(alex.work())
-console.log(alex instanceof Person, alex instanceof Animal)
 alex.phyComposition.push(`kidney*3`)
 
-const json = new Person(`json`)
+const json = createChildInstance(new Animal('human'), 'json')
 json.features.push(`swim`)
 json.hobbies.push(`read`)
 console.log(`\n··· json >>>`)
 console.log(json)
 console.log(json.eat())
-console.log(json.work())
-console.log(json instanceof Person, json instanceof Animal)
 
 
 }

@@ -17,7 +17,7 @@
 {
 
 
-console.log('%c=> 原型链继承', 'color: #ff0000;')
+console.log('%c=> 寄生组合式继承', 'color: #ff0000;')
 function Animal(type) {
     this.type = type
     /* 引用类型的属性 */
@@ -34,19 +34,38 @@ Animal.prototype.eat = function() {
 }
 
 function Person(name) {
+    Animal.call(this, 'human')
     this.name = name
     this.hobbies = []
 }
+Person.prototype.work = function() {
+    return `${this.name} is working.`
+}
 
 /* 
-    原型链继承
-        缺点:
-            1. 实际上子类将共享同一个父类的属性和方法
-                因此子类的实例将共享父类中所有本地引用属性/方法和 prototype 所有引用属性/方法
-            2. 子类实例对继承自父类 prototype 上的引用属性做修改时将影响到子类和父类的实例
+    寄生组合式继承
+        1. 无法继承父类的本地属性和本地方法(需要在子类中以 call 方式执行父类)
+        2. 子类实例对继承自父类 prototype 上的引用属性做修改时将影响到子类和父类的实例
 */
-Person.prototype = new Animal('human')
-Person.prototype.constructor = Person
+function classExtends(Child, Parent) {
+    const prototype = createBridgingInstance(Parent.prototype)
+    // const prototype = Object.create(Parent.prototype)
+    Child.prototype = prototype
+    Child.prototype.constructor = Child
+}
+function createBridgingInstance(reference) {
+    function Bridging() {}
+    Bridging.prototype = reference
+    Bridging.prototype.constructor = Bridging
+    return new Bridging()
+}
+
+function Person(name) {
+    Animal.call(this, 'human')
+    this.name = name
+    this.hobbies = []
+}
+classExtends(Person, Animal)
 Person.prototype.work = function() {
     return `${this.name} is working.`
 }
@@ -62,17 +81,15 @@ console.log(`\n··· alex >>>`)
 console.log(alex)
 console.log(alex.eat())
 console.log(alex.work())
-console.log(alex instanceof Person, alex instanceof Animal)
 alex.phyComposition.push(`kidney*3`)
 
-const json = new Person(`json`)
+const json = new Person('json')
 json.features.push(`swim`)
 json.hobbies.push(`read`)
 console.log(`\n··· json >>>`)
 console.log(json)
 console.log(json.eat())
 console.log(json.work())
-console.log(json instanceof Person, json instanceof Animal)
 
 
 }

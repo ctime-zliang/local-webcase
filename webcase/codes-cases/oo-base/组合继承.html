@@ -17,7 +17,7 @@
 {
 
 
-console.log('%c=> 原型链继承', 'color: #ff0000;')
+console.log('%c=> 组合继承(借用构造函数继承+原型链继承)', 'color: #ff0000;')
 function Animal(type) {
     this.type = type
     /* 引用类型的属性 */
@@ -33,18 +33,19 @@ Animal.prototype.eat = function() {
     return `A(n) ${this.type} his name is ${this.name || '-'} is eating.`
 }
 
+/* 
+    组合继承(借用构造函数继承+原型链继承) 
+        缺点:
+            1. 需要两次使用父类
+            2. 子类的实例将共享父类中 prototype 所有引用属性/方法
+            3. 子类实例对继承自父类 prototype 上的引用属性做修改时将影响到子类和父类的实例
+*/
 function Person(name) {
+    Animal.call(this, 'human')
     this.name = name
     this.hobbies = []
 }
 
-/* 
-    原型链继承
-        缺点:
-            1. 实际上子类将共享同一个父类的属性和方法
-                因此子类的实例将共享父类中所有本地引用属性/方法和 prototype 所有引用属性/方法
-            2. 子类实例对继承自父类 prototype 上的引用属性做修改时将影响到子类和父类的实例
-*/
 Person.prototype = new Animal('human')
 Person.prototype.constructor = Person
 Person.prototype.work = function() {
