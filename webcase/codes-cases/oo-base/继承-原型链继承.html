@@ -15,17 +15,17 @@
 <script type="text/javascript" src="./js/inherit.js"></script>
 <script type="text/javascript" src="./js/main.js"></script>
 <script>
+console.log('%c=> 继承-原型链继承', 'color: #ff0000;')
+
 {
 
-
-console.log('%c=> 原型链继承', 'color: #ff0000;')
 
 function Human(name) {
     this.name = name
     this.hobbies = []
 }
 /* 
-    原型链继承
+    继承-原型链继承
         缺点:
             1. 实际上子类将共享同一个父类的属性和方法
                 因此子类的实例将共享父类中所有本地引用属性/方法和 prototype 所有引用属性/方法
