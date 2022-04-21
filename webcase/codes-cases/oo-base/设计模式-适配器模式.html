@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="./css/main.css" />
+<title>Code Case</title>
+</head>
+
+<body>
+<div class="container"></div>
+</body>
+<script type="text/javascript" src="./js/Biological.js"></script>
+<script type="text/javascript" src="./js/main.js"></script>
+<script>
+console.log('%c=> 设计模式-适配器模式', 'color: #ff0000;')
+
+{
+
+
+class GoogleMap {
+    constructor() {
+        /* ... */
+    }
+
+    render() {
+        console.log(`render google map`)
+    }
+}
+
+class BaiduMap {
+    constructor() {
+        /* ... */
+    }
+
+    display() {
+        console.log(`display baidu map`)
+    }
+}
+
+/* 
+    设置一个针对 BaiduMap 的适配器
+    在该适配器上部署 render 方法以实现在 BaiduMap 实例上间接调用 render
+ */
+class BaiduMapAdapter {
+    constructor() {
+        this.baiduMap = new BaiduMap()
+    }
+
+    render() {
+        this.baiduMap.display()
+    }
+}
+
+const mapRender = (instance) => {
+    if (instance && instance.render instanceof Function) {
+        instance.render()
+        return
+    }
+    console.warn(`${instance.constructor.name}.render is not a function.`)
+}
+
+mapRender(new GoogleMap())
+mapRender(new BaiduMap())
+mapRender(new BaiduMapAdapter())
+
+}
+</script>
+</html>
