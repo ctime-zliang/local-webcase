@@ -15,28 +15,29 @@
 <script type="text/javascript" src="./js/Biological.js"></script>
 <script type="text/javascript" src="./js/main.js"></script>
 <script>
-console.log('%c=> 设计模式-单例模式', 'color: #ff0000;')
+console.log('%c=> 设计模式-门面模式(外观模式)', 'color: #ff0000;')
 
 {
 
 
-/* 
-    对于单例模式, 无论访问多少次, 都应只返回首次运行时的那个实例
+/*
+    接口封装, 以实现对外的接口风格统一
  */
-const BiologicalSingleInstance = (() => {
-    let instance = null
-    return (type) => {
-        if (instance instanceof Biological) {
-            return instance
-        }
-        return (instance = new Biological(type), instance)
-    }
-})()
 
-const dog = BiologicalSingleInstance(`dog`)
-console.log(dog.breathing())
-const human = BiologicalSingleInstance(`human`)
-console.log(human.breathing())
+/* 设置元素透明度 */
+const setElementOpacity = (element, value) => {
+    element.style.opacity = value
+    element.style.filter = `alpha(opacity=${value * 100})`
+}
+
+/* 事件绑定 */
+const bindEvent = (element, type, cb, capture = false) => {
+    if (typeof element.attachEvent !== 'undefined') {
+        element.attachEvent('on' + type, cb)
+        return
+    }
+    element.addEventListener(type, cb, capture)
+}
 
 
 }
