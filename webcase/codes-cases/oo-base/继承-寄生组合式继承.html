@@ -17,6 +17,12 @@
 <script>
 console.log('%c=> 继承-寄生组合式继承', 'color: #ff0000;')
 
+/* 
+    继承-寄生组合式继承
+        1. 无法继承父类的本地属性和本地方法(需要在子类中以 call 方式执行父类)
+        2. 子类实例对继承自父类 prototype 上的引用属性做修改时将影响到子类和父类的实例
+*/
+
 {
 
 
@@ -29,11 +35,6 @@ Human.prototype.work = function() {
     return `${this.name} is working.`
 }
 
-/* 
-    继承-寄生组合式继承
-        1. 无法继承父类的本地属性和本地方法(需要在子类中以 call 方式执行父类)
-        2. 子类实例对继承自父类 prototype 上的引用属性做修改时将影响到子类和父类的实例
-*/
 function classExtends(Child, Parent) {
     const prototype = createBridgingInstance(Parent.prototype)
     // const prototype = Object.create(Parent.prototype)

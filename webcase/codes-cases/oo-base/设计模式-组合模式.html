@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="./css/main.css" />
+<title>Code Case</title>
+</head>
+
+<body>
+<div class="container"></div>
+</body>
+<script type="text/javascript" src="./js/Biological.js"></script>
+<script type="text/javascript" src="./js/main.js"></script>
+<script>
+console.log('%c=> 设计模式-组合模式', 'color: #ff0000;')
+
+/*
+    将对象组合成"树"结构, 以表示"部分-整体"的层次结构
+    通过对象的多态表现, 使得外部对单个对象或组合对象的使用具有一致性
+ */
+
+{
+
+
+console.log(`\n-> 案例一: 命令执行`)
+
+class Command {
+    add() {
+        console.log(`method: add, in Command`)
+    }
+
+    doTask() {
+        console.log(`method: doTask, in Command`)
+    }
+}
+
+/* 命令管理类 */
+class MacroCommand extends Command {
+    constructor() {
+        super()
+        this.cmds = []
+    }
+
+    add(cmdInstance) {
+        this.cmds.push(cmdInstance)
+    }
+
+    doTask() {
+        for (let i = 0; i < this.cmds.length; i++) {
+            if (this.cmds[i].doTask) {
+                this.cmds[i].doTask()
+            }
+        }
+    }
+}
+
+class Television extends Command {
+    constructor() {
+        super()
+        this.name = 'Color Television'
+    }
+
+    doTask() {
+        console.log(`${this.name}: Play TV.`)
+    }
+}
+
+class Radio extends Command {
+    constructor() {
+        super()
+        this.name = 'Old Radio'
+    }
+
+    doTask() {
+        console.log(`${this.name}: Play Broadcast.`)
+    }
+}
+
+const macroCommand = new MacroCommand()
+const television = new Television()
+const radio = new Radio()
+macroCommand.add(television)
+macroCommand.add(radio)
+macroCommand.doTask()
+
+console.log(`----------------------------------`)
+
+const supperMacroCommand = new MacroCommand()
+supperMacroCommand.add(radio)
+supperMacroCommand.add(macroCommand)
+supperMacroCommand.doTask()
+console.log(supperMacroCommand)
+
+
+
+}
+
+/************************************************************/
+/************************************************************/
+/************************************************************/
+
+{
+   
+
+console.log(`\n-> 案例二: ***`)
+ 
+
+}
+
+</script>
+</html>

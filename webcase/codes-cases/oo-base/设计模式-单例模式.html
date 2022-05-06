@@ -17,12 +17,13 @@
 <script>
 console.log('%c=> 设计模式-单例模式', 'color: #ff0000;')
 
-{
-
-
 /* 
     对于单例模式, 无论访问多少次, 都应只返回首次运行时的那个实例
  */
+
+{
+
+
 const BiologicalSingleInstance = (() => {
     let instance = null
     return (type) => {

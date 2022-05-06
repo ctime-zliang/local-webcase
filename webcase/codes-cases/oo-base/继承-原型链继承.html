@@ -17,13 +17,6 @@
 <script>
 console.log('%c=> 继承-原型链继承', 'color: #ff0000;')
 
-{
-
-
-function Human(name) {
-    this.name = name
-    this.hobbies = []
-}
 /* 
     继承-原型链继承
         缺点:
@@ -31,6 +24,15 @@ function Human(name) {
                 因此子类的实例将共享父类中所有本地引用属性/方法和 prototype 所有引用属性/方法
             2. 子类实例对继承自父类 prototype 上的引用属性做修改时将影响到子类和父类的实例
 */
+
+{
+
+
+function Human(name) {
+    this.name = name
+    this.hobbies = []
+}
+
 Human.prototype = new Biological('human')
 Human.prototype.constructor = Human
 Human.prototype.work = function() {

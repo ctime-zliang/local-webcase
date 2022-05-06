@@ -17,14 +17,15 @@
 <script>
 console.log('%c=> 继承-借用构造函数继承', 'color: #ff0000;')
 
-{
-
-
 /* 
     继承-借用构造函数继承 
         缺点:
             1. 无法继承父类上被定义在父类 prototype 上的属性和方法
 */
+
+{
+
+
 function Human(name) {
     Biological.call(this, 'human')
     this.name = name

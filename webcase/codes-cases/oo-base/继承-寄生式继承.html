@@ -17,13 +17,14 @@
 <script>
 console.log('%c=> 继承-寄生式继承', 'color: #ff0000;')
 
-{
-
-
 /* 
     继承-寄生式继承
         1. 子类实例对继承自父类 prototype 上的引用属性做修改时将影响到子类和父类的实例
 */
+
+{
+
+
 function createChildInstance(ParentInstance, name) {
     const Child = Object.create(ParentInstance)
     Child.name = name
