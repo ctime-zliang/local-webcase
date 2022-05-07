@@ -76,10 +76,22 @@ class Bouns {
     }
 }
 
+const salary = 10000
+const staff = new Bouns(salary)
 
-const staff = new Bouns(10000)
+// 策略修改并计算
 staff.setStrategy(new BonusStrategyA())
 console.log(staff.calculate())
+staff.setStrategy(new BonusStrategyC())
+console.log(staff.calculate())
+
+/* 
+    使用一个"等级"到"计算方法"的哈希表来实现, 也是一种策略模式
+    const Strategy = { 
+        // 策略哈希表 
+    }
+    const bouns = Strategy[level]()
+ */
 
 
 }
