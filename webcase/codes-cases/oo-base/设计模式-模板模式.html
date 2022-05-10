@@ -19,7 +19,7 @@ console.log('%c=> 设计模式-模板(方法)模式', 'color: #ff0000;')
 
 /*
     在父类中定义抽象方法和逻辑框架, 在子类中定义具体的实现
-    需要子类拥有相同或相似的处理逻辑
+    需要子类拥有相同或相似的处理逻辑, 即具有相似的形状
  */
 
 {
@@ -33,6 +33,9 @@ class Interview {
         this.companyName = companyName
     }
 
+    /*
+        start 作为模板方法, 定义了子类具体的处理逻辑 
+     */
     start() {
         this.writtenTest()
         this.technicalInterview()
@@ -41,19 +44,19 @@ class Interview {
     }
 
     writtenTest() {
-        throw new Error(`Written Test: 必须在子类实现该方法`)
+        throw new Error(`Written Test: 必须在子类实现该方法.`)
     }
 
     technicalInterview() {
-        throw new Error(`Technical Interview: 必须在子类实现该方法`)
+        throw new Error(`Technical Interview: 必须在子类实现该方法.`)
     }
     
     leaderInterview() {
-        throw new Error(`Leader Interview: 必须在子类实现该方法`)
+        throw new Error(`Leader Interview: 必须在子类实现该方法.`)
     }
 
     waitNotice() {
-        throw new Error(`Wait Notice: 必须在子类实现该方法`)
+        throw new Error(`Wait Notice: 必须在子类实现该方法.`)
     }
 }
 
