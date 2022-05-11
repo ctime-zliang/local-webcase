@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="./css/main.css" />
+<title>Code Case</title>
+</head>
+
+<body>
+<div class="container"></div>
+</body>
+<script type="text/javascript" src="./js/Biological.js"></script>
+<script type="text/javascript" src="./js/main.js"></script>
+<script>
+console.log('%c=> 设计模式-命令模式', 'color: #ff0000;')
+
+/*
+    用一种松耦合的方式来设计程序, 使得请求发送者和请求接收者能够消除彼此之间的耦合关系
+    命令模式的四个主要部分:
+        - 命令对象
+        - 委托者(client)
+            指创建命令对象并把它传递给调用者的代码逻辑
+        - 调用者(invoker)
+            使用这个命令对象并调用它的对应方法的对象
+        - 接受者(receiver)
+            被调用方法所在的对象
+ */
+
+{
+
+
+console.log(`\n-> 案例一: 宏命令`)
+
+/*
+    宏命令是一组命令的集合, 通过执行宏命令的方式, 可以批次执行命令
+ */
+
+class Command {
+    add() {
+        throw new Error(`无法调用此方法.`)
+    }
+
+    doTask() {
+        throw new Error(`无法调用此方法.`)
+    }
+}
+
+/* 命令管理类 */
+class MacroCommand extends Command {
+    constructor(name) {
+        super()
+        this.name = name
+        this.cmds = []
+    }
+
+    add(cmdInstance) {
+        this.cmds.push(cmdInstance)
+    }
+
+    doTask() {
+        console.log(`正在执行组合命令: ${this.name}.`)
+        for (let i = 0; i < this.cmds.length; i++) {
+            if (this.cmds[i].doTask) {
+                this.cmds[i].doTask()
+            }
+        }
+    }
+}
+
+class Television extends Command {
+    constructor() {
+        super()
+        this.name = 'Color Television'
+    }
+
+    doTask() {
+        console.log(`- ${this.name}: Play TV.`)
+    }
+}
+
+class Radio extends Command {
+    constructor() {
+        super()
+        this.name = 'Old Radio'
+    }
+
+    doTask() {
+        console.log(`- ${this.name}: Play Broadcast.`)
+    }
+}
+
+const macroCommand = new MacroCommand('宏命令(组合命令)')
+const television = new Television()
+const radio = new Radio()
+macroCommand.add(television)
+macroCommand.add(radio)
+macroCommand.doTask()
+
+
+}
+
+</script>
+</html>
