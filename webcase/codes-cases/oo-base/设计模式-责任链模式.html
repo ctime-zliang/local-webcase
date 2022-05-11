@@ -94,6 +94,16 @@ class Chain {
     }
 }
 
+Function.prototype.after = function(fn) {
+    const self = this
+    return function() {
+        const nowResult = self.apply(self, arguments)
+        if (nowResult ===  NEXT_GOING_TAG) {
+            return fn.apply(self, arguments)
+        }
+    }
+}
+
 /* 实例化处理节点 */
 const orderIn500Node = new Chain(orderIn500)
 const orderIn200Node = new Chain(orderIn200)
@@ -104,6 +114,15 @@ orderIn500Node.nextInstance = orderIn200Node
 orderIn200Node.nextInstance = orderInCommonNode
 
 orderIn500Node.start(1, true, 3000)
+
+console.log('---------------------------------------------')
+const order1 = orderIn500.after(orderIn200)
+const order2 = order1.after(orderInCommon)
+/* 
+    const order = orderIn500.after(orderIn200).after(orderInCommon)
+    order(1, true, 3000)
+ */
+order2(1, true, 3000)
 
 
 }
