@@ -102,5 +102,102 @@ macroCommand.doTask()
 
 }
 
+/************************************************************/
+/************************************************************/
+/************************************************************/
+
+{
+
+
+console.log(`\n-> 案例二: 服务订餐`)
+
+/* 接受者 */
+class Cook {
+    constructor(name) {
+        this.name = name
+    }
+
+    stirFry() {
+        console.log(`${this.name} 执行炒菜.`)
+    }
+}
+
+class Cleaner {
+    constructor(name) {
+        this.name = name
+    }
+
+    prepare() {
+        console.log(`${this.name} 执行就餐清洁预备.`)
+    }
+}
+
+class Finance {
+    constructor(name) {
+        this.name = name
+    }
+
+    collection(amount) {
+        console.log(`${this.name} 已收款: ${amount}.`)
+    }
+}
+
+/* 中介命令 */
+class WaiterCommand {
+    constructor(cookReceiver, cleanReceiver) {
+        this.cookReceiver = cookReceiver
+        this.cleanReceiver = cleanReceiver
+    }
+
+    book() {
+        console.log(`已接收到订餐指令, 正在执行:`)
+        this.cleanReceiver.prepare()
+        this.cookReceiver.stirFry()
+    }
+}
+
+class CashierCommand {
+    constructor(financeReceiver) {
+        this.financeReceiver = financeReceiver
+    }
+
+    pay(amount) {
+        this.financeReceiver.collection(amount)
+    }
+}
+
+/* 发起者 */
+class Customer {
+    constructor(name) {
+        this.name = name
+    }
+
+    book(command) {
+        console.log(`${this.name} 开始订餐.`)
+        command.book()
+    }
+
+    pay(command, amount) {
+        console.log(`${this.name} 开始付款 ${amount}.`)
+        command.pay(amount)
+    }
+}
+
+/* 服务发起者 */
+const zhangsan = new Customer(`zhangsan`)
+/* 服务接收者 */
+const cooker = new Cook(`wangdachu`)
+const cleaner = new Cleaner(`lidama`)
+const financer = new Finance(`zhangxiansheng`)
+/* 中介命令 */
+const waiterCommand = new WaiterCommand(cooker, cleaner)
+const cashier = new CashierCommand(financer)
+
+zhangsan.book(waiterCommand)
+zhangsan.pay(cashier, 100)
+
+
+}
+
 </script>
 </html>
