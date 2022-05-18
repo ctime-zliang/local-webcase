@@ -50,11 +50,19 @@ class BaiduMap {
  */
 class BaiduMapAdapter {
     constructor() {
-        this.baiduMap = new BaiduMap()
+        this._baiduMap = new BaiduMap()
+    }
+
+    set baiduMap(value) {
+        this._baiduMap = value
+    }
+
+    get baiduMap() {
+        return this._baiduMap
     }
 
     render() {
-        this.baiduMap.display()
+        this._baiduMap.display()
     }
 }
 

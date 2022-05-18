@@ -45,19 +45,35 @@ class Command {
 class MacroCommand extends Command {
     constructor(name) {
         super()
-        this.name = name
-        this.cmds = []
+        this._name = name
+        this._cmds = []
+    }
+
+    set name(value) {
+        this._name = value
+    }
+
+    get name() {
+        return this._name
+    }
+
+    set cmds(value) {
+        this._cmds = value
+    }
+
+    get cmds() {
+        return this._cmds
     }
 
     add(cmdInstance) {
-        this.cmds.push(cmdInstance)
+        this._cmds.push(cmdInstance)
     }
 
     doTask() {
-        console.log(`正在执行组合命令: ${this.name}.`)
-        for (let i = 0; i < this.cmds.length; i++) {
-            if (this.cmds[i].doTask) {
-                this.cmds[i].doTask()
+        console.log(`正在执行组合命令: ${this._name}.`)
+        for (let i = 0; i < this._cmds.length; i++) {
+            if (this._cmds[i].doTask) {
+                this._cmds[i].doTask()
             }
         }
     }
@@ -67,6 +83,14 @@ class Television extends Command {
     constructor() {
         super()
         this.name = 'Color Television'
+    }
+
+    set name(value) {
+        this._name = value
+    }
+
+    get name() {
+        return this._name
     }
 
     doTask() {
@@ -80,8 +104,16 @@ class Radio extends Command {
         this.name = 'Old Radio'
     }
 
+    set name(value) {
+        this._name = value
+    }
+
+    get name() {
+        return this._name
+    }
+
     doTask() {
-        console.log(`- ${this.name}: Play Broadcast.`)
+        console.log(`- ${this._name}: Play Broadcast.`)
     }
 }
 

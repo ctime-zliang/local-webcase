@@ -38,8 +38,8 @@ function getIntersectionNode(head1, head2) {
     return pA
 }
 
-const coms =          [8, 4, 5]
-const arr1 =    [4, 1]
+const coms = [8, 4, 5]
+const arr1 = [4, 1]
 const arr2 = [5, 0, 1]
 
 const head = ven$setArray2List(coms)

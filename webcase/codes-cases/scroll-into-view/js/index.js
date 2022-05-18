@@ -19,11 +19,11 @@ function move(obj, target, speed, callback) {
     obj.timer = setInterval(() => {
         let oldValue = parseInt(Cache.get())
         let newValue = oldValue + speed
-        if((speed < 0 && newValue < target) || (speed > 0 && newValue > target)) {
+        if ((speed < 0 && newValue < target) || (speed > 0 && newValue > target)) {
             newValue = target
         }
         Cache.set(newValue)
-        if(newValue == target) {
+        if (newValue == target) {
             clearInterval(obj.timer)
             callback && callback()
         }
@@ -44,7 +44,7 @@ function updateElementAttr(hostElement, key, value) {
 
 function setItemSelectedByTarget(targetElemet) {
     const ulElement = document.querySelector('ul')
-    Array.from(ulElement.children).forEach((item, index) => {
+    Array.from(ulElement.children).forEach((item) => {
         if (item === targetElemet) {
             item.classList.add('ulist-item-active')
             return

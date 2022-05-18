@@ -59,28 +59,36 @@ console.log(`\n-> 案例二: 类组合(拼接)`)
     
 class Color {
     constructor(color) {
-        this.name = color
+        this._color = color
     }
 
-    getColor() {
-        return this.name
+    set color(value) {
+        this._color = value
+    }
+
+    get color() {
+        return this._color
     }
 }
 
 class Shape {
     constructor(shape) {
-        this.name = shape
+        this._shape = shape
     }
 
-    getShape() {
-        return this.name
+    set shape(value) {
+        this._shape = value
+    }
+
+    get shape() {
+        return this._shape
     }
 }
 
 class Tennis {
     constructor(color, shape) {
-        this.color = color
-        this.shape = shape
+        this._color = color
+        this._shape = shape
     }
 }
 

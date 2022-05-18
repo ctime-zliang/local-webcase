@@ -29,9 +29,33 @@ console.log(`\n-> 案例一: 图书馆借书管理`)
 /* 管理内部状态(属性)的 类 */
 class Book {
     constructor(isbn, name, author) {
-        this.isbn = isbn
-        this.name = name
-        this.author = author
+        this._isbn = isbn
+        this._name = name
+        this._author = author
+    }
+
+    set isbn(value) {
+        this._isbn = value
+    }
+
+    get isbn() {
+        return this._isbn
+    }
+
+    set name(value) {
+        this._name = value
+    }
+
+    get name() {
+        return this._name
+    }
+
+    set author(value) {
+        this._author = value
+    }
+
+    get author() {
+        return this._author
     }
 }
 

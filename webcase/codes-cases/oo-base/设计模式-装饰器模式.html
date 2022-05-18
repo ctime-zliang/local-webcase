@@ -24,6 +24,9 @@ console.log('%c=> 设计模式-装饰器模式', 'color: #ff0000;')
 {
 
 
+console.log(`\n-> 接口处理`)
+
+
 class User {
     constructor() {
         /* ... */
@@ -37,13 +40,21 @@ class User {
 
 class UserDecorator {
     constructor(userInstance) {
-        this.userInstance = userInstance
+        this._userInstance = userInstance
+    }
+
+    set userInstance(value) {
+        this._userInstance = value
+    }
+
+    get userInstance() {
+        return this._userInstance
     }
 
     updateName() {
         /* 功能拓展 */
         console.log(`正在更新用户名...`)
-        this.userInstance.updateName()
+        this._userInstance.updateName()
     }
 }
 

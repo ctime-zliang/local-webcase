@@ -3,12 +3,11 @@
 
     请注意，你需要找的是数组排序后的第 k 个最大的元素，而不是第 k 个不同的元素。
  */
-function findKthLargest (nums, k) {
+function findKthLargest(nums, k) {
     if (nums.length <= 0 || k > nums.length) {
         return null
     }
     const list = nums.sort((a, b) => { return +a - +b })
-    console.log(list)
     return list[nums.length - k]
 }
 

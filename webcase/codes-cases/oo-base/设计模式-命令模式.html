@@ -52,19 +52,35 @@ class Command {
 class MacroCommand extends Command {
     constructor(name) {
         super()
-        this.name = name
-        this.cmds = []
+        this._name = name
+        this._cmds = []
+    }
+
+    set name(value) {
+        this._name = value
+    }
+
+    get name() {
+        return this._name
+    }
+
+    set cmds(value) {
+        this._cmds = value
+    }
+
+    get cmds() {
+        return this._cmds
     }
 
     add(cmdInstance) {
-        this.cmds.push(cmdInstance)
+        this._cmds.push(cmdInstance)
     }
 
     doTask() {
-        console.log(`正在执行组合命令: ${this.name}.`)
-        for (let i = 0; i < this.cmds.length; i++) {
-            if (this.cmds[i].doTask) {
-                this.cmds[i].doTask()
+        console.log(`正在执行组合命令: ${this._name}.`)
+        for (let i = 0; i < this._cmds.length; i++) {
+            if (this._cmds[i].doTask) {
+                this._cmds[i].doTask()
             }
         }
     }
@@ -73,11 +89,19 @@ class MacroCommand extends Command {
 class Television extends Command {
     constructor() {
         super()
-        this.name = 'Color Television'
+        this._name = 'Color Television'
+    }
+
+    set name(value) {
+        this._name = value
+    }
+
+    get name() {
+        return this._name
     }
 
     doTask() {
-        console.log(`- ${this.name}: Play TV.`)
+        console.log(`- ${this._name}: Play TV.`)
     }
 }
 
@@ -87,8 +111,16 @@ class Radio extends Command {
         this.name = 'Old Radio'
     }
 
+    set name(value) {
+        this._name = value
+    }
+
+    get name() {
+        return this._name
+    }
+
     doTask() {
-        console.log(`- ${this.name}: Play Broadcast.`)
+        console.log(`- ${this_.name}: Play Broadcast.`)
     }
 }
 
@@ -114,55 +146,103 @@ console.log(`\n-> 案例二: 服务订餐`)
 /* 接受者 */
 class Cook {
     constructor(name) {
-        this.name = name
+        this._name = name
+    }
+
+    set name(value) {
+        this._name = value
+    }
+
+    get name() {
+        return this._name
     }
 
     stirFry() {
-        console.log(`${this.name} 执行炒菜.`)
+        console.log(`${this._name} 执行炒菜.`)
     }
 }
 
 class Cleaner {
     constructor(name) {
-        this.name = name
+        this._name = name
+    }
+
+    set name(value) {
+        this._name = value
+    }
+
+    get name() {
+        return this._name
     }
 
     prepare() {
-        console.log(`${this.name} 执行就餐清洁预备.`)
+        console.log(`${this._name} 执行就餐清洁预备.`)
     }
 }
 
 class Finance {
     constructor(name) {
-        this.name = name
+        this._name = name
+    }
+
+    set name(value) {
+        this._name = value
+    }
+
+    get name() {
+        return this._name
     }
 
     collection(amount) {
-        console.log(`${this.name} 已收款: ${amount}.`)
+        console.log(`${this._name} 已收款: ${amount}.`)
     }
 }
 
 /* 中介命令 */
 class WaiterCommand {
     constructor(cookReceiver, cleanReceiver) {
-        this.cookReceiver = cookReceiver
-        this.cleanReceiver = cleanReceiver
+        this._cookReceiver = cookReceiver
+        this._cleanReceiver = cleanReceiver
+    }
+
+    set cookReceiver(value) {
+        this._cookReceiver = value
+    }
+
+    get cookReceiver() {
+        return this._cookReceiver
+    }
+
+    set cleanReceiver(value) {
+        this._cleanReceiver = value
+    }
+
+    get cleanReceiver() {
+        return this._cleanReceiver
     }
 
     book() {
         console.log(`已接收到订餐指令, 正在执行:`)
-        this.cleanReceiver.prepare()
-        this.cookReceiver.stirFry()
+        this._cleanReceiver.prepare()
+        this._cookReceiver.stirFry()
     }
 }
 
 class CashierCommand {
     constructor(financeReceiver) {
-        this.financeReceiver = financeReceiver
+        this._financeReceiver = financeReceiver
+    }
+
+    set financeReceiver(value) {
+        this._financeReceiver = value
+    }
+
+    get financeReceiver() {
+        return this._financeReceiver
     }
 
     pay(amount) {
-        this.financeReceiver.collection(amount)
+        this._financeReceiver.collection(amount)
     }
 }
 
@@ -172,13 +252,21 @@ class Customer {
         this.name = name
     }
 
+    set name(value) {
+        this._name = value
+    }
+
+    get name() {
+        return this._name
+    }
+
     book(command) {
-        console.log(`${this.name} 开始订餐.`)
+        console.log(`${this._name} 开始订餐.`)
         command.book()
     }
 
     pay(command, amount) {
-        console.log(`${this.name} 开始付款 ${amount}.`)
+        console.log(`${this._name} 开始付款 ${amount}.`)
         command.pay(amount)
     }
 }

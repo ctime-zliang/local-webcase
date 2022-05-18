@@ -8,9 +8,7 @@ window.$util = {
      * @param {Element} el DOM元素
      * @return {Object}
      */
-	nodeIndexOf(
-		el
-	) {
+	nodeIndexOf(el) {
 		return [].indexOf.call(el.parentNode.children, el)
 	},
 	/**

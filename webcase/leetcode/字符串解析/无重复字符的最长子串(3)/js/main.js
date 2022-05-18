@@ -7,7 +7,7 @@
  * @param {string} s 被检测字符串
  * @return {number} 
  */
-function lengthOfLongestSubstring (s) {
+function lengthOfLongestSubstring(s) {
     if (!s || !s.length || s.length <= 1) {
         return (s || '').length || 0
     }

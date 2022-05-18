@@ -19,17 +19,29 @@ console.log('%c=> 设计模式-代理模式', 'color: #ff0000;')
 
 class Phone {
     constructor(name) {
-        this.name = name
+        this._name = name
     }
 
-    getName() {
-        return this.name
+    set name(value) {
+        this._name = value
+    }
+
+    get name() {
+        return this._name
     }
 }
 
 class Person {
     constructor(name) {
-        this.name = name
+        this._name = name
+    }
+
+    set name(value) {
+        this._name = value
+    }
+
+    get name() {
+        return this._name
     }
 }
 
@@ -89,11 +101,11 @@ class Star extends Person {
 class Assistant extends Person {
     constructor(name) {
         super(name)
-        this.star = null
+        this._star = null
     }
 
-    setStar(star) {
-        this.star = star
+    set star(value) {
+        this._star = value
     }
 
     purchasePhone(phone) {
@@ -108,7 +120,7 @@ class Assistant extends Person {
 const xiaoming = new Star(`Xiaoming`)
 const wang = new Assistant(`WangDaye`)
 
-wang.setStar(xiaoming)
+wang.star = xiaoming
 wang.purchasePhone(new Phone(`iPhone 8 Plus`))
 
 
@@ -127,15 +139,15 @@ console.log(`\n-> 保护代理`)
 class Partner extends Person {
     constructor(name) {
         super(name)
-        this.price = 0
+        this._price = 0
     }
 
-    setPrice(value) {
-        this.price = value
+    set price(value) {
+        this._price = value
     }
 
-    getPrice(value) {
-        return this.price
+    get price() {
+        return this._price
     }
 }
 
@@ -160,12 +172,24 @@ class Star extends Person {
 class Assistant extends Person {
     constructor(name) {
         super(name)
-        this.star = null
-        this.threshold = 10000
+        this._star = null
+        this._threshold = 10000
     }
 
-    setStar(star) {
-        this.star = star
+    set star(value) {
+        this._star = value
+    }
+
+    get star() {
+        return this._star
+    }
+
+    set threshold(value) {
+        this._threshold = value
+    }
+
+    get threshold() {
+        return this._threshold
     }
 
     /* 代言洽谈 */
@@ -182,13 +206,13 @@ class Assistant extends Person {
 const xiaoming = new Star(`Xiaoming`)
 const wang = new Assistant(`WangDaye`)
 
-wang.setStar(xiaoming)
+wang.star = xiaoming
 
 const carer = new Partner(`Carer`)
 const jane = new Partner(`Jane`)
 
-carer.setPrice(9000)
-jane.setPrice(12000)
+carer.price = 9000
+jane.price = 12000
 
 wang.businessNgotiation(carer)
 wang.businessNgotiation(jane)

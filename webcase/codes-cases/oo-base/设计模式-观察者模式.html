@@ -27,20 +27,20 @@ class Subject {
         this.observers = []
     }
 
+    set state(value) {
+        this._state = value
+    }
+
+    get state() {
+        return this._state
+    }
+
     addObserver(observer) {
         this.observers.push(observer)
     }
 
-    getState() {
-        return this.state
-    }
-
-    setState(state) {
-        this.state = state
-    }
-
     notify() {
-        const state = this.getState()
+        const state = this._state
         for (let observer of this.observers) {
             observer.update(state)
         }
@@ -50,11 +50,19 @@ class Subject {
 /* 观察者类 */
 class Observer {
     constructor(name) {
-        this.name = name
+        this._name = name
+    }
+
+    set name(value) {
+        this._name = value
+    }
+
+    get name() {
+        return this._name
     }
 
     update(state) {
-        console.log(`I am is observer name is ${this.name}, got data:`, state)
+        console.log(`I am is observer name is ${this._name}, got data:`, state)
     }
 }
 
@@ -65,7 +73,7 @@ const subject = new Subject('yellow')
 subject.addObserver(new Observer(`alex`))
 subject.addObserver(new Observer(`jane`))
 
-subject.setState(`blue`)
+subject.state = `blue`
 /*
     向所有观察者发布更新通知
  */

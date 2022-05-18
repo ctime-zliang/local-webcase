@@ -5,7 +5,7 @@
         左括号必须用相同类型的右括号闭合
         左括号必须以正确的顺序闭合
  */
-function isValid (string) {
+function isValid(string) {
     const len = string.length
     if (len % 2 !== 0) {
         return false

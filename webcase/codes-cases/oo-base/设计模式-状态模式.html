@@ -42,34 +42,46 @@ console.log(`\n-> 案例一: 红绿灯`)
  */
 class TrafficLight {
     constructor() {
-        this.states = []
-        this.currentState = null
+        this._states = []
+        this._currentState = null
+    }
+
+    set states(value) {
+        this._states = value
+    }
+
+    get states() {
+        return this._states
+    }
+
+    set currentState(value) {
+        this._currentState = value
+    }
+
+    get currentState() {
+        return this._currentState
     }
 
     addState(stateInstance) {
-        this.states.push(stateInstance)
-    }
-
-    setCurrentState(state) {
-        this.currentState = state
+        this._states.push(stateInstance)
     }
 
     toggle() {
-        const currentStateIndex = this.states.findIndex((state) => {
-            return state === this.currentState
+        const currentStateIndex = this._states.findIndex((state) => {
+            return state === this._currentState
         })
         if (typeof currentStateIndex === 'undefined') {
             return
         }
-        if (currentStateIndex + 1 < this.states.length) {
-            this.setCurrentState(this.states[currentStateIndex + 1])
+        if (currentStateIndex + 1 < this._states.length) {
+            this.setCurrentState(this._states[currentStateIndex + 1])
             return
         }
-        this.setCurrentState(this.states[0])
+        this.setCurrentState(this._states[0])
     }
 
     render(callback) {
-        const result = this.currentState.view()
+        const result = this._currentState.view()
         callback && callback(result)
         console.log(result)
     }
@@ -81,6 +93,14 @@ class TrafficLight {
 class Light {
     constructor(light) {
         this.light = light
+    }
+
+    set light(value) {
+        this._light = value
+    }
+
+    get light() {
+        return this._light
     }
 }
 class RedLight extends Light {

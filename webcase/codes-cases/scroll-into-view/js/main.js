@@ -49,11 +49,15 @@ function scrollIntoViewByIndex(itemIndex, containerElement) {
      */
     if (containerElement.scrollTop > scrollToShowInViewTop) {
         // containerElement.scrollTop = scrollToShowInViewTop
-        Animate.run({ scrollTop: scrollToShowInViewTop },  (key, value) => {
-            containerElement.scrollTop = value
-        }, () => {
-            console.log('finished.')
-        })
+        Animate.run(
+            { scrollTop: scrollToShowInViewTop },  
+            (key, value) => {
+                containerElement.scrollTop = value
+            }, 
+            () => {
+                console.log('finished.')
+            }
+        )
         return
     }
     /*
@@ -62,11 +66,15 @@ function scrollIntoViewByIndex(itemIndex, containerElement) {
      */
     if (containerElement.scrollTop < scrollToShowInViewBottom) {
         // containerElement.scrollTop = scrollToShowInViewBottom
-        Animate.run({ scrollTop: scrollToShowInViewBottom },  (key, value) => {
-            containerElement.scrollTop = value
-        }, () => {
-            console.log('finished.')
-        })
+        Animate.run(
+            { scrollTop: scrollToShowInViewBottom }, 
+            (key, value) => {
+                containerElement.scrollTop = value
+            }, 
+            () => {
+                console.log('finished.')
+            }
+        )
         return
     }
 }

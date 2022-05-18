@@ -2,35 +2,83 @@ const HEADE_VALUE_OF_SGL = '$head'
 
 class NodeOfSL {
     constructor(data) {
-        this.data = data
-        this.prev = null
-        this.next = null
+        this._data = data
+        this._prev = null
+        this._next = null
+    }
+
+    set data(value) {
+        this._data = value
+    }
+
+    get data() {
+        return this._parent
+    }
+
+    set prev(value) {
+        this._prev = value
+    }
+
+    get prev() {
+        return this._prev
+    }
+
+    set next(value) {
+        this._next = value
+    }
+
+    get next() {
+        return this._next
     }
 }
 
 class SingleList {
     constructor() {
-        this.length = 0
-        this.head = new NodeOfSL(HEADE_VALUE_OF_SGL)
-        this.current = this.head
+        this._length = 0
+        this._head = new NodeOfSL(HEADE_VALUE_OF_SGL)
+        this._current = this._head
+    }
+
+    set length(value) {
+        this._length = value
+    }
+
+    get length() {
+        return this._length
+    }
+
+    set head(value) {
+        this._head = value
+    }
+
+    get head() {
+        return this._head
+    }
+
+    set current(value) {
+        this._current = value
+    }
+
+    get current() {
+        return this._current
     }
 
     isEmpty() {
-        return this.length === 0
+        return this._length === 0
     }
 
     size() {
-        return this.length
+        return this._length
     }
 
     now() {
-        return this.current
+        return this._current
     }
 
     display() {
         let string = ``
-        let curr = this.head
-        while(curr) {
+        let curr = this._head
+        while (curr) {
             string += curr.data
             curr = curr.next
             if (curr) {
@@ -41,8 +89,8 @@ class SingleList {
     }
 
     findLast() {
-        let curr = this.head
-        while(curr.next) {
+        let curr = this._head
+        while (curr.next) {
             curr = curr.next
         }
         return curr
@@ -52,7 +100,7 @@ class SingleList {
         if (typeof value == 'undefined') {
             return null
         }
-        let curr = this.head
+        let curr = this._head
         while (curr && curr.data !== value) {
             curr = curr.next
         }
@@ -63,14 +111,14 @@ class SingleList {
         const lastItem = this.findLast()
         const newItem = new NodeOfSL(value)
         lastItem.next = newItem
-        this.length++
+        this._length++
     }
 
-    forward(step = 0, curr = this.head) {
-        while(step-- && curr.next){
+    forward(step = 0, curr = this._head) {
+        while (step-- && curr.next) {
             curr = curr.next
         }
-        return this.current = curr
+        return this._current = curr
     }
 
     insertAfter(posValue, value) {
@@ -81,7 +129,7 @@ class SingleList {
         const newItem = new NodeOfSL(value)
         newItem.next = posItem.next
         posItem.next = newItem
-        this.length++
+        this._length++
     }
 
     removeValue(value) {
@@ -92,9 +140,9 @@ class SingleList {
         if (vItem.data === HEADE_VALUE_OF_SGL) {
             throw new Error(`The Head Node cannot be removed`)
         }
-        let curr = this.head
+        let curr = this._head
         let prev = null
-        while(curr && curr.data !== value) {
+        while (curr && curr.data !== value) {
             prev = curr
             curr = curr.next
         }
@@ -102,12 +150,12 @@ class SingleList {
             return
         }
         prev.next = curr.next
-        this.length--
+        this._length--
     }
 
     clear() {
-        this.head.next = null
-        this.length = 0
+        this._head.next = null
+        this._length = 0
     }
 }
 

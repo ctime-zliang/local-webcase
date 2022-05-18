@@ -49,96 +49,96 @@ const EVENT_NAME_CONFIG = {
 
 class VirtualScroller {
     constructor(el, option = {}) {
-        this.RuntimeConfig = { ...defaultProfile, ...option, ...defaultConfig }
-        this.RuntimeConfig.outerContainer = el
-        this.eventHandlers = {}
+        this._runtimeConfig = { ...defaultProfile, ...option, ...defaultConfig }
+        this._runtimeConfig.outerContainer = el
+        this._eventHandlers = {}
         this._init()
         this._initFragment()
         this._bindEvent()
     }
 
     setData(list) {
-        const RuntimeConfig = this.RuntimeConfig
-        RuntimeConfig.listData = list
-        RuntimeConfig.dataAllCount = list.length
-        RuntimeConfig.rowsAllHeight = RuntimeConfig.dataAllCount * RuntimeConfig.rowItemHeight
-        RuntimeConfig.contentAreaYOffsetMax = RuntimeConfig.rowsAllHeight - RuntimeConfig.outerContainerRect.height
+        const runtimeConfig = this._runtimeConfig
+        runtimeConfig.listData = list
+        runtimeConfig.dataAllCount = list.length
+        runtimeConfig.rowsAllHeight = runtimeConfig.dataAllCount * runtimeConfig.rowItemHeight
+        runtimeConfig.contentAreaYOffsetMax = runtimeConfig.rowsAllHeight - runtimeConfig.outerContainerRect.height
         this._setContentRect()
         this._insertHtml(this._sliceListData())
     }
 
     on(eventName, callback) {
-        if (!eventName || typeof eventName != 'string' || typeof callback != 'function') {
+        if (!eventName || typeof eventName != 'string' || !(callback instanceof Function)) {
             return
         }
-        if (!this.eventHandlers[eventName]) {
-            this.eventHandlers[eventName] = []
+        if (!this._eventHandlers[eventName]) {
+            this._eventHandlers[eventName] = []
         }
-        this.eventHandlers[eventName].push(callback)
+        this._eventHandlers[eventName].push(callback)
     }
 
     _init() {
-        const RuntimeConfig = this.RuntimeConfig
-        RuntimeConfig.outerContainerRect = RuntimeConfig.outerContainer.getBoundingClientRect()        
+        const runtimeConfig = this._runtimeConfig
+        runtimeConfig.outerContainerRect = runtimeConfig.outerContainer.getBoundingClientRect()        
     }
 
     _initFragment() {
-        const RuntimeConfig = this.RuntimeConfig
+        const runtimeConfig = this._runtimeConfig
         document.body.appendChild(document.createRange().createContextualFragment(positionContainer(virtualScrollerFragmentTemplate())))
         const positionElement = document.body.lastElementChild
         const ulistElement = positionElement.querySelector(`.virtual-scroller-ulist`)
         const itemElement = ulistElement.firstElementChild
         /* ... */
-        ulistElement.style.maxHeight = RuntimeConfig.outerContainerRect.height + 'px'
-        RuntimeConfig.rowItemHeight = itemElement.getBoundingClientRect().height
+        ulistElement.style.maxHeight = runtimeConfig.outerContainerRect.height + 'px'
+        runtimeConfig.rowItemHeight = itemElement.getBoundingClientRect().height
         ulistElement.innerHTML = ''
-        RuntimeConfig.outerContainer.innerHTML = ''
-        RuntimeConfig.outerContainer.appendChild(positionElement.firstElementChild)        
+        runtimeConfig.outerContainer.innerHTML = ''
+        runtimeConfig.outerContainer.appendChild(positionElement.firstElementChild)        
         document.body.removeChild(positionElement)
-        RuntimeConfig.container = RuntimeConfig.outerContainer.firstElementChild
+        runtimeConfig.container = runtimeConfig.outerContainer.firstElementChild
     }
 
     _setContentRect() {
-        const RuntimeConfig = this.RuntimeConfig
-        const contentElement = RuntimeConfig.container.querySelector(`.virtual-scroller-content`)
-        contentElement.style.height = `${RuntimeConfig.dataAllCount * RuntimeConfig.rowItemHeight}px`
-        contentElement.style.paddingTop = `${RuntimeConfig.contentAreaYOffset}px`
+        const runtimeConfig = this._runtimeConfig
+        const contentElement = runtimeConfig.container.querySelector(`.virtual-scroller-content`)
+        contentElement.style.height = `${runtimeConfig.dataAllCount * runtimeConfig.rowItemHeight}px`
+        contentElement.style.paddingTop = `${runtimeConfig.contentAreaYOffset}px`
     }
 
     _bindEvent() {
         const self = this
-        const RuntimeConfig = this.RuntimeConfig
-        const wrapperElement = RuntimeConfig.container.querySelector(`.virtual-scroller-wrapper`)
-        const contentElement = RuntimeConfig.container.querySelector(`.virtual-scroller-content`)   
-        const ulistElement = RuntimeConfig.container.querySelector(`.virtual-scroller-ulist`)
+        const runtimeConfig = this._runtimeConfig
+        const wrapperElement = runtimeConfig.container.querySelector(`.virtual-scroller-wrapper`)
+        const contentElement = runtimeConfig.container.querySelector(`.virtual-scroller-content`)   
+        const ulistElement = runtimeConfig.container.querySelector(`.virtual-scroller-ulist`)
         wrapperElement.addEventListener('scroll', function(evte) {
             let scrollTop = evte.currentTarget.scrollTop
             /* 阈值判断 */
-            if (scrollTop <= RuntimeConfig.contentAreaYOffsetMin) {
+            if (scrollTop <= runtimeConfig.contentAreaYOffsetMin) {
                 self._emit(EVENT_NAME_CONFIG.SCROLL_TO_TOP)
-                scrollTop = RuntimeConfig.contentAreaYOffsetMin
+                scrollTop = runtimeConfig.contentAreaYOffsetMin
             }
-            if (scrollTop >= RuntimeConfig.contentAreaYOffsetMax) {
+            if (scrollTop >= runtimeConfig.contentAreaYOffsetMax) {
                 self._emit(EVENT_NAME_CONFIG.SCROLL_TO_BOTTOM)               
-                scrollTop = RuntimeConfig.contentAreaYOffsetMax
+                scrollTop = runtimeConfig.contentAreaYOffsetMax
             }
             /* 修改视图 */
-            RuntimeConfig.contentAreaYOffset = scrollTop
-            ulistElement.style.transform = `translate3d(0, ${RuntimeConfig.contentAreaYOffset}px, 5px)`
-            RuntimeConfig.viewStartIndex = Math.floor((RuntimeConfig.contentAreaYOffset / RuntimeConfig.rowItemHeight)) || 0
+            runtimeConfig.contentAreaYOffset = scrollTop
+            ulistElement.style.transform = `translate3d(0, ${runtimeConfig.contentAreaYOffset}px, 5px)`
+            runtimeConfig.viewStartIndex = Math.floor((runtimeConfig.contentAreaYOffset / runtimeConfig.rowItemHeight)) || 0
             /* 渲染列表 */       
             self._insertHtml(self._sliceListData())
         })
     }
 
     _sliceListData() {
-        const RuntimeConfig = this.RuntimeConfig
-        return RuntimeConfig.listData.slice(RuntimeConfig.viewStartIndex, RuntimeConfig.viewStartIndex + RuntimeConfig.viewRenderCount)
+        const runtimeConfig = this._runtimeConfig
+        return runtimeConfig.listData.slice(runtimeConfig.viewStartIndex, runtimeConfig.viewStartIndex + runtimeConfig.viewRenderCount)
     }
 
     _insertHtml(data) {
-        const RuntimeConfig = this.RuntimeConfig
-        const ulistElement = RuntimeConfig.container.querySelector(`.virtual-scroller-ulist`)
+        const runtimeConfig = this._runtimeConfig
+        const ulistElement = runtimeConfig.container.querySelector(`.virtual-scroller-ulist`)
         const htmlString = 
             data
             .map(item => {
@@ -149,7 +149,7 @@ class VirtualScroller {
     }
 
     _emit(eventName, ...args) {
-        const events = this.eventHandlers[eventName]
+        const events = this._eventHandlers[eventName]
         for (let i = 0; i < events.length; i++) {
             events[i](...args)
         } 

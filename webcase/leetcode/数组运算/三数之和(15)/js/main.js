@@ -72,7 +72,7 @@ function loopFind(nums) {
     return res
 }
 
-function threeSum (nums) {
+function threeSum(nums) {
     return loopFind(nums)
 }
 

@@ -8,9 +8,7 @@ window.$methods = {
      * @param {Element} el path元素
      * @return {Array}
      */
-	getPointsOfPath(
-		el
-	) {
+	getPointsOfPath(el) {
 		const dValueReg = /([MLQTCSAZVH])([^MLQTCSAZVH]*)/gi
 		const numReg = /([+]\d+[.]\d+|[-]\d+[.]\d+|\d+[.]\d+|[+]\d+|[-]\d+|\d+)/ig
 	
@@ -41,10 +39,7 @@ window.$methods = {
 	 * @param {Array} points path坐标组
      * @return {Array}
      */
-	createCircleControlDots(
-		container,
-		points = []
-	) {
+	createCircleControlDots(container, points = []) {
 		const SVG_NS = 'http://www.w3.org/2000/svg'
 		const cFragment = document.createDocumentFragment()
 		const gEl = document.createElementNS(SVG_NS, 'g')
@@ -74,10 +69,7 @@ window.$methods = {
 	 * @param {Array} points path坐标组
      * @return {Array}
      */
-	setPointsOfPath(
-		el,
-		points = []
-	) {
+	setPointsOfPath(el,	points = []) {
 		let string = ''		
 		if (!points) {
 			return
@@ -98,10 +90,7 @@ window.$methods = {
 	 * @param {Array} points path坐标组
      * @return {Undefined}
      */
-	setCenterOfCirclesToAllCircles(
-		circles,
-		points = []
-	) {
+	setCenterOfCirclesToAllCircles(circles,	points = []) {
 		circles.forEach((item, index) => {
 			if (points[index] && typeof points[index].x !== 'undefined') {
 				item.setAttribute('cx', points[index].x)
@@ -118,12 +107,9 @@ window.$methods = {
 	 * @param {Object} points path坐标组
      * @return {Undefined}
      */
-	setCenterOfCirclesToPartCircles(
-		circles,
-		pointObj = {}
-	) {
+	setCenterOfCirclesToPartCircles(circles, pointObj = {}) {
 		Object.keys(pointObj).forEach((item, index) => {
-			if(pointObj[item] && typeof pointObj[item].x !== 'undefined') {
+			if (pointObj[item] && typeof pointObj[item].x !== 'undefined') {
 				circles[String( item )].setAttribute('cx', pointObj[item].x)
 			}
 			if (pointObj[item] && typeof pointObj[item].y !== 'undefined') {

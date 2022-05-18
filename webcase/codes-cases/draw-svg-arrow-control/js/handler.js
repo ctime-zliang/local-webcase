@@ -10,10 +10,7 @@ window.$handler = {
 	 * @param {Object} canvasRect SVG画布的坐标&尺寸数据
      * @return {Object}
      */
-	getMouseDownRect(
-		evte,
-		canvasRect = {}
-	) {
+	getMouseDownRect(evte, canvasRect = {}) {
 		const _PosRect = {}		
 		_PosRect.canvasRectLeft = canvasRect.left || 0
 		_PosRect.canvasRectTop = canvasRect.top || 0
@@ -86,10 +83,7 @@ window.$handler = {
      * @param {Array} pathPoints path的路径坐标组
      * @return {Object}
      */
-	getRotateCenterRect(
-		index = 0,
-		pathPoints = []
-	) {
+	getRotateCenterRect(index = 0, pathPoints = []) {
 		const _PosRect = {}		
 		// 默认的旋转中心点/控制点
 		_PosRect.rotateCenterPoint = {
@@ -131,10 +125,7 @@ window.$handler = {
 	 * @param {Object} pathPoints 鼠标按下时获取的path坐标组
      * @return {Object}
      */
-	getPathPointsWhenMove(
-		posRect = {},
-		pathPoints = []
-	) {
+	getPathPointsWhenMove(posRect = {},	pathPoints = []) {
 		// 点击的目标的索引
 		let index = +posRect.index
 		// 坐标点副本

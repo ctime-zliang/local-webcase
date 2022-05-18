@@ -28,9 +28,7 @@ let CanvasRect = ArrowPath.parentNode.getBoundingClientRect()
 let POSRECT = {}
 
 // mousedown
-function handlerMouseDown(
-	evte 
-) {		
+function handlerMouseDown(evte) {		
 	// 获取鼠标按下时的尺寸&坐标参数
 	let mouseDownRect = window.$handler.getMouseDownRect.bind(this)(
 		evte,
@@ -97,7 +95,6 @@ function handlerMouseMove(evte) {
 	}	
 	POSRECT.rotateAngle = POSRECT.isCanRotate ? POSRECT.newAngle : POSRECT.initAngle
 
-	// 异步 - 下一轮EventLoop
 	window.setTimeout(() => {	
 		// 计算复位后的鼠标坐标
 		let reductionMousePoints = window.$math.getDotsAfterRotate(
@@ -131,9 +128,7 @@ function handlerMouseMove(evte) {
 	})
 }
 // mouseup
-function handlerMouseUp(
-	evte 
-) {	
+function handlerMouseUp(evte) {	
 	// 移除mousemove
 	document.removeEventListener('mousemove', handlerMouseMove)
 	console.log(POSRECT)

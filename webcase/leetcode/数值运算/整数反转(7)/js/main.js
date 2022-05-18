@@ -5,7 +5,7 @@
 
     假设环境不允许存储 64 位整数（有符号或无符号）
  */
-function reverse (x) {
+function reverse(x) {
     let number = x
     let res = 0
     while (number != 0) {

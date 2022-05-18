@@ -2,37 +2,85 @@ const HEADE_VALUE_OF_CSGL = '$head'
 
 class NodeOfCSL {
     constructor(data) {
-        this.data = data
-        this.prev = null
-        this.next = null
+        this._data = data
+        this._prev = null
+        this._next = null
+    }
+
+    set data(value) {
+        this._data = value
+    }
+
+    get data() {
+        return this._parent
+    }
+
+    set prev(value) {
+        this._prev = value
+    }
+
+    get prev() {
+        return this._prev
+    }
+
+    set next(value) {
+        this._next = value
+    }
+
+    get next() {
+        return this._next
     }
 }
 
 class CircleSingleList {
     constructor() {
-        this.length = 0
-        this.head = new NodeOfCSL(HEADE_VALUE_OF_CSGL)
-        this.head.next = this.head
-        this.current = this.head
+        this._length = 0
+        this._head = new NodeOfCSL(HEADE_VALUE_OF_CSGL)
+        this._head.next = this._head
+        this._current = this._head
+    }
+
+    set length(value) {
+        this._length = value
+    }
+
+    get length() {
+        return this._length
+    }
+
+    set head(value) {
+        this._head = value
+    }
+
+    get head() {
+        return this._head
+    }
+
+    set current(value) {
+        this._current = value
+    }
+
+    get current() {
+        return this._current
     }
 
     isEmpty() {
-        return this.length === 0
+        return this._length === 0
     }
 
     size() {
-        return this.length
+        return this._length
     }
 
     now() {
-        return this.current
+        return this._current
     }
 
     display() {
         let string = `...->`
-        let curr = this.head
+        let curr = this._head
         let count = 0
-        while (count <= this.length) {
+        while (count <= this._length) {
             string += curr.data + '->'
             curr = curr.next
             count++
@@ -42,9 +90,9 @@ class CircleSingleList {
     }
 
     findLast() {
-        let curr = this.head
+        let curr = this._head
         let count = 0
-        while (count < this.length) {
+        while (count < this._length) {
             curr = curr.next
             count++
         }
@@ -55,21 +103,21 @@ class CircleSingleList {
         const newItem = new NodeOfCSL(value)
         const lastItem = this.findLast()
         lastItem.next = newItem
-        newItem.next = this.head
-        this.length++
+        newItem.next = this._head
+        this._length++
     }
 
     findFirstByValue(value) {
         if (typeof value == 'undefined') {
             return null
         }
-        let curr = this.head
+        let curr = this._head
         let count = 0
-        while (count <= this.length && curr.data !== value) {
+        while (count <= this._length && curr.data !== value) {
             curr = curr.next
             count++
         }
-        if (count > this.length) {
+        if (count > this._length) {
             return null
         }
         return curr
@@ -83,7 +131,7 @@ class CircleSingleList {
         const newItem = new NodeOfCSL(value)
         newItem.next = posItem.next
         posItem.next = newItem
-        this.length++
+        this._length++
     }
 
     removeValue(value) {
@@ -94,23 +142,23 @@ class CircleSingleList {
         if (vItem.data === HEADE_VALUE_OF_CSGL) {
             throw new Error(`The Head Node cannot be removed`)
         }
-        let curr = this.head
+        let curr = this._head
         let prev = null
         let count = 0
-        while (count <= this.length && curr.data !== value) {
+        while (count <= this._length && curr.data !== value) {
             prev = curr
             curr = curr.next
             count++
         }
         prev.next = curr.next
-        this.length--
+        this._length--
     }
 
-    forward(step = 0, curr = this.head) {
-        while(step-- && curr.next){
+    forward(step = 0, curr = this._head) {
+        while (step-- && curr.next) {
             curr = curr.next
         }
-        return this.current = curr
+        return this._current = curr
     }
 }
 

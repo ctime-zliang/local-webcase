@@ -2,38 +2,86 @@ const HEADE_VALUE_OF_CSDL = '$head'
 
 class NodeOfCDL {
     constructor(data) {
-        this.data = data
-        this.prev = null
-        this.next = null
+        this._data = data
+        this._prev = null
+        this._next = null
+    }
+
+    set data(value) {
+        this._data = value
+    }
+
+    get data() {
+        return this._parent
+    }
+
+    set prev(value) {
+        this._prev = value
+    }
+
+    get prev() {
+        return this._prev
+    }
+
+    set next(value) {
+        this._next = value
+    }
+
+    get next() {
+        return this._next
     }
 }
 
 class CircleDoubleList {
     constructor() {
-        this.length = 0
-        this.head = new NodeOfCDL(HEADE_VALUE_OF_CSDL)
-        this.head.next = this.head
-        this.head.prev = this.head
-        this.current = this.head
+        this._length = 0
+        this._head = new NodeOfCDL(HEADE_VALUE_OF_CSDL)
+        this._head.next = this._head
+        this._head.prev = this._head
+        this._current = this._head
+    }
+
+    set length(value) {
+        this._length = value
+    }
+
+    get length() {
+        return this._length
+    }
+
+    set head(value) {
+        this._head = value
+    }
+
+    get head() {
+        return this._head
+    }
+
+    set current(value) {
+        this._current = value
+    }
+
+    get current() {
+        return this._current
     }
 
     isEmpty() {
-        return this.length === 0
+        return this._length === 0
     }
 
     size() {
-        return this.length
+        return this._length
     }
 
     now() {
-        return this.current
+        return this._current
     }
 
     display() {
         let string = `...->`
         let count = 0
-        let curr = this.head
-        while (count <= this.length) {
+        let curr = this._head
+        while (count <= this._length) {
             string += curr.data + '->'
             curr = curr.next
             count++
@@ -44,7 +92,7 @@ class CircleDoubleList {
 
     reverseDisplay() {
         let string = `...->`
-        let count = this.length
+        let count = this._length
         let curr = this.findLast()
         while (count >= -1) {
             string += curr.data + '->'
@@ -56,9 +104,9 @@ class CircleDoubleList {
     }
 
     findLast() {
-        let curr = this.head
+        let curr = this._head
         let count = 0
-        while (count < this.length) {
+        while (count < this._length) {
             curr = curr.next
             count++
         }
@@ -69,13 +117,13 @@ class CircleDoubleList {
         if (typeof value == 'undefined') {
             return null
         }
-        let curr = this.head
+        let curr = this._head
         let count = 0
-        while(count <= this.length && curr.data !== value) {
+        while (count <= this._length && curr.data !== value) {
             curr = curr.next
             count++
         }
-        if (count > this.length) {
+        if (count > this._length) {
             return null
         }
         return curr
@@ -90,8 +138,8 @@ class CircleDoubleList {
         newItem.next = lastItem.next
         newItem.prev = lastItem
         lastItem.next = newItem
-        this.head.prev = newItem
-        this.length++
+        this._head.prev = newItem
+        this._length++
     }
 
     insertAfter(posValue, value) {
@@ -104,21 +152,21 @@ class CircleDoubleList {
         posItem.next.prev = newItem
         posItem.next = newItem
         newItem.prev = posItem
-        this.length++
+        this._length++
     }
 
-    forward(step, curr = this.head) {
+    forward(step, curr = this._head) {
         while (step--) {
             curr = curr.next
         }
-        return this.current = curr
+        return this._current = curr
     }
 
-    backoff(step, curr = this.head) {
+    backoff(step, curr = this._head) {
         while (step--) {
             curr = curr.prev
         }
-        return this.current = curr
+        return this._current = curr
     }
 
     removeValue(value) {
@@ -130,7 +178,7 @@ class CircleDoubleList {
             throw new Error(`The Head Node cannot be removed`)
         }
         vItem.prev.next = vItem.next
-        this.length--
+        this._length--
     }
 }
 
@@ -138,7 +186,7 @@ class CircleDoubleList {
 const list3_1 = [1, 2, 3, 4, 5, 6, 4, 10]
 const circleDoubleList = new CircleDoubleList()
 
-list3_1.forEach((item, index) => {
+list3_1.forEach((item) => {
     circleDoubleList.append(item)
 })
 

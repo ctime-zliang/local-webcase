@@ -23,7 +23,7 @@
 		if (firstChild) {
 			$this.insertBefore(ripple, firstChild)
 		} else {
-			$this.appendChild( ripple )
+			$this.appendChild(ripple)
 		}
 		ripple.style.cssText = 'width: ' + wx + 'px;height: ' + wx + 'px;top: ' + y + 'px;left: ' + x + 'px'
 		ripple.classList.add( 'rippleEffect' )

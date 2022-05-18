@@ -30,7 +30,15 @@ console.log(`\n-> 案例一: 面试流程`)
 /* 包含抽象方法和逻辑框架的父类 */
 class Interview {
     constructor(companyName) {
-        this.companyName = companyName
+        this._companyName = companyName
+    }
+
+    set companyName(value) {
+        this._companyName = value
+    }
+
+    get companyName() {
+        return this._companyName
     }
 
     /*
@@ -68,8 +76,8 @@ class BaiduInterview extends Interview {
         this._candidateName
     }
 
-    set candidateName(name) {
-        this._candidateName = name
+    set candidateName(value) {
+        this._candidateName = value
     }
 
     get candidateName() {
@@ -77,19 +85,19 @@ class BaiduInterview extends Interview {
     }
 
     writtenTest() {
-        console.log(`${this.companyName} 正在对候选: ${this.candidateName} 执行笔试.`)
+        console.log(`${this.companyName} 正在对候选: ${this._candidateName} 执行笔试.`)
     }
 
     technicalInterview() {
-        console.log(`${this.companyName} 正在对候选: ${this.candidateName} 执行技术面试.`)
+        console.log(`${this.companyName} 正在对候选: ${this._candidateName} 执行技术面试.`)
     }
     
     leaderInterview() {
-        console.log(`${this.companyName} 正在对候选: ${this.candidateName} 执行领导面试.`)
+        console.log(`${this.companyName} 正在对候选: ${this._candidateName} 执行领导面试.`)
     }
 
     waitNotice() {
-        console.log(`候选人: ${this.candidateName} 已完成 ${this.companyName} 公司的初选面试, 正在等候结果通知.`)
+        console.log(`候选人: ${this._candidateName} 已完成 ${this.companyName} 公司的初选面试, 正在等候结果通知.`)
     }
 }
 

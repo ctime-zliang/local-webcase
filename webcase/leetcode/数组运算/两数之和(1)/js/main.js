@@ -28,7 +28,7 @@ function hashtableFind(nums, target) {
     return []
 }
 
-function twoSum (nums, target) {
+function twoSum(nums, target) {
     return hashtableFind(nums, target)
 }
 
