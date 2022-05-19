@@ -62,7 +62,7 @@ class EduCondition extends Condition {
     }
 }
 
-class AndLogicalRelation {
+class AndArithmeticLogic {
     constructor() {
         this._conditions = []
     }
@@ -89,16 +89,16 @@ class AndLogicalRelation {
 
 const eduCondition = new EduCondition(20)
 const ageCondidtion = new AgeCondidtion(18)
-const modeAndRelation = new AndLogicalRelation()
+const andModeArithmeticLogic = new AndArithmeticLogic()
 
-modeAndRelation.addConditon(eduCondition)
-modeAndRelation.addConditon(ageCondidtion)
+andModeArithmeticLogic.addConditon(eduCondition)
+andModeArithmeticLogic.addConditon(ageCondidtion)
 
 const xiaoming = { name: 'xiaoming', age: 22, edu: 21 }
 const xiaowang = { name: 'xiaowang', age: 18, edu: 17 } 
 
-console.log(modeAndRelation.expression(xiaoming))
-console.log(modeAndRelation.expression(xiaowang))
+console.log(andModeArithmeticLogic.expression(xiaoming))
+console.log(andModeArithmeticLogic.expression(xiaowang))
 
 
 }
