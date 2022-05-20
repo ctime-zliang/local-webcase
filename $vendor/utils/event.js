@@ -4,6 +4,7 @@
  * @param {htmllement | string} host 事件的真实宿主元素或用于捕获宿主的选择器
  * @param {string} eventName 事件名称
  * @param {string} selector 触发事件的元素选择器(可选) * 
+ *      如果此项不是一个字符串, 则内部将把此参数作为 callback 处理
  * @param {function} callback 事件处理器
  * @param {boolean} capture 设定以在冒泡/捕获阶段执行事件
  * @return {undefined}
