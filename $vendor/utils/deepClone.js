@@ -11,7 +11,7 @@ function ven$deepClone(json) {
     function traverse(obj){
         const result = {}
         let keys = []
-        let item = null        
+        let item = null
 
         if (wMap.get(obj)) {
             return wMap.get(obj)

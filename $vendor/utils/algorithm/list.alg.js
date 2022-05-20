@@ -6,8 +6,8 @@
  * @return {undefined} 
  */
 function ListNode(val, next) {
-    this.val = (val === undefined ? 0 : val)
-    this.next = (next === undefined ? null : next)
+    this.val = val === undefined ? 0 : val
+    this.next = next === undefined ? null : next
 }
 
 
@@ -35,7 +35,7 @@ function ven$setList2Array(list) {
  * @return {ListNode} 
  */
 function ven$setArray2List(arr) {
-    const head = new ListNode(arr[0], null)
+    let head = new ListNode(arr[0], null)
     let p = head
     for (let i = 1; i < arr.length; i++) {
         const node = new ListNode(arr[i], null)

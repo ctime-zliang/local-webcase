@@ -68,11 +68,11 @@
         return el
     }
     
-    const getRAF = function(){
+    const getRAF = function(){
         return (
             window.requestAnimationFrame ||
             window.webkitRequestAnimationFrame ||
-            function (callback) {
+            function(callback) {
                 window.setTimeout(callback, 1000 / 60)
             }
         )
@@ -114,7 +114,7 @@
         }        
     }
 
-    let RAF = getRAF()
+    let RAF = getRAF()
 
     RuntimeVariable.callback = showCallback
     RuntimeVariable.insertStyleError = insertStyle(RuntimeVariable.insertStyleText)

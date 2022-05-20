@@ -5,9 +5,8 @@
  * @return {array<object>}
  */
 function ven$dfs1(node = null) {
-    const nodelist = []
-    traverse(node, nodelist)
-    return nodelist
+    const nodelist = []    
+    return (traverse(node, nodelist), nodelist)
     
     function traverse(node, nodelist) {
         const children = []
@@ -30,8 +29,7 @@ function ven$dfs1(node = null) {
 function ven$dfs2(node = null) {
     const nodelist = []
     const item = null 
-    const stack = []
-     
+    const stack = []     
     if (node) {
         stack.push(node)
         while (stack.length) {
@@ -54,10 +52,9 @@ function ven$dfs2(node = null) {
  */
 function ven$bfs(node = null) {
     const nodelist = []
-    const children = []
-    const item = null
+    const children = []    
     const queue = []
-
+    let item = null
     if (node) {
         queue.push(node)
         while (queue.length) {

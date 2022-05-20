@@ -10,9 +10,9 @@ function ven$bubbleSort(arr = []) {
     let swap = 0
     for (let i = 0; i < len; i++) {
         for (let j = 0; j < len - 1 - i; j++) {
-            if (res[j] > res[j+1]) {
-                swap = res[j+1]
-                res[j+1] = res[j]
+            if (res[j] > res[j + 1]) {
+                swap = res[j + 1]
+                res[j + 1] = res[j]
                 res[j] = swap
             }
         }
@@ -35,11 +35,10 @@ function ven$bubbleSortOptimi(arr = []) {
     for (let i = 0; i < len; i++) {
         isChange = 0
         for (let j = len - 1; j > i; j--) {
-            if (arrCopy[j-1] > arrCopy[j]) {
-                swap = arrCopy[j-1]
-                arrCopy[j-1] = arrCopy[j]
+            if (arrCopy[j - 1] > arrCopy[j]) {
+                swap = arrCopy[j - 1]
+                arrCopy[j - 1] = arrCopy[j]
                 arrCopy[j] = swap
-                /* 设置标记 表示此轮遍历发生了值对换 */
                 isChange = true
             }
         }
@@ -172,8 +171,8 @@ function ven$insertSort(arr = []){
                 否则
                     退出内层遍历 
             */
-            if (tagValue < arrCopy[tagIndex-1]) {
-                arrCopy[tagIndex] = arrCopy[tagIndex-1]
+            if (tagValue < arrCopy[tagIndex - 1]) {
+                arrCopy[tagIndex] = arrCopy[tagIndex - 1]
                 tagIndex--
             } else {
                 break
