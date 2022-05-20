@@ -43,6 +43,7 @@ const DEFAULT_TEAM_STATE = 'init'
 const WIN_TEAM_STATE = 'win'
 const LOSE_TEAM_STATE = 'lose'
 
+/* 中介者 */
 class PlayerMediator {
     constructor() {
         this._teams = {}
@@ -77,6 +78,15 @@ class PlayerMediator {
                 item.lose()
             })
             teamItem.state = LOSE_TEAM_STATE
+        }
+        const aliveTeams = Object.values(this._teams).filter((item) => {
+            return item.state === DEFAULT_TEAM_STATE
+        })
+        if (aliveTeams.length <= 1) {
+            console.log('%c===>>> winer:', 'color: #ff6600;')
+            aliveTeams[0].players.forEach((item) => {
+                item.win()
+            })
         }
     }
 
@@ -134,6 +144,7 @@ class PlayerBase {
     die() {
         this._state = DIE_STATE
         console.log(`${this._name} is dead.`)
+        /* 向中介者派发消息 */
         playerMediator.reciveMessage('playerDead', this)
     }
 }
@@ -150,6 +161,9 @@ const player02 = playerFactory('qian', 'red')
 const player21 = playerFactory('zhou', 'blue')
 const player22 = playerFactory('wu', 'blue')
 
+const player31 = playerFactory('sun', 'yellow')
+const player32 = playerFactory('wang', 'yellow')
+
 console.log(playerMediator)
 
 const main = async () => {
@@ -157,6 +171,11 @@ const main = async () => {
     player01.die()
     await delay(500)
     player02.die()
+    console.log(`==================================`)
+    await delay(800)
+    player31.die()
+    await delay(500)
+    player32.die()
 }
 
 main()
