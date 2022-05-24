@@ -69,7 +69,7 @@
 
     const initFPSViewElement = (className) => {
         const containerElement = document.createElement('div')
-        const bodyElement = document.body || document.documentElement
+        const bodyElement = document.body
         containerElement.className = className
         bodyElement.appendChild(containerElement)
         return containerElement
@@ -162,5 +162,5 @@
         calcFrameRate(0)
     }
 
-    main()
+    window.setTimeout(main)
 })();
