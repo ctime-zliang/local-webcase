@@ -1,11 +1,18 @@
-;(function(){
-    const RuntimeVariable = {
-        url: window.location.href,
-        className: '_fps-container',
-        element: null,
-        isSetShow: false,
-        insertStyleText: `
-            ._fps-container{
+;(() => {
+    /*
+        自定义必选配置项
+     */
+    const config = {
+        /* 帧率刷新间隔(ms) */
+        interval: 500,
+        /* 帧率告警阈值边界 */
+        serious: [0, 19],
+        warning: [20, 39]
+    }
+
+    const styleProfile = {
+        cssText: `
+            ._fps-monitor-container {
                 display: none;
                 position: fixed; 
                 top: 0;
@@ -23,52 +30,81 @@
                 -moz-user-select: none;
                 user-select: none;
             }
-            ._fps-container-warning{
+            ._fps-monitor-tips-warning {
                 color: #ff6600;
             }
-            ._fps-container-serious{
+            ._fps-monitor-tips-serious {
                 color: #ff0000;
             }
-        `,
-        insertStyleError: false,
-        frame: 0,
-        allFrameCount: 0,
-        lastTime: performance.now(),
-        lastFrameTime: performance.now(),
-        callback: new Function(),
-        lastFPSNumber: 0,
-        interval: 300,
-        serious: [0, 19],
-        warning: [20, 39]
+        `
     }
 
-    const insertStyle = function(cssText) {
-        const style = document.createElement('style')
-        const head = document.head || document.getElementsByTagName('head')[0]
-        let insertStyleError = false        
-        style.type = 'text/css'
-        if (style.styleSheet) { 
+    const profile = {
+        className: '_fps-monitor-container',
+        lastFrameTime: 0,
+        lastTime: 0,
+        frameCount: 0,
+        fps: 0,
+        /* ... */
+        rafTimeStamp: 0,
+    }
+
+    const initFPSViewStyle = (cssText) => {
+        const styleElement = document.createElement('style')
+        const headElement = document.head || document.getElementsByTagName('head')[0]
+        let initStyleError = false        
+        styleElement.type = 'text/css'
+        if (styleElement.styleSheet) { 
             try {
-                style.styleSheet.cssText = cssText
+                styleElement.styleSheet.cssText = cssText
             } catch (e) {
-                insertStyleError = true
+                initStyleError = true
             }           
         } else {
-            style.appendChild(document.createTextNode(cssText))
+            styleElement.appendChild(document.createTextNode(cssText))
         }
-        head.appendChild(style)
-        return insertStyleError
+        headElement.appendChild(styleElement)
+        return initStyleError
     }
-    
-    const insertElement = function(className) {
-        const el =document.createElement('div')
-        const body = document.body || document.documentElement
-        el.className = className
-        body.appendChild(el)
-        return el
+
+    const initFPSViewElement = (className) => {
+        const containerElement = document.createElement('div')
+        const bodyElement = document.body || document.documentElement
+        containerElement.className = className
+        bodyElement.appendChild(containerElement)
+        return containerElement
     }
-    
-    const getRAF = function(){
+
+    const initRAF = () => {
+        const vendors = ['webkit', 'moz']
+        let lastTime = 0
+        for (let x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+            window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame']
+            window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame']
+        }
+        if (!window.requestAnimationFrame) {
+            window.requestAnimationFrame = function(callback, element) {
+                const currTime = new Date().getTime()
+                const timeToCall = Math.max(0, 16 - (currTime - lastTime))
+                const id = window.setTimeout(function() { 
+                    callback(currTime + timeToCall)
+                }, timeToCall)
+                lastTime = currTime + timeToCall
+                return id
+            }
+        }
+        if (!window.cancelAnimationFrame) {
+            window.cancelAnimationFrame = function(id) {
+                window.clearTimeout(id)
+            }
+        }
+    }
+
+    /************************************ ************************************/
+    /************************************ ************************************/
+    /************************************ ************************************/
+
+    const initRAF2 = () => {
         return (
             window.requestAnimationFrame ||
             window.webkitRequestAnimationFrame ||
@@ -78,49 +114,53 @@
         )
     }
 
-    const loop = function() {
+    const runtimeConfig = {
+        ...config,
+        ...profile,
+        ...styleProfile,
+    }
+    const calcFrameRate = (rafTimeStamp) => {
+        runtimeConfig.rafTimeStamp = rafTimeStamp
         let now = performance.now()
-        let fps = Math.round(1000 / (now - RuntimeVariable.lastFrameTime))
-        RuntimeVariable.lastFrameTime = now
-        RuntimeVariable.frame++        
-        if (now - RuntimeVariable.lastTime >= RuntimeVariable.interval) {
-            fps = Math.round((RuntimeVariable.frame * 1000) / (now - RuntimeVariable.lastTime))
-            RuntimeVariable.callback(fps)
-            RuntimeVariable.frame = 0
-            RuntimeVariable.lastTime = now
+        runtimeConfig.lastFrameTime = now
+        runtimeConfig.frameCount++        
+        if (now - runtimeConfig.lastTime >= runtimeConfig.interval) {
+            runtimeConfig.fps = Math.round((runtimeConfig.frameCount * 1000) / (now - runtimeConfig.lastTime))
+            showFPS()
+            /* ... */
+            runtimeConfig.frameCount = 0
+            runtimeConfig.lastTime = now
         }
-        RAF(loop)
+        window.requestAnimationFrame(calcFrameRate)
     }
-    
-    const showCallback = function(fps = 0) {
-        if (RuntimeVariable.lastFPSNumber === fps) {
-            return
-        }
-        RuntimeVariable.lastFPSNumber = fps
-        RuntimeVariable.element.innerHTML = `FPS: ${fps}`
-        if (fps >= RuntimeVariable.warning[0] && fps <= RuntimeVariable.warning[1]) {
-            RuntimeVariable.element.classList.add('_fps-container-warning')
+    const showFPS = () => {
+        runtimeConfig.container.innerHTML = `
+            <div>FPS: ${runtimeConfig.fps}</div>
+            <div>RAF: ${runtimeConfig.frameCount}</div>
+        `
+        if (runtimeConfig.fps >= runtimeConfig.warning[0] && runtimeConfig.fps <= runtimeConfig.warning[1]) {
+            runtimeConfig.container.classList.add('_fps-monitor-tips-warning')
         } else {
-            RuntimeVariable.element.classList.remove('_fps-container-warning')
+            runtimeConfig.container.classList.remove('_fps-monitor-tips-warning')
         }
-        if (fps >= RuntimeVariable.serious[0] && fps <= RuntimeVariable.serious[1]) {
-            RuntimeVariable.element.classList.add('_fps-container-serious')
+        if (runtimeConfig.fps >= runtimeConfig.serious[0] && runtimeConfig.fps <= runtimeConfig.serious[1]) {
+            runtimeConfig.container.classList.add('_fps-monitor-tips-serious')
         } else {
-            RuntimeVariable.element.classList.remove('_fps-container-serious')
+            runtimeConfig.container.classList.remove('_fps-monitor-tips-serious')
         }
-        if (!RuntimeVariable.isSetShow) {
-            RuntimeVariable.isSetShow = true
-            RuntimeVariable.element.style.display = 'block'
-        }        
+        runtimeConfig.container.style.display = 'block'
+        /* ... */
+        if (runtimeConfig.renderCallback instanceof Function) {
+            runtimeConfig.renderCallback(runtimeConfig)
+        }
     }
 
-    let RAF = getRAF()
-
-    RuntimeVariable.callback = showCallback
-    RuntimeVariable.insertStyleError = insertStyle(RuntimeVariable.insertStyleText)
-    RuntimeVariable.element = insertElement(RuntimeVariable.className)
-    if (!RuntimeVariable.insertStyleError) { 
-        loop()
+    const main = () => {
+        runtimeConfig.initStyleError = initFPSViewStyle(runtimeConfig.cssText)
+        runtimeConfig.container = initFPSViewElement(runtimeConfig.className)
+        initRAF()
+        calcFrameRate(0)
     }
-})()
 
+    main()
+})();
