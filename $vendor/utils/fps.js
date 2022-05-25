@@ -4,13 +4,14 @@
      */
     const config = {
         /* 帧率刷新间隔(ms) */
-        interval: 500,
+        interval: 100,
         /* 帧率告警阈值边界 */
         serious: [0, 19],
         warning: [20, 39]
     }
 
     const styleProfile = {
+        /* 样式设置 */
         cssText: `
             ._fps-monitor-container {
                 display: none;
@@ -39,16 +40,6 @@
         `
     }
 
-    const profile = {
-        className: '_fps-monitor-container',
-        lastFrameTime: 0,
-        lastTime: 0,
-        frameCount: 0,
-        fps: 0,
-        /* ... */
-        rafTimeStamp: 0,
-    }
-
     const initFPSViewStyle = (cssText) => {
         const styleElement = document.createElement('style')
         const headElement = document.head || document.getElementsByTagName('head')[0]
@@ -67,10 +58,10 @@
         return initStyleError
     }
 
-    const initFPSViewElement = (className) => {
+    const initFPSViewElement = () => {
         const containerElement = document.createElement('div')
         const bodyElement = document.body
-        containerElement.className = className
+        containerElement.className = '_fps-monitor-container'
         bodyElement.appendChild(containerElement)
         return containerElement
     }
@@ -116,27 +107,33 @@
 
     const runtimeConfig = {
         ...config,
-        ...profile,
         ...styleProfile,
     }
-    const calcFrameRate = (rafTimeStamp) => {
+    const initProfile = () => {
+        runtimeConfig.lastTime = performance.now()
+        runtimeConfig.frameCount = 0
+        runtimeConfig.fps = 0
+        runtimeConfig.rafTimeStamp = 0
+        runtimeConfig.rafCount = 0
+    }
+    const countFrames = (rafTimeStamp) => {
         runtimeConfig.rafTimeStamp = rafTimeStamp
-        let now = performance.now()
-        runtimeConfig.lastFrameTime = now
-        runtimeConfig.frameCount++        
+        const now = performance.now()
+        runtimeConfig.frameCount++
         if (now - runtimeConfig.lastTime >= runtimeConfig.interval) {
-            runtimeConfig.fps = Math.round((runtimeConfig.frameCount * 1000) / (now - runtimeConfig.lastTime))
+            runtimeConfig.fps = (runtimeConfig.frameCount * 1000) / (now - runtimeConfig.lastTime)
+            runtimeConfig.rafCount = runtimeConfig.frameCount / ((now - runtimeConfig.lastTime) / 1000)
             showFPS()
             /* ... */
             runtimeConfig.frameCount = 0
             runtimeConfig.lastTime = now
         }
-        window.requestAnimationFrame(calcFrameRate)
+        window.requestAnimationFrame(countFrames)
     }
     const showFPS = () => {
         runtimeConfig.container.innerHTML = `
-            <div>FPS: ${runtimeConfig.fps}</div>
-            <div>RAF: ${runtimeConfig.frameCount}</div>
+            <div>FPS COUNT: ${runtimeConfig.fps.toFixed(4)}</div>
+            <div>RAF COUNT: ${runtimeConfig.rafCount.toFixed(4)}</div>
         `
         if (runtimeConfig.fps >= runtimeConfig.warning[0] && runtimeConfig.fps <= runtimeConfig.warning[1]) {
             runtimeConfig.container.classList.add('_fps-monitor-tips-warning')
@@ -157,9 +154,10 @@
 
     const main = () => {
         runtimeConfig.initStyleError = initFPSViewStyle(runtimeConfig.cssText)
-        runtimeConfig.container = initFPSViewElement(runtimeConfig.className)
+        runtimeConfig.container = initFPSViewElement()
+        initProfile()
         initRAF()
-        calcFrameRate(0)
+        countFrames(performance.now())
     }
 
     window.setTimeout(main)
