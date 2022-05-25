@@ -5,7 +5,7 @@
 
 // let time = {}
 // function taskTest() {
-//     console.log(`=======================`)
+//     console.log(`\n======================= start.`)
 //     window.setTimeout(() => {
 //         window.requestAnimationFrame(() => {
 //             time.st1RAf1 = performance.now()
@@ -17,9 +17,9 @@
 //         })
 //         console.log(`setTimeout 1`)
 //         time.st1 = performance.now()
-//         // ven$choke(100)
-//         // document.body.innerHTML = `<div>${Math.random()}</div>`
-//         document.body.innerHTML = createHtmlString()
+//         // ven$choke(50)
+//         // appContainer.innerHTML = `<div>${Math.random()}</div>`        
+//         appContainer.innerHTML = createHtmlString()
 //     })
 //     window.setTimeout(() => {
 //         window.requestAnimationFrame(() => {
@@ -37,7 +37,7 @@
 //         time.rAf1 = performance.now()
 //         console.log(`promise 1`)
 //     })
-//     Promise.resolve().then(() => {        
+//     Promise.resolve().then(() => {
 //         console.log(`promise 2`)
 //     })
 //     window.requestAnimationFrame(() => {
@@ -63,6 +63,6 @@
 // }
 
 // document.body.addEventListener(`click`, function() {
-//     document.body.innerHTML = ''
+//     appContainer.innerHTML = ''
 //     taskTest()
 // })

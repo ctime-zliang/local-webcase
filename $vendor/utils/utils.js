@@ -16,12 +16,12 @@ async function ven$classOf(target) {
  * @return {undefined}
  */
 function ven$choke(delay = 1000) {
-    console.log('%c start choke while...', 'color: green; font-size: 18px;') 
+    console.log('%c Synchronous Blocking Start...' + delay +  'ms.', 'color: green; font-size: 18px;') 
     const start = performance.now()
     while (performance.now() - start <= delay) {
         /* ... */
     }
-    console.log('%c end choke while...', 'color: green; font-size: 18px;') 
+    console.log('%c Synchronous Blocking End...', 'color: green; font-size: 18px;') 
 }
 
 
