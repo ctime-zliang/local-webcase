@@ -11,7 +11,6 @@
     }
 
     const styleProfile = {
-        /* 样式设置 */
         cssText: `
             ._fps-monitor-container {
                 display: none;
@@ -117,8 +116,8 @@
         runtimeConfig.rafCount = 0
     }
     const countFrames = (rafTimeStamp) => {
-        runtimeConfig.rafTimeStamp = rafTimeStamp
         const now = performance.now()
+        runtimeConfig.rafTimeStamp = rafTimeStamp        
         runtimeConfig.frameCount++
         if (now - runtimeConfig.lastTime >= runtimeConfig.interval) {
             runtimeConfig.fps = (runtimeConfig.frameCount * 1000) / (now - runtimeConfig.lastTime)
