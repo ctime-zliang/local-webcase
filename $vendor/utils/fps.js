@@ -1,7 +1,4 @@
 ;(() => {
-    /*
-        自定义必选配置项
-     */
     const config = {
         /* 帧率刷新间隔(ms) */
         interval: 100,
@@ -13,14 +10,14 @@
     const styleProfile = {
         cssText: `
             ._fps-monitor-container {
-                display: none;
+                display: block;
                 position: fixed; 
                 top: 0;
                 right: 0;
                 line-height: 14px;
                 padding: 4px 8px;
                 border: 1px solid #dcdcdc;
-                background-color: rgba(245, 245, 245, 0.75);
+                background-color: rgba(245, 245, 245, 1);
                 color: #049404;
                 font-size: 14px;
                 font-weight: 400;
@@ -39,7 +36,20 @@
         `
     }
 
-    const initFPSViewStyle = (cssText) => {
+    const createHtmlString = () => {
+        const htmlString = `
+            <div id="_fpsMonitorContainer" class="_fps-monitor-container">
+                <div id="_fpsMonitorWrapper">
+                    <div data-tagitem="_fps-fps-count"></div>
+                    <div data-tagitem="_fps-raf-count"></div>
+                    <div data-tagitem="_fps-ric-count"></div>
+                </div>
+            </div>
+        `
+        return htmlString
+    }
+
+    const initViewStyle = (cssText) => {
         const styleElement = document.createElement('style')
         const headElement = document.head || document.getElementsByTagName('head')[0]
         let initStyleError = false        
@@ -57,12 +67,17 @@
         return initStyleError
     }
 
-    const initFPSViewElement = () => {
-        const containerElement = document.createElement('div')
+    const initViewElement = () => {
         const bodyElement = document.body
-        containerElement.className = '_fps-monitor-container'
-        bodyElement.appendChild(containerElement)
-        return containerElement
+        bodyElement.appendChild(document.createRange().createContextualFragment(createHtmlString()))
+    }
+
+    const initElementHandler = (runtimeConfig) => {
+        runtimeConfig.containerElement = document.getElementById('_fpsMonitorContainer')
+        runtimeConfig.wrapperElement = document.getElementById('_fpsMonitorWrapper')
+        runtimeConfig.fpsCountItemElement = runtimeConfig.containerElement.querySelector('[data-tagitem="_fps-fps-count"]')
+        runtimeConfig.rAFCountItemElement = runtimeConfig.containerElement.querySelector('[data-tagitem="_fps-raf-count"]')
+        runtimeConfig.rICCountItemElement = runtimeConfig.containerElement.querySelector('[data-tagitem="_fps-ric-count"]')
     }
 
     const initRAF = () => {
@@ -89,62 +104,78 @@
             }
         }
     }
+    
+    // const initRAF2 = () => {
+    //     return (
+    //         window.requestAnimationFrame ||
+    //         window.webkitRequestAnimationFrame ||
+    //         function(callback) {
+    //             window.setTimeout(callback, 1000 / 60)
+    //         }
+    //     )
+    // }
 
     /************************************ ************************************/
     /************************************ ************************************/
-    /************************************ ************************************/
-
-    const initRAF2 = () => {
-        return (
-            window.requestAnimationFrame ||
-            window.webkitRequestAnimationFrame ||
-            function(callback) {
-                window.setTimeout(callback, 1000 / 60)
-            }
-        )
-    }
+    /************************************ ************************************/    
 
     const runtimeConfig = {
         ...config,
         ...styleProfile,
     }
+    
     const initProfile = () => {
-        runtimeConfig.lastTime = performance.now()
-        runtimeConfig.frameCount = 0
+        runtimeConfig._rAFSetCountLastTime = performance.now()
+        runtimeConfig._rAFCountInEveryInterval = -1
+        runtimeConfig._rICSetCountLastTime = performance.now()
+        runtimeConfig._rICCountInEveryInterval = -1
+        /* ... */
+        runtimeConfig.rAFCount = 0
         runtimeConfig.fps = 0
-        runtimeConfig.rafTimeStamp = 0
-        runtimeConfig.rafCount = 0
+        runtimeConfig.rICCount = 0
     }
-    const countFrames = (rafTimeStamp) => {
+
+    const countRAF = (timeStamp) => {
         const now = performance.now()
-        runtimeConfig.rafTimeStamp = rafTimeStamp        
-        runtimeConfig.frameCount++
-        if (now - runtimeConfig.lastTime >= runtimeConfig.interval) {
-            runtimeConfig.fps = (runtimeConfig.frameCount * 1000) / (now - runtimeConfig.lastTime)
-            runtimeConfig.rafCount = runtimeConfig.frameCount / ((now - runtimeConfig.lastTime) / 1000)
-            showFPS()
+        runtimeConfig._rAFCountInEveryInterval++
+        if (now - runtimeConfig._rAFSetCountLastTime >= runtimeConfig.interval) {
+            runtimeConfig.fps = (runtimeConfig._rAFCountInEveryInterval * 1000) / (now - runtimeConfig._rAFSetCountLastTime)
+            runtimeConfig.rAFCount = runtimeConfig._rAFCountInEveryInterval / ((now - runtimeConfig._rAFSetCountLastTime) / 1000)
+            renderView()
             /* ... */
-            runtimeConfig.frameCount = 0
-            runtimeConfig.lastTime = now
+            runtimeConfig._rAFCountInEveryInterval = 0
+            runtimeConfig._rAFSetCountLastTime = now
         }
-        window.requestAnimationFrame(countFrames)
+        window.requestAnimationFrame(countRAF)
     }
-    const showFPS = () => {
-        runtimeConfig.container.innerHTML = `
-            <div>FPS COUNT: ${runtimeConfig.fps.toFixed(4)}</div>
-            <div>RAF COUNT: ${runtimeConfig.rafCount.toFixed(4)}</div>
-        `
+
+    const countRIC = (deadline) => {
+        const now = performance.now()
+        runtimeConfig._rICCountInEveryInterval++
+        if (now - runtimeConfig._rICSetCountLastTime >= 1000) {
+            runtimeConfig.rICCount = runtimeConfig._rICCountInEveryInterval
+            renderView()
+            /* ... */
+            runtimeConfig._rICCountInEveryInterval = 0
+            runtimeConfig._rICSetCountLastTime = now
+        }
+        window.requestIdleCallback(countRIC)
+    }
+
+    const renderView = () => {
+        runtimeConfig.fpsCountItemElement.innerHTML = `FPS COUNT: <span>${runtimeConfig.fps.toFixed(4)}</span>`
+        runtimeConfig.rAFCountItemElement.innerHTML = `RAF COUNT: <span>${runtimeConfig.rAFCount.toFixed(4)}</span>`
+        runtimeConfig.rICCountItemElement.innerHTML = `RIC COUNT: <span>${runtimeConfig.rICCount.toFixed(4)}</span>`
         if (runtimeConfig.fps >= runtimeConfig.warning[0] && runtimeConfig.fps <= runtimeConfig.warning[1]) {
-            runtimeConfig.container.classList.add('_fps-monitor-tips-warning')
+            runtimeConfig.wrapperElement.classList.add('_fps-monitor-tips-warning')
         } else {
-            runtimeConfig.container.classList.remove('_fps-monitor-tips-warning')
+            runtimeConfig.wrapperElement.classList.remove('_fps-monitor-tips-warning')
         }
         if (runtimeConfig.fps >= runtimeConfig.serious[0] && runtimeConfig.fps <= runtimeConfig.serious[1]) {
-            runtimeConfig.container.classList.add('_fps-monitor-tips-serious')
+            runtimeConfig.wrapperElement.classList.add('_fps-monitor-tips-serious')
         } else {
-            runtimeConfig.container.classList.remove('_fps-monitor-tips-serious')
+            runtimeConfig.wrapperElement.classList.remove('_fps-monitor-tips-serious')
         }
-        runtimeConfig.container.style.display = 'block'
         /* ... */
         if (runtimeConfig.renderCallback instanceof Function) {
             runtimeConfig.renderCallback(runtimeConfig)
@@ -152,11 +183,13 @@
     }
 
     const main = () => {
-        runtimeConfig.initStyleError = initFPSViewStyle(runtimeConfig.cssText)
-        runtimeConfig.container = initFPSViewElement()
+        initViewStyle(runtimeConfig.cssText)
+        initViewElement()
         initProfile()
+        initElementHandler(runtimeConfig)
         initRAF()
-        countFrames(performance.now())
+        countRIC()
+        countRAF(performance.now())
     }
 
     window.setTimeout(main)

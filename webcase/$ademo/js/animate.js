@@ -7,7 +7,7 @@
 //     `
 //     /* ... */
 //     let boxHtml = '<div>'
-//     for (let i = 0; i < 100; i++) {
+//     for (let i = 0; i < 500; i++) {
 //         let itemTop = 0 + 100 * i + i * 5
 //         boxHtml += `<div class="box" style="position: absolute; left: 0; top: ${itemTop}px; width: 100px; height: 100px; background-color: #ff6600;"></div>`
 //     }
@@ -21,7 +21,7 @@
 //             left: 800,
 //             width: 200
 //         },
-//         1000,
+//         8000,
 //         'linear'
 //     )
 // }
