@@ -15,11 +15,11 @@
                 top: 0;
                 right: 0;
                 line-height: 14px;
-                padding: 4px 8px;
+                padding: 2px 4px;
                 border: 1px solid #dcdcdc;
                 background-color: rgba(245, 245, 245, 1);
                 color: #049404;
-                font-size: 14px;
+                font-size: 12px;
                 font-weight: 400;
                 box-sizing: border-box;
                 z-index: 99999999;
@@ -104,16 +104,6 @@
             }
         }
     }
-    
-    // const initRAF2 = () => {
-    //     return (
-    //         window.requestAnimationFrame ||
-    //         window.webkitRequestAnimationFrame ||
-    //         function(callback) {
-    //             window.setTimeout(callback, 1000 / 60)
-    //         }
-    //     )
-    // }
 
     /************************************ ************************************/
     /************************************ ************************************/
