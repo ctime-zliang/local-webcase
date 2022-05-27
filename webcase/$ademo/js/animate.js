@@ -18,10 +18,10 @@
 // function jQueryAnimate() {
 //     $('.box').stop().animate(
 //         {
-//             left: 800,
+//             left: 1000,
 //             width: 200
 //         },
-//         8000,
+//         12000,
 //         'linear'
 //     )
 // }

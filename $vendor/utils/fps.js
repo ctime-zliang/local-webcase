@@ -4,7 +4,7 @@
         interval: 100,
         /* 帧率告警阈值边界 */
         serious: [0, 19],
-        warning: [20, 39]
+        warning: [20, 29]
     }
 
     const styleProfile = {
