@@ -178,8 +178,10 @@
         initProfile()
         initElementHandler(runtimeConfig)
         initRAF()
-        countRIC()
-        countRAF(performance.now())
+        window.requestAnimationFrame(countRAF)
+        if (window.requestIdleCallback) {
+            window.requestIdleCallback(countRIC)
+        }
     }
 
     window.setTimeout(main)
