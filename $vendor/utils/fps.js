@@ -116,13 +116,15 @@
     
     const initProfile = () => {
         runtimeConfig._rAFSetCountLastTime = performance.now()
-        runtimeConfig._rAFCountInEveryInterval = -1
+        runtimeConfig._rAFCountInEveryInterval = 0
         runtimeConfig._rICSetCountLastTime = performance.now()
-        runtimeConfig._rICCountInEveryInterval = -1
+        runtimeConfig._rICCountInEveryInterval = 0
         /* ... */
         runtimeConfig.rAFCount = 0
         runtimeConfig.fps = 0
         runtimeConfig.rICCount = 0
+        /* ... */
+        window.fpsRuntimeConfig = runtimeConfig
     }
 
     const countRAF = (timeStamp) => {
