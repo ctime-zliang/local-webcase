@@ -40,8 +40,8 @@
         const htmlString = `
             <div id="_fpsMonitorContainer" class="_fps-monitor-container">
                 <div id="_fpsMonitorWrapper">
-                    <div data-tagitem="_fps-fps-count"></div>
                     <div data-tagitem="_fps-raf-count"></div>
+                    <div data-tagitem="_fps-raf-interval-count"></div>
                     <div data-tagitem="_fps-ric-count"></div>
                 </div>
             </div>
@@ -75,8 +75,8 @@
     const initElementHandler = (runtimeConfig) => {
         runtimeConfig.containerElement = document.getElementById('_fpsMonitorContainer')
         runtimeConfig.wrapperElement = document.getElementById('_fpsMonitorWrapper')
-        runtimeConfig.fpsCountItemElement = runtimeConfig.containerElement.querySelector('[data-tagitem="_fps-fps-count"]')
         runtimeConfig.rAFCountItemElement = runtimeConfig.containerElement.querySelector('[data-tagitem="_fps-raf-count"]')
+        runtimeConfig.rAFIntervalCountItemElement = runtimeConfig.containerElement.querySelector('[data-tagitem="_fps-raf-interval-count"]')
         runtimeConfig.rICCountItemElement = runtimeConfig.containerElement.querySelector('[data-tagitem="_fps-ric-count"]')
     }
 
@@ -121,7 +121,7 @@
         runtimeConfig._rICCountInEveryInterval = 0
         /* ... */
         runtimeConfig.rAFCount = 0
-        runtimeConfig.fps = 0
+        runtimeConfig.rAFIntervalCount = 0
         runtimeConfig.rICCount = 0
         /* ... */
         window.fpsRuntimeConfig = runtimeConfig
@@ -131,8 +131,8 @@
         const now = performance.now()
         runtimeConfig._rAFCountInEveryInterval++
         if (now - runtimeConfig._rAFSetCountLastTime >= runtimeConfig.interval) {
-            runtimeConfig.fps = (runtimeConfig._rAFCountInEveryInterval * 1000) / (now - runtimeConfig._rAFSetCountLastTime)
             runtimeConfig.rAFCount = runtimeConfig._rAFCountInEveryInterval / ((now - runtimeConfig._rAFSetCountLastTime) / 1000)
+            runtimeConfig.rAFIntervalCount = runtimeConfig._rAFCountInEveryInterval
             renderView()
             /* ... */
             runtimeConfig._rAFCountInEveryInterval = 0
@@ -155,15 +155,15 @@
     }
 
     const renderView = () => {
-        runtimeConfig.fpsCountItemElement.innerHTML = `FPS COUNT: <span>${runtimeConfig.fps.toFixed(4)}</span>`
         runtimeConfig.rAFCountItemElement.innerHTML = `RAF COUNT: <span>${runtimeConfig.rAFCount.toFixed(4)}</span>`
+        runtimeConfig.rAFIntervalCountItemElement.innerHTML = `RAF COUNT: <span>${runtimeConfig.rAFIntervalCount.toFixed(4)}</span>`
         runtimeConfig.rICCountItemElement.innerHTML = `RIC COUNT: <span>${runtimeConfig.rICCount.toFixed(4)}</span>`
-        if (runtimeConfig.fps >= runtimeConfig.warning[0] && runtimeConfig.fps <= runtimeConfig.warning[1]) {
+        if (runtimeConfig.rAFCount >= runtimeConfig.warning[0] && runtimeConfig.rAFCount <= runtimeConfig.warning[1]) {
             runtimeConfig.wrapperElement.classList.add('_fps-monitor-tips-warning')
         } else {
             runtimeConfig.wrapperElement.classList.remove('_fps-monitor-tips-warning')
         }
-        if (runtimeConfig.fps >= runtimeConfig.serious[0] && runtimeConfig.fps <= runtimeConfig.serious[1]) {
+        if (runtimeConfig.rAFCount >= runtimeConfig.serious[0] && runtimeConfig.rAFCount <= runtimeConfig.serious[1]) {
             runtimeConfig.wrapperElement.classList.add('_fps-monitor-tips-serious')
         } else {
             runtimeConfig.wrapperElement.classList.remove('_fps-monitor-tips-serious')
