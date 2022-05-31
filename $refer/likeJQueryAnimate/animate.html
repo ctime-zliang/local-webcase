@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>jQuery之$().animate()的实现</title>
+</head>
+<body>
+<script src="jQuery.js"></script>
+
+  <div id="A" style="width:100px;height:50px;background-color: deeppink">这是A</div>
+
+<script>
+  //匿名函数自调用，下面好长好长的function就是$
+  //也就是说$是一个function(){xxx}
+  (function($) {
+
+    window.$ = $;
+
+  })(
+    //这里也是匿名函数自调用
+    //本质就是经过一系列操作得到chenQuery并作为参数$，赋值给window.$
+    function() {
+      //匹配ID
+      let rquickExpr = /^(?:#([\w-]*))$/;
+      //jQuery初始化
+      function chenQuery(selector) {
+        return new chenQuery.fn.init(selector);
+      }
+
+      //假设是在数据缓存中存取队列
+      const Queue=[]
+
+      //数据缓存
+      const dataPriv={
+        get:function (type) {
+          if(type==='queue') return Queue
+        },
+
+      }
+
+      const dequeue=function() {
+        const Queue=dataPriv.get("queue")
+        let fn = Queue.shift()
+        //当单个动画结束后，执行下个动画
+        const next = function() {
+          dequeue();
+        }
+
+        if ( fn === "inprogress" ) {
+          fn = Queue.shift();
+        }
+
+        if (fn) {
+          Queue.unshift( "inprogress" );
+          /*执行doAnimation方法,doAnimation(element, options,function() {firing = false;_fire();})*/
+          /*fn的参数就是形参func*/
+          /*func方法是用来通知上个动画结束，下个动画运行的重要function*/
+          //func的作用是用来通知动画执行结束，并继续执行下一个动画
+          const func=function() {
+            next();
+          }
+          fn(func);
+        }
+
+
+      }
+
+      //省略type
+      const queue=function(element, options, callback, ) {
+        //模仿从数据缓存中得到的队列,直接写Queue.push也行
+        const Queue=dataPriv.get("queue")
+        //向动画队列中添加doAnimation触发器
+        Queue.push(function(func) {
+          //doAnimation
+          callback(element, options, func);
+        });
+        //如果没有动画在运行，运行动画
+        //动画锁inprogress
+        if(Queue[0]!=='inprogress'){
+          dequeue()
+        }
+
+      }
+
+      /*动画*/
+      const animation = function(element,options) {
+
+        const doAnimation = function(element, options, func) {
+          const width = options.width
+
+          /*===这里面定义了动画的算法，也就是Animation实现的地方===*/
+          // 默认动画时长2s
+          element.style.transitionDuration = '400ms';
+          element.style.width =  width + 'px';
+
+          /*监听单个动画完结*/
+          //transitionend 事件在 CSS 完成过渡后触发
+          element.addEventListener('transitionend', function() {
+            func()
+          });
+        }
+        //每调用一次animation，就入一次队
+        return queue(element, options,doAnimation,);
+      }
+
+
+      //为chenQuery的fn和prototype原型属性 赋 animate属性
+      chenQuery.fn = chenQuery.prototype = {
+        //也可以直接把animation里的代码放这里来，但这样就太长了，降低了可读性
+        animate: function(options) {
+          animation(this.element, options);
+          //注意返回的是this,也就是$("#A"),这样就能继续调用animate方法
+          // 也就是链式调用
+          return this;
+        }
+      }
+      //为chenQuery的fn属性添加init方法
+      const init = chenQuery.fn.init = function(selector) {
+        // ["#A", "A",groups: undefined,index: 0,input: "#A"]
+        const match = rquickExpr.exec(selector);
+        //这边默认是只找id的元素
+        const element = document.getElementById(match[1])
+        //this指chenQuery.fn.init方法
+        //为该方法添加element属性
+        this.element = element;
+        //返回chenQuery.fn.init
+        return this;
+      }
+      //挺绕的，再将init的原型等于chenQuery.fn方法
+      init.prototype = chenQuery.fn;
+
+      //chenQuery本身是一个function(){}
+      // chenQuery{
+      //init能调用fn，fn能调用init
+      //   fn:{
+      //     animate:function(){},
+      //     init:function(){},
+      //     // init.prototype=fn
+      //   },
+      //   prototype:{
+      //     animate:function(){},
+      //   }
+      // }
+
+      return chenQuery;
+    }());
+
+
+  const A = document.querySelector('#A');
+  //在异步调用中，进行同步调用
+  //动画是异步的
+  A.onclick = function() {
+    //就是连续调用animation.add()
+    $('#A').animate({
+      'width': '500'
+    }).animate({
+      'width': '300'
+    }).animate({
+      'width': '1000'
+    });
+  };
+
+</script>
+</body>
+</html>
