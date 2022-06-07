@@ -11,7 +11,7 @@
 
 <body>
 <div id="appContainer" class="container">
-	<div id="AAA" style="width:100px;height:50px;background-color: deeppink">这是A</div>
+	<div id="box" style="width:100px;height:50px;background-color: deeppink">这是A</div>
 </div>
 </body>
 
@@ -268,52 +268,21 @@
             //每调用一次animation，就入一次队        
             return queue(element, options,doAnimation,);     
          }      
-        //为chenQuery的fn和prototype原型属性 赋 animate属性      
-        chenQuery.fn = chenQuery.prototype = {        
-            //也可以直接把animation里的代码放这里来，但这样就太长了，降低了可读性        
-            animate: function(options) {          
-                animation(this.element, options);          
-                //注意返回的是this,也就是$("#A"),这样就能继续调用animate方法          
-                // 也就是链式调用          
-                return this;        
-            }      
-        }      
-        //为chenQuery的fn属性添加init方法      
-        const init = chenQuery.fn.init = function(selector) {        
-            // ["#A", "A",groups: undefined,index: 0,input: "#A"]       
-            const match = rquickExpr.exec(selector);        
-            //这边默认是只找id的元素        
-            const element = document.getElementById(match[1])        
-            //this指chenQuery.fn.init方法        
-            //为该方法添加element属性        
-            this.element = element;        
-            //返回chenQuery.fn.init        
-            return this;      
-        }      
-        //挺绕的，再将init的原型等于chenQuery.fn方法      
-        init.prototype = chenQuery.fn;      
-        //chenQuery本身是一个function(){}     
-        // chenQuery{      
-            //init能调用fn，fn能调用init      
-            //   fn:{      
-                //     animate:function(){},      
-                //     init:function(){},      
-                //     // init.prototype=fn      
-                //   },      
-                //   prototype:{      
-                    //     animate:function(){},      
-                    //   }      
-                    // }      
-            return chenQuery;    
+        
+        window.animation = animation   
+ 
         }()
     );  
         
-    const A = document.querySelector('#AAA');  
+    const box = document.querySelector('#box');  
     //在异步调用中，进行同步调用  
     //动画是异步的  
-    A.onclick = function() {    
+    box.onclick = function() {    
     	//就是连续调用animation.add()    
-    	$('#AAA').animate({      'width': '500'    }).animate({      'width': '300'    }).animate({      'width': '1000'    });  
+    	// $('#box').animate({      'width': '500'    }).animate({      'width': '300'    }).animate({      'width': '1000'    });  
+        animation(document.getElementById('box'), {      'width': '500'    })
+        animation(document.getElementById('box'), {      'width': '300'    })
+        animation(document.getElementById('box'), {      'width': '1000'    })
     };
     
     
