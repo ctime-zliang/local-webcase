@@ -26,6 +26,9 @@
                 -webkit-user-select: none;
                 -moz-user-select: none;
                 user-select: none;
+                -webkit-transform: translate3d(0, 0, 5px);
+                -moz-transform: translate3d(0, 0, 5px);
+                transform: translate3d(0, 0, 5px);
             }
             ._fps-monitor-tips-warning {
                 color: #ff6600;
