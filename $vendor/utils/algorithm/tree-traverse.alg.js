@@ -27,9 +27,9 @@ function ven$dfs1(node = null) {
  * @return {array<object>}
  */
 function ven$dfs2(node = null) {
-    const nodelist = []
-    const item = null 
-    const stack = []     
+    const nodelist = []    
+    const stack = []
+    let item = null   
     if (node) {
         stack.push(node)
         while (stack.length) {
