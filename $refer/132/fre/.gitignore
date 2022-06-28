@@ -8,3 +8,5 @@ demo/**/dist/
 /dist/
 /**/node_modules/
 .DS_Store
+/.ignore/
+yarn.lock

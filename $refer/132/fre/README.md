@@ -1,4 +1,4 @@
-<p align="center"><img src="https://p.pstatp.com/origin/13896000169f1061c64b8" alt="fre logo" width="130"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/44045911/147237798-174728c9-7399-4b47-be39-78ef69198a0d.png" alt="fre logo" width="130"></p>
 <h1 align="center">Fre</h1>
 <p align="center">👻 Tiny Concurrent UI library with Fiber.</p>
 <p align="center">
@@ -11,13 +11,17 @@
 
 - **Concurrent Mode** — This is an amazing idea, which implements the coroutine scheduler in JavaScript, it also called **Time slicing**.
 
-- **Offscreen rendering** — Another amazing idea which operate DOM in memory and paint them all to the screen once.
+- **O(ND) reconcilation algorithm** — Fre has a minimal longest-common-subsequence algorithm, It supported keyed, pre-process.
 
-- **Highly-optimized algorithm** — Fre has a better reconciliation algorithm, It supported keyed, pre-process.
+- **Do more with less** — After tree shaking, project of hello world is only 1KB, but it has most features, virtual DOM, hooks API, Fragments and so on.
 
-- **Do more with less** — After tree shaking, project of hello world is only 1KB, but it has most features, virtual DOM, hooks API and so on.
+### Contributors
 
-### Use
+<a href="https://github.com/yisar/fre/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=yisar/fre" />
+</a>
+
+### Usage
 
 ```shell
 yarn add fre
@@ -28,10 +32,10 @@ import { render, useState } from 'fre'
 
 function App() {
   const [count, setCount] = useState(0)
-  return <div>
+  return <>
       <h1>{count}</h1>
       <button onClick={() => setCount(count + 1)}>+</button>
-    </div>
+    </>
 }
 
 render(<App/>, document.body)
@@ -64,12 +68,12 @@ function App() {
   const [up, setUp] = useState(0)
   const [down, setDown] = useState(0)
   return (
-    <div>
+    <>
       <h1>{up}</h1>
       <button onClick={() => setUp(up + 1)}>+</button>
       <h1>{down}</h1>
       <button onClick={() => setDown(down - 1)}>-</button>
-    </div>
+    </>
   )
 }
 ```
@@ -91,11 +95,11 @@ function reducer(state, action) {
 function App() {
   const [state, dispatch] = useReducer(reducer, { count: 1 })
   return (
-    <div>
+    <>
       {state.count}
       <button onClick={() => dispatch({ type: 'up' })}>+</button>
       <button onClick={() => dispatch({ type: 'down' })}>-</button>
-    </div>
+    </>
   )
 }
 ```
@@ -117,10 +121,10 @@ function App({ flag }) {
     document.title = 'count is ' + count
   }, [flag])
   return (
-    <div>
+    <>
       <h1>{count}</h1>
       <button onClick={() => setCount(count + 1)}>+</button>
-    </div>
+    </>
   )
 }
 ```
@@ -192,39 +196,19 @@ function App() {
   return flag && <span ref={t}>I will removed</span>
 }
 ```
-
-### Suspense
-
-This is another feature of concurrent rendering, which can achieve asynchronous refresh without the aid of state.
+### Fragments
 
 ```js
-const LazyComponent = lazy(Component)
-
+// fragment
 function App() {
-  return <Suspense fallback={<div>Loading...</div>}>
-    <LazyComponent/>
-  </Suspense>
+  return <>{something}</>
+}
+// render array
+function App() {
+  return [a, b, c]
 }
 ```
 
-### ErrorBoundary
-
-Similar to Suspense is ErrorBoundary, where rendering can fallback when errors are caught.
-
-```js
-
-function App() {
-  return <ErrorBoundary fallback={(e)=>{
-    console.error(e)
-    return e
-  }}>
-    <ErrorComponent/>
-  </ErrorBoundary>
-}
-function ErrorComponent(){
-  throw 'err'
-}
-```
 
 ### jsx2
 
@@ -254,13 +238,13 @@ But at the same time, fre has obvious advantages in reconciliation algorithm and
 
 To some extent, vue and preact are similar. They have similar synchronous rendering, only the API is different.
 
-The reconciliation algorithm of fre is similar to vue, but the biggest difference is that vue/preact do not support concurrent mode, this means that the roadmap is totally different.
+The reconciliation algorithm of fre is similar to vue3, but the biggest difference is that vue/preact do not support concurrent mode, this means that the roadmap is totally different.
 
 | framework | concurrent | offscreen | reconcilation algorithm | bundle size |
 | --------- | ---------- | --------- | ----------------------- | ----------- |
 | fre2      | √          | √         | ★★★★                 | 2kb         |
 | react18   | √          | √         | ★★                    | 43kb        |
-| vue3      | ×          | x         | ★★★★★               | 32kb        |
+| vue3      | ×          | x         | ★★★★★               | 33kb        |
 | preactX   | ×          | x         | ★★★                  | 4kb         |
 
 #### License

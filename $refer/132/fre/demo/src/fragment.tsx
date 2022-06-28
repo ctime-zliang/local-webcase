@@ -1,28 +1,24 @@
-import { render, Fragment, h, useState } from '../../src/index'
+import {render, h, Fragment, useState, useEffect} from '../../src/index'
 
-function View() {
-	const [number, setNumber] = useState(0)
-	const [list, setList] = useState([])
-	const modifyList = () => {
-		setNumber(number + 1)
-		const array = []
-		for (let i = 0; i < number; i++) {
-			array.push(i)
+function fk({i = 0}) {
+	const [c, s] = useState(i);
+	return h('button', {
+		onClick() {
+			s(c + 1);
 		}
-		setList(array)
-	}
-	return (
-		<div className="row-view">
-			<div onClick={modifyList}>
-				Modify List {list.length} - {number}
-			</div>
-			<ul>
-				<li>Initial Li</li>
-				{list.map((item, index) => {
-					return <li>{item}</li>
-				})}
-			</ul>
-		</div>
-	)
+	}, c);
 }
-render(<View />, document.getElementById('app'))
+
+function test() {
+	const [c, s] = useState(true);
+	return h(Fragment, {}, h('button', {
+		onClick() {
+			s(!c);
+		}
+	}, 'change'), c ? h(fk) : 'none');
+}
+
+render(
+	h(test),
+	document.getElementById('app')
+);
