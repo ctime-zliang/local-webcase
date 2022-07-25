@@ -170,7 +170,11 @@ function ven$padNumber(number, allLength) {
  * @param {number} insertIndex 索引位置
  * @return {undefined} 
  */
-function ven$insertArray2Array(operaArr, targetArr, insertIndex) {
+function ven$insertArray2Array(
+    operaArr, 
+    targetArr, 
+    insertIndex
+) {
     /* 将 operaArr 插入到 targetArr 的 insertIndex 处 */
     targetArr.splice.apply(targetArr, Array.concat(insertIndex, 0, operaArr))
 }
@@ -192,64 +196,34 @@ function ven$createElementFragment(htmlString, useDOMParser = false) {
 
 
 /**
- * @description 按照自然排序规律重排数组(简单数组或 json)元素
- * @function ven$naturalSort
- * @param {array<string|number|object>} array 被排序数组
- * @param {string} key 当 array 是 json 时, 指定一个排序依据键
- * @return {array<string|number|object>} 
+ * @description 使用 setTimeout 模拟 setInterval
+ * @function ven$interval
+ * @param {Function} fn 执行函数
+ * @param {number} interval 间隔时间
+ * @param {object} scope 指定 fn 的作用域
+ * @return {{ timer: null }} 
  */
-function ven$naturalSort(array, key = '') {
-    const indexArray = []
-    const itemArray = []
-    const typeArray = []
-    const digit = 1
-    const letter = 2
-    for (let i =0; i< array.length; i++) {
-        indexArray[i] = i
-        const string = key ? (array[i][key] || '') : array[i]
-        itemArray[i] = string.toUpperCase().match(/\D+|\d+(?:\.\d+)?/g)
-        typeArray[i] = []
-        if (itemArray[i]) {
-            for (let j = 0; j < itemArray[i].length; j++) {
-                typeArray[i][j] = itemArray[i][j].match(/\d+/) ? digit : letter
-            }
-        }
+function ven$interval(
+    fn, 
+    interval, 
+    scope = undefined
+) {
+    let handler = { timer: null }
+    let intv = function() {
+        fn.call(scope)
+        handler.timer = setTimeout(intv, interval)
     }
-    indexArray.sort(__ven$naturalSort__naturalCompare(itemArray, typeArray, digit, letter))
-    const result = []
-    for (let i = 0; i < array.length; i++) {
-        result[i] = array[indexArray[i]]
-    }
-    return result
+    handler.timer = setTimeout(intv, interval)
+    return handler.timer
 }
-function __ven$naturalSort__naturalCompare(itemArray, typeArray, digit, lettter) {
-    return (a, b) => {
-        const itemA = itemArray[a]
-        const itemB = itemArray[b]
-        const typeA = typeArray[a]
-        const typeB = typeArray[b]
-        if (!itemA || !itemB) {
-            return itemA === itemB ? 0 : (itemA ? 1 : -1)
-        }
-        const len = Math.max(itemA.length, itemB.length)
-        for (let i = 0; i < len; i++) {
-            if (!itemA[i]) {
-                return -1
-            }
-            if (!itemB[i]) {
-                return 1
-            }
-            if (itemA[i] === itemB[i]) {
-                continue
-            }
-            if (typeA[i] !== typeB[i]) {
-                return typeA[i] === digit ? -1 : 1
-            }
-            if (typeA[i] === digit) {
-                return itemA[i] -  itemB[i]
-            }
-            return itemA[i] < itemB[i] ? -1 : 1
-        }
-        return 0
-    }
+
+
+/**
+ * @description 奇偶判断
+ * @function ven$isOddEven
+ * @param {number} number 被检测数
+ * @return {boolean} 
+ */
+function ven$isOddEven(number) {
+    return !!(number & 1)
 }

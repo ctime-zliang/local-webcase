@@ -9,7 +9,7 @@
  * @param {boolean} capture 设定以在冒泡/捕获阶段执行事件
  * @return {undefined}
  */
-async function ven$bindEvent(
+function ven$bindEvent(
     host, 
     eventName, 
     selector = null, 
