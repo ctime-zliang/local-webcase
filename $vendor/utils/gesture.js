@@ -260,7 +260,7 @@
         this.options.pointerdown && this.options.pointerdown.call(targetElement, evte, this)
     }
 
-    Gesture.prototype.handlePointercancel = function(evte) {
+    Gesture.prototype.handlePointercancelEvent = function(evte) {
         window.clearTimeout(this.longTapTimeout)
         this.isPointerdown = false
         this.tapCount = 0
@@ -275,7 +275,7 @@
             item.addEventListener('pointerdown', this.handlePointerdownEvent)
             item.addEventListener('pointermove', this.handlePointermoveEvent)
             item.addEventListener('pointerup', this.handlePointerupEvent)
-            item.addEventListener('pointercancel', this.handlePointercancel)
+            item.addEventListener('pointercancel', this.handlePointercancelEvent)
             item.addEventListener('wheel', this.handleWheelEvent)
         })
     }
@@ -285,7 +285,7 @@
             item.removeEventListener('pointerdown', this.handlePointerdownEvent)
             item.removeEventListener('pointermove', this.handlePointermoveEvent)
             item.removeEventListener('pointerup', this.handlePointerupEvent)
-            item.removeEventListener('pointercancel', this.handlePointercancel)
+            item.removeEventListener('pointercancel', this.handlePointercancelEvent)
             item.removeEventListener('wheel', this.handleWheelEvent)
         })
     }
