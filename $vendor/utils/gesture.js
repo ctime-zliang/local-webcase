@@ -144,6 +144,8 @@
     const DIRECTION_LEFT = 'LEFT'
     const DIRECTION_RIGHT = 'RIGHT'
 
+    const POINTER_ITEM_UPDATE = 'POINTER_ITEM_UPDATE'
+    const POINTER_ITEM_DELETE = 'POINTER_ITEM_DELETE'
     function Gesture(host, selector, options) {
         this.containerElements = []
         if (typeof host === 'string') {
@@ -164,7 +166,7 @@
         this.lastPointerMove = { x: 0, y: 0 }  // 上一次移动位置
         this.lastCenter = { x: 0, y: 0 }  // 上一次中心位置
         this.tapCount = 0  // 点击计数器
-        this.points = []  // 移动位置数组 长度 20 用于计算是否触发 swipe
+        this.pointDots = []  // 移动位置数组 长度 20 用于计算是否触发 swipe
         this.pointers = []  // 触摸点数组
         this.moveDirection = ''  // 拖拽方向
         this.isPointerdown = false  // 按下标识
@@ -196,6 +198,28 @@
         return Math.atan2(pointA.y - pointB.y, pointA.x - pointB.x) * 180 / Math.PI
     }
 
+    Gesture.prototype.updatePointers = function(evte, type) {
+        let idx = -1
+        let targetPointer = null
+        for (let i = 0; i < this.pointers; i++) {
+            if (this.pointers[i].pointerId === evte.pointerId) {
+                idx = i
+                targetPointer = this.pointers[i]
+                break
+            }
+        }
+        if (targetPointer) {
+            if (type === POINTER_ITEM_UPDATE) {
+                this.pointers[i] = evte
+                return
+            }
+            if (type === POINTER_ITEM_DELETE) {
+                this.pointers.splice(idx, 1)
+                return
+            }
+        }
+    }
+
     Gesture.prototype.handlePointerdownEvent = function(evte) {
         /**
          * 屏蔽鼠标中键和右键
@@ -207,28 +231,31 @@
             return
         }
         this.pointers.push(evte)
-        this.pointerPostions.push({
-            x: evte.clientX,
-            y: evte.clientY
-        })
         const targetElement = evte.target
         targetElement.setPointerCapture(evte.pointerId)
-        const newEvte = this.pointers[this.pointers.length - 1]
-        const firstEvte = this.pointers[0]
         if (this.pointers.length === 1) {
             window.clearTimeout(this.singleTapTimeout);
+            this.pointerPostions.push({
+                x: evte.clientX,
+                y: evte.clientY
+            })
+            this.lastPointerPostions.push({
+                x: 0,
+                y: 0
+            })
             const pointerPostions1 = this.pointerPostions[0]
             const lastPointerPostions1 = this.lastPointerPostions[0]
+            const pointers1 = this.pointers[0]
             this.isPointerdown = true
             this.tapCount++
             this.moveDirection = ''
-            this.points.length = 0
+            this.pointDots.length = 0
             this.distance.x = 0
             this.distance.y = 0
             this.lastDistance.x = 0
             this.lastDistance.y = 0
-            this.lastPointerMove.x = newEvte.clientX
-            this.lastPointerMove.y = newEvte.clientY
+            this.lastPointerMove.x = pointers1.clientX
+            this.lastPointerMove.y = pointers1.clientY
             if (this.tapCount > 1) {
                 if (
                     Math.abs(pointerPostions1.x - lastPointerPostions1.x) > 30 
@@ -246,6 +273,16 @@
         }
         if (this.pointers.length === 2) {            
             window.clearTimeout(this.longTapTimeout)
+            const pointers1 = this.pointers[0]
+            const pointers2 = this.pointers[1]
+            this.pointerPostions.push({
+                x: pointers2.clientX,
+                y: pointers2.clientY
+            })
+            this.lastPointerPostions.push({
+                x: pointers2.clientX,
+                y: pointers2.clientY
+            })
             this.tapCount = 0
             this.lastDistance.x = this.distance.x
             this.lastDistance.y = this.distance.y
@@ -253,11 +290,26 @@
             this.lastCenter.x = center.x
             this.lastCenter.y = center.y
         }
-        this.lastPointerPostions.push({ 
-            x: firstEvte.clientX, 
-            y: firstEvte.clientY 
-        })
+        this.lastPointerPostions[0].x = this.pointers[0].clientX
+        this.lastPointerPostions[0].y = this.pointers[0].clientY
         this.options.pointerdown && this.options.pointerdown.call(targetElement, evte, this)
+    }
+
+    Gesture.prototype.handlePointermoveEvent = function(evte) {
+        if (!this.pointerdown) {
+            return
+        }
+        this.updatePointers(evte, POINTER_ITEM_UPDATE)
+        if (this.pointers.length === 1) {
+            const uPointer1 = {
+                x: this.pointers[0].clientX,
+                y: this.pointers[0].clientY
+            }
+
+        }
+        if (this.pointers.length === 2) {
+
+        }
     }
 
     Gesture.prototype.handlePointercancelEvent = function(evte) {
@@ -289,6 +341,11 @@
             item.removeEventListener('wheel', this.handleWheelEvent)
         })
     }
+
+    /****************************** ******************************/
+    /****************************** ******************************/
+    /****************************** ******************************/
+    /****************************** ******************************/
 
     xGesture.run = function(host, selector, options) {
         return new Gesture(host, selector, options)
