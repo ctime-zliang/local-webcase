@@ -1,56 +1,11 @@
-﻿let _old = {
-	a: 'i am unchanged',
-	b: 'i am deleted',
-	e: {
-		a: 1,
-		b: false, 
-		c: null
-	},
-	f: [
-		1,
-		{
-			a: 'same',
-			b: [
-				{
-					a:'same'
-				}, {
-					d: 'delete'
-				}
-			]
-		}
-	],
-	g: new Date( '2017.11.25' ),
-	h: 'i am updated'
-}
-let _new = {
-	a: 'i am unchanged',
+﻿console.log(xGesture)
 
-	c: 'i am created',
-	e: { 
-		a: '1', 
-		b: '', 
-		d: 'created'
+xGesture.run('#tapBox1', {
+	longTap(evte, gesture) {
+		console.log(this, evte, gesture)
 	},
-	f: [
-		{
-			a: 'same',
-			b: [
-				{
-					a: 'same'
-				}, 
-				{
-					c: 'create'
-				}
-			]
-		},
-		1
-	],
-	g: new Date( '2017.11.25' ),
-	h: 'i am updated really'
-}
-let res = Ven$JsonDiff.diff(_old, _new)
+	pointerdown(evte, gesture) {
+		console.log(this, evte, gesture)
+	}
+})
 
-// output
-console.log( _old )
-console.log( _new )
-console.log( res )
