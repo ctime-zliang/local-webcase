@@ -21,62 +21,6 @@
     /****************************** ******************************/
     /****************************** ******************************/
 
-    const DEFAULT_NS = `stname`
-    
-    function EventBus() {
-        this.handlers = {}
-    }
-
-    EventBus.prototype.on = function(eventName, callback, spaceName = DEFAULT_NS) {
-        const handlers = this.handlers
-		const sn = spaceName || DEFAULT_NS
-		if (!eventName || typeof eventName !== 'string' || typeof callback !== 'function') {
-			return
-		}
-		if (!handlers[sn]) {
-			handlers[sn] = {}
-		}
-		if (!handlers[sn][eventName] || !handlers[sn][eventName].length) {
-			handlers[sn][eventName] = []
-		}
-		handlers[sn][eventName].push(callback)
-    }
-
-    EventBus.prototype.emit = function(eventName, params = null, spaceName = DEFAULT_NS) {
-        const handlers = this.handlers
-		const sn = spaceName || DEFAULT_NS
-		if (!eventName || typeof eventName !== 'string' || !handlers[sn]) {
-			return
-		}
-		const length = (handlers[sn][eventName] || []).length
-		for (let i = 0; i < length; i++) {
-			handlers[sn][eventName][i](params)
-		}
-    }
-
-    EventBus.prototype.clearEvent = function(eventName, spaceName = DEFAULT_NS) {
-        const handlers = this.handlers
-		const sn = spaceName || DEFAULT_NS
-		if (!eventName || typeof eventName !== 'string' || !handlers[sn]) {
-			return
-		}
-		delete handlers[sn][eventName]
-    }
-
-    EventBus.prototype.clearNameSpace = function(spaceName = DEFAULT_NS) {
-        const handlers = this.handlers
-		const sn = spaceName || DEFAULT_NS
-		if (!handlers[sn]) {
-			return
-		}
-		handlers[sn] = {}
-    }
-
-    /****************************** ******************************/
-    /****************************** ******************************/
-    /****************************** ******************************/
-    /****************************** ******************************/
-
     function bindEvent(
         host, 
         eventName, 
@@ -146,6 +90,20 @@
 
     const POINTER_ITEM_UPDATE = 'POINTER_ITEM_UPDATE'
     const POINTER_ITEM_DELETE = 'POINTER_ITEM_DELETE'
+
+    const DEFAULT_GUEST_OPTIONS = {
+        zoomInWheelRatio: 1.1,  // 放大倍率
+        zoomOutWheelRatio: 1 / 1.1  // 缩小倍率
+    }
+
+    function createProfile() {
+        return {
+            singleTapTimeout: null,
+            longTapTimeout: null,
+            isPointerdown: false,
+            tapCount: 0
+        }
+    }
     function Gesture(host, selector, options) {
         this.containerElements = []
         if (typeof host === 'string') {
@@ -153,25 +111,20 @@
         }
         this.options = typeof options !== 'object' ? selector : options
         this.options = this.options || {}
+        this.options = Object.assign({}, DEFAULT_GUEST_OPTIONS, this.options)
         /* ... */
         this.touchDownDots = []  // 触摸点按下时的位置坐标
         this.lastTouchDownDots = []  // 上一次触摸点按下时的位置坐标
         this.pointDots = []  // 移动位置数组 长度 20 用于计算是否触发 swipe
         this.pointers = []  // 触摸点数组
 
-        // this.point1 = { x: 0, y: 0 }  // 第一个触摸点位置
-        // this.point2 = { x: 0, y: 0 }  // 第二个触摸点位置
-        // this.lastPoint1 = { x: 0, y: 0 }  // 上一次第一个触摸点位置
-        // this.lastPoint2 = { x: 0, y: 0 }  // 上一次第二个触摸点位置
         this.distance = { x: 0, y: 0 }  // 移动距离
         this.lastDistance = { x: 0, y: 0 }  // 上一次移动距离
         this.lastPointerMove = { x: 0, y: 0 }  // 上一次移动位置
         this.lastCenter = { x: 0, y: 0 }  // 上一次中心位置
-        this.tapCount = 0  // 点击计数器
         this.moveDirection = ''  // 拖拽方向
-        this.isPointerdown = false  // 按下标识
-        this.singleTapTimeout = null  // 单击延时器
-        this.longTapTimeout = null  // 长按延时器
+
+        this._profile = createProfile()
 
         this.init()
     }
@@ -183,10 +136,18 @@
         this.handlePointercancelEvent = this.handlePointercancelEvent.bind(this)
         this.handleWheelEvent = this.handleWheelEvent.bind(this)
         /* ... */
+        this.setTouchAction('none')
         this.bindEvent()
     }
 
+    Gesture.prototype.setTouchAction = function(value) {
+        this.containerElements.forEach((item) => {
+            item.style.touchAction = value
+        })
+    }
+
     Gesture.prototype.destory = function() {
+        this.setTouchAction('initial')
         this.unBindEvent()
     }
 
@@ -214,7 +175,7 @@
         }
         if (targetPointer) {
             if (type === POINTER_ITEM_UPDATE) {
-                this.pointers[i] = evte
+                this.pointers[idx] = evte
                 return
             }
             if (type === POINTER_ITEM_DELETE) {
@@ -274,16 +235,16 @@
             return
         }
         this.pointers.push(evte)
+        this._profile.isPointerdown = true
         if (this.pointers.length === 1) {
-            window.clearTimeout(this.singleTapTimeout);
+            window.clearTimeout(this._profile.singleTapTimeout);
             targetElement.setPointerCapture(evte.pointerId)
             this.touchDownDots[0] = { x: evte.clientX, y: evte.clientY }
-            this.lastTouchDownDots[0] = { x: 0, y: 0 }
+            this.lastTouchDownDots[0] = { x: evte.clientX, y: evte.clientY }
             const touchDownDot1 = this.touchDownDots[0]
             const lastTouchDownDot1 = this.lastTouchDownDots[0]
             const pointer1 = this.pointers[0]
-            this.isPointerdown = true
-            this.tapCount++
+            this._profile.tapCount++
             this.moveDirection = ''
             this.pointDots.length = 0
             this.distance.x = 0
@@ -292,26 +253,23 @@
             this.lastDistance.y = 0
             this.lastPointerMove.x = pointer1.clientX
             this.lastPointerMove.y = pointer1.clientY
-            if (this.tapCount > 1) {
-                if (
-                    Math.abs(touchDownDot1.x - lastTouchDownDot1.x) > 30 
-                    || Math.abs(touchDownDot1.y - lastTouchDownDot1.y) > 30
-                ) {
-                    this.tapCount = 1
+            if (this._profile.tapCount > 1) {
+                if (Math.abs(touchDownDot1.x - lastTouchDownDot1.x) > 30 || Math.abs(touchDownDot1.y - lastTouchDownDot1.y) > 30) {
+                    this._profile.tapCount = 1
                 }
             }
-            if (this.tapCount === 1) {
-                this.longTapTimeout = window.setTimeout(() => {
-                    this.tapCount = 0
+            if (this._profile.tapCount === 1) {
+                this._profile.longTapTimeout = window.setTimeout(() => {
+                    this._profile.tapCount = 0
                     this.options.onLongTap && this.options.onLongTap.call(targetElement, evte, this)
                 }, 500)
             }
         }
         if (this.pointers.length === 2) {            
-            window.clearTimeout(this.longTapTimeout)
+            window.clearTimeout(this._profile.longTapTimeout)
             this.touchDownDots[1] = { x: evte.clientX, y: evte.clientY }
             this.lastTouchDownDots[1] = { x: evte.clientX, y: evte.clientY }
-            this.tapCount = 0
+            this._profile.tapCount = 0
             this.lastDistance.x = this.distance.x
             this.lastDistance.y = this.distance.y
             const center = this.getCenter(this.touchDownDots[0], this.touchDownDots[1])
@@ -322,11 +280,11 @@
         this.options.onPointerdown && this.options.onPointerdown.call(targetElement, evte, this)
     }
 
-    Gesture.prototype.handlePointermoveEvent = function(evte) {       
-        if (!this.pointerdown) {
+    Gesture.prototype.handlePointermoveEvent = function(evte) {
+        const targetElement = evte.target
+        if (!this._profile.isPointerdown) {
             return
         }
-        evte.preventDefault()
         const idx = this.updatePointers(evte, POINTER_ITEM_UPDATE)
         if (this.pointers.length === 1) {
             const pointer1 = this.pointers[0]
@@ -334,8 +292,8 @@
             this.distance.x = pointer1.clientX - touchDownDot1.x + this.lastDistance.x
             this.distance.y = pointer1.clientX - touchDownDot1.y + this.lastDistance.y
             if (Math.abs(this.distance.x) >= 10 || Math.abs(this.distance.y) >= 10) {
-                window.clearTimeout(this.longTapTimeout)
-                this.tapCount = 0
+                window.clearTimeout(this._profile.longTapTimeout)
+                this._profile.tapCount = 0
                 this.moveDirection = this.getMoveDirection()
             }
             this.pointDots.unshift({
@@ -390,24 +348,24 @@
 
     Gesture.prototype.handlePointerupEvent = function(evte) {
         const targetElement = evte.target
-        if (!this.isPointerdown) {
+        if (!this._profile.isPointerdown) {
             return;
         }
         const idx = this.updatePointers(evte, POINTER_ITEM_DELETE)
         if (this.pointers.length === 0) {
-            window.clearTimeout(this.longTapTimeout)
-            this.isPointerdown = false
-            if (this.tapCount === 0) {
+            window.clearTimeout(this._profile.longTapTimeout)
+            this._profile.isPointerdown = false
+            if (this._profile.tapCount === 0) {
                 this.handleSwipe(evte)
             } else {
                 this.options.onTap && this.options.onTap.call(targetElement, evte, this)
-                if (this.tapCount === 1) {
-                    this.singleTapTimeout = window.setTimeout(() => {
-                        this.tapCount = 0
+                if (this._profile.tapCount === 1) {
+                    this._profile.singleTapTimeout = window.setTimeout(() => {
+                        this._profile.tapCount = 0
                         this.options.onSingleTap && this.options.onSingleTap.call(targetElement, evte, this)
                     }, 250)
-                } else if (this.tapCount > 1) {
-                    this.tapCount = 0
+                } else if (this._profile.tapCount >= 2) {
+                    this._profile.tapCount = 0
                     this.options.onDoubleTap && this.options.onDoubleTap.call(targetElement, evte, this)
                 }
             }
@@ -423,19 +381,16 @@
     }
 
     Gesture.prototype.handlePointercancelEvent = function(evte) {
-        window.clearTimeout(this.longTapTimeout)
-        this.isPointerdown = false
-        this.tapCount = 0
+        window.clearTimeout(this._profile.longTapTimeout)
+        this._profile.isPointerdown = false
+        this._profile.tapCount = 0
         this.pointers.length = 0
         this.options.onPpointercancel && this.options.onPpointercancel.call(targetElement, evte, this)
     }
 
     Gesture.prototype.handleWheelEvent = function(evte) {
-        evte._scale = 1.1
-        if (evte.deltaY > 0) {
-            evte._scale = 1 / 1.1
-        }
-        this.options.onWheel && this.options.onWheel.call(evte.target, evte, this)
+        evte._scale = evte.deltaY > 0 ? this.options.zoomOutWheelRatio : this.options.zoomInWheelRatio
+        this.options.onWheel && this.options.onWheel.call(evte.target, evte, { scale: evte._scale }, this)
     }
 
     Gesture.prototype.bindEvent = function() {
@@ -464,6 +419,7 @@
     /****************************** ******************************/
 
     xGesture.run = function(host, selector, options) {
-        return new Gesture(host, selector, options)
+        const guestInstance = new Gesture(host, selector, options)
+        return guestInstance
     }
 }());
