@@ -407,6 +407,8 @@
                     scale,
                     centerX: center.x,
                     centerY: center.y,
+                    lastCenterX: _$profile.lastCenter.x,
+                    lastCenterY: _$profile.lastCenter.y,
                     pointA: { x: pointer1.clientX, y: pointer1.clientY },
                     pointB: { x: pointer2.clientX, y: pointer2.clientY }
                 },

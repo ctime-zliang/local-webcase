@@ -68,8 +68,8 @@ xGesture.run('#guestBox10', {
 })
 
 xGesture.run('#guestBox11', {
-	onPinch(evte, { scale, centerX, centerY, pointA, pointB }, gesture) {
-		console.log('onPinch', scale, centerX, centerY, pointA, pointB)
+	onPinch(evte, { scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
+		console.log('onPinch', scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB)
 	},
 })
 
