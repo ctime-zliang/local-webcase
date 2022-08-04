@@ -1,85 +1,92 @@
 ﻿console.log(xGesture)
 
 xGesture.run('#guestBox1', {
-	onPointerdown(evte, gesture) {
-		console.log('onPointerdown', evte, gesture)
+	onPointerdown(evte, { clientX, clientY }, gesture) {
+		console.log('onPointerdown', clientX, clientY)
 	},
 })
 
 xGesture.run('#guestBox2', {
-	onPointermove(evte, gesture) {
+	onPointermove(evte, { clientX, clientY }, gesture) {
 		evte.preventDefault()
-		console.log('onPointermove', evte, gesture)
+		console.log('onPointermove', clientX, clientY)
 	},
 })
 
 xGesture.run('#guestBox3', {
-	onPointerup(evte, gesture) {
-		console.log('onPointerup', evte, gesture)
+	onPointerup(evte, { clientX, clientY }, gesture) {
+		console.log('onPointerup', clientX, clientY)
 	},
 })
 
 xGesture.run('#guestBox13', {
-	onPpointercancel(evte, gesture) {
-		console.log('onPpointercancel', evte, gesture)
+	onPpointercancel(evte, { clientX, clientY }, gesture) {
+		console.log('onPpointercancel', clientX, clientY)
 	},
 })
 
 xGesture.run('#guestBox4', {
-	onTap(evte, gesture) {
-		console.log('onTap', evte, gesture)
+	onTap(evte, { tapX, tapY }, gesture) {
+		console.log('onTap', tapX, tapY)
 	},
 })
 
 xGesture.run('#guestBox5', {
-	onLongTap(evte, gesture) {
-		console.log('onLongTap', evte, gesture)
+	onLongTap(evte, { tapX, tapY }, gesture) {
+		console.log('onLongTap', tapX, tapY)
 	},
 })
 
 xGesture.run('#guestBox6', {
-	onSingleTap(evte, gesture) {
-		console.log('onSingleTap', evte, gesture)
+	onSingleTap(evte, { tapX, tapY }, gesture) {
+		console.log('onSingleTap', tapX, tapY)
 	},
 })
 
 xGesture.run('#guestBox7', {
-	onDoubleTap(evte, gesture) {
-		console.log('onDoubleTap', evte, gesture)
+	onDoubleTap(evte, { tapX, tapY }, gesture) {
+		console.log('onDoubleTap', tapX, tapY)
 	},
 })
 
 xGesture.run('#guestBox8', {
-	onDragMove(evte, gesture) {
-		console.log('onDragMove', evte, gesture)
+	onDragMove(evte, { direction, distX, distY, diffX, diffY, moveX, moveY }, gesture) {
+		console.log('onDragMove', direction, distX, distY, diffX, diffY, moveX, moveY)
 	},
 })
 
 xGesture.run('#guestBox9', {
-	onSwipe(evte, gesture) {
-		console.log('onSwipe', evte, gesture)
+	onSwipe(evte, { direction, distX, distY }, gesture) {
+		console.log('onSwipe', direction, distX, distY)
 	},
 })
 
 xGesture.run('#guestBox10', {
-	onRotate(evte, gesture) {
-		console.log('onRotate', evte, gesture)
+	onRotate(evte, { rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
+		console.log('onRotate', rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB)
 	},
 })
 
 xGesture.run('#guestBox11', {
-	onPinch(evte, gesture) {
-		console.log('onPinch', evte, gesture)
+	onPinch(evte, { scale, centerX, centerY, pointA, pointB }, gesture) {
+		console.log('onPinch', scale, centerX, centerY, pointA, pointB)
 	},
 })
 
 let wheelScale = 1.0
+let maxWheelScale = 10
+let minWheelScale = 0.005
 xGesture.run('#guestBox12', {
 	onWheel(evte, { scale }, gesture) {
 		evte.preventDefault()
-		console.log('onWheel', evte, scale, gesture)
+		console.log('onWheel', scale)
 		wheelScale *= scale
-		this.innerHTML = `onWheel ${wheelScale}`
+		if (wheelScale > maxWheelScale) {
+		    wheelScale = maxWheelScale
+		} else if (wheelScale < minWheelScale) {
+		    wheelScale = minWheelScale
+		}
+		evte.target.innerHTML = `onWheel ${wheelScale}`
 	},
 })
 
