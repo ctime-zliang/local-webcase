@@ -58,7 +58,6 @@ xGesture.attach('#guestBox7', {
 })
 
 const gBox8 = document.getElementById('guestBox8')
-const gBox8ClientRect = gBox8.getBoundingClientRect()
 xGesture.attach('#guestBox8', {
 	onPointerdown(evte, { clientX, clientY }, gesture) {
 		DrawDragMoveLine.drawStart()
@@ -66,7 +65,7 @@ xGesture.attach('#guestBox8', {
 	onDragMove(evte, { movePosition, moveDirection, distX, distY, speedX, speedY, clientX, clientY }, gesture) {
 		console.log('onDragMove', JSON.stringify({ movePosition, moveDirection, distX, distY, speedX, speedY, clientX, clientY }))
 		evte.target.innerHTML = `onDragMove (movePosition: ${movePosition}, moveDirection: ${moveDirection})`
-		DrawDragMoveLine.addPath({ x: clientX - gBox8ClientRect.left, y: clientY - gBox8ClientRect.top })
+		DrawDragMoveLine.addPath({ x: clientX - gBox8.getBoundingClientRect().left, y: clientY - gBox8.getBoundingClientRect().top })
 		DrawDragMoveLine.drawMove()
 	},
 })
