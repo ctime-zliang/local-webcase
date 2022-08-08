@@ -81,6 +81,11 @@
             dotsRecordInPointermove: [],
             /**
              * 单指情形下
+             *      dotsRecordInPointermove 保存记录的最大长度
+             */
+            maxLengthDotsRecordInPointermove: 30,
+            /**
+             * 单指情形下
              *      单次记录 pointer-down/pointer-move/pointer-up 触发时的指针采样坐标
              *      在每一次 pointer-move 触发时, 与之前记录的指针坐标做对比计算, 即可计算出指针移动的距离和方向
              */
@@ -212,16 +217,19 @@
     Gesture.prototype.handleSwipe = function(evte) {
         const _$profile = this._$profile
         const MIN_SWIPE_DISTANCE = 20
+        const MAX_TIME_INTERVAL = 200
         let x = 0
         let y = 0
         let swipeDirection = ''
-        for (let pointDotItem of _$profile.dotsRecordInPointermove) {
-            if (evte.timeStamp - pointDotItem.timeStamp < 175) {
-                x = evte.clientX - pointDotItem.x
-                y = evte.clientY - pointDotItem.y
-                continue
-            }
-            break
+        /**
+         * 指针抬起时, 查找与此刻的时间间隔在 ${MAX_TIME_INTERVAL} 以内的"最早"的坐标记录 PA
+         * 并获取此刻指针坐标与 PA 点的距离
+         */
+        let i = 0
+        while (i <= _$profile.dotsRecordInPointermove.length - 1 && (evte.timeStamp - _$profile.dotsRecordInPointermove[i].timeStamp < MAX_TIME_INTERVAL)) {
+            x = evte.clientX - _$profile.dotsRecordInPointermove[i].x
+            y = evte.clientY - _$profile.dotsRecordInPointermove[i].y
+            i++
         }
         if (Math.abs(x) > MIN_SWIPE_DISTANCE || Math.abs(y) > MIN_SWIPE_DISTANCE) {
             if (Math.abs(x) > Math.abs(y)) {
@@ -360,7 +368,7 @@
                 y: pointer1.clientY,
                 timeStamp: evte.timeStamp
             })
-            if (_$profile.dotsRecordInPointermove.length > 20) {
+            if (_$profile.dotsRecordInPointermove.length > _$profile.maxLengthDotsRecordInPointermove) {
                 _$profile.dotsRecordInPointermove.pop()
             }
             if (Math.abs(_$profile.offsetRectAtPointerdown.x) >= 3 || Math.abs(_$profile.offsetRectAtPointerdown.y) >= 3) {
