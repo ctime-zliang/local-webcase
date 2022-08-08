@@ -31,11 +31,11 @@
 
     const DEFAULT_GUEST_OPTIONS = {
         /**
-         * 放大倍率
+         * wheel 放大倍率
          */
         zoomInWheelRatio: 1.1,
         /**
-         * 缩小倍率
+         * wheel 缩小倍率
          */
         zoomOutWheelRatio: 1 / 1.1,
         /**
@@ -46,6 +46,10 @@
          * 在 wheel 触发时是否屏蔽默认行为
          */
         isPreventDefaultInWheel: true,
+        /**
+         * onLongTap 触发的延迟时间设置
+         */
+        delayOfLongTapDispatch: 500
     }
 
     function createProfile() {
@@ -58,6 +62,7 @@
             /**
              * 指针数组
              *      指针事件存储队列
+             *      会在指针移动过程中更新指定序列的指针事件对象
              */
             pointers: [],
             /**
@@ -82,9 +87,15 @@
             pointerPositionCache: { x: 0, y: 0 },
             /**
              * 单指情形下
+             *      pointer 移动方位
+             *      在任意时刻, 指针坐标相对于 pointer-down 按下时的坐标的方位
+             */
+            movePositionRange: '',
+            /**
+             * 单指情形下
              *      pointer 移动方向
              */
-            moveDirection: '',
+             moveDirection: '',
             /**
              * 多指情形下
              *      单次记录 pointer-down/pointer-move 触发时多指的几何中心坐标
@@ -167,7 +178,7 @@
         return idx
     }
 
-    Gesture.prototype.getMoveDirection = function() {
+    Gesture.prototype.getMovePositionRange = function() {
         const _$profile = this._$profile
         if (Math.abs(_$profile.offsetRectAtPointerdown.x) > Math.abs(_$profile.offsetRectAtPointerdown.y)) {
             if (_$profile.offsetRectAtPointerdown.x > 0) {
@@ -181,18 +192,18 @@
         return DIRECTION_UP
     }
 
-    Gesture.prototype.getMoveDirection2 = function() {
+    Gesture.prototype.getMoveDirection = function() {
         const _$profile = this._$profile
         const pointer1 = _$profile.pointers[0]
-        const moveX = pointer1.clientX - _$profile.pointerPositionCache.x
-        const moveY = pointer1.clientY - _$profile.pointerPositionCache.y
-        if (Math.abs(moveX) > Math.abs(moveY)) {
-            if (moveX > 0) {
+        const speedX = pointer1.clientX - _$profile.pointerPositionCache.x
+        const speedY = pointer1.clientY - _$profile.pointerPositionCache.y
+        if (Math.abs(speedX) > Math.abs(speedY)) {
+            if (speedX > 0) {
                 return DIRECTION_RIGHT
             }
             return DIRECTION_LEFT
         }
-        if (moveY > 0) {
+        if (speedY > 0) {
             return DIRECTION_DOWN
         }
         return DIRECTION_UP
@@ -224,7 +235,9 @@
                 { 
                     direction: swipeDirection,
                     distX: x,
-                    distY: y
+                    distY: y,
+                    releaseX: evte.clientX,
+                    releaseY: evte.clientY,
                 }, 
                 this
             )
@@ -255,6 +268,7 @@
             const lastDotRecordInPointerdown1 = _$profile.lastDotsRecordInPointerdown[0] 
             /* ... */
             _$profile.tapCount++
+            _$profile.movePositionRange = ''
             _$profile.moveDirection = ''
             /* ... */
             _$profile.dotsRecordInPointermove.length = 0
@@ -287,7 +301,7 @@
                         },
                         this
                     )
-                }, 500)
+                }, this.options.delayOfLongTapDispatch)
             }
             /* ... */
             _$profile.lastDotsRecordInPointerdown[0] = { x: _$profile.pointers[0].clientX, y: _$profile.pointers[0].clientY }
@@ -349,27 +363,25 @@
             if (_$profile.dotsRecordInPointermove.length > 20) {
                 _$profile.dotsRecordInPointermove.pop()
             }
-            if (Math.abs(_$profile.offsetRectAtPointerdown.x) >= 5 || Math.abs(_$profile.offsetRectAtPointerdown.y) >= 5) {
+            if (Math.abs(_$profile.offsetRectAtPointerdown.x) >= 3 || Math.abs(_$profile.offsetRectAtPointerdown.y) >= 3) {
                 window.clearTimeout(this._$profile.longTapTimeout)
                 _$profile.tapCount = 0
-                _$profile.moveDirection = this.getMoveDirection()
+                _$profile.movePositionRange = this.getMovePositionRange()
             }
+            _$profile.moveDirection = this.getMoveDirection()
             /* ... */
-            const moveX = pointer1.clientX - _$profile.pointerPositionCache.x
-            const moveY = pointer1.clientY - _$profile.pointerPositionCache.y
-            const distX = pointer1.clientX - dotRecordInPointerdown1.x + _$profile.lastOffsetRectAtPointerdown.x
-            const distY = pointer1.clientY - dotRecordInPointerdown1.y + _$profile.lastOffsetRectAtPointerdown.y
             this.options.onDragMove && this.options.onDragMove.call(
                 undefined,
                 evte, 
                 {
-                    direction: _$profile.moveDirection,
-                    distX,
-                    distY,
-                    moveX,
-                    moveY,
+                    movePosition: _$profile.movePositionRange,
+                    moveDirection: _$profile.moveDirection,
+                    distX: _$profile.offsetRectAtPointerdown.x,
+                    distY: _$profile.offsetRectAtPointerdown.y,
+                    speedX: pointer1.clientX - _$profile.pointerPositionCache.x,
+                    speedY: pointer1.clientY - _$profile.pointerPositionCache.y,
                     clientX: pointer1.clientX,
-                    clientX: pointer1.clientY
+                    clientY: pointer1.clientY
                 },
                 this
             )
@@ -454,6 +466,8 @@
         if (_$profile.pointers.length === 0) {
             window.clearTimeout(this._$profile.longTapTimeout)
             _$profile.isPointerdown = false
+            _$profile.movePositionRange = ''
+            _$profile.moveDirection = ''
             if (_$profile.tapCount === 0) {
                 this.handleSwipe(evte)
             } else {
@@ -551,6 +565,8 @@
             evte, 
             { 
                 scale,
+                clientX: evte.clientX,
+                clientY: evte.clientY
             }, 
             this
         )
@@ -563,6 +579,10 @@
         this.options.onContextmenu && this.options.onContextmenu.call(
             undefined, 
             evte, 
+            { 
+                clientX: evte.clientX,
+                clientY: evte.clientY
+            },
             this
         )
     }
@@ -594,7 +614,14 @@
     /****************************** ******************************/
     /****************************** ******************************/
 
-    xGesture.attch = function(host, options) {
+    xGesture.attach = function(host, options) {
         return new Gesture(host, options)
+    }
+
+    xGesture.defined = {
+        DIRECTION_UP,
+        DIRECTION_DOWN,
+        DIRECTION_LEFT,
+        DIRECTION_RIGHT
     }
 }());
