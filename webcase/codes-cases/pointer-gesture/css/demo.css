@@ -1,0 +1,73 @@
+.page-container {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    align-content: flex-start;
+    flex-wrap: nowrap;
+}
+
+.page-header {
+    width: 100vw;
+    height: 45px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    flex-wrap: nowrap;
+    background-color: #efefef;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+.page-content {
+    width: 100%;
+    height: calc(100vh - 45px - 30px);
+    overflow: auto;
+}
+
+.page-footer {
+    width: 100vw;
+    height: 30px;
+    background-color: #f9faf9;
+    border-top: 1px solid #efefef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    flex-wrap: nowrap;
+}
+
+.view-title {
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.content-description {
+    padding: 15px 20px;
+    font-size: 0.15rem;
+    line-height: 0.15rem;
+}
+
+.guesture-interactive {
+    padding: 10px 20px;
+}
+.guesture-interactive-pointerdown {
+    background-color: #f5f2f2;
+}
+
+.view-subject {
+    margin: 15px 0;
+}
+.view-subject .view-subject-title {
+    padding: 8px 20px;
+    background-color: #efefef;
+    font-size: 0.1rem;
+    font-weight: 900;
+}
+.view-subject .view-subject-content {
+    font-size: 0.1rem;
+}
