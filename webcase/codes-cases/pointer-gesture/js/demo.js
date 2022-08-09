@@ -2,19 +2,24 @@ console.log(xGesture)
 
 const globalContainerElement = document.getElementById('appContainer')
 
+/**
+ * Pointer Down
+ */
 ;(function(sectionElement) {
     const pointerdownGuestureElement = sectionElement.querySelector('[data-tagitem="guesture"]')
     const pointerdownCountElement = sectionElement.querySelector('[data-tagitem="pointerdown-count"]')
 
     let pointerdownCount = 0
+    let styleUpdateTimer = null
 
     xGesture.attach(pointerdownGuestureElement, {
         onPointerdown(evte, { clientX, clientY }, guesture) {
-            evte.target.classList.add('guesture-interactive-pointerdown')
+            window.clearTimeout(styleUpdateTimer)
+            pointerdownGuestureElement.classList.add('guesture-interactive-pointerdown')
             pointerdownCountElement.textContent = ++pointerdownCount
+            styleUpdateTimer = window.setTimeout(() => {
+                pointerdownGuestureElement.classList.remove('guesture-interactive-pointerdown')
+            }, 85)
         },
-        onPointerup(evte, { clientX, clientY }, guesture) {
-            evte.target.classList.remove('guesture-interactive-pointerdown')
-        }
     })
 })(globalContainerElement.querySelector('[data-tagitem="pointerdown"]'));
