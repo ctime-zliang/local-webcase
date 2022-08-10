@@ -31,18 +31,179 @@
     </section>
     <section class="page-content">
         <div class="content-description">一个 Web page 手势库: guesture.js</div>
+        <!-- Pointer Down -->
         <div class="view-subject" style="margin-top: 0;" data-tagitem="pointerdown">
             <div class="view-subject-title">Pointer down 事件</div>
             <div class="view-subject-content">
                 <div class="guesture-interactive" data-tagitem="guesture">
-                    <span>触发 pointerdown 事件: </span><em data-tagitem="pointerdown-count">0</em> <span>次</span>
+                    <div class="guesture-interactive-content">
+                        <span>触发 pointerdown 事件: </span>
+                        <em data-tagitem="event-count">0</em>
+                        <span>次</span>
+                        <span>(</span>
+                        <em data-tagitem="event-absolute-x">0</em>, <em data-tagitem="event-absolute-y">0</em>
+                        <span>)</span>
+                    </div>
                 </div>
             </div>
         </div>
+        <!-- /Pointer Down -->
+        <!-- Pointer Up -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="pointerup">
+            <div class="view-subject-title">Pointer up 事件</div>
+            <div class="view-subject-content">
+                <div class="guesture-interactive" data-tagitem="guesture">
+                    <div class="guesture-interactive-content">
+                        <span>触发 pointerup 事件: </span>
+                        <em data-tagitem="event-count">0</em>
+                        <span>次</span>
+                        <span>(</span>
+                        <em data-tagitem="event-absolute-x">0</em>, <em data-tagitem="event-absolute-y">0</em>
+                        <span>)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Pointer Up -->
+        <!-- Pointer Move -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="pointermove">
+            <div class="view-subject-title">Pointer move 事件</div>
+            <div class="view-subject-content">
+                <div class="guesture-interactive" data-tagitem="guesture">
+                    <div class="guesture-interactive-content" style="height: 125px;">
+                        <span style="line-height: 0.2rem;">触发 pointermove 事件</span>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前绝对坐标: </span>
+                            <em data-tagitem="absolute-x">0</em>, <em data-tagitem="absolute-y">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前相对坐标: </span>
+                            <em data-tagitem="relative-x">0</em>, <em data-tagitem="relative-y">0</em>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Pointer Move -->
+        <!-- Tap -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="tap">
+            <div class="view-subject-title">Tap 事件</div>
+            <div class="view-subject-content">
+                <div class="guesture-interactive" data-tagitem="guesture">
+                    <div class="guesture-interactive-content">
+                        <span>触发 tap 事件: </span>
+                        <em data-tagitem="event-count">0</em>
+                        <span>次</span>
+                        <span>(</span>
+                        <em data-tagitem="event-absolute-x">0</em>, <em data-tagitem="event-absolute-y">0</em>
+                        <span>)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Tap -->
+        <!-- Long Tap -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="longtap">
+            <div class="view-subject-title">Long Tap 事件</div>
+            <div class="view-subject-content">
+                <div class="guesture-interactive" data-tagitem="guesture">
+                    <div class="guesture-interactive-content">
+                        <span>触发 longtap 事件: </span>
+                        <em data-tagitem="event-count">0</em>
+                        <span>次</span>
+                        <span>(</span>
+                        <em data-tagitem="event-absolute-x">0</em>, <em data-tagitem="event-absolute-y">0</em>
+                        <span>)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Long Tap -->
+        <!-- Single Tap -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="singletap">
+            <div class="view-subject-title">Single Tap 事件</div>
+            <div class="view-subject-content">
+                <div class="guesture-interactive" data-tagitem="guesture">
+                    <div class="guesture-interactive-content">
+                        <span>触发 singletap 事件: </span>
+                        <em data-tagitem="event-count">0</em>
+                        <span>次</span>
+                        <span>(</span>
+                        <em data-tagitem="event-absolute-x">0</em>, <em data-tagitem="event-absolute-y">0</em>
+                        <span>)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Single Tap -->
+        <!-- Double Tap -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="doubletap">
+            <div class="view-subject-title">Double Tap 事件</div>
+            <div class="view-subject-content">
+                <div class="guesture-interactive" data-tagitem="guesture">
+                    <div class="guesture-interactive-content">
+                        <span>触发 doubletap 事件: </span>
+                        <em data-tagitem="event-count">0</em>
+                        <span>次</span>
+                        <span>(</span>
+                        <em data-tagitem="event-absolute-x">0</em>, <em data-tagitem="event-absolute-y">0</em>
+                        <span>)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Double Tap -->
+        <!-- Drag Move -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="dragmove">
+            <div class="view-subject-title">Drag move 事件</div>
+            <div class="view-subject-content">
+                <div class="guesture-interactive" data-tagitem="guesture">
+                    <div class="guesture-interactive-content" style="height: 180px;">
+                        <span style="line-height: 0.2rem;">触发 dragmove 事件</span>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前移动速度: </span>
+                            <em data-tagitem="speed-x">0</em>, <em data-tagitem="speed-y">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前移动方位/方向: </span>
+                            <em data-tagitem="move-position">-</em>/<em data-tagitem="move-direction">-</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前绝对坐标: </span>
+                            <em data-tagitem="absolute-x">0</em>, <em data-tagitem="absolute-y">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前相对坐标: </span>
+                            <em data-tagitem="relative-x">0</em>, <em data-tagitem="relative-y">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前移动距离: </span>
+                            <em data-tagitem="dist-x">0</em>, <em data-tagitem="dist-y">0</em>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Drag Move -->
+        <!-- Wheel -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="wheel">
+            <div class="view-subject-title">Wheel 事件</div>
+            <div class="view-subject-content">
+                <div class="guesture-interactive" data-tagitem="guesture" style="padding: 0;">
+                    <div class="guesture-interactive-content image-wrapper" data-tagitem="wheel-image-wrapper" style="border: 0; padding: 0;">
+                        <img src="./images/demo1.jpg" class="image-viewitem image-viewitem-boxshadow" data-tagitem="wheel-image" />
+                    </div>
+                </div>
+                <div class="guesture-interactive">
+                    <div class="guesture-interactive-content" style="padding: 0;"></div>
+                </div>
+            </div>
+        </div>
+        <!-- /Wheel -->
     </section>
     <section class="page-footer"></section>
 </div>
 </body>
-<script type="text/javascript" src="../../../$vendor/utils/gesture.js"></script>>
+<script type="text/javascript" src="../../../$vendor/utils/gesture.js"></script>
 <script type="text/javascript" src="./js/demo.js"></script>
 </html>
