@@ -73,6 +73,7 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
     let guestureElementRect = null
 
     xGesture.attach(guestureElement, {
+        cssTouchAction: 'none',
         onPointermove(evte, { clientX, clientY }, guesture) {
             window.clearTimeout(styleUpdateTimer)
             guestureElement.classList.add(interactiveSelectedClassname)
@@ -219,10 +220,10 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
     let guestureElementRect = null
 
     xGesture.attach(guestureElement, {
-        onPointerdown(evte, { clientX, clientY }, guesture) {
-            evte.preventDefault()
-            evte.currentTarget.style.touchAction = 'none'
-        },
+        cssTouchAction: 'none',
+        // onPointerdown(evte, { clientX, clientY }, guesture) {
+        //     evte.preventDefault()
+        // },
         onDragMove(evte, { movePosition, moveDirection, distX, distY, speedX, speedY, clientX, clientY }, gesture) {
             evte.preventDefault()
             window.clearTimeout(styleUpdateTimer)

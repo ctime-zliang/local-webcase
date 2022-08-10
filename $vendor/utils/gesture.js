@@ -49,7 +49,11 @@
         /**
          * onLongTap 触发的延迟时间设置
          */
-        delayOfLongTapDispatch: 500
+        delayOfLongTapDispatch: 500,
+        /**
+         * 指定 touchAction
+         */
+        cssTouchAction: 'initial',
     }
 
     function createProfile() {
@@ -136,7 +140,7 @@
         this.handleWheelEvent = this.handleWheelEvent.bind(this)
         this.handleContextmenuEvent = this.handleContextmenuEvent.bind(this)
         /* ... */
-        this.setTouchAction('none')
+        this.setTouchAction(this.options.cssTouchAction)
         this.bindEvent()
     }
 
