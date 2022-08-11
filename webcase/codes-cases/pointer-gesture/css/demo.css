@@ -108,10 +108,16 @@
     align-items: center;
     align-content: center;
     flex-wrap: nowrap;
+    overflow: hidden;
 }
-.image-viewitem {
-    width: 75%;
+.image-viewitem {    
     display: block;
+}
+.image-viewitem-w-75 {
+    width: 75%;
+}
+.image-viewitem-w-50 {
+    width: 50%;
 }
 .image-viewitem-boxshadow {
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);

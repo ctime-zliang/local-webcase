@@ -391,3 +391,74 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
     SwipeManager.init(sectionElement.querySelector('.swiper-container'))
 })(globalContainerElement.querySelector('[data-tagitem="swipe"]'));
 
+
+/**
+ * Pinch
+ */
+ ;(function(sectionElement) {
+    const guestureElement = sectionElement.querySelector('[data-tagitem="guesture"]')
+    const scaleValueElement = sectionElement.querySelector('[data-tagitem="scale-value"]')
+    const xCenterElement = sectionElement.querySelector('[data-tagitem="center-x"]')
+    const yCenterElement = sectionElement.querySelector('[data-tagitem="center-y"]')
+    const xPoiner1Element = sectionElement.querySelector('[data-tagitem="pointer1-x"]')
+    const yPoiner1Element = sectionElement.querySelector('[data-tagitem="pointer1-y"]')
+    const xPoiner2Element = sectionElement.querySelector('[data-tagitem="pointer2-x"]')
+    const yPoiner2Element = sectionElement.querySelector('[data-tagitem="pointer2-y"]')
+
+    let styleUpdateTimer = null
+
+    xGesture.attach(guestureElement, {
+        cssTouchAction: 'none',
+        onPinch(evte, { scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
+            console.log({ scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
+            window.clearTimeout(styleUpdateTimer)
+            guestureElement.classList.add(interactiveSelectedClassname)
+            scaleValueElement.textContent = scale
+            xCenterElement.textContent = centerX
+            yCenterElement.textContent = centerY
+            xPoiner1Element.textContent = pointA.x
+            yPoiner1Element.textContent = pointA.x
+            xPoiner2Element.textContent = pointB.x
+            yPoiner2Element.textContent = pointB.x
+            styleUpdateTimer = window.setTimeout(() => {
+                guestureElement.classList.remove(interactiveSelectedClassname)
+            }, 150)
+        },
+    })
+})(globalContainerElement.querySelector('[data-tagitem="pinch"]'));
+
+
+/**
+ * Rotate
+ */
+ ;(function(sectionElement) {
+    const guestureElement = sectionElement.querySelector('[data-tagitem="guesture"]')
+    const rotateValueElement = sectionElement.querySelector('[data-tagitem="rotate-value"]')
+    const xCenterElement = sectionElement.querySelector('[data-tagitem="center-x"]')
+    const yCenterElement = sectionElement.querySelector('[data-tagitem="center-y"]')
+    const xPoiner1Element = sectionElement.querySelector('[data-tagitem="pointer1-x"]')
+    const yPoiner1Element = sectionElement.querySelector('[data-tagitem="pointer1-y"]')
+    const xPoiner2Element = sectionElement.querySelector('[data-tagitem="pointer2-x"]')
+    const yPoiner2Element = sectionElement.querySelector('[data-tagitem="pointer2-y"]')
+
+    let styleUpdateTimer = null
+
+    xGesture.attach(guestureElement, {
+        cssTouchAction: 'none',
+        onPinch(evte, { rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
+            console.log({ rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
+            window.clearTimeout(styleUpdateTimer)
+            guestureElement.classList.add(interactiveSelectedClassname)
+            rotateValueElement.textContent = rotate
+            xCenterElement.textContent = centerX
+            yCenterElement.textContent = centerY
+            xPoiner1Element.textContent = pointA.x
+            yPoiner1Element.textContent = pointA.x
+            xPoiner2Element.textContent = pointB.x
+            yPoiner2Element.textContent = pointB.x
+            styleUpdateTimer = window.setTimeout(() => {
+                guestureElement.classList.remove(interactiveSelectedClassname)
+            }, 150)
+        },
+    })
+})(globalContainerElement.querySelector('[data-tagitem="rotate"]'));

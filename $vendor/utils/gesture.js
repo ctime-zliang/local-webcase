@@ -1,3 +1,5 @@
+/* 参考引用 Github 源码 */
+
 ;(function() {
     'use strict'
     

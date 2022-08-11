@@ -223,7 +223,7 @@
             <div class="view-subject-content">
                 <div class="guesture-interactive" data-tagitem="guesture" style="padding: 0;">
                     <div class="guesture-interactive-content image-wrapper" data-tagitem="wheel-image-wrapper" style="border: 0; padding: 0;">
-                        <img src="./images/demo1.jpg" class="image-viewitem image-viewitem-boxshadow" data-tagitem="wheel-image" />
+                        <img src="./images/demo1.jpg" class="image-viewitem image-viewitem-w-75 image-viewitem-boxshadow" data-tagitem="wheel-image" />
                     </div>
                 </div>
                 <div class="guesture-interactive">
@@ -232,6 +232,72 @@
             </div>
         </div>
         <!-- /Wheel -->
+        <!-- Pinch -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="pinch">
+            <div class="view-subject-title">Pinch 事件</div>
+            <div class="view-subject-content">
+                <div class="guesture-interactive" data-tagitem="guesture" style="padding: 0;">
+                    <div class="guesture-interactive-content image-wrapper" data-tagitem="pinch-image-wrapper" style="border: 0; padding: 0; min-height: 250px;">
+                        <img src="./images/demo1.jpg" class="image-viewitem image-viewitem-w-50 image-viewitem-boxshadow" data-tagitem="pinch-image" />
+                    </div>
+                </div>
+                <div class="guesture-interactive">
+                    <div class="guesture-interactive-content">
+                        <span style="line-height: 0.2rem;">触发 pinch 事件</span>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前缩放倍率: </span>
+                            <em data-tagitem="scale-value">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前多指中心坐标: </span>
+                            <em data-tagitem="center-x">0</em>, <em data-tagitem="center-y">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>指针 1 坐标: </span>
+                            <em data-tagitem="pointer1-x">0</em>, <em data-tagitem="pointer1-y">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>指针 2 坐标: </span>
+                            <em data-tagitem="pointer2-x">0</em>, <em data-tagitem="pointer2-y">0</em>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Pinch -->
+        <!-- Rotate -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="rotate">
+            <div class="view-subject-title">Rotate 事件</div>
+            <div class="view-subject-content">
+                <div class="guesture-interactive" data-tagitem="guesture" style="padding: 0;">
+                    <div class="guesture-interactive-content image-wrapper" data-tagitem="rotate-image-wrapper" style="border: 0; padding: 0; min-height: 250px;">
+                        <img src="./images/demo1.jpg" class="image-viewitem image-viewitem-w-50 image-viewitem-boxshadow" data-tagitem="rotate-image" />
+                    </div>
+                </div>
+                <div class="guesture-interactive">
+                    <div class="guesture-interactive-content">
+                        <span style="line-height: 0.2rem;">触发 rotate 事件</span>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前旋转角度(角度): </span>
+                            <em data-tagitem="rotate-value">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前多指中心坐标: </span>
+                            <em data-tagitem="center-x">0</em>, <em data-tagitem="center-y">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>指针 1 坐标: </span>
+                            <em data-tagitem="pointer1-x">0</em>, <em data-tagitem="pointer1-y">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>指针 2 坐标: </span>
+                            <em data-tagitem="pointer2-x">0</em>, <em data-tagitem="pointer2-y">0</em>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Rotate -->
     </section>
     <section class="page-footer"></section>
 </div>
