@@ -204,15 +204,15 @@
     Gesture.prototype.getMoveDirection = function() {
         const _$profile = this._$profile
         const pointer1 = _$profile.pointers[0]
-        const speedX = pointer1.clientX - _$profile.pointerPositionCache.x
-        const speedY = pointer1.clientY - _$profile.pointerPositionCache.y
-        if (Math.abs(speedX) > Math.abs(speedY)) {
-            if (speedX > 0) {
+        const diffX = pointer1.clientX - _$profile.pointerPositionCache.x
+        const diffY = pointer1.clientY - _$profile.pointerPositionCache.y
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+            if (diffX > 0) {
                 return DIRECTION_RIGHT
             }
             return DIRECTION_LEFT
         }
-        if (speedY > 0) {
+        if (diffY > 0) {
             return DIRECTION_DOWN
         }
         return DIRECTION_UP
@@ -390,8 +390,8 @@
                     moveDirection: _$profile.moveDirection,
                     distX: _$profile.offsetRectAtPointerdown.x,
                     distY: _$profile.offsetRectAtPointerdown.y,
-                    speedX: pointer1.clientX - _$profile.pointerPositionCache.x,
-                    speedY: pointer1.clientY - _$profile.pointerPositionCache.y,
+                    diffX: pointer1.clientX - _$profile.pointerPositionCache.x,
+                    diffY: pointer1.clientY - _$profile.pointerPositionCache.y,
                     clientX: pointer1.clientX,
                     clientY: pointer1.clientY
                 },

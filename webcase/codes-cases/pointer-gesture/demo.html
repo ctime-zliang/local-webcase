@@ -30,7 +30,10 @@
         <div class="view-title">Web Page Guesture</div>
     </section>
     <section class="page-content">
-        <div class="content-description">一个 Web page 手势库: guesture.js</div>
+        <div class="content-description">
+            <div class="text-line">一个 Web page 手势库: guesture.js</div>
+            <div class="text-line" style="font-size: 0.08rem;">(打开控制台查看事件详情输出)</div>
+        </div>
         <!-- Pointer Down -->
         <div class="view-subject" style="margin-top: 0;" data-tagitem="pointerdown">
             <div class="view-subject-title">Pointer down 事件</div>
@@ -161,7 +164,7 @@
                     <div class="guesture-interactive-content" style="height: 180px;">
                         <span style="line-height: 0.2rem;">触发 dragmove 事件</span>
                         <div style="line-height: 0.2rem;">
-                            <span>当前移动速度: </span>
+                            <span>当前移动步长(速度): </span>
                             <em data-tagitem="speed-x">0</em>, <em data-tagitem="speed-y">0</em>
                         </div>
                         <div style="line-height: 0.2rem;">
@@ -185,6 +188,35 @@
             </div>
         </div>
         <!-- /Drag Move -->
+        <!-- Swipe -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="swipe">
+            <div class="view-subject-title">Swipe 事件</div>
+            <div class="view-subject-content">
+                <div class="guesture-interactive" data-tagitem="guesture">
+                    <div class="guesture-interactive-content">
+                        <div class="swiper-container">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-item">
+                                    <div class="list-content">这是一条列表, 向左滑动试一试, 会有一些东西</div>
+                                    <div class="list-extend">
+                                        <button class="list-btn list-readed-setting">设为已读</button>
+                                        <button class="list-btn list-delete-setting">删除</button>
+                                    </div>
+                                </div>
+                                <div class="swiper-item">
+                                    <div class="list-content">这是一条列表, 向左滑动试一试, 会有一些东西</div>
+                                    <div class="list-extend">
+                                        <button class="list-btn list-readed-setting">设为已读</button>
+                                        <button class="list-btn list-delete-setting">删除</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Swipe -->
         <!-- Wheel -->
         <div class="view-subject" style="margin-top: 0;" data-tagitem="wheel">
             <div class="view-subject-title">Wheel 事件</div>
