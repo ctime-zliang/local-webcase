@@ -1,6 +1,73 @@
 console.log(xGesture)
 
 
+class AlertManager {
+    static STATUS_CLOSE = 'close'
+    static STATUS_OPEN = 'open'
+    static status = 'close'
+    static containerElemeent = null
+    static contentElement = null
+    static btnsWrapperElement = null
+    static callback = null
+
+    static template() {
+        return `
+            <section class="alert-container">
+                <div class="alert-position-wrapper">
+                    <div class="alert-lock alert-lock-visibility"></div>
+                    <div class="alert-wrapper">
+                        <div class="alert-message-wrapper">
+                            <div class="alert-message-content"></div>
+                        </div>
+                        <div class="alert-btns-wrapper">
+                            <button class="alert-btn alert-confirm-btn" data-tagitem="confirm">确认</button>
+                            <button class="alert-btn alert-cancel-btn" data-tagitem="cancel">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        `
+    }
+
+    static init() {
+        this.tapEventHandler = this.tapEventHandler.bind(this)
+        document.body.appendChild(document.createRange().createContextualFragment(this.template()))
+        this.containerElemeent = document.querySelector('.alert-container')
+        this.contentElement = this.containerElemeent.querySelector('.alert-message-content')
+        this.btnsWrapperElement = this.containerElemeent.querySelector('.alert-btns-wrapper')
+        this.bindEvent()
+    }
+
+    static open(message, callback) {
+        this.callback = callback
+        this.contentElement.innerHTML = message
+        this.containerElemeent.classList.add('alert-container-show')
+    }
+
+    static close() {
+        this.containerElemeent.classList.remove('alert-container-show')
+        this.callback = null
+    }
+
+    static bindEvent() {
+        this.btnsWrapperElement.addEventListener('touchstart', this.tapEventHandler)
+        this.btnsWrapperElement.addEventListener('mousedown', this.tapEventHandler)
+    }
+
+    static tapEventHandler(e) {
+        if (e.target.classList.contains('alert-btn')) {
+            e.target.classList.add('alert-btn-touched')
+            window.setTimeout(() => {
+                e.target.classList.remove('alert-btn-touched')
+            }, 125)
+            this.callback && this.callback.call(undefined, e.target.getAttribute('data-tagitem'))
+        }
+    }
+}
+
+AlertManager.init()
+
+
 const globalContainerElement = document.getElementById('appContainer')
 const interactiveSelectedClassname = 'guesture-interactive-selected'
 
@@ -89,6 +156,9 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
                 guestureElement.classList.remove(interactiveSelectedClassname)
             }, 150)
         },
+        onPpointercancel(evte, { clientX, clientY }, gesture) {
+            console.log({ clientX, clientY })
+        },
     })
 })(globalContainerElement.querySelector('[data-tagitem="pointermove"]'));
 
@@ -142,6 +212,10 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
             countElement.textContent = ++eventCount
             xAbsoluteElement.textContent = tapX
             yAbsoluteElement.textContent = tapY
+            AlertManager.open(`触发了 longTap 事件.`, (tag) => {
+                console.log(tag)
+                AlertManager.close()
+            })
             // alert(`触发了 longTap 事件.`)
             styleUpdateTimer = window.setTimeout(() => {
                 guestureElement.classList.remove(interactiveSelectedClassname)
@@ -301,18 +375,13 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
         static swipeContainerElement = null
         static swipeItemElements = []
         static swipeItemTranlsteXMap = {}
-        static swipeStart = 0
-        static swipeEnd = -100
+        static STATUS_OPEN = 'open'
+        static STATUS_CLOSE = 'close'
+        static leftEndPoint = -120
 
         static init(swipeContainerElement) {
             this.swipeContainerElement = swipeContainerElement
             this.swipeItemElements = this.swipeContainerElement.querySelectorAll('.swiper-item')
-            if (this.swipeItemElements[0]) {
-                const listExtendElement = this.swipeItemElements[0].querySelector('.list-extend')
-                if (listExtendElement) {
-                    this.swipeEnd = -1 * listExtendElement.getBoundingClientRect().width
-                }
-            }
             Array.from(this.swipeItemElements).forEach((itemElement) => {
                 this.initItemElement(itemElement)
             })
@@ -322,8 +391,13 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
             const id = `list${Math.random()}`
             itemElement.setAttribute('id', id)
             itemElement.id = id
-            this.swipeItemTranlsteXMap[id] = { setting: 0, start: this.swipeStart, end: this.swipeEnd, last: 0 }
-            this.applyStyle(itemElement)
+            this.swipeItemTranlsteXMap[id] = { 
+                setting: 0, 
+                rightEndPoint: 0, 
+                leftEndPoint: this.leftEndPoint, 
+                status: this.STATUS_CLOSE,
+            }
+            this.applyTransfromStyle(itemElement)
             this.bindEvent(itemElement)
         }
 
@@ -331,7 +405,15 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
             itemElement.style[attr] = value
         }
 
-        static applyStyle(itemElement) {
+        static setTransitionStyle(itemElement, use = false) {
+            if (!use) {
+                itemElement.style.transition = 'none'
+                return
+            }
+            itemElement.style.transition = 'transform .2s ease'
+        }
+
+        static applyTransfromStyle(itemElement) {
             const tranlsteXItemData = this.swipeItemTranlsteXMap[itemElement.id]
             if (!tranlsteXItemData) {
                 return
@@ -342,47 +424,64 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
         static bindEvent(itemElement) {
             const self = this
             xGesture.attach(itemElement, {
-                cssTouchAction: 'none',
+                cssTouchAction: 'pan-y',
                 onDragMove(evte, { movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY }, gesture) {
-                    console.log({ movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY })
+                    // console.log({ movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY })
                     const currentTarget = evte.currentTarget
                     const tranlsteXItemData = self.swipeItemTranlsteXMap[currentTarget.id]
                     tranlsteXItemData.setting += diffX
-                    if (tranlsteXItemData.setting > tranlsteXItemData.start) {
-                        tranlsteXItemData.setting = tranlsteXItemData.start
-                    } else if (tranlsteXItemData.setting < tranlsteXItemData.end) {
-                        tranlsteXItemData.setting = tranlsteXItemData.end
+                    if (tranlsteXItemData.setting > tranlsteXItemData.rightEndPoint) {
+                        tranlsteXItemData.setting = tranlsteXItemData.rightEndPoint
+                    } else if (tranlsteXItemData.setting < tranlsteXItemData.leftEndPoint) {
+                        tranlsteXItemData.setting = tranlsteXItemData.leftEndPoint
                     }
-                    self.updateStyle(currentTarget, 'transition', 'none')
-                    self.applyStyle(currentTarget)
+                    self.setTransitionStyle(currentTarget, false)
+                    self.applyTransfromStyle(currentTarget)
                 },
                 onSwipe(evte, { direction, distX, distY, releaseX, releaseY }, gesture) {
                     console.log({ direction, distX, distY, releaseX, releaseY })
                     const currentTarget = evte.currentTarget
                     const tranlsteXItemData = self.swipeItemTranlsteXMap[currentTarget.id]
                     if (direction === xGesture.defined.DIRECTION_RIGHT) {
-                        tranlsteXItemData.setting = tranlsteXItemData.start
+                        tranlsteXItemData.setting = tranlsteXItemData.rightEndPoint
+                        tranlsteXItemData.status = self.STATUS_CLOSE
                     } else if (direction === xGesture.defined.DIRECTION_LEFT) {
-                        tranlsteXItemData.setting = tranlsteXItemData.end
+                        tranlsteXItemData.setting = tranlsteXItemData.leftEndPoint
+                        tranlsteXItemData.status = self.STATUS_OPEN
                     }
-                    self.updateStyle(currentTarget, 'transition', 'transform .2s ease')
-                    self.applyStyle(currentTarget)
+                    self.setTransitionStyle(currentTarget, true)
+                    self.applyTransfromStyle(currentTarget)
                 },
                 onPointerup(evte, { clientX, clientY }, gesture) {
                     console.log({ clientX, clientY })
                     const currentTarget = evte.currentTarget
                     const tranlsteXItemData = self.swipeItemTranlsteXMap[currentTarget.id]
-                    if (tranlsteXItemData.setting === tranlsteXItemData.start || tranlsteXItemData.setting === tranlsteXItemData.end) {
+                    if (tranlsteXItemData.setting === tranlsteXItemData.rightEndPoint || tranlsteXItemData.setting === tranlsteXItemData.leftEndPoint) {
                         return
                     }
-                    if (tranlsteXItemData.last === tranlsteXItemData.start) {
-                        tranlsteXItemData.setting = tranlsteXItemData.setting < tranlsteXItemData.start - 40 ? tranlsteXItemData.end : tranlsteXItemData.start;
-                    } else if (tranlsteXItemData.last === tranlsteXItemData.end) {
-                        tranlsteXItemData.setting = tranlsteXItemData.setting > tranlsteXItemData.end + 40 ? tranlsteXItemData.start : tranlsteXItemData.end;
+                    if (tranlsteXItemData.status === self.STATUS_OPEN) {
+                        if (tranlsteXItemData.setting < tranlsteXItemData.rightEndPoint - 40) {
+                            tranlsteXItemData.setting = tranlsteXItemData.leftEndPoint
+                        } else {
+                            tranlsteXItemData.setting = tranlsteXItemData.rightEndPoint
+                        }
+                    } else if (tranlsteXItemData.status === self.STATUS_CLOSE) {
+                        if (tranlsteXItemData.setting > tranlsteXItemData.leftEndPoint + 40) {
+                            tranlsteXItemData.setting = tranlsteXItemData.rightEndPoint
+                        } else {
+                            tranlsteXItemData.setting = tranlsteXItemData.leftEndPoint
+                        }
                     }
-                    tranlsteXItemData.last = tranlsteXItemData.setting
-                    self.updateStyle(currentTarget, 'transition', 'transform .2s ease')
-                    self.applyStyle(currentTarget)
+                    self.setTransitionStyle(currentTarget, true)
+                    self.applyTransfromStyle(currentTarget)
+                },
+                onPpointercancel(evte, { clientX, clientY }, gesture) {
+                    console.log({ clientX, clientY })
+                    const currentTarget = evte.currentTarget
+                    const tranlsteXItemData = self.swipeItemTranlsteXMap[currentTarget.id]
+                    tranlsteXItemData.setting = tranlsteXItemData.rightEndPoint
+                    self.setTransitionStyle(currentTarget, true)
+                    self.applyTransfromStyle(currentTarget)
                 }
             })
         }

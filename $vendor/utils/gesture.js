@@ -137,6 +137,7 @@
     Gesture.prototype.init = function() {
         this.handlePointerdownEvent = this.handlePointerdownEvent.bind(this)
         this.handlePointermoveEvent = this.handlePointermoveEvent.bind(this)
+        this.handleTouchmoveEvent = this.handleTouchmoveEvent.bind(this)
         this.handlePointerupEvent = this.handlePointerupEvent.bind(this)
         this.handlePointercancelEvent = this.handlePointercancelEvent.bind(this)
         this.handleWheelEvent = this.handleWheelEvent.bind(this)
@@ -273,7 +274,7 @@
         _$profile.isPointerdown = true
         if (_$profile.pointers.length === 1) {
             window.clearTimeout(_$profile.singleTapTimeout);
-            evte.target.setPointerCapture(evte.pointerId)
+            evte.currentTarget.setPointerCapture(evte.pointerId)
             _$profile.dotsRecordInPointerdown[0] = { x: evte.clientX, y: evte.clientY }
             _$profile.lastDotsRecordInPointerdown[0] = { x: evte.clientX, y: evte.clientY }
             /* ... */
@@ -471,6 +472,10 @@
         )
     }
 
+    Gesture.prototype.handleTouchmoveEvent = function(evte) {
+        // evte.preventDefault()
+    }
+
     Gesture.prototype.handlePointerupEvent = function(evte) {
         const _$profile = this._$profile
         if (!_$profile.isPointerdown) {
@@ -605,6 +610,7 @@
         this.containerElements.forEach((item) => {
             item.addEventListener('pointerdown', this.handlePointerdownEvent)
             item.addEventListener('pointermove', this.handlePointermoveEvent)
+            item.addEventListener('touchmove', this.handleTouchmoveEvent)
             item.addEventListener('pointerup', this.handlePointerupEvent)
             item.addEventListener('pointercancel', this.handlePointercancelEvent)
             item.addEventListener('wheel', this.handleWheelEvent)
@@ -616,6 +622,7 @@
         this.containerElements.forEach((item) => {
             item.removeEventListener('pointerdown', this.handlePointerdownEvent)
             item.removeEventListener('pointermove', this.handlePointermoveEvent)
+            item.removeEventListener('touchmove', this.handleTouchmoveEvent)
             item.removeEventListener('pointerup', this.handlePointerupEvent)
             item.removeEventListener('pointercancel', this.handlePointercancelEvent)
             item.removeEventListener('wheel', this.handleWheelEvent)
