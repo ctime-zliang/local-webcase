@@ -19,6 +19,7 @@ class AlertManager {
     static callback = null
     static pointerdownX = 0
     static pointerdownY = 0
+    static btns = []
     static defaultConfirmBtn = { type: 'confirm', tag: 'confirm', text: '确认' }
     static defaultCancelBtn = { type: 'cancel', tag: 'cancel', text: '取消' }
     static defaultCloseBtn = { type: 'close', tag: 'close', text: '关闭' }
@@ -155,7 +156,7 @@ class AlertManager {
 
     static _rippleAnimation(e) {
         let evte = e
-        if (e instanceof TouchEvent) {
+        if (typeof e.changedTouches !== 'undefined') {
             evte = e.changedTouches[0]
         }
         const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn', e.path || (e.componsedPath && e.componsedPath()), 0)
@@ -166,13 +167,13 @@ class AlertManager {
         const spanElement = document.createElement('span')
         const targetClientRect = target.getBoundingClientRect()
         const x = evte.pageX - targetClientRect.left - btnClientWidth / 2
-        const y = evte.pageY - targetClientRect.top - btnClientWidth / 2	
-		spanElement.className = 'ripple'
+        const y = evte.pageY - targetClientRect.top - btnClientWidth / 2
 		if (target.firstChild) {
 			target.insertBefore(spanElement, target.firstChild)
 		} else {
 			target.appendChild(spanElement)
 		}
+        spanElement.classList.add('ripple')
         spanElement.addEventListener('animationend', this._rippleAnimationEndHandler)
 		spanElement.style.cssText = 'width: ' + btnClientWidth + 'px; height: ' + btnClientWidth + 'px; top: ' + y + 'px; left: ' + x + 'px;'
 		spanElement.classList.add('ripple-animation')
