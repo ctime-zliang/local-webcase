@@ -10,25 +10,24 @@ function __AlertFindTargetByClassName(element, className, eventPath, index) {
 }
 
 class AlertManager {
-    static STATUS_CLOSE = 'close'
-    static STATUS_OPEN = 'open'
-    static status = 'close'
-    static containerElemeent = null
-    static contentElement = null
-    static btnsWrapperElement = null
-    static callback = null
-    static pointerdownX = 0
-    static pointerdownY = 0
-    static btns = []
     static defaultConfirmBtn = { type: 'confirm', tag: 'confirm', text: '确认' }
     static defaultCancelBtn = { type: 'cancel', tag: 'cancel', text: '取消' }
     static defaultCloseBtn = { type: 'close', tag: 'close', text: '关闭' }
+    /****************************** ******************************/
+    /****************************** ******************************/
+    static _containerElemeent = null
+    static _contentElement = null
+    static _btnsWrapperElement = null
+    static _callback = null
+    static _pointerdownX = 0
+    static _pointerdownY = 0
+    static _btns = []
 
     static init() {
         if (document.querySelector('.alertmgr-container')) {
             return
         }
-        this.btns = [this.defaultConfirmBtn]
+        this._btns = [this.defaultConfirmBtn]
         /* ... */
         this._touchstartHandler = this._touchstartHandler.bind(this)
         this._touchendHandler = this._touchendHandler.bind(this)
@@ -38,9 +37,9 @@ class AlertManager {
         this._rippleAnimationEndHandler = this._rippleAnimationEndHandler.bind(this)
         /* ... */
         document.body.appendChild(document.createRange().createContextualFragment(this._template()))
-        this.containerElemeent = document.querySelector('.alertmgr-container')
-        this.contentElement = this.containerElemeent.querySelector('.alertmgr-message-content')
-        this.btnsWrapperElement = this.containerElemeent.querySelector('.alertmgr-btns-wrapper')
+        this._containerElemeent = document.querySelector('.alertmgr-container')
+        this._contentElement = this._containerElemeent.querySelector('.alertmgr-message-content')
+        this._btnsWrapperElement = this._containerElemeent.querySelector('.alertmgr-btns-wrapper')
         /* ... */
         this._updateBtnsView()
         this._bindEvent()
@@ -48,28 +47,28 @@ class AlertManager {
 
     static open(message, options = {}) {
         if (options.callback) {
-            this.callback = options.callback
+            this._callback = options.callback
         }
-        if (options.btns) {
-            this.btns = options.btns
+        if (options._btns) {
+            this._btns = options._btns
             this._updateBtnsView()
         }
         /* ... */        
-        this.contentElement.innerHTML = message
-        this.containerElemeent.classList.add('alertmgr-container-show')
+        this._contentElement.innerHTML = message
+        this._containerElemeent.classList.add('alertmgr-container-show')
     }
 
     static close() {
-        this.containerElemeent.classList.remove('alertmgr-container-show')
-        this.callback = null
+        this._containerElemeent.classList.remove('alertmgr-container-show')
+        this._callback = null
     }
 
     static setCallback(callback) {
-        this.callback = callback
+        this._callback = callback
     }
 
-    static setBtns(btns) {
-        this.btns = btns
+    static setBtns(_btns) {
+        this._btns = _btns
         this._updateBtnsView()
     }
 
@@ -94,58 +93,62 @@ class AlertManager {
 
     static _updateBtnsView() {
         let htmlString = ``
-        this.btns.forEach((item) => {
+        this._btns.forEach((item) => {
             htmlString += `
-                <button class="alertmgr-btn alertmgr-${item.type}-btn" data-tagitem="${item.tag}"><span class="alertmgr-btn-text">${item.text}</span></button>
+                <button class="alertmgr-btn alertmgr-${item.type}-btn" data-tagitem="${item.tag}">
+                    <span class="alertmgr-btn-text">${item.text}</span>
+                </button>
             `
         })
-        this.btnsWrapperElement.innerHTML = htmlString
+        this._btnsWrapperElement.innerHTML = htmlString
     }
 
     static _bindEvent() {
-        this.btnsWrapperElement.addEventListener('touchstart', this._touchstartHandler)
-        this.btnsWrapperElement.addEventListener('touchend', this._touchendHandler)
-        this.btnsWrapperElement.addEventListener('mousedown', this._mousedownHandler)
-        this.btnsWrapperElement.addEventListener('mouseup', this._mouseupHandler)
-        this.containerElemeent.addEventListener('contextmenu', this._contextmenuHandler)
+        this._btnsWrapperElement.addEventListener('touchstart', this._touchstartHandler)
+        this._btnsWrapperElement.addEventListener('touchend', this._touchendHandler)
+        this._btnsWrapperElement.addEventListener('mousedown', this._mousedownHandler)
+        this._btnsWrapperElement.addEventListener('mouseup', this._mouseupHandler)
+        this._containerElemeent.addEventListener('contextmenu', this._contextmenuHandler)
     }
 
     static _touchstartHandler(e) {
-        const toucher0 = e.changedTouches[0]
         e.preventDefault()
-        this.pointerdownX = toucher0.clientX
-        this.pointerdownY = toucher0.clientY
+        const toucher0 = e.changedTouches[0]
+        this._pointerdownX = toucher0.clientX
+        this._pointerdownY = toucher0.clientY
         this._rippleAnimation(e)
     }
 
     static _touchendHandler(e) {
+        e.preventDefault()
         const toucher0 = e.changedTouches[0]
-        if (Math.abs(toucher0.clientX - this.pointerdownX) < 8 && Math.abs(toucher0.clientY - this.pointerdownY) < 8) {
+        if (Math.abs(toucher0.clientX - this._pointerdownX) < 8 && Math.abs(toucher0.clientY - this._pointerdownY) < 8) {
             const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn', e.path || (e.componsedPath && e.componsedPath()), 0)
-            if (target && this.callback) {
-                this.callback.call(this, target.getAttribute('data-tagitem'))
+            if (target && this._callback) {
+                this._callback.call(this, target.getAttribute('data-tagitem'))
             }
         }
     }
 
     static _mousedownHandler(e) {
+        e.preventDefault()
         if (e.button !== 0) {
             return
         }
-        e.preventDefault()
         this._rippleAnimation(e)
-        this.pointerdownX = e.clientX
-        this.pointerdownY = e.clientY
+        this._pointerdownX = e.clientX
+        this._pointerdownY = e.clientY
     }
 
     static _mouseupHandler(e) {
+        e.preventDefault()
         if (e.button !== 0) {
             return
         }
-        if (Math.abs(e.clientX - this.pointerdownX) < 8 && Math.abs(e.clientY - this.pointerdownY) < 8) {
+        if (Math.abs(e.clientX - this._pointerdownX) < 8 && Math.abs(e.clientY - this._pointerdownY) < 8) {
             const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn', e.path || (e.componsedPath && e.componsedPath()), 0)
-            if (target && this.callback) {
-                this.callback.call(this, target.getAttribute('data-tagitem'))
+            if (target && this._callback) {
+                this._callback.call(this, target.getAttribute('data-tagitem'))
             }
         }
     }
