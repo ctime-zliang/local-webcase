@@ -137,6 +137,12 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
     let eventCount = 0
     let styleUpdateTimer = null
 
+    AlertManager.setBtns([AlertManager.defaultConfirmBtn, AlertManager.defaultCancelBtn])
+    AlertManager.bindCallback(function(tag) {
+        console.log(tag)
+        this.close()
+    })
+
     xGesture.attach(guestureElement, {
         isPreventDefaultInLongDown: true,
         onLongTap(evte, { tapX, tapY }, guesture) {
@@ -146,16 +152,7 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
             countElement.textContent = ++eventCount
             xAbsoluteElement.textContent = tapX
             yAbsoluteElement.textContent = tapY
-            AlertManager.setBtns([AlertManager.defaultConfirmBtn, AlertManager.defaultCancelBtn])
-            AlertManager.open(
-                `触发了 longTap 事件.`, 
-                {
-                    callback(tag) {
-                        console.log(tag)
-                        this.close()
-                    }
-                }
-            )
+            AlertManager.open(`触发了 longTap 事件`)
             // alert(`触发了 longTap 事件.`)
             styleUpdateTimer = window.setTimeout(() => {
                 guestureElement.classList.remove(interactiveSelectedClassname)

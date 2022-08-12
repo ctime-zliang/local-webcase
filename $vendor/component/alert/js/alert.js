@@ -77,10 +77,9 @@ class AlertManager {
 
     static close() {
         this._containerElemeent.classList.remove('alertmgr-container-show')
-        this._callback = null
     }
 
-    static setCallback(callback) {
+    static bindCallback(callback) {
         this._callback = callback
     }
 
@@ -204,7 +203,7 @@ class AlertManager {
         e.currentTarget.parentNode.removeChild(e.currentTarget)
     }
 
-    static _fadeTask(start, end) {
+    static _fadeTask(start, end, d = 300) {
         window.setTimeout(() => {
             window.requestAnimationFrame(() => {
                 start()
@@ -214,7 +213,7 @@ class AlertManager {
                     end()
                     this._wrapperElement.classList.remove('alert-transition-duringshort')
                     this._locakElement.classList.remove('alert-transition-duringshort')
-                }, 300)
+                }, d)
             })
         })
     }

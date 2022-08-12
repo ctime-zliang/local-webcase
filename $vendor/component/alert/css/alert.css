@@ -80,7 +80,6 @@
     justify-content: space-around;
     align-items: center;
     align-content: center;
-    z-index: 999999;
     background-color: #ffffff;
     border: 1px solid #dcdcdc;
     border-radius: 4px;
@@ -88,6 +87,7 @@
     transform: translate3d(0, 0, 5px) scale(1);
     -moz-transform: translate3d(0, 0, 5px) scale(1);
     -webkit-transform: translate3d(0, 0, 5px) scale(1);
+    z-index: 999992;
 }
 .alertmgr-wrapper-entrystart {
     transform: translate3d(0, 0, 5px) scale(1.15);
