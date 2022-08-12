@@ -17,7 +17,9 @@ class AlertManager {
     /****************************** ******************************/
     static _containerElemeent = null
     static _contentElement = null
+    static _wrapperElement = null
     static _btnsWrapperElement = null
+    static _locakElement = null
     static _callback = null
     static _pointerdownX = 0
     static _pointerdownY = 0
@@ -38,6 +40,8 @@ class AlertManager {
         /* ... */
         document.body.appendChild(document.createRange().createContextualFragment(this._template()))
         this._containerElemeent = document.querySelector('.alertmgr-container')
+        this._locakElement = this._containerElemeent.querySelector('.alertmgr-lock')
+        this._wrapperElement = this._containerElemeent.querySelector('.alertmgr-wrapper')
         this._contentElement = this._containerElemeent.querySelector('.alertmgr-message-content')
         this._btnsWrapperElement = this._containerElemeent.querySelector('.alertmgr-btns-wrapper')
         /* ... */
@@ -56,6 +60,19 @@ class AlertManager {
         /* ... */        
         this._contentElement.innerHTML = message
         this._containerElemeent.classList.add('alertmgr-container-show')
+        this._wrapperElement.classList.add('alertmgr-wrapper-entrystart', 'alert-transition-duringshort')
+        this._locakElement.classList.add('alertmgr-lock-entrystart', 'alert-transition-duringshort')    
+        /* ... */
+        this._fadeTask(
+            () => {
+                this._wrapperElement.classList.remove('alertmgr-wrapper-entrystart')
+                this._locakElement.classList.remove('alertmgr-lock-entrystart')
+            },
+            () => {
+                this._wrapperElement.classList.remove('alert-transition-duringshort')
+                this._locakElement.classList.remove('alert-transition-duringshort')
+            }
+        )
     }
 
     static close() {
@@ -185,6 +202,21 @@ class AlertManager {
     static _rippleAnimationEndHandler(e) {
         e.currentTarget.removeEventListener('animationend', this._rippleAnimationEndHandler)
         e.currentTarget.parentNode.removeChild(e.currentTarget)
+    }
+
+    static _fadeTask(start, end) {
+        window.setTimeout(() => {
+            window.requestAnimationFrame(() => {
+                start()
+                this._wrapperElement.classList.remove('alertmgr-wrapper-entrystart')
+                this._locakElement.classList.remove('alertmgr-lock-entrystart')
+                window.setTimeout(() => {
+                    end()
+                    this._wrapperElement.classList.remove('alert-transition-duringshort')
+                    this._locakElement.classList.remove('alert-transition-duringshort')
+                }, 300)
+            })
+        })
     }
 }
 
