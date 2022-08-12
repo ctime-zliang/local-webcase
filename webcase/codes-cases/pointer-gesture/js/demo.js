@@ -1,72 +1,6 @@
 console.log(xGesture)
 
-
-class AlertManager {
-    static STATUS_CLOSE = 'close'
-    static STATUS_OPEN = 'open'
-    static status = 'close'
-    static containerElemeent = null
-    static contentElement = null
-    static btnsWrapperElement = null
-    static callback = null
-
-    static template() {
-        return `
-            <section class="alert-container">
-                <div class="alert-position-wrapper">
-                    <div class="alert-lock alert-lock-visibility"></div>
-                    <div class="alert-wrapper">
-                        <div class="alert-message-wrapper">
-                            <div class="alert-message-content"></div>
-                        </div>
-                        <div class="alert-btns-wrapper">
-                            <button class="alert-btn alert-confirm-btn" data-tagitem="confirm">确认</button>
-                            <button class="alert-btn alert-cancel-btn" data-tagitem="cancel">取消</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        `
-    }
-
-    static init() {
-        this.tapEventHandler = this.tapEventHandler.bind(this)
-        document.body.appendChild(document.createRange().createContextualFragment(this.template()))
-        this.containerElemeent = document.querySelector('.alert-container')
-        this.contentElement = this.containerElemeent.querySelector('.alert-message-content')
-        this.btnsWrapperElement = this.containerElemeent.querySelector('.alert-btns-wrapper')
-        this.bindEvent()
-    }
-
-    static open(message, callback) {
-        this.callback = callback
-        this.contentElement.innerHTML = message
-        this.containerElemeent.classList.add('alert-container-show')
-    }
-
-    static close() {
-        this.containerElemeent.classList.remove('alert-container-show')
-        this.callback = null
-    }
-
-    static bindEvent() {
-        this.btnsWrapperElement.addEventListener('touchstart', this.tapEventHandler)
-        this.btnsWrapperElement.addEventListener('mousedown', this.tapEventHandler)
-    }
-
-    static tapEventHandler(e) {
-        if (e.target.classList.contains('alert-btn')) {
-            e.target.classList.add('alert-btn-touched')
-            window.setTimeout(() => {
-                e.target.classList.remove('alert-btn-touched')
-            }, 125)
-            this.callback && this.callback.call(undefined, e.target.getAttribute('data-tagitem'))
-        }
-    }
-}
-
 AlertManager.init()
-
 
 const globalContainerElement = document.getElementById('appContainer')
 const interactiveSelectedClassname = 'guesture-interactive-selected'
@@ -212,10 +146,16 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
             countElement.textContent = ++eventCount
             xAbsoluteElement.textContent = tapX
             yAbsoluteElement.textContent = tapY
-            AlertManager.open(`触发了 longTap 事件.`, (tag) => {
-                console.log(tag)
-                AlertManager.close()
-            })
+            AlertManager.setBtns([AlertManager.defaultConfirmBtn, AlertManager.defaultCancelBtn])
+            AlertManager.open(
+                `触发了 longTap 事件.`, 
+                {
+                    callback(tag) {
+                        console.log(tag)
+                        this.close()
+                    }
+                }
+            )
             // alert(`触发了 longTap 事件.`)
             styleUpdateTimer = window.setTimeout(() => {
                 guestureElement.classList.remove(interactiveSelectedClassname)
