@@ -286,6 +286,10 @@
 }
 
 .log-container {
+    position: relative;
+    z-index: 101;
+    left: 0;
+    top: 0;
     color: #eaeaea;
     padding: 5px 0;
 }

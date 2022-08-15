@@ -80,6 +80,7 @@
             imageElement.onload = function(e) {
                 _({ width: this.width, height: this.height, image: this })
             }
+            imageElement.style.opacity = '0'
             imageElement.src = './images/demo1.jpg'
             imageViewContainerElement.appendChild(imageElement)
         })
@@ -91,6 +92,7 @@
         const left = (containerRect.width - sizeResult.width) / 2
         imageElement.style.height = `${sizeResult.height}px`
         imageElement.style.width = `${sizeResult.width}px`
+        imageElement.style.opacity = '1'
         TransfromManager.setTransitionStyle(imageElement, false)
         TransfromManager.applyTransfromStyle(imageElement)
         // imageElement.style.top = `${top}px`
@@ -133,8 +135,8 @@
                     x: (ratio - 1) * profile.width / 2,
                     y: (ratio - 1) * profile.height / 2,
                 }
-                TransfromManager.setTranslateX(TransfromManager.getTranslateX() - ((ratio - 1) * (tapX - TransfromManager.getTranslateX()) - origin.x))
-                TransfromManager.setTranslateY(TransfromManager.getTranslateY() - ((ratio - 1) * (tapY - TransfromManager.getTranslateY()) - origin.x))
+                // TransfromManager.setTranslateX(TransfromManager.getTranslateX() - ((ratio - 1) * (tapX - TransfromManager.getTranslateX()) - origin.x))
+                // TransfromManager.setTranslateY(TransfromManager.getTranslateY() - ((ratio - 1) * (tapY - TransfromManager.getTranslateY()) - origin.x))
                 TransfromManager.setScale(TransfromManager.getScale() * ratio)
                 TransfromManager.setTransitionStyle(evte.currentTarget, true)
                 TransfromManager.applyTransfromStyle(evte.currentTarget)
