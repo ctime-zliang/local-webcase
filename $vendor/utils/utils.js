@@ -227,3 +227,43 @@ function ven$interval(
 function ven$isOddEven(number) {
     return !!(number & 1)
 }
+
+
+/**
+ * @description 缩放图片以适应容器
+ * @function ven$zoomImageByContainer
+ * @param {number} naturalWidth 图片本身宽度
+ * @param {number} naturalHeight 图片本身高度
+ * @param {number} containerWidth 容器宽度
+ * @param {number} containerHeight 容器高度
+ * @return {{ width, height }} 
+ */
+function ven$zoomImageByContainer(
+    naturalWidth,
+    naturalHeight,
+    containerWidth,
+    containerHeight
+) {
+    const imageRatio = naturalWidth / naturalHeight
+    const containerRatio = containerWidth / containerHeight
+    let width = 0
+    let height = 0
+    if (imageRatio >= containerRatio) {
+        if (naturalWidth > containerWidth) {
+            width = containerWidth
+            height = containerWidth / naturalWidth * naturalHeight
+        } else {
+            width = naturalWidth
+            height = naturalHeight
+        }
+    } else {
+        if (naturalHeight > containerHeight) {
+            width = containerHeight / naturalHeight * naturalWidth
+            height = containerHeight
+        } else {
+            width = naturalWidth
+            height = naturalHeight
+        }
+    }
+    return { width, height }
+}

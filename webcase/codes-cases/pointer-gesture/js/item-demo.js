@@ -1,16 +1,8 @@
-console.log(xGesture)
-
-AlertManager.init()
-
-const globalContainerElement = document.getElementById('appContainer')
-const interactiveSelectedClassname = 'guesture-interactive-selected'
-
-
 /**
  * Pointer Down
  */
 ;(function(sectionElement) {
-    const guestureElement = sectionElement.querySelector('[data-tagitem="guesture"]')
+    const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
     const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
     const yAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-y"]')
@@ -18,16 +10,16 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
     let eventCount = 0
     let styleUpdateTimer = null
 
-    xGesture.attach(guestureElement, {
-        onPointerdown(evte, { clientX, clientY }, guesture) {
+    xGesture.attach(gestureElement, {
+        onPointerdown(evte, { clientX, clientY }, gesture) {
             console.log({ clientX, clientY })
             window.clearTimeout(styleUpdateTimer)
-            guestureElement.classList.add(interactiveSelectedClassname)
+            gestureElement.classList.add(interactiveSelectedClassname)
             countElement.textContent = ++eventCount
             xAbsoluteElement.textContent = clientX
             yAbsoluteElement.textContent = clientY
             styleUpdateTimer = window.setTimeout(() => {
-                guestureElement.classList.remove(interactiveSelectedClassname)
+                gestureElement.classList.remove(interactiveSelectedClassname)
             }, 85)
         },
     })
@@ -38,7 +30,7 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
  * Pointer Up
  */
  ;(function(sectionElement) {
-    const guestureElement = sectionElement.querySelector('[data-tagitem="guesture"]')
+    const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
     const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
     const yAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-y"]')
@@ -46,16 +38,16 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
     let eventCount = 0
     let styleUpdateTimer = null
 
-    xGesture.attach(guestureElement, {
-        onPointerup(evte, { clientX, clientY }, guesture) {
+    xGesture.attach(gestureElement, {
+        onPointerup(evte, { clientX, clientY }, gesture) {
             console.log({ clientX, clientY })
             window.clearTimeout(styleUpdateTimer)
-            guestureElement.classList.add(interactiveSelectedClassname)
+            gestureElement.classList.add(interactiveSelectedClassname)
             countElement.textContent = ++eventCount
             xAbsoluteElement.textContent = clientX
             yAbsoluteElement.textContent = clientY
             styleUpdateTimer = window.setTimeout(() => {
-                guestureElement.classList.remove(interactiveSelectedClassname)
+                gestureElement.classList.remove(interactiveSelectedClassname)
             }, 85)
         },
     })
@@ -66,28 +58,28 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
  * Pointer Move
  */
  ;(function(sectionElement) {
-    const guestureElement = sectionElement.querySelector('[data-tagitem="guesture"]')
+    const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="absolute-x"]')
     const yAbsoluteElement = sectionElement.querySelector('[data-tagitem="absolute-y"]')
     const xRelativeElement = sectionElement.querySelector('[data-tagitem="relative-x"]')
     const yRelativeElement = sectionElement.querySelector('[data-tagitem="relative-y"]')
 
     let styleUpdateTimer = null
-    let guestureElementRect = null
+    let gestureElementRect = null
 
-    xGesture.attach(guestureElement, {
+    xGesture.attach(gestureElement, {
         cssTouchAction: 'none',
-        onPointermove(evte, { clientX, clientY }, guesture) {
+        onPointermove(evte, { clientX, clientY }, gesture) {
             console.log({ clientX, clientY })
             window.clearTimeout(styleUpdateTimer)
-            guestureElement.classList.add(interactiveSelectedClassname)
-            guestureElementRect = guestureElement.getBoundingClientRect()
+            gestureElement.classList.add(interactiveSelectedClassname)
+            gestureElementRect = gestureElement.getBoundingClientRect()
             xAbsoluteElement.textContent = clientX
             yAbsoluteElement.textContent = clientY
-            xRelativeElement.textContent = clientX - guestureElementRect.left
-            yRelativeElement.textContent = clientY - guestureElementRect.top
+            xRelativeElement.textContent = clientX - gestureElementRect.left
+            yRelativeElement.textContent = clientY - gestureElementRect.top
             styleUpdateTimer = window.setTimeout(() => {
-                guestureElement.classList.remove(interactiveSelectedClassname)
+                gestureElement.classList.remove(interactiveSelectedClassname)
             }, 150)
         },
         onPpointercancel(evte, { clientX, clientY }, gesture) {
@@ -101,7 +93,7 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
  * Tap
  */
  ;(function(sectionElement) {
-    const guestureElement = sectionElement.querySelector('[data-tagitem="guesture"]')
+    const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
     const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
     const yAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-y"]')
@@ -109,16 +101,16 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
     let eventCount = 0
     let styleUpdateTimer = null
 
-    xGesture.attach(guestureElement, {
-        onTap(evte, { tapX, tapY }, guesture) {
+    xGesture.attach(gestureElement, {
+        onTap(evte, { tapX, tapY }, gesture) {
             console.log({ tapX, tapY })
             window.clearTimeout(styleUpdateTimer)
-            guestureElement.classList.add(interactiveSelectedClassname)
+            gestureElement.classList.add(interactiveSelectedClassname)
             countElement.textContent = ++eventCount
             xAbsoluteElement.textContent = tapX
             yAbsoluteElement.textContent = tapY
             styleUpdateTimer = window.setTimeout(() => {
-                guestureElement.classList.remove(interactiveSelectedClassname)
+                gestureElement.classList.remove(interactiveSelectedClassname)
             }, 85)
         },
     })
@@ -129,7 +121,7 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
  * Long Tap
  */
  ;(function(sectionElement) {
-    const guestureElement = sectionElement.querySelector('[data-tagitem="guesture"]')
+    const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
     const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
     const yAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-y"]')
@@ -143,19 +135,19 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
         this.close()
     })
 
-    xGesture.attach(guestureElement, {
+    xGesture.attach(gestureElement, {
         isPreventDefaultInLongDown: true,
-        onLongTap(evte, { tapX, tapY }, guesture) {
+        onLongTap(evte, { tapX, tapY }, gesture) {
             console.log({ tapX, tapY })
             window.clearTimeout(styleUpdateTimer)
-            guestureElement.classList.add(interactiveSelectedClassname)
+            gestureElement.classList.add(interactiveSelectedClassname)
             countElement.textContent = ++eventCount
             xAbsoluteElement.textContent = tapX
             yAbsoluteElement.textContent = tapY
             AlertManager.open(`触发了 longTap 事件`)
             // alert(`触发了 longTap 事件.`)
             styleUpdateTimer = window.setTimeout(() => {
-                guestureElement.classList.remove(interactiveSelectedClassname)
+                gestureElement.classList.remove(interactiveSelectedClassname)
             }, 85)
         },
     })
@@ -166,7 +158,7 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
  * Single Tap
  */
  ;(function(sectionElement) {
-    const guestureElement = sectionElement.querySelector('[data-tagitem="guesture"]')
+    const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
     const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
     const yAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-y"]')
@@ -174,16 +166,16 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
     let eventCount = 0
     let styleUpdateTimer = null
 
-    xGesture.attach(guestureElement, {
-        onSingleTap(evte, { tapX, tapY }, guesture) {
+    xGesture.attach(gestureElement, {
+        onSingleTap(evte, { tapX, tapY }, gesture) {
             console.log({ tapX, tapY })
             window.clearTimeout(styleUpdateTimer)
-            guestureElement.classList.add(interactiveSelectedClassname)
+            gestureElement.classList.add(interactiveSelectedClassname)
             countElement.textContent = ++eventCount
             xAbsoluteElement.textContent = tapX
             yAbsoluteElement.textContent = tapY
             styleUpdateTimer = window.setTimeout(() => {
-                guestureElement.classList.remove(interactiveSelectedClassname)
+                gestureElement.classList.remove(interactiveSelectedClassname)
             }, 85)
         },
     })
@@ -194,7 +186,7 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
  * Double Tap
  */
  ;(function(sectionElement) {
-    const guestureElement = sectionElement.querySelector('[data-tagitem="guesture"]')
+    const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
     const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
     const yAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-y"]')
@@ -202,16 +194,16 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
     let eventCount = 0
     let styleUpdateTimer = null
 
-    xGesture.attach(guestureElement, {
-        onDoubleTap(evte, { tapX, tapY }, guesture) {
+    xGesture.attach(gestureElement, {
+        onDoubleTap(evte, { tapX, tapY }, gesture) {
             console.log({ tapX, tapY })
             window.clearTimeout(styleUpdateTimer)
-            guestureElement.classList.add(interactiveSelectedClassname)
+            gestureElement.classList.add(interactiveSelectedClassname)
             countElement.textContent = ++eventCount
             xAbsoluteElement.textContent = tapX
             yAbsoluteElement.textContent = tapY
             styleUpdateTimer = window.setTimeout(() => {
-                guestureElement.classList.remove(interactiveSelectedClassname)
+                gestureElement.classList.remove(interactiveSelectedClassname)
             }, 85)
         },
     })
@@ -222,7 +214,7 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
  * Drag Move
  */
  ;(function(sectionElement) {
-    const guestureElement = sectionElement.querySelector('[data-tagitem="guesture"]')
+    const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="absolute-x"]')
     const yAbsoluteElement = sectionElement.querySelector('[data-tagitem="absolute-y"]')
     const xRelativeElement = sectionElement.querySelector('[data-tagitem="relative-x"]')
@@ -235,19 +227,19 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
     const yDistElement = sectionElement.querySelector('[data-tagitem="dist-y"]')
 
     let styleUpdateTimer = null
-    let guestureElementRect = null
+    let gestureElementRect = null
 
-    xGesture.attach(guestureElement, {
+    xGesture.attach(gestureElement, {
         cssTouchAction: 'none',
         onDragMove(evte, { movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY }, gesture) {
             console.log({ movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY })
             window.clearTimeout(styleUpdateTimer)
-            guestureElement.classList.add(interactiveSelectedClassname)
-            guestureElementRect = guestureElement.getBoundingClientRect()
+            gestureElement.classList.add(interactiveSelectedClassname)
+            gestureElementRect = gestureElement.getBoundingClientRect()
             xAbsoluteElement.textContent = clientX
             yAbsoluteElement.textContent = clientY
-            xRelativeElement.textContent = clientX - guestureElementRect.left
-            yRelativeElement.textContent = clientY - guestureElementRect.top
+            xRelativeElement.textContent = clientX - gestureElementRect.left
+            yRelativeElement.textContent = clientY - gestureElementRect.top
             xSpeedElement.textContent = diffX
             ySpeedElement.textContent = diffY
             positionMoveElement.textContent = movePosition
@@ -255,7 +247,7 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
             xDistElement.textContent = distX
             yDistElement.textContent = distY
             styleUpdateTimer = window.setTimeout(() => {
-                guestureElement.classList.remove(interactiveSelectedClassname)
+                gestureElement.classList.remove(interactiveSelectedClassname)
             }, 150)
         },
     })
@@ -266,8 +258,9 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
  * Wheel
  */
  ;(function(sectionElement) {
-    const guestureElement = sectionElement.querySelector('[data-tagitem="guesture"]')
+    const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const wheelImageElement = sectionElement.querySelector('[data-tagitem="wheel-image"]')
+    
     class TransfromManager {
         static scale = 1
 
@@ -287,7 +280,7 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
     let wheelScale = 1.0
     let maxWheelScale = 10
     let minWheelScale = 0.1
-    xGesture.attach(guestureElement, {
+    xGesture.attach(gestureElement, {
         onWheel(evte, { scale, clientX, clientY }, gesture) {
             console.log({ scale, clientX, clientY })
             wheelScale *= scale
@@ -432,7 +425,7 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
  * Pinch
  */
  ;(function(sectionElement) {
-    const guestureElement = sectionElement.querySelector('[data-tagitem="guesture"]')
+    const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const scaleValueElement = sectionElement.querySelector('[data-tagitem="scale-value"]')
     const xCenterElement = sectionElement.querySelector('[data-tagitem="center-x"]')
     const yCenterElement = sectionElement.querySelector('[data-tagitem="center-y"]')
@@ -443,12 +436,12 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
 
     let styleUpdateTimer = null
 
-    xGesture.attach(guestureElement, {
+    xGesture.attach(gestureElement, {
         cssTouchAction: 'none',
         onPinch(evte, { scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
             console.log({ scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
             window.clearTimeout(styleUpdateTimer)
-            guestureElement.classList.add(interactiveSelectedClassname)
+            gestureElement.classList.add(interactiveSelectedClassname)
             scaleValueElement.textContent = scale
             xCenterElement.textContent = centerX
             yCenterElement.textContent = centerY
@@ -457,7 +450,7 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
             xPoiner2Element.textContent = pointB.x
             yPoiner2Element.textContent = pointB.x
             styleUpdateTimer = window.setTimeout(() => {
-                guestureElement.classList.remove(interactiveSelectedClassname)
+                gestureElement.classList.remove(interactiveSelectedClassname)
             }, 150)
         },
     })
@@ -468,7 +461,7 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
  * Rotate
  */
  ;(function(sectionElement) {
-    const guestureElement = sectionElement.querySelector('[data-tagitem="guesture"]')
+    const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const rotateValueElement = sectionElement.querySelector('[data-tagitem="rotate-value"]')
     const xCenterElement = sectionElement.querySelector('[data-tagitem="center-x"]')
     const yCenterElement = sectionElement.querySelector('[data-tagitem="center-y"]')
@@ -479,12 +472,12 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
 
     let styleUpdateTimer = null
 
-    xGesture.attach(guestureElement, {
+    xGesture.attach(gestureElement, {
         cssTouchAction: 'none',
         onPinch(evte, { rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
             console.log({ rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
             window.clearTimeout(styleUpdateTimer)
-            guestureElement.classList.add(interactiveSelectedClassname)
+            gestureElement.classList.add(interactiveSelectedClassname)
             rotateValueElement.textContent = rotate
             xCenterElement.textContent = centerX
             yCenterElement.textContent = centerY
@@ -493,8 +486,9 @@ const interactiveSelectedClassname = 'guesture-interactive-selected'
             xPoiner2Element.textContent = pointB.x
             yPoiner2Element.textContent = pointB.x
             styleUpdateTimer = window.setTimeout(() => {
-                guestureElement.classList.remove(interactiveSelectedClassname)
+                gestureElement.classList.remove(interactiveSelectedClassname)
             }, 150)
         },
     })
 })(globalContainerElement.querySelector('[data-tagitem="rotate"]'));
+

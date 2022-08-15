@@ -59,6 +59,36 @@
     font-weight: 900;
 }
 
+.view-btn {
+    color: #ffffff;
+    background-color: #1B9AF7;
+    border-color: #1B9AF7;
+    border-radius: 4px;
+    font-weight: 300;
+    font-size: 0.115rem;
+    text-decoration: none;
+    text-align: center;
+    line-height: 30px;
+    width: 100%;
+    height: 30px;
+    padding: 0 30px;
+    margin: 0;
+    display: inline-block;
+    appearance: none;
+    cursor: pointer;
+    border: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-transition-property: all;
+    transition-property: all;
+    -webkit-transition-duration: .3s;
+    transition-duration: .3s;
+}
+.view-btn:hover {
+    background-color: #1091ec;
+}
+
 
 /****************************** ******************************/
 /****************************** ******************************/
@@ -83,14 +113,14 @@
 /****************************** ******************************/
 
 
-.guesture-interactive {
+.gesture-interactive {
     padding: 0 20px;  
     overflow: hidden;  
 }
-.guesture-interactive-selected {
+.gesture-interactive-selected {
     background-color: #f5f2f2;
 }
-.guesture-interactive .guesture-interactive-content {
+.gesture-interactive .gesture-interactive-content {
     padding: 10px 10px;
     border-bottom: 1px dashed #dcdcdc;
 }
@@ -112,6 +142,9 @@
 }
 .image-viewitem {    
     display: block;
+}
+.image-viewitem-w-100 {
+    width: 100%;
 }
 .image-viewitem-w-75 {
     width: 75%;
@@ -213,4 +246,50 @@
 .list-delete-setting {
     background-color: #ff0000;
     color: #ffffff;
+}
+
+
+/****************************** ******************************/
+/****************************** ******************************/
+/****************************** ******************************/
+/****************************** ******************************/
+
+
+.fullcase-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: 100;
+}
+.fullcase-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+}
+.image-view-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-self: center;
+    flex-wrap: nowrap;
+    align-items: center;
+    align-content: center;
+}
+
+.log-container {
+    color: #eaeaea;
+    padding: 5px 0;
+}
+.log-item {
+    font-size: 0.115rem;
+    padding: 0 5px;
 }

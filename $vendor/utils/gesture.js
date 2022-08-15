@@ -156,7 +156,11 @@
         this.containerElements.forEach((item) => {
             item.style.touchAction = value
         })
-    }    
+    }
+
+    Gesture.prototype.getAllPointers = function() {
+        return this._$profile.pointers
+    }
 
     Gesture.prototype.getCenter = function(pointA, pointB) {
         return { x: (pointA.x + pointB.x) / 2, y: (pointA.y + pointB.y) / 2 }

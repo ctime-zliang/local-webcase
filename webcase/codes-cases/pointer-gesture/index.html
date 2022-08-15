@@ -5,102 +5,332 @@
 <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="../../../$vendor/component/alert/css/alert.css" />
+<link rel="stylesheet" type="text/css" href="./css/reset.css" />
+<link rel="stylesheet" type="text/css" href="./css/demo.css" />
 <title>Code Case</title>
-<style>
-* {
-    padding: 0; 
-    margin: 0; 
-    outline: 0; 
-    box-sizing: border-box; 
-    background-color: transparent;
-    user-select: none;
-}
-html, 
-body { 
-    width: 100%; 
-    min-height: 100%; 
-    padding: 0; 
-    margin: 0; 
-    outline: 0; 
-    font-family: 'Helvetica Neue', 'Luxi Sans', 'DejaVu Sans', 'Tahoma', 'Hiragino Sans GB', 'STHeiti', 'Microsoft YaHei';	
-    font-size: 16px; 
-    background: #ffffff; 
-    -webkit-overflow-scrolling: touch; 
-    -ms-overflow-scrolling: touch; 
-    -moz-overflow-scrolling: touch; 
-    -o-overflow-scrolling: touch; 
-	-webkit-text-size-adjust: none; 
-    -moz-text-size-adjust: none; 
-    -ms-text-size-adjust: none; 
-    -o-text-size-adjust: none;
-	-webkit-tap-highlight-color: rgba(0, 0, 0, 0); 
-    -moz-tap-highlight-color: rgba(0, 0, 0, 0); 
-    -webkit-text-size-adjust: 100%; 
-    -moz-text-size-adjust: 100%; 
-}
+<style>    
 </style>
+<script>
+;(function() {
+    function __resetFontSizeClac(){
+		const _fontSize = document.documentElement.clientWidth / 3.75
+		return _fontSize > 100 ? 100 : _fontSize
+	}
+	document.documentElement.style.fontSize = __resetFontSizeClac() + 'px'
+	window.onresize = function() {
+		document.documentElement.style.fontSize = __resetFontSizeClac() + 'px'
+	}
+})();
+</script>
 </head>
 
 <body>
-    <div style="width: 100%; height: 100px;">
-        <div id="guestBox1" style="width: 80%; height: 100%; background-color: #EFF0F2;">onPointerdown</div>
-    </div>
-    <div style="width: 100%; height: 40px;"></div>
-    <div style="width: 100%; height: 200px;">
-        <div id="guestBox2" style="width: 80%; height: 100%; background-color: #EFF0F2;">onPointermove</div>
-    </div>
-    <div style="width: 100%; height: 40px;"></div>
-    <div style="width: 100%; height: 100px;">
-        <div id="guestBox3" style="width: 80%; height: 100%; background-color: #EFF0F2;">onPointerup</div>
-    </div>
-    <div style="width: 100%; height: 40px;"></div>
-    <div style="width: 100%; height: 100px;">
-        <div id="guestBox13" style="width: 80%; height: 100%; background-color: #EFF0F2;">onPpointercancel</div>
-    </div>
-    <div style="width: 100%; height: 40px;"></div>
-    <div style="width: 100%; height: 100px;">
-        <div id="guestBox4" style="width: 80%; height: 100%; background-color: #EFF0F2;">onTap</div>
-    </div>
-    <div style="width: 100%; height: 40px;"></div>
-    <div style="width: 100%; height: 100px;">
-        <div id="guestBox5" style="width: 80%; height: 100%; background-color: #EFF0F2;">onLongTap</div>
-    </div>
-    <div style="width: 100%; height: 40px;"></div>
-    <div style="width: 100%; height: 100px;">
-        <div id="guestBox6" style="width: 80%; height: 100%; background-color: #EFF0F2;">onSingleTap</div>
-    </div>
-    <div style="width: 100%; height: 40px;"></div>
-    <div style="width: 100%; height: 100px;">
-        <div id="guestBox7" style="width: 80%; height: 100%; background-color: #EFF0F2;">onDoubleTap</div>
-    </div>
-    <div style="width: 100%; height: 40px;"></div>
-    <div style="width: 100%; height: 200px;">
-        <div style="width: 80%; height: 100%; background-color: #EFF0F2;">
-            <canvas id="dragMoveCanvas" width="200" height="200"></canvas>
+<div id="appContainer" class="page-container">
+    <section class="page-header">
+        <div class="view-title">Web Page gesture</div>
+    </section>
+    <section class="page-content">
+        <div class="content-description">
+            <div class="text-line">一个 Web page 手势库: gesture.js</div>
+            <div class="text-line" style="font-size: 0.08rem;">(打开控制台查看事件详情输出)</div>
         </div>
-    </div>
-    <div style="width: 100%; height: 40px;"></div>
-    <div style="width: 100%; height: 200px;">
-        <div id="guestBox8" style="width: 80%; height: 100%; background-color: #EFF0F2;">onDragMove</div>
-    </div>
-    <div style="width: 100%; height: 40px;"></div>
-    <div style="width: 100%; height: 200px;">
-        <div id="guestBox9" style="width: 80%; height: 100%; background-color: #EFF0F2;">onSwipe</div>
-    </div>
-    <div style="width: 100%; height: 40px;"></div>
-    <div style="width: 100%; height: 100px;">
-        <div id="guestBox10" style="width: 80%; height: 100%; background-color: #EFF0F2;">onRotate</div>
-    </div>
-    <div style="width: 100%; height: 40px;"></div>
-    <div style="width: 100%; height: 100px;">
-        <div id="guestBox11" style="width: 80%; height: 100%; background-color: #EFF0F2;">onPinch</div>
-    </div>
-    <div style="width: 100%; height: 40px;"></div>
-    <div style="width: 100%; height: 100px;">
-        <div id="guestBox12" style="width: 80%; height: 100%; background-color: #EFF0F2;">onWheel</div>
-    </div>
+        <!-- Pointer Down -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="pointerdown">
+            <div class="view-subject-title">Pointer down 事件</div>
+            <div class="view-subject-content">
+                <div class="gesture-interactive" data-tagitem="gesture">
+                    <div class="gesture-interactive-content">
+                        <span>触发 pointerdown 事件: </span>
+                        <em data-tagitem="event-count">0</em>
+                        <span>次</span>
+                        <span>(</span>
+                        <em data-tagitem="event-absolute-x">0</em>, <em data-tagitem="event-absolute-y">0</em>
+                        <span>)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Pointer Down -->
+        <!-- Pointer Up -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="pointerup">
+            <div class="view-subject-title">Pointer up 事件</div>
+            <div class="view-subject-content">
+                <div class="gesture-interactive" data-tagitem="gesture">
+                    <div class="gesture-interactive-content">
+                        <span>触发 pointerup 事件: </span>
+                        <em data-tagitem="event-count">0</em>
+                        <span>次</span>
+                        <span>(</span>
+                        <em data-tagitem="event-absolute-x">0</em>, <em data-tagitem="event-absolute-y">0</em>
+                        <span>)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Pointer Up -->
+        <!-- Pointer Move -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="pointermove">
+            <div class="view-subject-title">Pointer move 事件</div>
+            <div class="view-subject-content">
+                <div class="gesture-interactive" data-tagitem="gesture">
+                    <div class="gesture-interactive-content" style="height: 125px;">
+                        <span style="line-height: 0.2rem;">触发 pointermove 事件</span>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前绝对坐标: </span>
+                            <em data-tagitem="absolute-x">0</em>, <em data-tagitem="absolute-y">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前相对坐标: </span>
+                            <em data-tagitem="relative-x">0</em>, <em data-tagitem="relative-y">0</em>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Pointer Move -->
+        <!-- Tap -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="tap">
+            <div class="view-subject-title">Tap 事件</div>
+            <div class="view-subject-content">
+                <div class="gesture-interactive" data-tagitem="gesture">
+                    <div class="gesture-interactive-content">
+                        <span>触发 tap 事件: </span>
+                        <em data-tagitem="event-count">0</em>
+                        <span>次</span>
+                        <span>(</span>
+                        <em data-tagitem="event-absolute-x">0</em>, <em data-tagitem="event-absolute-y">0</em>
+                        <span>)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Tap -->
+        <!-- Long Tap -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="longtap">
+            <div class="view-subject-title">Long Tap 事件</div>
+            <div class="view-subject-content">
+                <div class="gesture-interactive" data-tagitem="gesture">
+                    <div class="gesture-interactive-content">
+                        <span>触发 longtap 事件: </span>
+                        <em data-tagitem="event-count">0</em>
+                        <span>次</span>
+                        <span>(</span>
+                        <em data-tagitem="event-absolute-x">0</em>, <em data-tagitem="event-absolute-y">0</em>
+                        <span>)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Long Tap -->
+        <!-- Single Tap -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="singletap">
+            <div class="view-subject-title">Single Tap 事件</div>
+            <div class="view-subject-content">
+                <div class="gesture-interactive" data-tagitem="gesture">
+                    <div class="gesture-interactive-content">
+                        <span>触发 singletap 事件: </span>
+                        <em data-tagitem="event-count">0</em>
+                        <span>次</span>
+                        <span>(</span>
+                        <em data-tagitem="event-absolute-x">0</em>, <em data-tagitem="event-absolute-y">0</em>
+                        <span>)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Single Tap -->
+        <!-- Double Tap -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="doubletap">
+            <div class="view-subject-title">Double Tap 事件</div>
+            <div class="view-subject-content">
+                <div class="gesture-interactive" data-tagitem="gesture">
+                    <div class="gesture-interactive-content">
+                        <span>触发 doubletap 事件: </span>
+                        <em data-tagitem="event-count">0</em>
+                        <span>次</span>
+                        <span>(</span>
+                        <em data-tagitem="event-absolute-x">0</em>, <em data-tagitem="event-absolute-y">0</em>
+                        <span>)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Double Tap -->
+        <!-- Drag Move -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="dragmove">
+            <div class="view-subject-title">Drag move 事件</div>
+            <div class="view-subject-content">
+                <div class="gesture-interactive" data-tagitem="gesture">
+                    <div class="gesture-interactive-content" style="height: 180px;">
+                        <span style="line-height: 0.2rem;">触发 dragmove 事件</span>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前移动步长(速度): </span>
+                            <em data-tagitem="speed-x">0</em>, <em data-tagitem="speed-y">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前移动方位/方向: </span>
+                            <em data-tagitem="move-position">-</em>/<em data-tagitem="move-direction">-</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前绝对坐标: </span>
+                            <em data-tagitem="absolute-x">0</em>, <em data-tagitem="absolute-y">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前相对坐标: </span>
+                            <em data-tagitem="relative-x">0</em>, <em data-tagitem="relative-y">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前移动距离: </span>
+                            <em data-tagitem="dist-x">0</em>, <em data-tagitem="dist-y">0</em>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Drag Move -->
+        <!-- Swipe -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="swipe">
+            <div class="view-subject-title">Swipe 事件</div>
+            <div class="view-subject-content">
+                <div class="gesture-interactive" data-tagitem="gesture">
+                    <div class="gesture-interactive-content">
+                        <div class="swiper-container">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-item">
+                                    <div class="list-content">这是一条列表, 向左滑动试一试, 会有一些东西</div>
+                                    <div class="list-extend">
+                                        <button class="list-btn list-readed-setting">设为已读</button>
+                                        <button class="list-btn list-delete-setting">删除</button>
+                                    </div>
+                                </div>
+                                <div class="swiper-item">
+                                    <div class="list-content">这是一条列表, 向左滑动试一试, 会有一些东西</div>
+                                    <div class="list-extend">
+                                        <button class="list-btn list-readed-setting">设为已读</button>
+                                        <button class="list-btn list-delete-setting">删除</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Swipe -->
+        <!-- Wheel -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="wheel">
+            <div class="view-subject-title">Wheel 事件</div>
+            <div class="view-subject-content">
+                <div class="gesture-interactive" data-tagitem="gesture" style="padding: 0;">
+                    <div class="gesture-interactive-content image-wrapper" data-tagitem="wheel-image-wrapper" style="border: 0; padding: 0;">
+                        <img src="./images/demo1.jpg" class="image-viewitem image-viewitem-w-75 image-viewitem-boxshadow" data-tagitem="wheel-image" />
+                    </div>
+                </div>
+                <div class="gesture-interactive">
+                    <div class="gesture-interactive-content" style="padding: 0;"></div>
+                </div>
+            </div>
+        </div>
+        <!-- /Wheel -->
+        <!-- Pinch -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="pinch">
+            <div class="view-subject-title">Pinch 事件</div>
+            <div class="view-subject-content">
+                <div class="gesture-interactive" data-tagitem="gesture" style="padding: 0;">
+                    <div class="gesture-interactive-content image-wrapper" data-tagitem="pinch-image-wrapper" style="border: 0; padding: 0; min-height: 250px;">
+                        <img src="./images/demo1.jpg" class="image-viewitem image-viewitem-w-50 image-viewitem-boxshadow" data-tagitem="pinch-image" />
+                    </div>
+                </div>
+                <div class="gesture-interactive">
+                    <div class="gesture-interactive-content">
+                        <span style="line-height: 0.2rem;">触发 pinch 事件</span>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前缩放倍率: </span>
+                            <em data-tagitem="scale-value">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前多指中心坐标: </span>
+                            <em data-tagitem="center-x">0</em>, <em data-tagitem="center-y">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>指针 1 坐标: </span>
+                            <em data-tagitem="pointer1-x">0</em>, <em data-tagitem="pointer1-y">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>指针 2 坐标: </span>
+                            <em data-tagitem="pointer2-x">0</em>, <em data-tagitem="pointer2-y">0</em>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Pinch -->
+        <!-- Rotate -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="rotate">
+            <div class="view-subject-title">Rotate 事件</div>
+            <div class="view-subject-content">
+                <div class="gesture-interactive" data-tagitem="gesture" style="padding: 0;">
+                    <div class="gesture-interactive-content image-wrapper" data-tagitem="rotate-image-wrapper" style="border: 0; padding: 0; min-height: 250px;">
+                        <img src="./images/demo1.jpg" class="image-viewitem image-viewitem-w-50 image-viewitem-boxshadow" data-tagitem="rotate-image" />
+                    </div>
+                </div>
+                <div class="gesture-interactive">
+                    <div class="gesture-interactive-content">
+                        <span style="line-height: 0.2rem;">触发 rotate 事件</span>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前旋转角度(角度): </span>
+                            <em data-tagitem="rotate-value">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>当前多指中心坐标: </span>
+                            <em data-tagitem="center-x">0</em>, <em data-tagitem="center-y">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>指针 1 坐标: </span>
+                            <em data-tagitem="pointer1-x">0</em>, <em data-tagitem="pointer1-y">0</em>
+                        </div>
+                        <div style="line-height: 0.2rem;">
+                            <span>指针 2 坐标: </span>
+                            <em data-tagitem="pointer2-x">0</em>, <em data-tagitem="pointer2-y">0</em>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Rotate -->
+        <!-- Bottom Extend button -->
+        <div class="view-subject" style="margin-top: 0;" data-tagitem="pointerup">
+            <div class="view-subject-content" style="padding: 0 18px;">
+                <button class="view-btn" data-tagitem="fullcase-btn">查看综合案例</button>
+            </div>
+        </div>
+        <!-- /Bottom Extend button -->
+    </section>
+    <section class="fullcase-container" data-tagitem="fullcaseContainer">
+        <div class="fullcase-wrapper">
+            <div class="image-view-container" data-tagitem="imageViewContainer"></div>
+            <div class="log-container">
+                <div class="log-item">
+                    <span>触摸点坐标: </span>
+                    <strong style="font-weight: 100;" data-tagitem="pointer-list">-</strong>
+                </div>
+                <div class="log-item">
+                    <span>缩放倍率: </span><span data-tagitem="scale-value">0</span><span>x</span>
+                </div>
+                <div class="log-item">
+                    <span>旋转角度: </span><span data-tagitem="rotate-value">0</span> <span>度</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="page-footer"></section>
+</div>
 </body>
+<script type="text/javascript" src="../../../$vendor/utils/utils.js"></script>
+<script type="text/javascript" src="../../../$vendor/component/alert/js/alert.js"></script>
 <script type="text/javascript" src="../../../$vendor/utils/gesture.js"></script>
-<script type="text/javascript" src="./js/drawDragMoveLine.js"></script>
-<script type="text/javascript" src="./js/main.js"></script>
+<script type="text/javascript" src="./js/init.js"></script>
+<script type="text/javascript" src="./js/item-demo.js"></script>
+<script type="text/javascript" src="./js/compre-demo.js"></script>
 </html>
