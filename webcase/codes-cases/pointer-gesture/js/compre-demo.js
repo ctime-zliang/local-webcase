@@ -73,7 +73,8 @@
         minScale: 1,
         maxWheelScale:  10,
         minWheelScale:  0.1,
-        isWheelDispatch: false
+        isWheelDispatch: false,
+        pointerdownTarget: null
     }
     const initImageDOM = async () => {
         return new Promise((_) => {
@@ -130,15 +131,20 @@
                 evte.preventDefault()
             },
             onPointerdown(evte, { clientX, clientY }, gesture) {
+                profile.pointerdownTarget = evte.target
                 updatePointersPositionShow(gesture.getAllPointers())
             },
             onPointermove(evte, { clientX, clientY }, gesture) {
                 updatePointersPositionShow(gesture.getAllPointers())
             },
             onPointerup(evte, { clientX, clientY }, gesture) {
+                profile.pointerdownTarget = null
                 updatePointersPositionShow(gesture.getAllPointers())
             },
             onDragMove(evte, { movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY }, gesture) {
+                if (profile.pointerdownTarget !== imageElement) {
+                    return
+                }
                 TransfromManager.translateX += diffX
                 TransfromManager.translateY += diffY
                 TransfromManager.setTransitionStyle(imageElement, false)
