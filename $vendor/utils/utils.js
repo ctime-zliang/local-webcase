@@ -256,12 +256,12 @@ function ven$zoomImageByContainer(
     const containerRatio = containerWidth / containerHeight
     let width = 0
     let height = 0
-    let mark = 'width'
+    let benchmark = 'width'
     if (imageRatio >= containerRatio) {
         if (naturalWidth > containerWidth) {
             width = containerWidth
             height = (containerWidth / naturalWidth) * naturalHeight
-            mark = 'height'
+            benchmark = 'width'
         } else {
             width = naturalWidth
             height = naturalHeight
@@ -270,7 +270,7 @@ function ven$zoomImageByContainer(
         if (naturalHeight > containerHeight) {
             width = (containerHeight / naturalHeight) * naturalWidth
             height = containerHeight
-            mark = 'width'
+            benchmark = 'height'
         } else {
             width = naturalWidth
             height = naturalHeight
@@ -280,7 +280,7 @@ function ven$zoomImageByContainer(
         width, 
         height, 
         naturalScale: width / naturalWidth,
-        containerScale: mark === 'width' ? width / containerWidth : height / containerHeight,
-        scaleMark: mark,
+        containerScale: benchmark === 'width' ? height / containerHeight : width / containerWidth,
+        benchmark,
     }
 }
