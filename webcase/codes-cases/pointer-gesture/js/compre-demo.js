@@ -71,6 +71,9 @@
     const profile = {
         maxScale: 3,
         minScale: 1,
+        maxWheelScale:  10,
+        minWheelScale:  0.1,
+        isWheelDispatch: false
     }
     const initImageDOM = async () => {
         return new Promise((_) => {
@@ -110,8 +113,19 @@
         bindEvent(imageLoadRes.image)
     }
     const bindEvent = (imageElement) => {
-        xGesture.attach(imageElement, {
+        xGesture.attach(imageElement.parentElement, {
             cssTouchAction: 'none',
+            onWheel(evte, { scale, clientX, clientY }, gesture) {
+                profile.isWheelDispatch = true
+                TransfromManager.scale *= scale
+                if (TransfromManager.scale > profile.maxWheelScale) {
+                    TransfromManager.scale = profile.maxWheelScale
+                } else if (TransfromManager.scale < profile.minWheelScale) {
+                    TransfromManager.scale = profile.minWheelScale
+                }
+                TransfromManager.setTransitionStyle(imageElement, true)
+                TransfromManager.applyTransfromStyle(imageElement)
+            },
             onContextmenu(evte, { clientX, clientY }, gesture) {
                 evte.preventDefault()
             },
@@ -127,34 +141,41 @@
             onDragMove(evte, { movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY }, gesture) {
                 TransfromManager.translateX += diffX
                 TransfromManager.translateY += diffY
-                TransfromManager.setTransitionStyle(evte.currentTarget, false)
-                TransfromManager.applyTransfromStyle(evte.currentTarget)
+                TransfromManager.setTransitionStyle(imageElement, false)
+                TransfromManager.applyTransfromStyle(imageElement)
             },
             onDoubleTap(evte, { tapX, tapY }, gesture) {
                 const offsetX = tapX - profile.width / 2
                 const offsetY = tapX - profile.height / 2
-                if (TransfromManager.scale <= 1) {
-                    TransfromManager.setTransitionStyle(evte.currentTarget, false)
+                if (profile.isWheelDispatch) {
                     TransfromManager.translateX = 0
                     TransfromManager.translateY = 0
-                    TransfromManager.applyTransfromStyle(evte.currentTarget)
-                    TransfromManager.scale = profile.maxScale
-                    TransfromManager.translateX = -1 * offsetX * TransfromManager.scale
-                    const translateXMax = (profile.width / 2)  * TransfromManager.scale - profile.width / 2
-                    if (TransfromManager.translateX >= translateXMax) {
-                        TransfromManager.translateX = translateXMax
-                    }
-                    const translateXMin = -1 * translateXMax
-                    if (TransfromManager.translateX <= translateXMin) {
-                        TransfromManager.translateX = translateXMin
-                    }
-                } else {
                     TransfromManager.scale = 1
-                    TransfromManager.translateX = 0
-                    TransfromManager.translateY = 0
+                    profile.isWheelDispatch = false
+                } else {
+                    if (TransfromManager.scale <= 1) {
+                        TransfromManager.setTransitionStyle(imageElement, false)
+                        TransfromManager.translateX = 0
+                        TransfromManager.translateY = 0
+                        TransfromManager.applyTransfromStyle(imageElement)
+                        TransfromManager.scale = profile.maxScale
+                        TransfromManager.translateX = -1 * offsetX * TransfromManager.scale
+                        const translateXMax = (profile.width / 2)  * TransfromManager.scale - profile.width / 2
+                        if (TransfromManager.translateX >= translateXMax) {
+                            TransfromManager.translateX = translateXMax
+                        }
+                        const translateXMin = -1 * translateXMax
+                        if (TransfromManager.translateX <= translateXMin) {
+                            TransfromManager.translateX = translateXMin
+                        }
+                    } else {
+                        TransfromManager.scale = 1
+                        TransfromManager.translateX = 0
+                        TransfromManager.translateY = 0
+                    }
                 }
-                TransfromManager.setTransitionStyle(evte.currentTarget, true)
-                TransfromManager.applyTransfromStyle(evte.currentTarget)
+                TransfromManager.setTransitionStyle(imageElement, true)
+                TransfromManager.applyTransfromStyle(imageElement)
                 scaleValueElement.textContent = TransfromManager.scale
                 console.log(profile)
             },
