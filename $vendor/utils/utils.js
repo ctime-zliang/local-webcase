@@ -236,7 +236,15 @@ function ven$isOddEven(number) {
  * @param {number} naturalHeight 图片本身高度
  * @param {number} containerWidth 容器宽度
  * @param {number} containerHeight 容器高度
- * @return {{ width, height }} 
+ * @return {
+ *      { 
+ *          width, 
+ *          height, 
+ *          naturalScale, 
+ *          containerScale,
+ *          scaleMark
+ *      }
+ * } 
  */
 function ven$zoomImageByContainer(
     naturalWidth,
@@ -248,22 +256,31 @@ function ven$zoomImageByContainer(
     const containerRatio = containerWidth / containerHeight
     let width = 0
     let height = 0
+    let mark = 'width'
     if (imageRatio >= containerRatio) {
         if (naturalWidth > containerWidth) {
             width = containerWidth
-            height = containerWidth / naturalWidth * naturalHeight
+            height = (containerWidth / naturalWidth) * naturalHeight
+            mark = 'height'
         } else {
             width = naturalWidth
             height = naturalHeight
         }
     } else {
         if (naturalHeight > containerHeight) {
-            width = containerHeight / naturalHeight * naturalWidth
+            width = (containerHeight / naturalHeight) * naturalWidth
             height = containerHeight
+            mark = 'width'
         } else {
             width = naturalWidth
             height = naturalHeight
         }
     }
-    return { width, height }
+    return { 
+        width, 
+        height, 
+        naturalScale: width / naturalWidth,
+        containerScale: mark === 'width' ? width / containerWidth : height / containerHeight,
+        scaleMark: mark,
+    }
 }

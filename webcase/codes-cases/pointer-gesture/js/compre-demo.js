@@ -5,50 +5,50 @@
     const rotateValueElement = sectionElement.querySelector('[data-tagitem="rotate-value"]')
 
     class TransfromManager {
-        static scale = 1
-        static rotate = 0
-        static translateX = 0
-        static translateY = 0
-        static translateZ = 5
+        static _scale = 1
+        static _rotate = 0
+        static _translateX = 0
+        static _translateY = 0
+        static _translateZ = 5
 
-        static setScale(value) {
-            this.scale = value
+        static set scale(value) {
+            this._scale = value
         }
 
-        static getScale() {
-            return this.scale
+        static get scale() {
+            return this._scale
         }
 
-        static setRotate(value) {
-            this.rotate = value
+        static set rotate(value) {
+            this._rotate = value
         }
 
-        static getRotate() {
-            return this.rotate
+        static get rotate() {
+            return this._rotate
         }
 
-        static setTranslateX(value) {
-            this.translateX = value
+        static set translateX(value) {
+            this._translateX = value
         }
 
-        static getTranslateX() {
-            return this.translateX
+        static get translateX() {
+            return this._translateX
         }
 
-        static setTranslateY(value) {
-            this.translateY = value
+        static set translateY(value) {
+            this._translateY = value
         }
 
-        static getTranslateY() {
-            return this.translateY
+        static get translateY() {
+            return this._translateY
         }
 
-        static setTranslateZ(value) {
-            this.translateZ = value
+        static set translateZ(value) {
+            this._translateZ = value
         }
 
-        static getTranslateZ() {
-            return this.translateZ
+        static get translateZ() {
+            return this._translateZ
         }
 
         static setTransitionStyle(targetElement, use = false) {
@@ -64,15 +64,13 @@
         }
 
         static getString() {
-            return `translate3d(${this.translateX}px, ${this.translateY}px, ${this.translateZ}px) scale(${this.scale}) rotate(${this.rotate})`
+            return `translate3d(${this.translateX}px, ${this._translateY}px, ${this._translateZ}px) scale(${this._scale}) rotate(${this._rotate})`
         }
     }
 
     const profile = {
-        maxScale: 0,
-        minScale: 0,
-        width: 0,
-        height: 0
+        maxScale: 3,
+        minScale: 1,
     }
     const initImageDOM = async () => {
         return new Promise((_) => {
@@ -95,17 +93,19 @@
         imageElement.style.opacity = '1'
         TransfromManager.setTransitionStyle(imageElement, false)
         TransfromManager.applyTransfromStyle(imageElement)
-        // imageElement.style.top = `${top}px`
-        // imageElement.style.left = `${left}px`
-        // imageElement.style.position = `absolute`
         return sizeResult
     }
     const init = async () => {
         const imageLoadRes = await initImageDOM()
         const sizeResult = initImageSize(imageLoadRes.image, imageViewContainerElement)
-        profile.maxScale = Math.max(Math.round(imageLoadRes.width / sizeResult.width), 3)
-        profile.width = sizeResult.width
-        profile.height = sizeResult.height
+        const imageClientRectJSON = imageLoadRes.image.getBoundingClientRect().toJSON()
+        Object.keys(sizeResult).forEach((item) => {
+            profile[item] = sizeResult[item]
+        })
+        Object.keys(imageClientRectJSON).forEach((item) => {
+            profile[item] = imageClientRectJSON[item]
+        })
+        profile.maxScale = 1 / profile.containerScale
 
         bindEvent(imageLoadRes.image)
     }
@@ -117,29 +117,42 @@
             },
             onPointerdown(evte, { clientX, clientY }, gesture) {
                 updatePointersPositionShow(gesture.getAllPointers())
-                console.log(evte, { clientX, clientY }, gesture)
             },
             onPointermove(evte, { clientX, clientY }, gesture) {
                 updatePointersPositionShow(gesture.getAllPointers())
             },
             onPointerup(evte, { clientX, clientY }, gesture) {
                 updatePointersPositionShow(gesture.getAllPointers())
-                console.log(evte, { clientX, clientY }, gesture)
+            },
+            onDragMove(evte, { movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY }, gesture) {
+                TransfromManager.translateX += diffX
+                TransfromManager.translateY += diffY
+                TransfromManager.setTransitionStyle(evte.currentTarget, false)
+                TransfromManager.applyTransfromStyle(evte.currentTarget)
             },
             onDoubleTap(evte, { tapX, tapY }, gesture) {
-                let ratio = 1 / TransfromManager.getScale()
-                if (TransfromManager.getScale() <= 1) {
-                    TransfromManager.setScale(profile.maxScale / TransfromManager.getScale())
+                const offsetX = tapX - profile.width / 2
+                const offsetY = tapX - profile.height / 2
+                if (TransfromManager.scale <= 1) {
+                    TransfromManager.scale = profile.maxScale
+                    TransfromManager.translateX = -1 * offsetX * TransfromManager.scale
+                    const translateXMax = (profile.width / 2)  * TransfromManager.scale - profile.width / 2
+                    if (TransfromManager.translateX >= translateXMax) {
+                        TransfromManager.translateX = translateXMax
+                    }
+                    const translateXMin = -1 * translateXMax
+                    if (TransfromManager.translateX <= translateXMin) {
+                        TransfromManager.translateX = translateXMin
+                    }
+                } else {
+                    TransfromManager.scale = 1
+                    TransfromManager.translateX = 0
+                    TransfromManager.translateY = 0
                 }
-                const origin = {
-                    x: (ratio - 1) * profile.width / 2,
-                    y: (ratio - 1) * profile.height / 2,
-                }
-                // TransfromManager.setTranslateX(TransfromManager.getTranslateX() - ((ratio - 1) * (tapX - TransfromManager.getTranslateX()) - origin.x))
-                // TransfromManager.setTranslateY(TransfromManager.getTranslateY() - ((ratio - 1) * (tapY - TransfromManager.getTranslateY()) - origin.x))
-                TransfromManager.setScale(TransfromManager.getScale() * ratio)
                 TransfromManager.setTransitionStyle(evte.currentTarget, true)
                 TransfromManager.applyTransfromStyle(evte.currentTarget)
+                scaleValueElement.textContent = TransfromManager.scale
+                console.log(profile)
             },
         })
     }
