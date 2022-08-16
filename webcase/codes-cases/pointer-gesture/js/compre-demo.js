@@ -134,6 +134,10 @@
                 const offsetX = tapX - profile.width / 2
                 const offsetY = tapX - profile.height / 2
                 if (TransfromManager.scale <= 1) {
+                    TransfromManager.setTransitionStyle(evte.currentTarget, false)
+                    TransfromManager.translateX = 0
+                    TransfromManager.translateY = 0
+                    TransfromManager.applyTransfromStyle(evte.currentTarget)
                     TransfromManager.scale = profile.maxScale
                     TransfromManager.translateX = -1 * offsetX * TransfromManager.scale
                     const translateXMax = (profile.width / 2)  * TransfromManager.scale - profile.width / 2
