@@ -29,7 +29,7 @@ class AlertManager {
         if (document.querySelector('.alertmgr-container')) {
             return
         }
-        this._btns = [this.defaultConfirmBtn]
+        this._btns = [this.defaultConfirmBtn, this.defaultCancelBtn]
         /* ... */
         this._touchstartHandler = this._touchstartHandler.bind(this)
         this._touchendHandler = this._touchendHandler.bind(this)

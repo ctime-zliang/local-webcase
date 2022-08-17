@@ -134,9 +134,6 @@
 
     let eventCount = 0
     let styleUpdateTimer = null
-
-    AlertManager.setBtns([AlertManager.defaultConfirmBtn, AlertManager.defaultCancelBtn])
-
     xGesture.attach(gestureElement, {
         isPreventDefaultInLongDown: true,
         onLongTap(evte, { tapX, tapY }, gesture) {
@@ -583,7 +580,7 @@
     let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
         cssTouchAction: 'none',
-        onPinch(evte, { rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
+        onRotate(evte, { rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
             console.log({ rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)

@@ -78,7 +78,8 @@
         maxWheelScale:  10,
         minWheelScale:  0.1,
         isWheelDispatch: false,
-        pointerdownTarget: null
+        pointerdownTarget: null,
+        imageSrc: `./images/demo3.jpg`
     }
     const initImageDOM = async () => {
         return new Promise((_) => {
@@ -87,7 +88,7 @@
                 _({ width: this.width, height: this.height, image: this })
             }
             imageElement.style.opacity = '0'
-            imageElement.src = './images/demo1.jpg'
+            imageElement.src = profile.imageSrc
             imageViewContainerElement.appendChild(imageElement)
         })
     }
@@ -111,12 +112,8 @@
         profile.viewportHeight = document.documentElement.clientHeight
         const imageLoadRes = await initImageDOM()
         const sizeResult = initImageSize(imageLoadRes.image)
-        const imageClientRectJSON = imageLoadRes.image.getBoundingClientRect().toJSON()
         Object.keys(sizeResult).forEach((item) => {
             profile[item] = sizeResult[item]
-        })
-        Object.keys(imageClientRectJSON).forEach((item) => {
-            profile[item] = imageClientRectJSON[item]
         })
         profile.maxScale = 1 / profile.containerScale
 
@@ -236,6 +233,12 @@
                 TransfromManager.applyTransfromStyle(imageElement)
                 TransfromManager.updateTransformTextContent(transformValueElement)
                 console.log(profile)
+            },
+            onRotate(evte, { rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
+                console.log({ rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
+            },
+            onPinch(evte, { scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
+                console.log({ scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
             },
         })
     }
