@@ -60,8 +60,8 @@ class AlertManager {
         /* ... */        
         this._contentElement.innerHTML = message
         this._containerElemeent.classList.add('alertmgr-container-show')
-        this._wrapperElement.classList.add('alertmgr-wrapper-entrystart', 'alert-transition-duringshort')
-        this._locakElement.classList.add('alertmgr-lock-entrystart', 'alert-transition-duringshort')    
+        this._wrapperElement.classList.add('alertmgr-wrapper-entrystart', 'alertmgr-transition-duringshort')
+        this._locakElement.classList.add('alertmgr-lock-entrystart', 'alertmgr-transition-duringshort')
         /* ... */
         this._fadeTask(
             () => {
@@ -69,8 +69,8 @@ class AlertManager {
                 this._locakElement.classList.remove('alertmgr-lock-entrystart')
             },
             () => {
-                this._wrapperElement.classList.remove('alert-transition-duringshort')
-                this._locakElement.classList.remove('alert-transition-duringshort')
+                this._wrapperElement.classList.remove('alertmgr-transition-duringshort')
+                this._locakElement.classList.remove('alertmgr-transition-duringshort')
             }
         )
     }
@@ -192,10 +192,10 @@ class AlertManager {
 		} else {
 			target.appendChild(spanElement)
 		}
-        spanElement.classList.add('ripple')
+        spanElement.classList.add('alertmgr-ripple')
         spanElement.addEventListener('animationend', this._rippleAnimationEndHandler)
 		spanElement.style.cssText = 'width: ' + btnClientWidth + 'px; height: ' + btnClientWidth + 'px; top: ' + y + 'px; left: ' + x + 'px;'
-		spanElement.classList.add('ripple-animation')
+		spanElement.classList.add('alertmgr-ripple-animation')
     }
 
     static _rippleAnimationEndHandler(e) {
@@ -211,8 +211,8 @@ class AlertManager {
                 this._locakElement.classList.remove('alertmgr-lock-entrystart')
                 window.setTimeout(() => {
                     end()
-                    this._wrapperElement.classList.remove('alert-transition-duringshort')
-                    this._locakElement.classList.remove('alert-transition-duringshort')
+                    this._wrapperElement.classList.remove('alertmgr-transition-duringshort')
+                    this._locakElement.classList.remove('alertmgr-transition-duringshort')
                 }, d)
             })
         })

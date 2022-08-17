@@ -28,6 +28,6 @@ var interactiveSelectedClassname = 'gesture-interactive-selected'
         }
     })
 
-    fullcaseContainerElement.style.display = 'block'
+    // fullcaseContainerElement.style.display = 'block'
 })(globalContainerElement);
 

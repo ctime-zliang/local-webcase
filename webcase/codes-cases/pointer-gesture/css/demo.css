@@ -52,6 +52,35 @@
 /****************************** ******************************/
 
 
+@keyframes commonRippleAnimation{
+    100%{
+        -webkit-transform: scale(2);
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+.common-ripple {
+	border-radius: 50%;
+	background-color: #efefef;
+	-webkit-transform: scale(0);
+	transform: scale(0);
+	position: absolute;
+	opacity: 1;
+    pointer-events: none;
+}
+.common-ripple-animation{
+	-webkit-animation: commonRippleAnimation 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+    -moz-animation: commonRippleAnimation 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+	animation: commonRippleAnimation 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+
+/****************************** ******************************/
+/****************************** ******************************/
+/****************************** ******************************/
+/****************************** ******************************/
+
+
 .view-title {
     width: 100%;
     text-align: center;

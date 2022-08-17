@@ -1,4 +1,4 @@
-@keyframes rippleAnimation{
+@keyframes alertmgrRippleAnimation{
     100%{
         -webkit-transform: scale(2);
         transform: scale(2);
@@ -6,14 +6,13 @@
     }
 }
 
-.alert-transition-duringshort {
+.alertmgr-transition-duringshort {
     -webkit-transition: all 0.15s ease-in;
     -moz-transition: all 0.15s ease-in;
     transition: all 0.15s ease-in; 
 }
 
-
-.ripple {
+.alertmgr-ripple {
 	border-radius: 50%;
 	background-color: #efefef;
 	-webkit-transform: scale(0);
@@ -22,10 +21,10 @@
 	opacity: 1;
     pointer-events: none;
 }
-.ripple-animation{
-	-webkit-animation: rippleAnimation 1s cubic-bezier(0.23, 1, 0.32, 1);
-    -moz-animation: rippleAnimation 1s cubic-bezier(0.23, 1, 0.32, 1);
-	animation: rippleAnimation 1s cubic-bezier(0.23, 1, 0.32, 1);
+.alertmgr-ripple-animation{
+	-webkit-animation: alertmgrRippleAnimation 1s cubic-bezier(0.23, 1, 0.32, 1);
+    -moz-animation: alertmgrRippleAnimation 1s cubic-bezier(0.23, 1, 0.32, 1);
+	animation: alertmgrRippleAnimation 1s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 

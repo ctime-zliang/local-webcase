@@ -292,3 +292,23 @@ function ven$zoomImageByContainer(
         benchmark,
     }
 }
+
+/**
+ * @description 递归向上查找指定 className 的元素节点
+ * @function ven$findTargetByClassName
+ * @param {HTMLElement} element HTML 元素
+ * @param {string} className class-name
+ * @param {array<DOM>} eventPath HTMLEvent Path
+ * @param {number} index 索引
+ * @return {HTMLElement|null} 
+ */
+ function ven$findTargetByClassName(element, className, eventPath, index) {
+    const nowElement = eventPath[index]
+    if ((nowElement.nodeType !== 1 && nowElement.nodeType !== 3) || !nowElement) {
+        return null
+    }
+    if (element.classList.contains(className)) {
+        return element
+    }
+    return ven$findTargetByClassName(element.parentElement, className, eventPath, ++index)
+}

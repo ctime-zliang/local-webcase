@@ -103,18 +103,48 @@
     const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
     const yAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-y"]')
 
+    const rippleAnimationEndHandler = (e) => {
+        e.currentTarget.removeEventListener('animationend', rippleAnimation)
+        e.currentTarget.parentNode.removeChild(e.currentTarget)
+    }
+    const rippleAnimation = (e) => {
+        let evte = e
+        if (typeof e.changedTouches !== 'undefined') {
+            evte = e.changedTouches[0]
+        }
+        const target = ven$findTargetByClassName(e.target, 'gesture-interactive', e.path || (e.componsedPath && e.componsedPath()), 0)
+        if (!target) {
+            return
+        }
+        const btnClientWidth = target.offsetWidth
+        const spanElement = document.createElement('span')
+        const targetClientRect = target.getBoundingClientRect()
+        const x = evte.pageX - targetClientRect.left - btnClientWidth / 2
+        const y = evte.pageY - targetClientRect.top - btnClientWidth / 2
+		if (target.firstChild) {
+			target.insertBefore(spanElement, target.firstChild)
+		} else {
+			target.appendChild(spanElement)
+		}
+        spanElement.classList.add('common-ripple')
+        spanElement.addEventListener('animationend', rippleAnimationEndHandler)
+		spanElement.style.cssText = 'width: ' + btnClientWidth + 'px; height: ' + btnClientWidth + 'px; top: ' + y + 'px; left: ' + x + 'px;'
+		spanElement.classList.add('common-ripple-animation')
+    }
+
     let eventCount = 0
     let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
         onTap(evte, { tapX, tapY }, gesture) {
             console.log({ tapX, tapY })
             window.clearTimeout(styleUpdateTimer)
-            gestureElement.classList.add(interactiveSelectedClassname)
+            // gestureElement.classList.add(interactiveSelectedClassname)
+            rippleAnimation(evte)
             countElement.textContent = ++eventCount
             xAbsoluteElement.textContent = tapX
             yAbsoluteElement.textContent = tapY
             styleUpdateTimer = window.setTimeout(() => {
-                gestureElement.classList.remove(interactiveSelectedClassname)
+                // gestureElement.classList.remove(interactiveSelectedClassname)
             }, 85)
         },
     })
