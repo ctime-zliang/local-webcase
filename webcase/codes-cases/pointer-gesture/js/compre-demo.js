@@ -119,6 +119,8 @@
 
         updateTextContent()
         bindEvent(imageLoadRes.image)
+
+        console.log(profile)
     }
     const bindEvent = (imageElement) => {
         xGesture.attach(imageElement.parentElement, {
@@ -138,7 +140,7 @@
                     TransfromManager.translateY = 0
                 } else {
                     if (profile.benchmark === 'width') {
-                        TransfromManager.translateX = -1 * offsetX * TransfromManager.scale
+                        TransfromManager.translateX = -1 * offsetX * TransfromManager.scale + offsetX
                         const translateXMax = (profile.width / 2)  * TransfromManager.scale - profile.width / 2
                         if (TransfromManager.translateX >= translateXMax) {
                             TransfromManager.translateX = translateXMax
@@ -148,7 +150,7 @@
                             TransfromManager.translateX = translateXMin
                         }
                     } else if (profile.benchmark === 'height') {
-                        TransfromManager.translateY = -1 * offsetY * TransfromManager.scale
+                        TransfromManager.translateY = -1 * offsetY * TransfromManager.scale + offsetY
                         const translateYMax = (profile.height / 2)  * TransfromManager.scale - profile.height / 2
                         if (TransfromManager.translateY >= translateYMax) {
                             TransfromManager.translateY = translateYMax
@@ -203,7 +205,7 @@
                         TransfromManager.applyTransfromStyle(imageElement)
                         TransfromManager.scale = profile.maxScale
                         if (profile.benchmark === 'width') {
-                            TransfromManager.translateX = -1 * offsetX * TransfromManager.scale
+                            TransfromManager.translateX = - 1 * offsetX * TransfromManager.scale + offsetX
                             const translateXMax = (profile.width / 2)  * TransfromManager.scale - profile.width / 2
                             if (TransfromManager.translateX >= translateXMax) {
                                 TransfromManager.translateX = translateXMax
@@ -213,7 +215,7 @@
                                 TransfromManager.translateX = translateXMin
                             }
                         } else if (profile.benchmark === 'height') {
-                            TransfromManager.translateY = -1 * offsetY * TransfromManager.scale
+                            TransfromManager.translateY = - 1 * offsetY * TransfromManager.scale + offsetY
                             const translateYMax = (profile.height / 2)  * TransfromManager.scale - profile.height / 2
                             if (TransfromManager.translateY >= translateYMax) {
                                 TransfromManager.translateY = translateYMax

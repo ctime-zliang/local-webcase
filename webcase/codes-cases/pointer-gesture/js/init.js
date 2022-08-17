@@ -49,6 +49,6 @@ var interactiveSelectedClassname = 'gesture-interactive-selected'
         pageContentElement.scrollTop = pageContentElement.scrollHeight
     })
 
-    // fullcaseContainerElement.style.display = 'block'
+    fullcaseContainerElement.style.display = 'block'
 })(globalContainerElement);
 
