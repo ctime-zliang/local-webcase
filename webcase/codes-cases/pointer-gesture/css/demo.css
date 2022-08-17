@@ -292,8 +292,10 @@
     top: 0;
     color: #eaeaea;
     padding: 5px 0;
+    background-color: rgba(0, 0, 0, 0.45);
 }
 .log-item {
     font-size: 0.115rem;
     padding: 0 5px;
+    line-height: 0.15rem;
 }

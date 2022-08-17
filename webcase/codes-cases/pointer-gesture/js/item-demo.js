@@ -423,6 +423,10 @@
             const transform = `scale(${this._scale})`
             targetElement.style.transform = transform
         }
+
+        static updateTextContent(targetElement) {
+            targetElement.textContent = this._scale
+        }
     }
 
     TransfromManager.setTransitionStyle(targetImageElement, true)
@@ -442,7 +446,7 @@
                 TransfromManager.scale = minScale
             }
             TransfromManager.applyTransfromStyle(targetImageElement)
-            scaleValueElement.textContent = TransfromManager.scale
+            TransfromManager.updateTextContent(scaleValueElement)
             styleUpdateTimer = window.setTimeout(() => {
                 gestureElement.classList.remove(interactiveSelectedClassname)
             }, 150)
@@ -490,6 +494,10 @@
             const transform = `scale(${this._scale})`
             targetElement.style.transform = transform
         }
+
+        static updateTextContent(targetElement) {
+            targetElement.textContent = this._scale
+        }
     }
 
     TransfromManager.setTransitionStyle(targetImageElement, true)
@@ -516,7 +524,7 @@
                 TransfromManager.scale = minScale
             }
             TransfromManager.applyTransfromStyle(targetImageElement)
-            pinchValueElement.textContent = TransfromManager.scale
+            TransfromManager.updateTextContent(pinchValueElement)
             styleUpdateTimer = window.setTimeout(() => {
                 gestureElement.classList.remove(interactiveSelectedClassname)
             }, 150)
@@ -564,6 +572,10 @@
             const transform = `rotate(${this._rorate}deg)`
             targetElement.style.transform = transform
         }
+
+        static updateTextContent(targetElement) {
+            targetElement.textContent = this._rorate
+        }
     }
 
     TransfromManager.setTransitionStyle(targetImageElement, true)
@@ -583,7 +595,7 @@
             yPoiner2Element.textContent = pointB.x
             TransfromManager.rorate = (TransfromManager.rorate + _rotate) % 360
             TransfromManager.applyTransfromStyle(evte.currentTarget)
-            rotateValueElement.textContent = TransfromManager.rorate
+            TransfromManager.updateTextContent(rotateValueElement)
             styleUpdateTimer = window.setTimeout(() => {
                 gestureElement.classList.remove(interactiveSelectedClassname)
             }, 150)

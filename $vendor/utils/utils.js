@@ -242,7 +242,11 @@ function ven$isOddEven(number) {
  *          height, 
  *          naturalScale, 
  *          containerScale,
- *          scaleMark
+ *          naturalWidth,
+ *          naturalHeight,
+ *          containerWidth,
+ *          containerHeight,
+ *          scaleMark,
  *      }
  * } 
  */
@@ -281,6 +285,10 @@ function ven$zoomImageByContainer(
         height, 
         naturalScale: width / naturalWidth,
         containerScale: benchmark === 'width' ? height / containerHeight : width / containerWidth,
+        naturalWidth,
+        naturalHeight,
+        containerWidth,
+        containerHeight,
         benchmark,
     }
 }

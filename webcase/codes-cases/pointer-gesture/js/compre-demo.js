@@ -1,8 +1,10 @@
 ;(function(sectionElement) {
     const imageViewContainerElement = sectionElement.querySelector('[data-tagitem="imageViewContainer"]')
     const pointerListElement = sectionElement.querySelector('[data-tagitem="pointer-list"]')
-    const scaleValueElement = sectionElement.querySelector('[data-tagitem="scale-value"]')
-    const rotateValueElement = sectionElement.querySelector('[data-tagitem="rotate-value"]')
+    const transformValueElement = sectionElement.querySelector('[data-tagitem="transform-value"]')
+    const viewportRectElement = sectionElement.querySelector('[data-tagitem="viewport-rect"]')
+    const imageNaturalRectElement = sectionElement.querySelector('[data-tagitem="image-natural-rect"]')
+    const imageScaleRectElement = sectionElement.querySelector('[data-tagitem="image-scale-rect"]')
 
     class TransfromManager {
         static _scale = 1
@@ -60,8 +62,13 @@
         }
 
         static applyTransfromStyle(targetElement) {
-            const transform = `translate3d(${this.translateX}px, ${this._translateY}px, ${this._translateZ}px) scale(${this._scale}) rotate(${this._rotate})`
+            const transform = `translate3d(${this.translateX}px, ${this._translateY}px, ${this._translateZ}px) scale(${this._scale}) rotate(${this._rotate}deg)`
             targetElement.style.transform = transform
+        }
+
+        static updateTransformTextContent(targetElement) {
+            const transform = `translate3d(${this.translateX}px, ${this._translateY}px, ${this._translateZ}px) scale(${this._scale}) rotate(${this._rotate}deg)`
+            targetElement.textContent = transform
         }
     }
 
@@ -85,21 +92,23 @@
         })
     }
     const initImageSize = (imageElement) => {
-        const containerRect = {
-            width: document.documentElement.clientWidth,
-            height: document.documentElement.clientHeight
-        }
-        const sizeResult = ven$zoomImageByContainer(imageElement.width, imageElement.height, containerRect.width, containerRect.height)
-        const top = (containerRect.height - sizeResult.height) / 2
-        const left = (containerRect.width - sizeResult.width) / 2
+        const sizeResult = ven$zoomImageByContainer(imageElement.width, imageElement.height, profile.viewportWidth, profile.viewportHeight)
         imageElement.style.height = `${sizeResult.height}px`
         imageElement.style.width = `${sizeResult.width}px`
         imageElement.style.opacity = '1'
         TransfromManager.setTransitionStyle(imageElement, false)
         TransfromManager.applyTransfromStyle(imageElement)
+        TransfromManager.updateTransformTextContent(transformValueElement)
         return sizeResult
     }
+    const updateTextContent = () => {
+        viewportRectElement.textContent = `${profile.viewportWidth} x ${profile.viewportHeight}`
+        imageNaturalRectElement.textContent = `${profile.naturalWidth} x ${profile.naturalHeight}`
+        imageScaleRectElement.textContent = `${profile.width} x ${profile.height}`
+    }
     const init = async () => {
+        profile.viewportWidth = document.documentElement.clientWidth
+        profile.viewportHeight = document.documentElement.clientHeight
         const imageLoadRes = await initImageDOM()
         const sizeResult = initImageSize(imageLoadRes.image)
         const imageClientRectJSON = imageLoadRes.image.getBoundingClientRect().toJSON()
@@ -111,6 +120,7 @@
         })
         profile.maxScale = 1 / profile.containerScale
 
+        updateTextContent()
         bindEvent(imageLoadRes.image)
     }
     const bindEvent = (imageElement) => {
@@ -118,15 +128,43 @@
             cssTouchAction: 'none',
             onWheel(evte, { scale, clientX, clientY }, gesture) {
                 profile.isWheelDispatch = true
+                const offsetX = clientX - profile.width / 2
+                const offsetY = clientY - profile.height / 2
                 TransfromManager.scale *= scale
                 if (TransfromManager.scale > profile.maxWheelScale) {
                     TransfromManager.scale = profile.maxWheelScale
                 } else if (TransfromManager.scale < profile.minWheelScale) {
                     TransfromManager.scale = profile.minWheelScale
                 }
+                if (TransfromManager.scale <= 1) {
+                    TransfromManager.translateX = 0
+                    TransfromManager.translateY = 0
+                } else {
+                    if (profile.benchmark === 'width') {
+                        TransfromManager.translateX = -1 * offsetX * TransfromManager.scale
+                        const translateXMax = (profile.width / 2)  * TransfromManager.scale - profile.width / 2
+                        if (TransfromManager.translateX >= translateXMax) {
+                            TransfromManager.translateX = translateXMax
+                        }
+                        const translateXMin = -1 * translateXMax
+                        if (TransfromManager.translateX <= translateXMin) {
+                            TransfromManager.translateX = translateXMin
+                        }
+                    } else if (profile.benchmark === 'height') {
+                        TransfromManager.translateY = -1 * offsetY * TransfromManager.scale
+                        const translateYMax = (profile.height / 2)  * TransfromManager.scale - profile.height / 2
+                        if (TransfromManager.translateY >= translateYMax) {
+                            TransfromManager.translateY = translateYMax
+                        }
+                        const translateYMin = -1 * translateYMax
+                        if (TransfromManager.translateY <= translateYMin) {
+                            TransfromManager.translateY = translateYMin
+                        }
+                    }
+                }
                 TransfromManager.setTransitionStyle(imageElement, true)
                 TransfromManager.applyTransfromStyle(imageElement)
-                scaleValueElement.textContent = TransfromManager.scale
+                TransfromManager.updateTransformTextContent(transformValueElement)
             },
             onContextmenu(evte, { clientX, clientY }, gesture) {
                 evte.preventDefault()
@@ -150,6 +188,7 @@
                 TransfromManager.translateY += diffY
                 TransfromManager.setTransitionStyle(imageElement, false)
                 TransfromManager.applyTransfromStyle(imageElement)
+                TransfromManager.updateTransformTextContent(transformValueElement)
             },
             onDoubleTap(evte, { tapX, tapY }, gesture) {
                 const offsetX = tapX - profile.width / 2
@@ -166,14 +205,26 @@
                         TransfromManager.translateY = 0
                         TransfromManager.applyTransfromStyle(imageElement)
                         TransfromManager.scale = profile.maxScale
-                        TransfromManager.translateX = -1 * offsetX * TransfromManager.scale
-                        const translateXMax = (profile.width / 2)  * TransfromManager.scale - profile.width / 2
-                        if (TransfromManager.translateX >= translateXMax) {
-                            TransfromManager.translateX = translateXMax
-                        }
-                        const translateXMin = -1 * translateXMax
-                        if (TransfromManager.translateX <= translateXMin) {
-                            TransfromManager.translateX = translateXMin
+                        if (profile.benchmark === 'width') {
+                            TransfromManager.translateX = -1 * offsetX * TransfromManager.scale
+                            const translateXMax = (profile.width / 2)  * TransfromManager.scale - profile.width / 2
+                            if (TransfromManager.translateX >= translateXMax) {
+                                TransfromManager.translateX = translateXMax
+                            }
+                            const translateXMin = -1 * translateXMax
+                            if (TransfromManager.translateX <= translateXMin) {
+                                TransfromManager.translateX = translateXMin
+                            }
+                        } else if (profile.benchmark === 'height') {
+                            TransfromManager.translateY = -1 * offsetY * TransfromManager.scale
+                            const translateYMax = (profile.height / 2)  * TransfromManager.scale - profile.height / 2
+                            if (TransfromManager.translateY >= translateYMax) {
+                                TransfromManager.translateY = translateYMax
+                            }
+                            const translateYMin = -1 * translateYMax
+                            if (TransfromManager.translateY <= translateYMin) {
+                                TransfromManager.translateY = translateYMin
+                            }
                         }
                     } else {
                         TransfromManager.scale = 1
@@ -183,7 +234,7 @@
                 }
                 TransfromManager.setTransitionStyle(imageElement, true)
                 TransfromManager.applyTransfromStyle(imageElement)
-                scaleValueElement.textContent = TransfromManager.scale
+                TransfromManager.updateTransformTextContent(transformValueElement)
                 console.log(profile)
             },
         })
