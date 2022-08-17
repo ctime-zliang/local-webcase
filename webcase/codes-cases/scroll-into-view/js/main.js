@@ -2,7 +2,7 @@
     cache: {},
     timer: null,
     run(json, runningCallback, finishedCallback) {
-        clearInterval(this.timer)
+        window.clearInterval(this.timer)
         const jsonKeys = Object.keys(json)
         let flag = true
         let sp = 0.01

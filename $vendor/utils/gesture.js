@@ -135,13 +135,14 @@
     }
     
     Gesture.prototype.init = function() {
-        this.handlePointerdownEvent = this.handlePointerdownEvent.bind(this)
-        this.handlePointermoveEvent = this.handlePointermoveEvent.bind(this)
-        this.handleTouchmoveEvent = this.handleTouchmoveEvent.bind(this)
-        this.handlePointerupEvent = this.handlePointerupEvent.bind(this)
-        this.handlePointercancelEvent = this.handlePointercancelEvent.bind(this)
-        this.handleWheelEvent = this.handleWheelEvent.bind(this)
-        this.handleContextmenuEvent = this.handleContextmenuEvent.bind(this)
+        this._handlePointerdownEvent = this.handlePointerdownEvent.bind(this)
+        this._handlePointermoveEvent = this.handlePointermoveEvent.bind(this)
+        this._handleTouchmoveEvent = this.handleTouchmoveEvent.bind(this)
+        this._handlePointerupEvent = this.handlePointerupEvent.bind(this)
+        this._handlePointercancelEvent = this.handlePointercancelEvent.bind(this)
+        this._handleWheelEvent = this.handleWheelEvent.bind(this)
+        this._handleContextmenuEvent = this.handleContextmenuEvent.bind(this)
+        this._handleClickEvent = this.handleClickEvent.bind(this)
         /* ... */
         this.setTouchAction(this.options.cssTouchAction)
         this.bindEvent()
@@ -156,11 +157,76 @@
         this.containerElements.forEach((item) => {
             item.style.touchAction = value
         })
+        return this
     }
 
     Gesture.prototype.getAllPointers = function() {
         return this._$profile.pointers
     }
+
+    Gesture.prototype.setOptionItem = function(key, value) {
+        this.options[key] = value
+        return this
+    }
+
+    Gesture.prototype.onPointerdown = function(callback) {
+        this.options.onPointerdown = callback
+        return this
+    }
+
+    Gesture.prototype.onPointerup = function(callback) {
+        this.options.onPointerup = callback
+        return this
+    }
+    
+    Gesture.prototype.onPointermove = function(callback) {
+        this.options.onPointermove = callback
+        return this
+    }
+
+    Gesture.prototype.onPpointercancel = function(callback) {
+        this.options.onPpointercancel = callback
+        return this
+    }
+
+    Gesture.prototype.onTap = function(callback) {
+        this.options.onTap = callback
+        return this
+    }
+
+    Gesture.prototype.onLongTap = function(callback) {
+        this.options.onLongTap = callback
+        return this
+    }
+
+    Gesture.prototype.onSingleTap = function(callback) {
+        this.options.onSingleTap = callback
+        return this
+    }
+
+    Gesture.prototype.onDoubleTap = function(callback) {
+        this.options.onDoubleTap = callback
+        return this
+    }
+
+    Gesture.prototype.onDragMove = function(callback) {
+        this.options.onDragMove = callback
+        return this
+    }
+
+    Gesture.prototype.onWheel = function(callback) {
+        this.options.onWheel = callback
+        return this
+    }
+
+    Gesture.prototype.onClick = function(callback) {
+        this.options.onClick = callback
+        return this
+    }
+
+    /****************************** ******************************/
+    /****************************** ******************************/
+    /****************************** ******************************/
 
     Gesture.prototype.getCenter = function(pointA, pointB) {
         return { x: (pointA.x + pointB.x) / 2, y: (pointA.y + pointB.y) / 2 }
@@ -610,27 +676,41 @@
         )
     }
 
+    Gesture.prototype.handleClickEvent = function(evte) {
+        this.options.onClick && this.options.onClick.call(
+            undefined, 
+            evte, 
+            { 
+                clientX: evte.clientX,
+                clientY: evte.clientY
+            },
+            this
+        )
+    }
+
     Gesture.prototype.bindEvent = function() {
         this.containerElements.forEach((item) => {
-            item.addEventListener('pointerdown', this.handlePointerdownEvent)
-            item.addEventListener('pointermove', this.handlePointermoveEvent)
-            item.addEventListener('touchmove', this.handleTouchmoveEvent)
-            item.addEventListener('pointerup', this.handlePointerupEvent)
-            item.addEventListener('pointercancel', this.handlePointercancelEvent)
-            item.addEventListener('wheel', this.handleWheelEvent)
-            item.addEventListener('contextmenu', this.handleContextmenuEvent)
+            item.addEventListener('pointerdown', this._handlePointerdownEvent)
+            item.addEventListener('pointermove', this._handlePointermoveEvent)
+            item.addEventListener('touchmove', this._handleTouchmoveEvent)
+            item.addEventListener('pointerup', this._handlePointerupEvent)
+            item.addEventListener('pointercancel', this._handlePointercancelEvent)
+            item.addEventListener('wheel', this._handleWheelEvent)
+            item.addEventListener('contextmenu', this._handleContextmenuEvent)
+            item.addEventListener('click', this._handleClickEvent)
         })
     }
 
     Gesture.prototype.unBindEvent = function() {
         this.containerElements.forEach((item) => {
-            item.removeEventListener('pointerdown', this.handlePointerdownEvent)
-            item.removeEventListener('pointermove', this.handlePointermoveEvent)
-            item.removeEventListener('touchmove', this.handleTouchmoveEvent)
-            item.removeEventListener('pointerup', this.handlePointerupEvent)
-            item.removeEventListener('pointercancel', this.handlePointercancelEvent)
-            item.removeEventListener('wheel', this.handleWheelEvent)
-            item.removeEventListener('contextmenu', this.handleContextmenuEvent)
+            item.removeEventListener('pointerdown', this._handlePointerdownEvent)
+            item.removeEventListener('pointermove', this._handlePointermoveEvent)
+            item.removeEventListener('touchmove', this._handleTouchmoveEvent)
+            item.removeEventListener('pointerup', this._handlePointerupEvent)
+            item.removeEventListener('pointercancel', this._handlePointercancelEvent)
+            item.removeEventListener('wheel', this._handleWheelEvent)
+            item.removeEventListener('contextmenu', this._handleContextmenuEvent)
+            item.removeEventListener('click', this._handleClickEvent)
         })
     }
 

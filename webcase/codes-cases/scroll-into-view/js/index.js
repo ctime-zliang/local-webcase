@@ -11,12 +11,12 @@ const Cache = {
 }
 
 function move(obj, target, speed, callback) {
-    clearInterval(obj.timer)
+    window.clearInterval(obj.timer)
     let current = parseInt(Cache.get())
     if(current > target) {
         speed = -speed
     }
-    obj.timer = setInterval(() => {
+    obj.timer = window.setInterval(() => {
         let oldValue = parseInt(Cache.get())
         let newValue = oldValue + speed
         if ((speed < 0 && newValue < target) || (speed > 0 && newValue > target)) {
@@ -24,7 +24,7 @@ function move(obj, target, speed, callback) {
         }
         Cache.set(newValue)
         if (newValue == target) {
-            clearInterval(obj.timer)
+            window.clearInterval(obj.timer)
             callback && callback()
         }
     }, 16.67)

@@ -50,12 +50,16 @@ class AlertManager {
     }
 
     static open(message, options = {}) {
-        if (options.callback) {
-            this._callback = options.callback
-        }
-        if (options._btns) {
-            this._btns = options._btns
-            this._updateBtnsView()
+        if (options instanceof Function) {
+            this._callback = options
+        } else {
+            if (options.callback) {
+                this._callback = options.callback
+            }
+            if (options.btns) {
+                this._btns = options.btns
+                this._updateBtnsView()
+            }
         }
         /* ... */        
         this._contentElement.innerHTML = message
@@ -81,11 +85,13 @@ class AlertManager {
 
     static bindCallback(callback) {
         this._callback = callback
+        return this
     }
 
     static setBtns(_btns) {
         this._btns = _btns
         this._updateBtnsView()
+        return this
     }
 
     /****************************** ******************************/

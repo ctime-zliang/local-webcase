@@ -185,7 +185,7 @@ function ven$insertArray2Array(
  * @function ven$createElementFragment
  * @param {string} htmlString HTML 字符串
  * @param {boolean} useDOMParser 是否使用 DOMParser API
- * @return {Element} 
+ * @return {htmllement} 
  */
 function ven$createElementFragment(htmlString, useDOMParser = false) {
     if (useDOMParser) {
@@ -198,7 +198,7 @@ function ven$createElementFragment(htmlString, useDOMParser = false) {
 /**
  * @description 使用 setTimeout 模拟 setInterval
  * @function ven$interval
- * @param {Function} fn 执行函数
+ * @param {function} fn 执行函数
  * @param {number} interval 间隔时间
  * @param {object} scope 指定 fn 的作用域
  * @return {{ timer: null }} 
@@ -296,11 +296,11 @@ function ven$zoomImageByContainer(
 /**
  * @description 递归向上查找指定 className 的元素节点
  * @function ven$findTargetByClassName
- * @param {HTMLElement} element HTML 元素
+ * @param {htmllement} element HTML 元素
  * @param {string} className class-name
- * @param {array<DOM>} eventPath HTMLEvent Path
+ * @param {array<Element>} eventPath HTMLEvent Path
  * @param {number} index 索引
- * @return {HTMLElement|null} 
+ * @return {htmllement|null} 
  */
  function ven$findTargetByClassName(element, className, eventPath, index) {
     const nowElement = eventPath[index]
