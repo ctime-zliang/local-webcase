@@ -246,7 +246,7 @@ function ven$isOddEven(number) {
  *          naturalHeight,
  *          containerWidth,
  *          containerHeight,
- *          scaleMark,
+ *          benchmark,
  *      }
  * } 
  */
