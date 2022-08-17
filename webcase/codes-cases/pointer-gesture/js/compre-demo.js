@@ -60,11 +60,8 @@
         }
 
         static applyTransfromStyle(targetElement) {
-            targetElement.style.transform = this.getString()
-        }
-
-        static getString() {
-            return `translate3d(${this.translateX}px, ${this._translateY}px, ${this._translateZ}px) scale(${this._scale}) rotate(${this._rotate})`
+            const transform = `translate3d(${this.translateX}px, ${this._translateY}px, ${this._translateZ}px) scale(${this._scale}) rotate(${this._rotate})`
+            targetElement.style.transform = transform
         }
     }
 
@@ -87,8 +84,11 @@
             imageViewContainerElement.appendChild(imageElement)
         })
     }
-    const initImageSize = (imageElement, containerElement) => {
-        const containerRect = containerElement.getBoundingClientRect()
+    const initImageSize = (imageElement) => {
+        const containerRect = {
+            width: document.documentElement.clientWidth,
+            height: document.documentElement.clientHeight
+        }
         const sizeResult = ven$zoomImageByContainer(imageElement.width, imageElement.height, containerRect.width, containerRect.height)
         const top = (containerRect.height - sizeResult.height) / 2
         const left = (containerRect.width - sizeResult.width) / 2
@@ -101,7 +101,7 @@
     }
     const init = async () => {
         const imageLoadRes = await initImageDOM()
-        const sizeResult = initImageSize(imageLoadRes.image, imageViewContainerElement)
+        const sizeResult = initImageSize(imageLoadRes.image)
         const imageClientRectJSON = imageLoadRes.image.getBoundingClientRect().toJSON()
         Object.keys(sizeResult).forEach((item) => {
             profile[item] = sizeResult[item]
@@ -126,6 +126,7 @@
                 }
                 TransfromManager.setTransitionStyle(imageElement, true)
                 TransfromManager.applyTransfromStyle(imageElement)
+                scaleValueElement.textContent = TransfromManager.scale
             },
             onContextmenu(evte, { clientX, clientY }, gesture) {
                 evte.preventDefault()

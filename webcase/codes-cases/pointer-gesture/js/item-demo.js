@@ -1,6 +1,8 @@
-/**
- * Pointer Down
- */
+/****************************** ******************************/
+/****************************** ******************************/
+/** Pointer Down ***/
+/****************************** ******************************/
+/****************************** ******************************/
 ;(function(sectionElement) {
     const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
@@ -9,7 +11,6 @@
 
     let eventCount = 0
     let styleUpdateTimer = null
-
     xGesture.attach(gestureElement, {
         onPointerdown(evte, { clientX, clientY }, gesture) {
             console.log({ clientX, clientY })
@@ -26,10 +27,12 @@
 })(globalContainerElement.querySelector('[data-tagitem="pointerdown"]'));
 
 
-/**
- * Pointer Up
- */
- ;(function(sectionElement) {
+/****************************** ******************************/
+/****************************** ******************************/
+/** Pointer Up ***/
+/****************************** ******************************/
+/****************************** ******************************/
+;(function(sectionElement) {
     const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
     const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
@@ -37,7 +40,6 @@
 
     let eventCount = 0
     let styleUpdateTimer = null
-
     xGesture.attach(gestureElement, {
         onPointerup(evte, { clientX, clientY }, gesture) {
             console.log({ clientX, clientY })
@@ -54,10 +56,12 @@
 })(globalContainerElement.querySelector('[data-tagitem="pointerup"]'));
 
 
-/**
- * Pointer Move
- */
- ;(function(sectionElement) {
+/****************************** ******************************/
+/****************************** ******************************/
+/** Pointer Move ***/
+/****************************** ******************************/
+/****************************** ******************************/
+;(function(sectionElement) {
     const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="absolute-x"]')
     const yAbsoluteElement = sectionElement.querySelector('[data-tagitem="absolute-y"]')
@@ -66,7 +70,6 @@
 
     let styleUpdateTimer = null
     let gestureElementRect = null
-
     xGesture.attach(gestureElement, {
         cssTouchAction: 'none',
         onPointermove(evte, { clientX, clientY }, gesture) {
@@ -89,10 +92,12 @@
 })(globalContainerElement.querySelector('[data-tagitem="pointermove"]'));
 
 
-/**
- * Tap
- */
- ;(function(sectionElement) {
+/****************************** ******************************/
+/****************************** ******************************/
+/** Tap ***/
+/****************************** ******************************/
+/****************************** ******************************/
+;(function(sectionElement) {
     const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
     const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
@@ -100,7 +105,6 @@
 
     let eventCount = 0
     let styleUpdateTimer = null
-
     xGesture.attach(gestureElement, {
         onTap(evte, { tapX, tapY }, gesture) {
             console.log({ tapX, tapY })
@@ -117,10 +121,12 @@
 })(globalContainerElement.querySelector('[data-tagitem="tap"]'));
 
 
-/**
- * Long Tap
- */
- ;(function(sectionElement) {
+/****************************** ******************************/
+/****************************** ******************************/
+/** Long Tap ***/
+/****************************** ******************************/
+/****************************** ******************************/
+;(function(sectionElement) {
     const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
     const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
@@ -130,10 +136,6 @@
     let styleUpdateTimer = null
 
     AlertManager.setBtns([AlertManager.defaultConfirmBtn, AlertManager.defaultCancelBtn])
-    AlertManager.bindCallback(function(tag) {
-        console.log(tag)
-        this.close()
-    })
 
     xGesture.attach(gestureElement, {
         isPreventDefaultInLongDown: true,
@@ -144,8 +146,12 @@
             countElement.textContent = ++eventCount
             xAbsoluteElement.textContent = tapX
             yAbsoluteElement.textContent = tapY
-            AlertManager.open(`触发了 longTap 事件`)
-            // alert(`触发了 longTap 事件.`)
+            AlertManager.open(`触发了 longTap 事件`, {
+                callback(tag) {
+                    console.log(tag)
+                    this.close()
+                }
+            })
             styleUpdateTimer = window.setTimeout(() => {
                 gestureElement.classList.remove(interactiveSelectedClassname)
             }, 85)
@@ -154,10 +160,12 @@
 })(globalContainerElement.querySelector('[data-tagitem="longtap"]'));
 
 
-/**
- * Single Tap
- */
- ;(function(sectionElement) {
+/****************************** ******************************/
+/****************************** ******************************/
+/** Single Tap ***/
+/****************************** ******************************/
+/****************************** ******************************/
+;(function(sectionElement) {
     const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
     const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
@@ -165,7 +173,6 @@
 
     let eventCount = 0
     let styleUpdateTimer = null
-
     xGesture.attach(gestureElement, {
         onSingleTap(evte, { tapX, tapY }, gesture) {
             console.log({ tapX, tapY })
@@ -182,10 +189,12 @@
 })(globalContainerElement.querySelector('[data-tagitem="singletap"]'));
 
 
-/**
- * Double Tap
- */
- ;(function(sectionElement) {
+/****************************** ******************************/
+/****************************** ******************************/
+/** Double Tap ***/
+/****************************** ******************************/
+/****************************** ******************************/
+;(function(sectionElement) {
     const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
     const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
@@ -193,7 +202,6 @@
 
     let eventCount = 0
     let styleUpdateTimer = null
-
     xGesture.attach(gestureElement, {
         onDoubleTap(evte, { tapX, tapY }, gesture) {
             console.log({ tapX, tapY })
@@ -210,10 +218,12 @@
 })(globalContainerElement.querySelector('[data-tagitem="doubletap"]'));
 
 
-/**
- * Drag Move
- */
- ;(function(sectionElement) {
+/****************************** ******************************/
+/****************************** ******************************/
+/** Drag Move ***/
+/****************************** ******************************/
+/****************************** ******************************/
+;(function(sectionElement) {
     const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
     const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="absolute-x"]')
     const yAbsoluteElement = sectionElement.querySelector('[data-tagitem="absolute-y"]')
@@ -228,7 +238,6 @@
 
     let styleUpdateTimer = null
     let gestureElementRect = null
-
     xGesture.attach(gestureElement, {
         cssTouchAction: 'none',
         onDragMove(evte, { movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY }, gesture) {
@@ -254,52 +263,12 @@
 })(globalContainerElement.querySelector('[data-tagitem="dragmove"]'));
 
 
-/**
- * Wheel
- */
- ;(function(sectionElement) {
-    const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
-    const wheelImageElement = sectionElement.querySelector('[data-tagitem="wheel-image"]')
-    
-    class TransfromManager {
-        static scale = 1
-
-        static setScale(value) {
-            this.scale = value
-        }
-
-        static getScale() {
-            return this.scale
-        }
-
-        static getString() {
-            return `scale(${this.scale})`
-        }
-    }
-
-    let wheelScale = 1.0
-    let maxWheelScale = 10
-    let minWheelScale = 0.1
-    xGesture.attach(gestureElement, {
-        onWheel(evte, { scale, clientX, clientY }, gesture) {
-            console.log({ scale, clientX, clientY })
-            wheelScale *= scale
-            if (wheelScale > maxWheelScale) {
-                wheelScale = maxWheelScale
-            } else if (wheelScale < minWheelScale) {
-                wheelScale = minWheelScale
-            }
-            TransfromManager.setScale(wheelScale)
-            wheelImageElement.style.transform = TransfromManager.getString()
-        },
-    })
-})(globalContainerElement.querySelector('[data-tagitem="wheel"]'));
-
-
-/**
- * Swipe
- */
- ;(function(sectionElement) {
+/****************************** ******************************/
+/****************************** ******************************/
+/** Swipe ***/
+/****************************** ******************************/
+/****************************** ******************************/
+;(function(sectionElement) {
     class SwipeManager {
         static translateX = 0
         static swipeContainerElement = null
@@ -421,12 +390,76 @@
 })(globalContainerElement.querySelector('[data-tagitem="swipe"]'));
 
 
-/**
- * Pinch
- */
- ;(function(sectionElement) {
+/****************************** ******************************/
+/****************************** ******************************/
+/** Wheel ***/
+/****************************** ******************************/
+/****************************** ******************************/
+;(function(sectionElement) {
     const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
+    const targetImageElement = sectionElement.querySelector('[data-tagitem="target-image"]')
     const scaleValueElement = sectionElement.querySelector('[data-tagitem="scale-value"]')
+
+    class TransfromManager {
+        static _scale = 1
+
+        static set scale(value) {
+            this._scale = value
+        }
+
+        static get scale() {
+            return this._scale
+        }
+
+        static setTransitionStyle(targetElement, use = false) {
+            if (!use) {
+                targetElement.style.transition = 'none'
+                return
+            }
+            targetElement.style.transition = 'transform .15s ease'
+        }
+
+        static applyTransfromStyle(targetElement) {
+            const transform = `scale(${this._scale})`
+            targetElement.style.transform = transform
+        }
+    }
+
+    TransfromManager.setTransitionStyle(targetImageElement, true)
+
+    let styleUpdateTimer = null
+    let maxScale = 10
+    let minScale = 0.1
+    xGesture.attach(gestureElement, {
+        onWheel(evte, { scale, clientX, clientY }, gesture) {
+            console.log({ scale, clientX, clientY })
+            window.clearTimeout(styleUpdateTimer)
+            gestureElement.classList.add(interactiveSelectedClassname)
+            TransfromManager.scale *= scale
+            if (TransfromManager.scale > maxScale) {
+                TransfromManager.scale = maxScale
+            } else if (TransfromManager.scale < minScale) {
+                TransfromManager.scale = minScale
+            }
+            TransfromManager.applyTransfromStyle(targetImageElement)
+            scaleValueElement.textContent = TransfromManager.scale
+            styleUpdateTimer = window.setTimeout(() => {
+                gestureElement.classList.remove(interactiveSelectedClassname)
+            }, 150)
+        },
+    })
+})(globalContainerElement.querySelector('[data-tagitem="wheel"]'));
+
+
+/****************************** ******************************/
+/****************************** ******************************/
+/** Pinch ***/
+/****************************** ******************************/
+/****************************** ******************************/
+;(function(sectionElement) {
+    const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
+    const targetImageElement = sectionElement.querySelector('[data-tagitem="target-image"]')
+    const pinchValueElement = sectionElement.querySelector('[data-tagitem="pinch-value"]')
     const xCenterElement = sectionElement.querySelector('[data-tagitem="center-x"]')
     const yCenterElement = sectionElement.querySelector('[data-tagitem="center-y"]')
     const xPoiner1Element = sectionElement.querySelector('[data-tagitem="pointer1-x"]')
@@ -434,21 +467,56 @@
     const xPoiner2Element = sectionElement.querySelector('[data-tagitem="pointer2-x"]')
     const yPoiner2Element = sectionElement.querySelector('[data-tagitem="pointer2-y"]')
 
-    let styleUpdateTimer = null
+    class TransfromManager {
+        static _scale = 1
 
+        static set scale(value) {
+            this._scale = value
+        }
+
+        static get scale() {
+            return this._scale
+        }
+
+        static setTransitionStyle(targetElement, use = false) {
+            if (!use) {
+                targetElement.style.transition = 'none'
+                return
+            }
+            targetElement.style.transition = 'transform .15s ease'
+        }
+
+        static applyTransfromStyle(targetElement) {
+            const transform = `scale(${this._scale})`
+            targetElement.style.transform = transform
+        }
+    }
+
+    TransfromManager.setTransitionStyle(targetImageElement, true)
+
+    let styleUpdateTimer = null
+    let maxWScale = 10
+    let minScale = 0.1
     xGesture.attach(gestureElement, {
         cssTouchAction: 'none',
         onPinch(evte, { scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
             console.log({ scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
-            scaleValueElement.textContent = scale
             xCenterElement.textContent = centerX
             yCenterElement.textContent = centerY
             xPoiner1Element.textContent = pointA.x
             yPoiner1Element.textContent = pointA.x
             xPoiner2Element.textContent = pointB.x
             yPoiner2Element.textContent = pointB.x
+            TransfromManager.scale *= scale
+            if (TransfromManager.scale > maxWScale) {
+                TransfromManager.scale = maxWScale
+            } else if (TransfromManager.scale < minScale) {
+                TransfromManager.scale = minScale
+            }
+            TransfromManager.applyTransfromStyle(targetImageElement)
+            pinchValueElement.textContent = TransfromManager.scale
             styleUpdateTimer = window.setTimeout(() => {
                 gestureElement.classList.remove(interactiveSelectedClassname)
             }, 150)
@@ -457,11 +525,14 @@
 })(globalContainerElement.querySelector('[data-tagitem="pinch"]'));
 
 
-/**
- * Rotate
- */
- ;(function(sectionElement) {
+/****************************** ******************************/
+/****************************** ******************************/
+/** Rotate ***/
+/****************************** ******************************/
+/****************************** ******************************/
+;(function(sectionElement) {
     const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
+    const targetImageElement = sectionElement.querySelector('[data-tagitem="target-image"]')
     const rotateValueElement = sectionElement.querySelector('[data-tagitem="rotate-value"]')
     const xCenterElement = sectionElement.querySelector('[data-tagitem="center-x"]')
     const yCenterElement = sectionElement.querySelector('[data-tagitem="center-y"]')
@@ -470,21 +541,49 @@
     const xPoiner2Element = sectionElement.querySelector('[data-tagitem="pointer2-x"]')
     const yPoiner2Element = sectionElement.querySelector('[data-tagitem="pointer2-y"]')
 
-    let styleUpdateTimer = null
+    class TransfromManager {
+        static _rorate = 1
 
+        static set rorate(value) {
+            this._rorate = value
+        }
+
+        static get rorate() {
+            return this._rorate
+        }
+
+        static setTransitionStyle(targetElement, use = false) {
+            if (!use) {
+                targetElement.style.transition = 'none'
+                return
+            }
+            targetElement.style.transition = 'transform .15s ease'
+        }
+
+        static applyTransfromStyle(targetElement) {
+            const transform = `rotate(${this._rorate}deg)`
+            targetElement.style.transform = transform
+        }
+    }
+
+    TransfromManager.setTransitionStyle(targetImageElement, true)
+
+    let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
         cssTouchAction: 'none',
         onPinch(evte, { rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
             console.log({ rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
-            rotateValueElement.textContent = rotate
             xCenterElement.textContent = centerX
             yCenterElement.textContent = centerY
             xPoiner1Element.textContent = pointA.x
             yPoiner1Element.textContent = pointA.x
             xPoiner2Element.textContent = pointB.x
             yPoiner2Element.textContent = pointB.x
+            TransfromManager.rorate = (TransfromManager.rorate + _rotate) % 360
+            TransfromManager.applyTransfromStyle(evte.currentTarget)
+            rotateValueElement.textContent = TransfromManager.rorate
             styleUpdateTimer = window.setTimeout(() => {
                 gestureElement.classList.remove(interactiveSelectedClassname)
             }, 150)
