@@ -19,7 +19,7 @@
     width: 100vw;
     height: 45px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     align-content: center;
     flex-wrap: nowrap;
@@ -29,17 +29,17 @@
 
 .page-content {
     width: 100%;
-    height: calc(100vh - 45px - 30px);
+    height: calc(100vh - 45px - 40px);
     overflow: auto;
 }
 
 .page-footer {
     width: 100vw;
-    height: 30px;
+    height: 40px;
     background-color: #f9faf9;
     border-top: 1px solid #efefef;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     align-content: center;
     flex-wrap: nowrap;

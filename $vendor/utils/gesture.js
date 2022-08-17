@@ -144,11 +144,13 @@
         this._handleContextmenuEvent = this.handleContextmenuEvent.bind(this)
         this._handleClickEvent = this.handleClickEvent.bind(this)
         /* ... */
+        this.setDraggableStatus('false')
         this.setTouchAction(this.options.cssTouchAction)
         this.bindEvent()
     }
 
     Gesture.prototype.destory = function() {
+        this.setDraggableStatus('auto')
         this.setTouchAction('initial')
         this.unBindEvent()
     }
@@ -158,6 +160,12 @@
             item.style.touchAction = value
         })
         return this
+    }
+
+    Gesture.prototype.setDraggableStatus = function(status = 'auto') {
+        this.containerElements.forEach((item) => {
+            item.setAttribute('draggable', status)
+        })
     }
 
     Gesture.prototype.getAllPointers = function() {
@@ -342,6 +350,9 @@
         }
         _$profile.pointers.push(evte)
         _$profile.isPointerdown = true
+        if (evte.target.draggable) {
+            evte.target.setAttribute('draggable', 'false')
+        }
         if (_$profile.pointers.length === 1) {
             window.clearTimeout(_$profile.singleTapTimeout);
             evte.currentTarget.setPointerCapture(evte.pointerId)
@@ -554,6 +565,7 @@
         const idx = this.updatePointers(evte, POINTER_ITEM_DELETE)
         if (_$profile.pointers.length === 0) {
             window.clearTimeout(this._$profile.longTapTimeout)
+            evte.target.setAttribute('draggable', 'auto')
             _$profile.isPointerdown = false
             _$profile.movePositionRange = ''
             _$profile.moveDirection = ''
