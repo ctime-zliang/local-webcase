@@ -127,39 +127,11 @@
             cssTouchAction: 'none',
             onWheel(evte, { scale, clientX, clientY }, gesture) {
                 profile.isWheelDispatch = true
-                const offsetX = clientX - profile.width / 2
-                const offsetY = clientY - profile.height / 2
                 TransfromManager.scale *= scale
                 if (TransfromManager.scale > profile.maxWheelScale) {
                     TransfromManager.scale = profile.maxWheelScale
                 } else if (TransfromManager.scale < profile.minWheelScale) {
                     TransfromManager.scale = profile.minWheelScale
-                }
-                if (TransfromManager.scale <= 1) {
-                    TransfromManager.translateX = 0
-                    TransfromManager.translateY = 0
-                } else {
-                    if (profile.benchmark === 'width') {
-                        TransfromManager.translateX = -1 * offsetX * TransfromManager.scale + offsetX
-                        const translateXMax = (profile.width / 2)  * TransfromManager.scale - profile.width / 2
-                        if (TransfromManager.translateX >= translateXMax) {
-                            TransfromManager.translateX = translateXMax
-                        }
-                        const translateXMin = -1 * translateXMax
-                        if (TransfromManager.translateX <= translateXMin) {
-                            TransfromManager.translateX = translateXMin
-                        }
-                    } else if (profile.benchmark === 'height') {
-                        TransfromManager.translateY = -1 * offsetY * TransfromManager.scale + offsetY
-                        const translateYMax = (profile.height / 2)  * TransfromManager.scale - profile.height / 2
-                        if (TransfromManager.translateY >= translateYMax) {
-                            TransfromManager.translateY = translateYMax
-                        }
-                        const translateYMin = -1 * translateYMax
-                        if (TransfromManager.translateY <= translateYMin) {
-                            TransfromManager.translateY = translateYMin
-                        }
-                    }
                 }
                 TransfromManager.setTransitionStyle(imageElement, true)
                 TransfromManager.applyTransfromStyle(imageElement)
@@ -190,51 +162,43 @@
                 TransfromManager.updateTransformTextContent(transformValueElement)
             },
             onDoubleTap(evte, { tapX, tapY }, gesture) {
-                const offsetX = tapX - profile.width / 2
-                const offsetY = tapX - profile.height / 2
-                if (profile.isWheelDispatch) {
+                const offsetX = tapX - profile.containerWidth / 2
+                const offsetY = tapY - profile.containerHeight / 2
+                const translateOffsetX = offsetX / TransfromManager.scale - TransfromManager.translateX / TransfromManager.scale
+                const translateOffsetY = offsetY / TransfromManager.scale - TransfromManager.translateY / TransfromManager.scale
+                if (TransfromManager.scale <= 1) {
+                    TransfromManager.scale = profile.maxScale
+                    if (profile.benchmark === 'width') {
+                        TransfromManager.translateX = - 1 * (translateOffsetX * TransfromManager.scale)
+                        const movePositiveMax = profile.containerWidth / 2 * TransfromManager.scale - profile.containerWidth / 2
+                        const moveNegativeMax = -1 * movePositiveMax
+                        if (TransfromManager.translateX >= movePositiveMax) {
+                            TransfromManager.translateX = movePositiveMax
+                        }
+                        if (TransfromManager.translateX <= moveNegativeMax) {
+                            TransfromManager.translateX = moveNegativeMax
+                        }
+                        TransfromManager.translateY = 0
+                    } else if (profile.benchmark === 'height') {
+                        TransfromManager.translateY = - 1 * (translateOffsetY * TransfromManager.scale)
+                        const movePositiveMax = profile.containerHeight / 2 * TransfromManager.scale - profile.containerHeight / 2
+                        const moveNegativeMax = -1 * movePositiveMax
+                        if (TransfromManager.translateY >= movePositiveMax) {
+                            TransfromManager.translateY = movePositiveMax
+                        }
+                        if (TransfromManager.translateY <= moveNegativeMax) {
+                            TransfromManager.translateY = moveNegativeMax
+                        }
+                        TransfromManager.translateX = 0
+                    }
+                } else {
+                    TransfromManager.scale = 1
                     TransfromManager.translateX = 0
                     TransfromManager.translateY = 0
-                    TransfromManager.scale = 1
-                    profile.isWheelDispatch = false
-                } else {
-                    if (TransfromManager.scale <= 1) {
-                        TransfromManager.setTransitionStyle(imageElement, false)
-                        TransfromManager.translateX = 0
-                        TransfromManager.translateY = 0
-                        TransfromManager.applyTransfromStyle(imageElement)
-                        TransfromManager.scale = profile.maxScale
-                        if (profile.benchmark === 'width') {
-                            TransfromManager.translateX = - 1 * offsetX * TransfromManager.scale + offsetX
-                            const translateXMax = (profile.width / 2)  * TransfromManager.scale - profile.width / 2
-                            if (TransfromManager.translateX >= translateXMax) {
-                                TransfromManager.translateX = translateXMax
-                            }
-                            const translateXMin = -1 * translateXMax
-                            if (TransfromManager.translateX <= translateXMin) {
-                                TransfromManager.translateX = translateXMin
-                            }
-                        } else if (profile.benchmark === 'height') {
-                            TransfromManager.translateY = - 1 * offsetY * TransfromManager.scale + offsetY
-                            const translateYMax = (profile.height / 2)  * TransfromManager.scale - profile.height / 2
-                            if (TransfromManager.translateY >= translateYMax) {
-                                TransfromManager.translateY = translateYMax
-                            }
-                            const translateYMin = -1 * translateYMax
-                            if (TransfromManager.translateY <= translateYMin) {
-                                TransfromManager.translateY = translateYMin
-                            }
-                        }
-                    } else {
-                        TransfromManager.scale = 1
-                        TransfromManager.translateX = 0
-                        TransfromManager.translateY = 0
-                    }
                 }
                 TransfromManager.setTransitionStyle(imageElement, true)
                 TransfromManager.applyTransfromStyle(imageElement)
                 TransfromManager.updateTransformTextContent(transformValueElement)
-                console.log(profile)
             },
             onRotate(evte, { rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
                 console.log({ rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
