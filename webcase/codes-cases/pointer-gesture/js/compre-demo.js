@@ -75,7 +75,7 @@
     const profile = {
         maxScale: 3,
         minScale: 1,
-        maxWheelScale:  10,
+        maxWheelScale:  16,
         minWheelScale:  0.1,
         isWheelDispatch: false,
         pointerdownTarget: null,
@@ -127,11 +127,22 @@
             cssTouchAction: 'none',
             onWheel(evte, { scale, clientX, clientY }, gesture) {
                 profile.isWheelDispatch = true
+                const offsetX = clientX - profile.containerWidth / 2
+                const offsetY = clientY - profile.containerHeight / 2
+                const translateOffsetX = offsetX / TransfromManager.scale - TransfromManager.translateX / TransfromManager.scale
+                const translateOffsetY = offsetY / TransfromManager.scale - TransfromManager.translateY / TransfromManager.scale
                 TransfromManager.scale *= scale
                 if (TransfromManager.scale > profile.maxWheelScale) {
                     TransfromManager.scale = profile.maxWheelScale
                 } else if (TransfromManager.scale < profile.minWheelScale) {
                     TransfromManager.scale = profile.minWheelScale
+                }
+                if (profile.benchmark === 'width') {
+                    TransfromManager.translateX = - 1 * (translateOffsetX * TransfromManager.scale - offsetX)
+                    TransfromManager.translateY = 0
+                } else if (profile.benchmark === 'height') {
+                    TransfromManager.translateY = - 1 * (translateOffsetY * TransfromManager.scale - offsetY)
+                    TransfromManager.translateX = 0
                 }
                 TransfromManager.setTransitionStyle(imageElement, true)
                 TransfromManager.applyTransfromStyle(imageElement)
