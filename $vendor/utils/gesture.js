@@ -137,7 +137,6 @@
     Gesture.prototype.init = function() {
         this._handlePointerdownEvent = this.handlePointerdownEvent.bind(this)
         this._handlePointermoveEvent = this.handlePointermoveEvent.bind(this)
-        this._handleTouchmoveEvent = this.handleTouchmoveEvent.bind(this)
         this._handlePointerupEvent = this.handlePointerupEvent.bind(this)
         this._handlePointercancelEvent = this.handlePointercancelEvent.bind(this)
         this._handleWheelEvent = this.handleWheelEvent.bind(this)
@@ -542,10 +541,6 @@
         )
     }
 
-    Gesture.prototype.handleTouchmoveEvent = function(evte) {
-        // evte.preventDefault()
-    }
-
     Gesture.prototype.handlePointerupEvent = function(evte) {
         const _$profile = this._$profile
         if (!_$profile.isPointerdown) {
@@ -692,7 +687,6 @@
         this.containerElements.forEach((item) => {
             item.addEventListener('pointerdown', this._handlePointerdownEvent)
             item.addEventListener('pointermove', this._handlePointermoveEvent)
-            item.addEventListener('touchmove', this._handleTouchmoveEvent)
             item.addEventListener('pointerup', this._handlePointerupEvent)
             item.addEventListener('pointercancel', this._handlePointercancelEvent)
             item.addEventListener('wheel', this._handleWheelEvent)
@@ -705,7 +699,6 @@
         this.containerElements.forEach((item) => {
             item.removeEventListener('pointerdown', this._handlePointerdownEvent)
             item.removeEventListener('pointermove', this._handlePointermoveEvent)
-            item.removeEventListener('touchmove', this._handleTouchmoveEvent)
             item.removeEventListener('pointerup', this._handlePointerupEvent)
             item.removeEventListener('pointercancel', this._handlePointercancelEvent)
             item.removeEventListener('wheel', this._handleWheelEvent)
