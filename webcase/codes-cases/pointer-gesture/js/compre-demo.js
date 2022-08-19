@@ -165,7 +165,7 @@
                 TransfromManager.applyTransfromStyle(imageElement)
                 TransfromManager.updateTransformTextContent(transformValueElement)
             },
-            onLongTap(evte, { tapX, tapY }, gesture) {
+            onLongTap(evte, { clientX, clientY }, gesture) {
                 if (profile.pointerdownTarget !== imageElement) {
                     return
                 }
@@ -184,12 +184,12 @@
                     this.close()
                 })
             },
-            onDoubleTap(evte, { tapX, tapY }, gesture) {
+            onDoubleTap(evte, { clientX, clientY }, gesture) {
                 if (profile.pointerdownTarget !== imageElement) {
                     return
                 }
-                const offsetX = tapX - profile.containerWidth / 2
-                const offsetY = tapY - profile.containerHeight / 2
+                const offsetX = clientX - profile.containerWidth / 2
+                const offsetY = clientY - profile.containerHeight / 2
                 const translateOffsetX = offsetX / TransfromManager.scale - TransfromManager.translateX / TransfromManager.scale
                 const translateOffsetY = offsetY / TransfromManager.scale - TransfromManager.translateY / TransfromManager.scale
                 if (TransfromManager.scale <= 1) {

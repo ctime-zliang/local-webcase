@@ -11,13 +11,13 @@ var interactiveSelectedClassname = 'gesture-interactive-selected'
     const exitFullcaseBtnElement = containerElement.querySelector('[data-tagitem="exit-fullcase-btn"]')
 
     xGesture.attach(fullcaseBtnElement)
-    .onTap((evte, { tapX, tapY }, gesture) => {
+    .onTap((evte, { clientX, clientY }, gesture) => {
         console.log(evte, gesture)
         fullcaseContainerElement.style.display = 'block'
     })
 
     xGesture.attach(exitFullcaseBtnElement)
-    .onTap((evte, { tapX, tapY }, gesture) => {
+    .onTap((evte, { clientX, clientY }, gesture) => {
         console.log(evte, gesture)
         AlertManager
         .setBtns([AlertManager.defaultConfirmBtn, AlertManager.defaultCancelBtn])
@@ -28,7 +28,7 @@ var interactiveSelectedClassname = 'gesture-interactive-selected'
             this.close()
         })
     })
-    .onLongTap((evte, { tapX, tapY }, gesture) => {
+    .onLongTap((evte, { clientX, clientY }, gesture) => {
         console.log(evte, gesture)
         AlertManager
         .setBtns([AlertManager.defaultConfirmBtn])
@@ -41,14 +41,14 @@ var interactiveSelectedClassname = 'gesture-interactive-selected'
     const pageContentElement = containerElement.querySelector('.page-content')
     const pageFooterElement = containerElement.querySelector('.page-footer')
     xGesture.attach(pageHeaderElement)
-    .onDoubleTap((evte, { tapX, tapY }, gesture) => {
+    .onDoubleTap((evte, { clientX, clientY }, gesture) => {
         pageContentElement.scrollTop = 0
     })
     xGesture.attach(pageFooterElement)
-    .onDoubleTap((evte, { tapX, tapY }, gesture) => {
+    .onDoubleTap((evte, { clientX, clientY }, gesture) => {
         pageContentElement.scrollTop = pageContentElement.scrollHeight
     })
 
-    fullcaseContainerElement.style.display = 'block'
+    // fullcaseContainerElement.style.display = 'block'
 })(globalContainerElement);
 

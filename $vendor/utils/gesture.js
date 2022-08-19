@@ -380,8 +380,8 @@
                         undefined, 
                         evte, 
                         {
-                            tapX: dotRecordInPointerdown1.x,
-                            tapY: dotRecordInPointerdown1.y
+                            clientX: dotRecordInPointerdown1.x,
+                            clientY: dotRecordInPointerdown1.y
                         },
                         this
                     )
@@ -559,8 +559,8 @@
                     undefined, 
                     evte,
                     {
-                        tapX: evte.clientX,
-                        tapY: evte.clientY
+                        clientX: evte.clientX,
+                        clientY: evte.clientY
                     },
                     this
                 )
@@ -571,8 +571,8 @@
                             undefined, 
                             evte, 
                             {
-                                tapX: evte.clientX,
-                                tapY: evte.clientY
+                                clientX: evte.clientX,
+                                clientY: evte.clientY
                             },
                             this
                         )
@@ -583,8 +583,8 @@
                         undefined, 
                         evte, 
                         {
-                            tapX: evte.clientX,
-                            tapY: evte.clientY
+                            clientX: evte.clientX,
+                            clientY: evte.clientY
                         },
                         this
                     )

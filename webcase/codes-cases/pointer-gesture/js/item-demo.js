@@ -163,12 +163,12 @@
 
     let eventCount = 0
     xGesture.attach(gestureElement, {
-        onTap(evte, { tapX, tapY }, gesture) {
-            console.log({ tapX, tapY })
+        onTap(evte, { clientX, clientY }, gesture) {
+            console.log({ clientX, clientY })
             rippleAnimation(evte)
             countElement.textContent = ++eventCount
-            xAbsoluteElement.textContent = tapX
-            yAbsoluteElement.textContent = tapY
+            xAbsoluteElement.textContent = clientX
+            yAbsoluteElement.textContent = clientY
         },
     })
 })(globalContainerElement.querySelector('[data-tagitem="tap"]'));
@@ -189,13 +189,13 @@
     let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
         isPreventDefaultInLongDown: true,
-        onLongTap(evte, { tapX, tapY }, gesture) {
-            console.log({ tapX, tapY })
+        onLongTap(evte, { clientX, clientY }, gesture) {
+            console.log({ clientX, clientY })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
             countElement.textContent = ++eventCount
-            xAbsoluteElement.textContent = tapX
-            yAbsoluteElement.textContent = tapY
+            xAbsoluteElement.textContent = clientX
+            yAbsoluteElement.textContent = clientY
             AlertManager.open(`触发了 longTap 事件`, {
                 btns: [AlertManager.defaultConfirmBtn, AlertManager.defaultCancelBtn],
                 callback(tag) {
@@ -225,13 +225,13 @@
     let eventCount = 0
     let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
-        onSingleTap(evte, { tapX, tapY }, gesture) {
-            console.log({ tapX, tapY })
+        onSingleTap(evte, { clientX, clientY }, gesture) {
+            console.log({ clientX, clientY })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
             countElement.textContent = ++eventCount
-            xAbsoluteElement.textContent = tapX
-            yAbsoluteElement.textContent = tapY
+            xAbsoluteElement.textContent = clientX
+            yAbsoluteElement.textContent = clientY
             styleUpdateTimer = window.setTimeout(() => {
                 gestureElement.classList.remove(interactiveSelectedClassname)
             }, 85)
@@ -254,13 +254,13 @@
     let eventCount = 0
     let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
-        onDoubleTap(evte, { tapX, tapY }, gesture) {
-            console.log({ tapX, tapY })
+        onDoubleTap(evte, { clientX, clientY }, gesture) {
+            console.log({ clientX, clientY })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
             countElement.textContent = ++eventCount
-            xAbsoluteElement.textContent = tapX
-            yAbsoluteElement.textContent = tapY
+            xAbsoluteElement.textContent = clientX
+            yAbsoluteElement.textContent = clientY
             styleUpdateTimer = window.setTimeout(() => {
                 gestureElement.classList.remove(interactiveSelectedClassname)
             }, 85)
