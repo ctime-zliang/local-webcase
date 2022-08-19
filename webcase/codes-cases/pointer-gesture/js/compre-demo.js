@@ -137,13 +137,8 @@
                 } else if (TransfromManager.scale < profile.minWheelScale) {
                     TransfromManager.scale = profile.minWheelScale
                 }
-                if (profile.benchmark === 'width') {
-                    TransfromManager.translateX = - 1 * (translateOffsetX * TransfromManager.scale - offsetX)
-                    TransfromManager.translateY = 0
-                } else if (profile.benchmark === 'height') {
-                    TransfromManager.translateY = - 1 * (translateOffsetY * TransfromManager.scale - offsetY)
-                    TransfromManager.translateX = 0
-                }
+                TransfromManager.translateX = - 1 * (translateOffsetX * TransfromManager.scale - offsetX)
+                TransfromManager.translateY = - 1 * (translateOffsetY * TransfromManager.scale - offsetY)
                 TransfromManager.setTransitionStyle(imageElement, true)
                 TransfromManager.applyTransfromStyle(imageElement)
                 TransfromManager.updateTransformTextContent(transformValueElement)
