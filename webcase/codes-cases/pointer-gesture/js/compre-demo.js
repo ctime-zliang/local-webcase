@@ -173,6 +173,7 @@
                 .setBtns([AlertManager.defaultConfirmBtn, AlertManager.defaultCancelBtn])
                 .open('还原图片状态?', function(tag) {
                     if (tag === 'confirm') {
+                        TransfromManager.rotate = 0
                         TransfromManager.scale = 1
                         TransfromManager.translateX = 0
                         TransfromManager.translateY = 0
