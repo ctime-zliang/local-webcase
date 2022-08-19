@@ -172,6 +172,24 @@
                 TransfromManager.applyTransfromStyle(imageElement)
                 TransfromManager.updateTransformTextContent(transformValueElement)
             },
+            onLongTap(evte, { tapX, tapY }, gesture) {
+                if (profile.pointerdownTarget !== imageElement) {
+                    return
+                }
+                AlertManager
+                .setBtns([AlertManager.defaultConfirmBtn, AlertManager.defaultCancelBtn])
+                .open('还原图片状态?', function(tag) {
+                    if (tag === 'confirm') {
+                        TransfromManager.scale = 1
+                        TransfromManager.translateX = 0
+                        TransfromManager.translateY = 0
+                        TransfromManager.setTransitionStyle(imageElement, true)
+                        TransfromManager.applyTransfromStyle(imageElement)
+                        TransfromManager.updateTransformTextContent(transformValueElement)
+                    }
+                    this.close()
+                })
+            },
             onDoubleTap(evte, { tapX, tapY }, gesture) {
                 const offsetX = tapX - profile.containerWidth / 2
                 const offsetY = tapY - profile.containerHeight / 2

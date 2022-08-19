@@ -145,15 +145,27 @@
     outline: 0;
 }
 
+.alertmgr-btns-wrapper .alertmgr-primary-btn {
+    color: rgb(32, 128, 240);
+}
 .alertmgr-btns-wrapper .alertmgr-confirm-btn {
-    color: #1890ff
+    color: rgb(32, 128, 240);
 }
 .alertmgr-btns-wrapper .alertmgr-cancel-btn {
-    color: #333333
+    color: #555555
 }
-.alertmgr-btns-wrapper .alertmgr-normal-btn {
-    color: #000000
+.alertmgr-btns-wrapper .alertmgr-default-btn {
+    color: #111111
 }
 .alertmgr-btns-wrapper .alertmgr-dangrous-btn {
     color: #ff0000;
+}
+.alertmgr-btns-wrapper .alertmgr-success-btn {
+    color: rgb(24, 160, 88);
+}
+.alertmgr-btns-wrapper .alertmgr-warning-btn {
+    color: rgb(252, 176, 64);
+}
+.alertmgr-btns-wrapper .alertmgr-error-btn {
+    color: rgb(208, 48, 80);
 }
