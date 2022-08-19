@@ -185,6 +185,9 @@
                 })
             },
             onDoubleTap(evte, { tapX, tapY }, gesture) {
+                if (profile.pointerdownTarget !== imageElement) {
+                    return
+                }
                 const offsetX = tapX - profile.containerWidth / 2
                 const offsetY = tapY - profile.containerHeight / 2
                 const translateOffsetX = offsetX / TransfromManager.scale - TransfromManager.translateX / TransfromManager.scale
