@@ -24,6 +24,7 @@ class AlertManager {
     static _pointerdownX = 0
     static _pointerdownY = 0
     static _btns = []
+    static _isPointerdown = false
 
     static init() {
         if (document.querySelector('.alertmgr-container')) {
@@ -72,21 +73,7 @@ class AlertManager {
         window.setTimeout(() => {
             this._wrapperElement.classList.remove('alertmgr-wrapper-entrystart')
             this._lockElement.classList.remove('alertmgr-lock-entrystart')
-            window.setTimeout(() => {
-                //this._wrapperElement.classList.remove('alertmgr-transition-duringshort')
-                //this._lockElement.classList.remove('alertmgr-transition-duringshort')
-            }, 300)
         })
-        // this._fadeTask(
-        //     () => {
-        //         this._wrapperElement.classList.remove('alertmgr-wrapper-entrystart')
-        //         this._lockElement.classList.remove('alertmgr-lock-entrystart')
-        //     },
-        //     () => {
-        //         this._wrapperElement.classList.remove('alertmgr-transition-duringshort')
-        //         this._lockElement.classList.remove('alertmgr-transition-duringshort')
-        //     }
-        // )
     }
 
     static close() {
@@ -127,7 +114,7 @@ class AlertManager {
         let htmlString = ``
         this._btns.forEach((item) => {
             htmlString += `
-                <button class="alertmgr-btn alertmgr-${item.type}-btn" data-tagitem="${item.tag}">
+                <button class="alertmgr-btn alertmgr-${item.type}-btn" data-tagitem="${item.tag}" style="pointer-events: none;">
                     <span class="alertmgr-btn-text">${item.text}</span>
                 </button>
             `
@@ -153,10 +140,14 @@ class AlertManager {
         this._pointerdownX = toucher0.clientX
         this._pointerdownY = toucher0.clientY
         this._rippleAnimation(e)
+        this._isPointerdown = true
     }
 
     static _btnsWrapperTouchendHandler(e) {
         e.preventDefault()
+        if (!this._isPointerdown) {
+            return
+        }
         const toucher0 = e.changedTouches[0]
         if (Math.abs(toucher0.clientX - this._pointerdownX) < 8 && Math.abs(toucher0.clientY - this._pointerdownY) < 8) {
             const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn', e.path || (e.componsedPath && e.componsedPath()), 0)
@@ -164,6 +155,7 @@ class AlertManager {
                 this._callback.call(this, target.getAttribute('data-tagitem'))
             }
         }
+        this._isPointerdown = false
     }
 
     static _btnsWrapperMousedownHandler(e) {
@@ -174,11 +166,12 @@ class AlertManager {
         this._rippleAnimation(e)
         this._pointerdownX = e.clientX
         this._pointerdownY = e.clientY
+        this._isPointerdown = true
     }
 
     static _btnsWrapperMouseupHandler(e) {
         e.preventDefault()
-        if (e.button !== 0) {
+        if (e.button !== 0 || !this._isPointerdown) {
             return
         }
         if (Math.abs(e.clientX - this._pointerdownX) < 8 && Math.abs(e.clientY - this._pointerdownY) < 8) {
@@ -187,6 +180,7 @@ class AlertManager {
                 this._callback.call(this, target.getAttribute('data-tagitem'))
             }
         }
+        this._isPointerdown = false
     }
 
     static _containerContextmenuHandler(e) {
@@ -198,11 +192,14 @@ class AlertManager {
     }
 
     static _transitionsTransitionendHandler(e) {
-        if (e === this._lockElement) {
+        if (e.target === this._lockElement) {
             this._lockElement.classList.remove('alertmgr-transition-duringshort')
         }
-        if (e === this._wrapperElement) {
+        if (e.target === this._wrapperElement) {
             this._wrapperElement.classList.remove('alertmgr-transition-duringshort')
+            Array.from(this._btnsWrapperElement.querySelectorAll('button')).forEach((item) => {
+                item.style.pointerEvents = 'auto'
+            })
         }
     }
 
@@ -212,7 +209,7 @@ class AlertManager {
             evte = e.changedTouches[0]
         }
         const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn', e.path || (e.componsedPath && e.componsedPath()), 0)
-        if (target.nodeName.toUpperCase() !== 'BUTTON') {
+        if (!target || target.nodeName.toUpperCase() !== 'BUTTON') {
             return
         }
         const btnClientWidth = target.offsetWidth
