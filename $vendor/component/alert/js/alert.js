@@ -73,7 +73,7 @@ class AlertManager {
         window.setTimeout(() => {
             this._wrapperElement.classList.remove('alertmgr-wrapper-entrystart')
             this._lockElement.classList.remove('alertmgr-lock-entrystart')
-        })
+        }, 1 / 60)
     }
 
     static close() {
