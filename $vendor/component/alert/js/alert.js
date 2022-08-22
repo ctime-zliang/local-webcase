@@ -19,7 +19,7 @@ class AlertManager {
     static _contentElement = null
     static _wrapperElement = null
     static _btnsWrapperElement = null
-    static _locakElement = null
+    static _lockElement = null
     static _callback = null
     static _pointerdownX = 0
     static _pointerdownY = 0
@@ -31,16 +31,18 @@ class AlertManager {
         }
         this._btns = [this.defaultConfirmBtn, this.defaultCancelBtn]
         /* ... */
-        this._touchstartHandler = this._touchstartHandler.bind(this)
-        this._touchendHandler = this._touchendHandler.bind(this)
-        this._mousedownHandler = this._mousedownHandler.bind(this)
-        this._mouseupHandler = this._mouseupHandler.bind(this)
-        this._contextmenuHandler = this._contextmenuHandler.bind(this)
+        this._btnsWrapperTouchstartHandler = this._btnsWrapperTouchstartHandler.bind(this)
+        this._btnsWrapperTouchendHandler = this._btnsWrapperTouchendHandler.bind(this)
+        this._btnsWrapperMousedownHandler = this._btnsWrapperMousedownHandler.bind(this)
+        this._btnsWrapperMouseupHandler = this._btnsWrapperMouseupHandler.bind(this)
+        this._containerContextmenuHandler = this._containerContextmenuHandler.bind(this)
         this._rippleAnimationEndHandler = this._rippleAnimationEndHandler.bind(this)
+        this._transitionsTransitionstartHandler = this._transitionsTransitionstartHandler.bind(this)
+        this._transitionsTransitionendHandler = this._transitionsTransitionendHandler.bind(this)
         /* ... */
         document.body.appendChild(document.createRange().createContextualFragment(this._template()))
         this._containerElemeent = document.querySelector('.alertmgr-container')
-        this._locakElement = this._containerElemeent.querySelector('.alertmgr-lock')
+        this._lockElement = this._containerElemeent.querySelector('.alertmgr-lock')
         this._wrapperElement = this._containerElemeent.querySelector('.alertmgr-wrapper')
         this._contentElement = this._containerElemeent.querySelector('.alertmgr-message-content')
         this._btnsWrapperElement = this._containerElemeent.querySelector('.alertmgr-btns-wrapper')
@@ -63,20 +65,28 @@ class AlertManager {
         }
         /* ... */        
         this._contentElement.innerHTML = message
-        this._containerElemeent.classList.add('alertmgr-container-show')
         this._wrapperElement.classList.add('alertmgr-wrapper-entrystart', 'alertmgr-transition-duringshort')
-        this._locakElement.classList.add('alertmgr-lock-entrystart', 'alertmgr-transition-duringshort')
+        this._lockElement.classList.add('alertmgr-lock-entrystart', 'alertmgr-transition-duringshort')
+        this._containerElemeent.classList.add('alertmgr-container-show')
         /* ... */
-        this._fadeTask(
-            () => {
-                this._wrapperElement.classList.remove('alertmgr-wrapper-entrystart')
-                this._locakElement.classList.remove('alertmgr-lock-entrystart')
-            },
-            () => {
-                this._wrapperElement.classList.remove('alertmgr-transition-duringshort')
-                this._locakElement.classList.remove('alertmgr-transition-duringshort')
-            }
-        )
+        window.setTimeout(() => {
+            this._wrapperElement.classList.remove('alertmgr-wrapper-entrystart')
+            this._lockElement.classList.remove('alertmgr-lock-entrystart')
+            window.setTimeout(() => {
+                //this._wrapperElement.classList.remove('alertmgr-transition-duringshort')
+                //this._lockElement.classList.remove('alertmgr-transition-duringshort')
+            }, 300)
+        })
+        // this._fadeTask(
+        //     () => {
+        //         this._wrapperElement.classList.remove('alertmgr-wrapper-entrystart')
+        //         this._lockElement.classList.remove('alertmgr-lock-entrystart')
+        //     },
+        //     () => {
+        //         this._wrapperElement.classList.remove('alertmgr-transition-duringshort')
+        //         this._lockElement.classList.remove('alertmgr-transition-duringshort')
+        //     }
+        // )
     }
 
     static close() {
@@ -126,14 +136,18 @@ class AlertManager {
     }
 
     static _bindEvent() {
-        this._btnsWrapperElement.addEventListener('touchstart', this._touchstartHandler)
-        this._btnsWrapperElement.addEventListener('touchend', this._touchendHandler)
-        this._btnsWrapperElement.addEventListener('mousedown', this._mousedownHandler)
-        this._btnsWrapperElement.addEventListener('mouseup', this._mouseupHandler)
-        this._containerElemeent.addEventListener('contextmenu', this._contextmenuHandler)
+        this._btnsWrapperElement.addEventListener('touchstart', this._btnsWrapperTouchstartHandler)
+        this._btnsWrapperElement.addEventListener('touchend', this._btnsWrapperTouchendHandler)
+        this._btnsWrapperElement.addEventListener('mousedown', this._btnsWrapperMousedownHandler)
+        this._btnsWrapperElement.addEventListener('mouseup', this._btnsWrapperMouseupHandler)
+        this._containerElemeent.addEventListener('contextmenu', this._containerContextmenuHandler)
+        this._wrapperElement.addEventListener('transitionstart', this._transitionsTransitionstartHandler)
+        this._wrapperElement.addEventListener('transitionend', this._transitionsTransitionendHandler)
+        this._lockElement.addEventListener('transitionstart', this._transitionsTransitionstartHandler)
+        this._lockElement.addEventListener('transitionend', this._transitionsTransitionendHandler)
     }
 
-    static _touchstartHandler(e) {
+    static _btnsWrapperTouchstartHandler(e) {
         e.preventDefault()
         const toucher0 = e.changedTouches[0]
         this._pointerdownX = toucher0.clientX
@@ -141,7 +155,7 @@ class AlertManager {
         this._rippleAnimation(e)
     }
 
-    static _touchendHandler(e) {
+    static _btnsWrapperTouchendHandler(e) {
         e.preventDefault()
         const toucher0 = e.changedTouches[0]
         if (Math.abs(toucher0.clientX - this._pointerdownX) < 8 && Math.abs(toucher0.clientY - this._pointerdownY) < 8) {
@@ -152,7 +166,7 @@ class AlertManager {
         }
     }
 
-    static _mousedownHandler(e) {
+    static _btnsWrapperMousedownHandler(e) {
         e.preventDefault()
         if (e.button !== 0) {
             return
@@ -162,7 +176,7 @@ class AlertManager {
         this._pointerdownY = e.clientY
     }
 
-    static _mouseupHandler(e) {
+    static _btnsWrapperMouseupHandler(e) {
         e.preventDefault()
         if (e.button !== 0) {
             return
@@ -175,8 +189,21 @@ class AlertManager {
         }
     }
 
-    static _contextmenuHandler(e) {
+    static _containerContextmenuHandler(e) {
         e.preventDefault()
+    }
+
+    static _transitionsTransitionstartHandler(e) {
+        /* ... */
+    }
+
+    static _transitionsTransitionendHandler(e) {
+        if (e === this._lockElement) {
+            this._lockElement.classList.remove('alertmgr-transition-duringshort')
+        }
+        if (e === this._wrapperElement) {
+            this._wrapperElement.classList.remove('alertmgr-transition-duringshort')
+        }
     }
 
     static _rippleAnimation(e) {
@@ -207,21 +234,6 @@ class AlertManager {
     static _rippleAnimationEndHandler(e) {
         e.currentTarget.removeEventListener('animationend', this._rippleAnimationEndHandler)
         e.currentTarget.parentNode.removeChild(e.currentTarget)
-    }
-
-    static _fadeTask(start, end, d = 300) {
-        window.setTimeout(() => {
-            window.requestAnimationFrame(() => {
-                start()
-                this._wrapperElement.classList.remove('alertmgr-wrapper-entrystart')
-                this._locakElement.classList.remove('alertmgr-lock-entrystart')
-                window.setTimeout(() => {
-                    end()
-                    this._wrapperElement.classList.remove('alertmgr-transition-duringshort')
-                    this._locakElement.classList.remove('alertmgr-transition-duringshort')
-                }, d)
-            })
-        })
     }
 }
 
