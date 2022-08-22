@@ -70,10 +70,12 @@ class AlertManager {
         this._lockElement.classList.add('alertmgr-lock-entrystart', 'alertmgr-transition-duringshort')
         this._containerElemeent.classList.add('alertmgr-container-show')
         /* ... */
-        window.setTimeout(() => {
-            this._wrapperElement.classList.remove('alertmgr-wrapper-entrystart')
-            this._lockElement.classList.remove('alertmgr-lock-entrystart')
-        }, 1 / 60)
+        window.requestAnimationFrame(() => {
+            window.setTimeout(() => {
+                this._wrapperElement.classList.remove('alertmgr-wrapper-entrystart')
+                this._lockElement.classList.remove('alertmgr-lock-entrystart')
+            }, 1 / 60)
+        })
     }
 
     static close() {
