@@ -78,7 +78,7 @@
         maxWheelScale:  16,
         minWheelScale:  0.1,
         pointerdownTarget: null,
-        imageSrc: document.getElementById(`fullcaseImageAnchor`).src
+        imageSrc: document.getElementById(`fullcaseImageAnchor`).getAttribute('data-src')
     }
     const initImageDOM = async () => {
         return new Promise((_) => {
