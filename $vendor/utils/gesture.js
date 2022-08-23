@@ -340,6 +340,7 @@
     }
 
     Gesture.prototype.handleTouchstartEvent = function(evte) {
+        const _$profile = this._$profile
         _$profile.__tkp && evte.preventDefault()
     }
 

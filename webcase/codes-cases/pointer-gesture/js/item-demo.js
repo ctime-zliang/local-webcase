@@ -162,13 +162,19 @@
     }
 
     let eventCount = 0
+    let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
         onTap(evte, { clientX, clientY }, gesture) {
             console.log({ clientX, clientY })
+            window.clearTimeout(styleUpdateTimer)
+            gestureElement.classList.add(interactiveSelectedClassname)
             countElement.textContent = ++eventCount
             xAbsoluteElement.textContent = clientX
             yAbsoluteElement.textContent = clientY
-            rippleAnimation(evte)
+            // rippleAnimation(evte)
+            styleUpdateTimer = window.setTimeout(() => {
+                gestureElement.classList.remove(interactiveSelectedClassname)
+            }, 85)
         },
     })
 })(globalContainerElement.querySelector('[data-tagitem="tap"]'));
