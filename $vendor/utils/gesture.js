@@ -28,6 +28,7 @@
     const DIRECTION_LEFT = 'LEFT'
     const DIRECTION_RIGHT = 'RIGHT'
 
+    const POINTER_ITEM_ADD = 'POINTER_ITEM_ADD'
     const POINTER_ITEM_UPDATE = 'POINTER_ITEM_UPDATE'
     const POINTER_ITEM_DELETE = 'POINTER_ITEM_DELETE'
 
@@ -119,6 +120,10 @@
              */
             offsetRectAtPointerdown: { x: 0, y: 0 },
             lastOffsetRectAtPointerdown: { x: 0, y: 0 },
+            /**
+             * 其他
+             */
+            __tkp: false
         }
     }
     function Gesture(host, options) {
@@ -242,6 +247,10 @@
 
     Gesture.prototype.updatePointers = function(evte, type) {
         const { pointers } = this._$profile
+        if (type === POINTER_ITEM_ADD) {
+            pointers.push(evte)
+            return pointers.length - 1
+        }
         let idx = -1
         for (let i = 0; i < pointers.length; i++) {
             if (pointers[i].pointerId === evte.pointerId) {
@@ -314,7 +323,7 @@
             } else {
                 swipeDirection = y > 0 ? DIRECTION_DOWN : DIRECTION_UP
             }
-            console.log(11111)
+            _$profile.__tkp = true
             this.options.onSwipe && this.options.onSwipe.call(
                 undefined, 
                 evte, 
@@ -331,7 +340,7 @@
     }
 
     Gesture.prototype.handleTouchstartEvent = function(evte) {
-        evte.preventDefault()
+        _$profile.__tkp && evte.preventDefault()
     }
 
     Gesture.prototype.handlePointerdownEvent = function(evte) {
@@ -345,8 +354,9 @@
         if (evte.pointerType === 'mouse' && evte.button !== 0) {
             return
         }
-        _$profile.pointers.push(evte)
+        this.updatePointers(evte, POINTER_ITEM_ADD)
         _$profile.isPointerdown = true
+        _$profile.__tkp = false
         if (_$profile.pointers.length === 1) {
             window.clearTimeout(_$profile.singleTapTimeout);
             evte.currentTarget.setPointerCapture(evte.pointerId)
@@ -396,7 +406,7 @@
             /* ... */
             _$profile.lastDotsRecordInPointerdown[0] = { x: _$profile.pointers[0].clientX, y: _$profile.pointers[0].clientY }
         }
-        if (_$profile.pointers.length === 2) {            
+        if (_$profile.pointers.length === 2) {
             window.clearTimeout(_$profile.longTapTimeout)
             _$profile.dotsRecordInPointerdown[1] = { x: evte.clientX, y: evte.clientY }
             _$profile.lastDotsRecordInPointerdown[1] = { x: evte.clientX, y: evte.clientY }
@@ -625,6 +635,7 @@
             },
             this
         )
+        _$profile.__tkp = false
     }
 
     Gesture.prototype.handlePointercancelEvent = function(evte) {
