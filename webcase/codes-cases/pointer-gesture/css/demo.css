@@ -127,7 +127,7 @@
 
 .content-description {
     padding: 10px 10px;
-    font-size: 0.15rem;
+    font-size: 0.18rem;
     line-height: 0.15rem;
 }
 
@@ -184,6 +184,10 @@
 .image-viewitem-boxshadow {
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
 }
+.image-thumb-background {
+    background: radial-gradient(circle,#00caf5 5px,transparent 0) 0 0;
+    background-size: 10px 10px;
+}
 
 
 /****************************** ******************************/
@@ -198,11 +202,11 @@
 .view-subject .view-subject-title {
     padding: 8px 20px;
     background-color: #efefef;
-    font-size: 0.1rem;
+    font-size: 0.16rem;
     font-weight: 900;
 }
 .view-subject .view-subject-content {
-    font-size: 0.1rem;
+    font-size: 0.14rem;
 }
 
 

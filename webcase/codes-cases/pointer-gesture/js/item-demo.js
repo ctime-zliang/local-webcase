@@ -644,7 +644,7 @@
             yPoiner1Element.textContent = pointA.x
             xPoiner2Element.textContent = pointB.x
             yPoiner2Element.textContent = pointB.x
-            TransfromManager.rorate = (TransfromManager.rorate + _rotate) % 360
+            TransfromManager.rorate = (TransfromManager.rorate + rotate) % 360
             TransfromManager.applyTransfromStyle(evte.currentTarget)
             TransfromManager.updateTextContent(rotateValueElement)
             styleUpdateTimer = window.setTimeout(() => {

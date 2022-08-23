@@ -78,7 +78,7 @@
         maxWheelScale:  16,
         minWheelScale:  0.1,
         pointerdownTarget: null,
-        imageSrc: `./images/demo3.jpg`
+        imageSrc: document.getElementById(`fullcaseImageAnchor`).src
     }
     const initImageDOM = async () => {
         return new Promise((_) => {
