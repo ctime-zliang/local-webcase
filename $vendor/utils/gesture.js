@@ -135,6 +135,7 @@
     }
     
     Gesture.prototype.init = function() {
+        this._handleTouchstartEvent = this.handleTouchstartEvent.bind(this)
         this._handlePointerdownEvent = this.handlePointerdownEvent.bind(this)
         this._handlePointermoveEvent = this.handlePointermoveEvent.bind(this)
         this._handlePointerupEvent = this.handlePointerupEvent.bind(this)
@@ -313,6 +314,7 @@
             } else {
                 swipeDirection = y > 0 ? DIRECTION_DOWN : DIRECTION_UP
             }
+            console.log(11111)
             this.options.onSwipe && this.options.onSwipe.call(
                 undefined, 
                 evte, 
@@ -326,6 +328,10 @@
                 this
             )
         }
+    }
+
+    Gesture.prototype.handleTouchstartEvent = function(evte) {
+        evte.preventDefault()
     }
 
     Gesture.prototype.handlePointerdownEvent = function(evte) {
@@ -626,7 +632,7 @@
         window.clearTimeout(_$profile.longTapTimeout)
         _$profile.isPointerdown = false
         _$profile.tapCount = 0
-        _$profile.pointers.length = 0
+        const idx = this.updatePointers(evte, POINTER_ITEM_DELETE)
         this.options.onPpointercancel && this.options.onPpointercancel.call(
             undefined, 
             evte, 
@@ -685,6 +691,7 @@
 
     Gesture.prototype.bindEvent = function() {
         this.containerElements.forEach((item) => {
+            item.addEventListener('touchstart', this._handleTouchstartEvent)
             item.addEventListener('pointerdown', this._handlePointerdownEvent)
             item.addEventListener('pointermove', this._handlePointermoveEvent)
             item.addEventListener('pointerup', this._handlePointerupEvent)
@@ -697,6 +704,7 @@
 
     Gesture.prototype.unBindEvent = function() {
         this.containerElements.forEach((item) => {
+            item.removeEventListener('touchstart', this._handleTouchstartEvent)
             item.removeEventListener('pointerdown', this._handlePointerdownEvent)
             item.removeEventListener('pointermove', this._handlePointermoveEvent)
             item.removeEventListener('pointerup', this._handlePointerupEvent)

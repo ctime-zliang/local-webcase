@@ -165,10 +165,10 @@
     xGesture.attach(gestureElement, {
         onTap(evte, { clientX, clientY }, gesture) {
             console.log({ clientX, clientY })
-            rippleAnimation(evte)
             countElement.textContent = ++eventCount
             xAbsoluteElement.textContent = clientX
             yAbsoluteElement.textContent = clientY
+            rippleAnimation(evte)
         },
     })
 })(globalContainerElement.querySelector('[data-tagitem="tap"]'));
