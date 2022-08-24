@@ -271,6 +271,10 @@
                 gestureElement.classList.remove(interactiveSelectedClassname)
             }, 85)
         },
+        onTap(evte, { clientX, clientY }, gesture) {
+            console.log(`onTap`)
+            document.querySelector('.view-title').textContent = gesture._$profile.tapCount
+        },
     })
 })(globalContainerElement.querySelector('[data-tagitem="doubletap"]'));
 
