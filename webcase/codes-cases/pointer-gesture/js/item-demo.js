@@ -571,9 +571,9 @@
             xCenterElement.textContent = centerX
             yCenterElement.textContent = centerY
             xPoiner1Element.textContent = pointA.x
-            yPoiner1Element.textContent = pointA.x
+            yPoiner1Element.textContent = pointA.y
             xPoiner2Element.textContent = pointB.x
-            yPoiner2Element.textContent = pointB.x
+            yPoiner2Element.textContent = pointB.y
             TransfromManager.scale *= scale
             if (TransfromManager.scale > maxWScale) {
                 TransfromManager.scale = maxWScale
@@ -647,9 +647,9 @@
             xCenterElement.textContent = centerX
             yCenterElement.textContent = centerY
             xPoiner1Element.textContent = pointA.x
-            yPoiner1Element.textContent = pointA.x
+            yPoiner1Element.textContent = pointA.y
             xPoiner2Element.textContent = pointB.x
-            yPoiner2Element.textContent = pointB.x
+            yPoiner2Element.textContent = pointB.y
             TransfromManager.rorate = (TransfromManager.rorate + rotate) % 360
             TransfromManager.applyTransfromStyle(evte.currentTarget)
             TransfromManager.updateTextContent(rotateValueElement)

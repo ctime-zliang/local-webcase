@@ -87,6 +87,9 @@
     -moz-transform: translate3d(0, 0, 5px) scale(1);
     -webkit-transform: translate3d(0, 0, 5px) scale(1);
     z-index: 999992;
+    box-shadow: rgb(50 50 50 / 30%) 0px 0px 15px;
+    -moz-box-shadow: rgb(50 50 50 / 30%) 0px 0px 15px;
+    -webkit-box-shadow: rgb(50 50 50 / 30%) 0px 0px 15px;
 }
 .alertmgr-wrapper-entrystart {
     transform: translate3d(0, 0, 5px) scale(1.15) !important;

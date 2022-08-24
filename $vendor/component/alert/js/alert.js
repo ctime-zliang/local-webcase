@@ -141,8 +141,8 @@ class AlertManager {
         const toucher0 = e.changedTouches[0]
         this._pointerdownX = toucher0.clientX
         this._pointerdownY = toucher0.clientY
-        this._rippleAnimation(e)
         this._isPointerdown = true
+        this._rippleAnimation(e)
     }
 
     static _btnsWrapperTouchendHandler(e) {
@@ -165,10 +165,10 @@ class AlertManager {
         if (e.button !== 0) {
             return
         }
-        this._rippleAnimation(e)
         this._pointerdownX = e.clientX
         this._pointerdownY = e.clientY
         this._isPointerdown = true
+        this._rippleAnimation(e)
     }
 
     static _btnsWrapperMouseupHandler(e) {

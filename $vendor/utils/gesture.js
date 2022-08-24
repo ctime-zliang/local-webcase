@@ -524,7 +524,7 @@
             const scale = this.getDistance(
                     { x: pointer1.clientX, y: pointer1.clientY }, 
                     { x: pointer2.clientX, y: pointer2.clientY }
-                ) - this.getDistance(lastDotRecordInPointerdown1, lastDotRecordInPointerdown2)
+                ) / this.getDistance(lastDotRecordInPointerdown1, lastDotRecordInPointerdown2)
             this.options.onPinch && this.options.onPinch.call(
                 undefined, 
                 evte, 
