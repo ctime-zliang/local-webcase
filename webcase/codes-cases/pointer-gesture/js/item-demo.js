@@ -259,6 +259,7 @@
 
     let eventCount = 0
     let styleUpdateTimer = null
+    let sTimer = null
     xGesture.attach(gestureElement, {
         onDoubleTap(evte, { clientX, clientY }, gesture) {
             console.log({ clientX, clientY })
@@ -272,8 +273,12 @@
             }, 85)
         },
         onTap(evte, { clientX, clientY }, gesture) {
+            window.clearTimeout(sTimer)
             console.log(`onTap`)
             document.querySelector('.view-title').textContent = gesture._$profile.tapCount
+            sTimer = window.setTimeout(() => {
+                document.querySelector('.view-title').textContent = '-'
+            }, 150)
         },
     })
 })(globalContainerElement.querySelector('[data-tagitem="doubletap"]'));
