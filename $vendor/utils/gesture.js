@@ -342,6 +342,7 @@
     Gesture.prototype.handleTouchstartEvent = function(evte) {
         const _$profile = this._$profile
         _$profile.__tkp && evte.preventDefault()
+        document.querySelector('.view-title').textContent = evte.timeStamp + 'touchstart'
     }
 
     Gesture.prototype.handlePointerdownEvent = function(evte) {
@@ -352,7 +353,6 @@
          *      中键 - 1
          *      右键 - 2
          */
-        document.querySelector('.view-title').textContent = evte.timeStamp
         if (evte.pointerType === 'mouse' && evte.button !== 0) {
             return
         }

@@ -566,7 +566,7 @@
         }
     }
 
-    TransfromManager.setTransitionStyle(targetImageElement, true)
+    TransfromManager.setTransitionStyle(targetImageElement, false)
 
     let styleUpdateTimer = null
     let maxWScale = 10
@@ -644,7 +644,7 @@
         }
     }
 
-    TransfromManager.setTransitionStyle(targetImageElement, true)
+    TransfromManager.setTransitionStyle(targetImageElement, false)
 
     let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
