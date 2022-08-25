@@ -360,8 +360,8 @@
         _$profile.isPointerdown = true
         _$profile.__tkp = false
         if (_$profile.pointers.length === 1) {
-            window.clearTimeout(_$profile.singleTapTimeout);
             evte.currentTarget.setPointerCapture(evte.pointerId)
+            window.clearTimeout(_$profile.singleTapTimeout)
             _$profile.dotsRecordInPointerdown[0] = { x: evte.clientX, y: evte.clientY }
             _$profile.lastDotsRecordInPointerdown[0] = { x: evte.clientX, y: evte.clientY }
             /* ... */
@@ -594,7 +594,7 @@
                             },
                             this
                         )
-                    }, 250)
+                    }, 300)
                 } else if (_$profile.tapCount >= 2) {
                     _$profile.tapCount = 0
                     this.options.onDoubleTap && this.options.onDoubleTap.call(
