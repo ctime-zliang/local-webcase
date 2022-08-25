@@ -582,20 +582,21 @@
                     },
                     this
                 )
-                if (_$profile.tapCount === 1) {
-                    _$profile.singleTapTimeout = window.setTimeout(() => {
-                        _$profile.tapCount = 0
-                        this.options.onSingleTap && this.options.onSingleTap.call(
-                            undefined, 
-                            evte, 
-                            {
-                                clientX: evte.clientX,
-                                clientY: evte.clientY
-                            },
-                            this
-                        )
-                    }, 350)
-                } else if (_$profile.tapCount >= 2) {
+                // if (_$profile.tapCount === 1) {
+                //     _$profile.singleTapTimeout = window.setTimeout(() => {
+                //         _$profile.tapCount = 0
+                //         this.options.onSingleTap && this.options.onSingleTap.call(
+                //             undefined, 
+                //             evte, 
+                //             {
+                //                 clientX: evte.clientX,
+                //                 clientY: evte.clientY
+                //             },
+                //             this
+                //         )
+                //     }, 350)
+                // } else 
+                if (_$profile.tapCount >= 2) {
                     _$profile.tapCount = 0
                     this.options.onDoubleTap && this.options.onDoubleTap.call(
                         undefined, 
