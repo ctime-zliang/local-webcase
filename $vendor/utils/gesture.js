@@ -149,7 +149,7 @@
         this._handleContextmenuEvent = this.handleContextmenuEvent.bind(this)
         this._handleClickEvent = this.handleClickEvent.bind(this)
         /* ... */
-        this.setTouchAction(this.options.cssTouchAction)
+        // this.setTouchAction(this.options.cssTouchAction)
         this.bindEvent()
     }
 
