@@ -217,37 +217,6 @@
 })(globalContainerElement.querySelector('[data-tagitem="longtap"]'));
 
 
-/****************************** ******************************/
-/****************************** ******************************/
-/** Single Tap ***/
-/****************************** ******************************/
-/****************************** ******************************/
-;(function(sectionElement) {
-    const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
-    const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
-    const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
-    const yAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-y"]')
-
-    let eventCount = 0
-    let styleUpdateTimer = null
-    xGesture.attach(gestureElement, {
-        onSingleTap(evte, { clientX, clientY }, gesture) {
-            console.log({ clientX, clientY })
-            window.clearTimeout(styleUpdateTimer)
-            gestureElement.classList.add(interactiveSelectedClassname)
-            countElement.textContent = ++eventCount
-            xAbsoluteElement.textContent = clientX
-            yAbsoluteElement.textContent = clientY
-            styleUpdateTimer = window.setTimeout(() => {
-                gestureElement.classList.remove(interactiveSelectedClassname)
-            }, 85)
-        },
-        onDoubleTap(evte, { clientX, clientY }, gesture) {
-            console.log(`onDoubleTap`, { clientX, clientY })
-        },
-    })
-})(globalContainerElement.querySelector('[data-tagitem="singletap"]'));
-
 
 /****************************** ******************************/
 /****************************** ******************************/
@@ -273,9 +242,6 @@
             styleUpdateTimer = window.setTimeout(() => {
                 gestureElement.classList.remove(interactiveSelectedClassname)
             }, 85)
-        },
-        onSingleTap(evte, { clientX, clientY }, gesture) {
-            console.log(`onSingleTap`, { clientX, clientY })
         },
         onTap(evte, { clientX, clientY }, gesture) {
             console.log(`onTap`, { clientX, clientY })

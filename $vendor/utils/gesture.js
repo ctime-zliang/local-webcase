@@ -61,7 +61,7 @@
 
     function createProfile() {
         return {
-            singleTapTimeout: null,
+            tapCountRestTimer: null,
             longTapTimeout: null,
             isPointerdown: false,
             tapCount: 0,
@@ -201,11 +201,6 @@
 
     Gesture.prototype.onLongTap = function(callback) {
         this.options.onLongTap = callback
-        return this
-    }
-
-    Gesture.prototype.onSingleTap = function(callback) {
-        this.options.onSingleTap = callback
         return this
     }
 
@@ -361,7 +356,7 @@
         _$profile.__tkp = false
         if (_$profile.pointers.length === 1) {
             evte.currentTarget.setPointerCapture(evte.pointerId)
-            window.clearTimeout(_$profile.singleTapTimeout)
+            window.clearTimeout(_$profile.tapCountRestTimer)
             _$profile.dotsRecordInPointerdown[0] = { x: evte.clientX, y: evte.clientY }
             _$profile.lastDotsRecordInPointerdown[0] = { x: evte.clientX, y: evte.clientY }
             /* ... */
@@ -582,20 +577,6 @@
                     },
                     this
                 )
-                // if (_$profile.tapCount === 1) {
-                //     _$profile.singleTapTimeout = window.setTimeout(() => {
-                //         _$profile.tapCount = 0
-                //         this.options.onSingleTap && this.options.onSingleTap.call(
-                //             undefined, 
-                //             evte, 
-                //             {
-                //                 clientX: evte.clientX,
-                //                 clientY: evte.clientY
-                //             },
-                //             this
-                //         )
-                //     }, 350)
-                // } else 
                 if (_$profile.tapCount >= 2) {
                     _$profile.tapCount = 0
                     this.options.onDoubleTap && this.options.onDoubleTap.call(
@@ -608,6 +589,9 @@
                         this
                     )
                 }
+                _$profile.tapCountRestTimer = window.setTimeout(() => {
+                    _$profile.tapCount = 0
+                }, 300)
             }
         } else if (_$profile.pointers.length === 1) {
             /* ... */
