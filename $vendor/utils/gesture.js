@@ -594,7 +594,7 @@
                             },
                             this
                         )
-                    }, 300)
+                    }, 350)
                 } else if (_$profile.tapCount >= 2) {
                     _$profile.tapCount = 0
                     this.options.onDoubleTap && this.options.onDoubleTap.call(

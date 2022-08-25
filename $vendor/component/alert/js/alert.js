@@ -177,7 +177,7 @@ class AlertManager {
             return
         }
         if (Math.abs(e.clientX - this._pointerdownX) < 8 && Math.abs(e.clientY - this._pointerdownY) < 8) {
-            const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn', e.path || (e.componsedPath && e.componsedPath()), 0)
+            const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn', (e.componsedPath && e.componsedPath()) || e.path, 0)
             if (target && this._callback) {
                 this._callback.call(this, target.getAttribute('data-tagitem'))
             }
@@ -210,7 +210,7 @@ class AlertManager {
         if (typeof e.changedTouches !== 'undefined') {
             evte = e.changedTouches[0]
         }
-        const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn', e.path || (e.componsedPath && e.componsedPath()), 0)
+        const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn', (e.componsedPath && e.componsedPath()) || e.path, 0)
         if (!target || target.nodeName.toUpperCase() !== 'BUTTON') {
             return
         }

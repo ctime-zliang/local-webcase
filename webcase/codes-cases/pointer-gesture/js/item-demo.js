@@ -242,6 +242,9 @@
                 gestureElement.classList.remove(interactiveSelectedClassname)
             }, 85)
         },
+        onDoubleTap(evte, { clientX, clientY }, gesture) {
+            console.log(`onDoubleTap`, { clientX, clientY })
+        },
     })
 })(globalContainerElement.querySelector('[data-tagitem="singletap"]'));
 
@@ -259,7 +262,6 @@
 
     let eventCount = 0
     let styleUpdateTimer = null
-    let sTimer = null
     xGesture.attach(gestureElement, {
         onDoubleTap(evte, { clientX, clientY }, gesture) {
             console.log({ clientX, clientY })
@@ -272,13 +274,11 @@
                 gestureElement.classList.remove(interactiveSelectedClassname)
             }, 85)
         },
+        onSingleTap(evte, { clientX, clientY }, gesture) {
+            console.log(`onSingleTap`, { clientX, clientY })
+        },
         onTap(evte, { clientX, clientY }, gesture) {
-            window.clearTimeout(sTimer)
-            console.log(`onTap`)
-            document.querySelector('.view-title').textContent = gesture._$profile.tapCount
-            sTimer = window.setTimeout(() => {
-                document.querySelector('.view-title').textContent = '-'
-            }, 150)
+            console.log(`onTap`, { clientX, clientY })
         },
     })
 })(globalContainerElement.querySelector('[data-tagitem="doubletap"]'));
