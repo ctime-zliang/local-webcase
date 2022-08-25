@@ -352,6 +352,7 @@
          *      中键 - 1
          *      右键 - 2
          */
+        document.querySelector('.view-title').textContent = evte.timeStamp
         if (evte.pointerType === 'mouse' && evte.button !== 0) {
             return
         }
