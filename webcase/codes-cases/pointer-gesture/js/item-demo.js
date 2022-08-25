@@ -141,7 +141,7 @@
         if (typeof e.changedTouches !== 'undefined') {
             evte = e.changedTouches[0]
         }
-        const target = ven$findTargetByClassName(e.target, 'gesture-interactive', e.path || (e.componsedPath && e.componsedPath()), 0)
+        const target = ven$findTargetByClassName2(e.target, 'gesture-interactive')
         if (!target) {
             return
         }
@@ -167,11 +167,11 @@
         onTap(evte, { clientX, clientY }, gesture) {
             console.log({ clientX, clientY })
             window.clearTimeout(styleUpdateTimer)
-            gestureElement.classList.add(interactiveSelectedClassname)
+            // gestureElement.classList.add(interactiveSelectedClassname)
             countElement.textContent = ++eventCount
             xAbsoluteElement.textContent = clientX
             yAbsoluteElement.textContent = clientY
-            // rippleAnimation(evte)
+            rippleAnimation(evte)
             styleUpdateTimer = window.setTimeout(() => {
                 gestureElement.classList.remove(interactiveSelectedClassname)
             }, 85)

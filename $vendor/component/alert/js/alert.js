@@ -1,12 +1,11 @@
-function __AlertFindTargetByClassName(element, className, eventPath, index) {
-    const nowElement = eventPath[index]
+function __AlertFindTargetByClassName(nowElement, className) {
     if ((nowElement.nodeType !== 1 && nowElement.nodeType !== 3) || !nowElement) {
         return null
     }
-    if (element.classList.contains(className)) {
-        return element
+    if (nowElement.classList.contains(className)) {
+        return nowElement
     }
-    return __AlertFindTargetByClassName(element.parentElement, className, eventPath, ++index)
+    return __AlertFindTargetByClassName(nowElement.parentElement, className)
 }
 
 class AlertManager {
@@ -151,15 +150,8 @@ class AlertManager {
             return
         }
         const toucher0 = e.changedTouches[0]
-        alert(`toucher0.clientX = ${toucher0.clientX}`)
-        alert(`this._pointerdownX = ${this._pointerdownX}`)
         if (Math.abs(toucher0.clientX - this._pointerdownX) < 8 && Math.abs(toucher0.clientY - this._pointerdownY) < 8) {
-            alert(`toucher0.clientY = ${toucher0.clientY}`)
-            alert(`this._pointerdownY = ${this._pointerdownY}`)
-            alert(e.path)
-            alert(e.componsedPath)
-            const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn', e.path || (e.componsedPath && e.componsedPath()), 0)
-            alert(target)
+            const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn')
             if (target && this._callback) {
                 this._callback.call(this, target.getAttribute('data-tagitem'))
             }
@@ -184,7 +176,7 @@ class AlertManager {
             return
         }
         if (Math.abs(e.clientX - this._pointerdownX) < 8 && Math.abs(e.clientY - this._pointerdownY) < 8) {
-            const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn', (e.componsedPath && e.componsedPath()) || e.path, 0)
+            const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn')
             if (target && this._callback) {
                 this._callback.call(this, target.getAttribute('data-tagitem'))
             }
@@ -217,7 +209,7 @@ class AlertManager {
         if (typeof e.changedTouches !== 'undefined') {
             evte = e.changedTouches[0]
         }
-        const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn', (e.componsedPath && e.componsedPath()) || e.path, 0)
+        const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn')
         if (!target || target.nodeName.toUpperCase() !== 'BUTTON') {
             return
         }

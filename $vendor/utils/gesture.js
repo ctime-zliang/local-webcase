@@ -691,12 +691,12 @@
     Gesture.prototype.bindEvent = function() {
         this.containerElements.forEach((item) => {
             item.addEventListener('touchstart', this._handleTouchstartEvent)
-            // item.addEventListener('pointerdown', this._handlePointerdownEvent)
-            // item.addEventListener('pointermove', this._handlePointermoveEvent)
-            // item.addEventListener('pointerup', this._handlePointerupEvent)
-            // item.addEventListener('pointercancel', this._handlePointercancelEvent)
-            // item.addEventListener('wheel', this._handleWheelEvent)
-            // item.addEventListener('contextmenu', this._handleContextmenuEvent)
+            item.addEventListener('pointerdown', this._handlePointerdownEvent)
+            item.addEventListener('pointermove', this._handlePointermoveEvent)
+            item.addEventListener('pointerup', this._handlePointerupEvent)
+            item.addEventListener('pointercancel', this._handlePointercancelEvent)
+            item.addEventListener('wheel', this._handleWheelEvent)
+            item.addEventListener('contextmenu', this._handleContextmenuEvent)
             item.addEventListener('click', this._handleClickEvent)
         })
     }
@@ -704,12 +704,12 @@
     Gesture.prototype.unBindEvent = function() {
         this.containerElements.forEach((item) => {
             item.removeEventListener('touchstart', this._handleTouchstartEvent)
-            // item.removeEventListener('pointerdown', this._handlePointerdownEvent)
-            // item.removeEventListener('pointermove', this._handlePointermoveEvent)
-            // item.removeEventListener('pointerup', this._handlePointerupEvent)
-            // item.removeEventListener('pointercancel', this._handlePointercancelEvent)
-            // item.removeEventListener('wheel', this._handleWheelEvent)
-            // item.removeEventListener('contextmenu', this._handleContextmenuEvent)
+            item.removeEventListener('pointerdown', this._handlePointerdownEvent)
+            item.removeEventListener('pointermove', this._handlePointermoveEvent)
+            item.removeEventListener('pointerup', this._handlePointerupEvent)
+            item.removeEventListener('pointercancel', this._handlePointercancelEvent)
+            item.removeEventListener('wheel', this._handleWheelEvent)
+            item.removeEventListener('contextmenu', this._handleContextmenuEvent)
             item.removeEventListener('click', this._handleClickEvent)
         })
     }
