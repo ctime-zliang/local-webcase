@@ -387,6 +387,7 @@
                 }
             }
             if (_$profile.tapCount === 1) {
+                evte.preventDefault()
                 _$profile.longTapTimeout = window.setTimeout(() => {
                     _$profile.tapCount = 0
                     this.options.onLongTap && this.options.onLongTap.call(
@@ -591,7 +592,7 @@
                 }
                 _$profile.tapCountRestTimer = window.setTimeout(() => {
                     _$profile.tapCount = 0
-                }, 300)
+                }, 500)
             }
         } else if (_$profile.pointers.length === 1) {
             /* ... */
