@@ -151,9 +151,13 @@ class AlertManager {
             return
         }
         const toucher0 = e.changedTouches[0]
-        alert(toucher0.clientX, this._pointerdownX)
+        alert(`toucher0.clientX = ${toucher0.clientX}`)
+        alert(`this._pointerdownX = ${this._pointerdownX}`)
         if (Math.abs(toucher0.clientX - this._pointerdownX) < 8 && Math.abs(toucher0.clientY - this._pointerdownY) < 8) {
-            alert(toucher0.clientY, this._pointerdownY)
+            alert(`toucher0.clientY = ${toucher0.clientY}`)
+            alert(`this._pointerdownY = ${this._pointerdownY}`)
+            alert(e.path)
+            alert(e.componsedPath)
             const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn', e.path || (e.componsedPath && e.componsedPath()), 0)
             alert(target)
             if (target && this._callback) {
