@@ -279,7 +279,8 @@
         static swipeItemTranlsteXMap = {}
         static STATUS_OPEN = 'open'
         static STATUS_CLOSE = 'close'
-        static leftEndPoint = -120
+        static leftEndPoint = -150
+        static moveDirection = undefined
 
         static init(swipeContainerElement) {
             this.swipeContainerElement = swipeContainerElement
@@ -327,7 +328,16 @@
             const self = this
             xGesture.attach(itemElement, {
                 onDragMove(evte, { movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY }, gesture) {
-                    // console.log({ movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY })
+                    console.log({ movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY })
+                    if (!self.moveDirection) {
+                        self.moveDirection = moveDirection
+                    }
+                    if (self.moveDirection === xGesture.defined.DIRECTION_UP || self.moveDirection === xGesture.defined.DIRECTION_DOWN) {
+                        return
+                    }
+                    if (evte.cancelable) {
+                        evte.preventDefault()
+                    }
                     const currentTarget = itemElement
                     const tranlsteXItemData = self.swipeItemTranlsteXMap[currentTarget.id]
                     tranlsteXItemData.setting += diffX
@@ -341,6 +351,13 @@
                 },
                 onSwipe(evte, { direction, distX, distY, releaseX, releaseY }, gesture) {
                     console.log({ direction, distX, distY, releaseX, releaseY })
+                    if (self.moveDirection === xGesture.defined.DIRECTION_UP || self.moveDirection === xGesture.defined.DIRECTION_DOWN) {
+                        self.moveDirection = undefined
+                        return
+                    }
+                    if (evte.cancelable) {
+                        evte.preventDefault()
+                    }
                     const currentTarget = itemElement
                     const tranlsteXItemData = self.swipeItemTranlsteXMap[currentTarget.id]
                     if (direction === xGesture.defined.DIRECTION_RIGHT) {
@@ -350,6 +367,7 @@
                         tranlsteXItemData.setting = tranlsteXItemData.leftEndPoint
                         tranlsteXItemData.status = self.STATUS_OPEN
                     }
+                    self.moveDirection = undefined
                     self.setTransitionStyle(currentTarget, true)
                     self.applyTransfromStyle(currentTarget)
                 },
@@ -372,7 +390,11 @@
                         } else {
                             tranlsteXItemData.setting = tranlsteXItemData.leftEndPoint
                         }
+                    } else {
+                        tranlsteXItemData.setting = tranlsteXItemData.rightEndPoint
+                        tranlsteXItemData.status = self.STATUS_CLOSE
                     }
+                    self.moveDirection = undefined
                     self.setTransitionStyle(currentTarget, true)
                     self.applyTransfromStyle(currentTarget)
                 },
@@ -381,6 +403,7 @@
                     const currentTarget = itemElement
                     const tranlsteXItemData = self.swipeItemTranlsteXMap[currentTarget.id]
                     tranlsteXItemData.setting = tranlsteXItemData.rightEndPoint
+                    self.moveDirection = undefined
                     self.setTransitionStyle(currentTarget, true)
                     self.applyTransfromStyle(currentTarget)
                 }
