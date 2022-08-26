@@ -13,7 +13,7 @@
     let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
         onPointerdown(evte, { clientX, clientY }, gesture) {
-            console.log({ clientX, clientY })
+            console.log(evte, { clientX, clientY })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
             countElement.textContent = ++eventCount
@@ -42,7 +42,7 @@
     let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
         onPointerup(evte, { clientX, clientY }, gesture) {
-            console.log({ clientX, clientY })
+            console.log(evte, { clientX, clientY })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
             countElement.textContent = ++eventCount
@@ -71,9 +71,8 @@
     let styleUpdateTimer = null
     let gestureElementRect = null
     xGesture.attach(gestureElement, {
-        cssTouchAction: 'none',
         onPointermove(evte, { clientX, clientY }, gesture) {
-            console.log({ clientX, clientY })
+            console.log(evte, { clientX, clientY })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
             gestureElementRect = gestureElement.getBoundingClientRect()
@@ -242,7 +241,6 @@
     let styleUpdateTimer = null
     let gestureElementRect = null
     xGesture.attach(gestureElement, {
-        cssTouchAction: 'none',
         onDragMove(evte, { movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY }, gesture) {
             console.log({ movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY })
             window.clearTimeout(styleUpdateTimer)
@@ -326,7 +324,6 @@
         static bindEvent(itemElement) {
             const self = this
             xGesture.attach(itemElement, {
-                cssTouchAction: 'pan-y',
                 onDragMove(evte, { movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY }, gesture) {
                     // console.log({ movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY })
                     const currentTarget = itemElement
@@ -510,7 +507,6 @@
     let maxWScale = 10
     let minScale = 0.1
     xGesture.attach(gestureElement, {
-        cssTouchAction: 'none',
         onPinch(evte, { scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
             console.log({ scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
             window.clearTimeout(styleUpdateTimer)
@@ -586,7 +582,6 @@
 
     let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
-        cssTouchAction: 'none',
         onRotate(evte, { rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
             console.log({ rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
             window.clearTimeout(styleUpdateTimer)

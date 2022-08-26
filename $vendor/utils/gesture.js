@@ -32,6 +32,9 @@
     const POINTER_ITEM_UPDATE = 'POINTER_ITEM_UPDATE'
     const POINTER_ITEM_DELETE = 'POINTER_ITEM_DELETE'
 
+    const TOUCH_EVENT = 'TOUCH_EVENT'
+    const MOUSE_EVENT=  'MOUSE_EVENT'
+
     const DEFAULT_GUEST_OPTIONS = {
         /**
          * wheel 放大倍率
@@ -116,6 +119,10 @@
              */
             offsetRectAtPointerdown: { x: 0, y: 0 },
             lastOffsetRectAtPointerdown: { x: 0, y: 0 },
+            /**
+             * 事件触发类型
+             */
+            triggerEventType: undefined
         }
     }
     function Gesture(host, options) {
@@ -138,30 +145,15 @@
         this._handlePointercancelEvent = this.handlePointercancelEvent.bind(this)
         this._handleWheelEvent = this.handleWheelEvent.bind(this)
         this._handleContextmenuEvent = this.handleContextmenuEvent.bind(this)
-        /* ... */
-        // this.setTouchAction(this.options.cssTouchAction)
         this.bindEvent()
     }
 
     Gesture.prototype.destory = function() {
-        this.setTouchAction('initial')
         this.unBindEvent()
-    }
-
-    Gesture.prototype.setTouchAction = function(value) {
-        this.containerElements.forEach((item) => {
-            item.style.touchAction = value
-        })
-        return this
     }
 
     Gesture.prototype.getAllPointers = function() {
         return this._$profile.pointers
-    }
-
-    Gesture.prototype.setOptionItem = function(key, value) {
-        this.options[key] = value
-        return this
     }
 
     Gesture.prototype.onPointerdown = function(callback) {
@@ -218,7 +210,7 @@
         if (pointers.length) {
             return pointers[pointers.length - 1]
         }
-        return { clientX: -1, clientY: -1, pageX: -1, pageY: -1, radiusX: -1, radiusY: -1, screenX: -1, screenY: -1, rotationAngle: 0, identifier: -1 }
+        return { clientX: -1, clientY: -1, pageX: -1, pageY: -1, radiusX: -1, radiusY: -1, screenX: -1, screenY: -1, rotationAngle: 0, identifier: -1, }
     }
 
     Gesture.prototype.getCenter = function(pointA, pointB) {
@@ -234,45 +226,45 @@
     }
 
     Gesture.prototype.updatePointers = function(evte, type) {
-        const { pointers } = this._$profile
+        const _$profile = this._$profile
         const touches = Array.from(evte.touches || [])
         const changedTouches = Array.from(evte.changedTouches || [])
         evte.pointerId = typeof evte.pointerId === 'undefined' && touches.length <= 0 && changedTouches.length <= 0 ? 1 : evte.pointerId
         if (type === POINTER_ITEM_ADD) {
             if (typeof evte.pointerId !== 'undefined') {
-                pointers.push(evte)
+                _$profile.pointers.push(evte)
                 return
             } 
             for (let i = 0; i < touches.length; i++) {
-                pointers.push(touches[i])
+                _$profile.pointers.push(touches[i])
             }
             return
         }
         if (type === POINTER_ITEM_UPDATE) {
-            for (let i = 0; i < pointers.length; i++) {
+            for (let i = 0; i < _$profile.pointers.length; i++) {
                 if (typeof evte.pointerId !== 'undefined') {
-                    if (pointers[i].pointerId === evte.pointerId) {
-                        pointers[i] = evte
+                    if (_$profile.pointers[i].pointerId === evte.pointerId) {
+                        _$profile.pointers[i] = evte
                         break
                     }
                     continue
                 }
-                pointers[i] = touches[i]
+                _$profile.pointers[i] = touches[i]
             }
             return
         }
         if (type === POINTER_ITEM_DELETE) {
-            for (let i = pointers.length - 1; i >= 0; i--) {
+            for (let i = _$profile.pointers.length - 1; i >= 0; i--) {
                 if (typeof evte.pointerId !== 'undefined') {
-                    if (pointers[i].pointerId === evte.pointerId) {
-                        pointers.splice(i, 1)
+                    if (_$profile.pointers[i].pointerId === evte.pointerId) {
+                        _$profile.pointers.splice(i, 1)
                         break
                     }
                     continue
                 } 
                 for (let j = 0; j < changedTouches.length; j++) {
-                    if (pointers[i].identifier === changedTouches[j].identifier) {
-                        pointers.splice(i, 1)
+                    if (_$profile.pointers[i].identifier === changedTouches[j].identifier) {
+                        _$profile.pointers.splice(i, 1)
                     }
                 }
             }
@@ -355,13 +347,10 @@
             evte.preventDefault()
         }
         const _$profile = this._$profile
-        /**
-         * 屏蔽鼠标中键和右键
-         *      左键 - 0
-         *      中键 - 1
-         *      右键 - 2
-         */
-        if (evte.pointerType === 'mouse' && evte.button !== 0) {
+        if (!_$profile.triggerEventType && evte.touches) {
+            _$profile.triggerEventType = TOUCH_EVENT
+        }
+        if ((evte.pointerType === 'mouse' && evte.button !== 0) || (_$profile.triggerEventType && evte.type[0] === 'm')) {
             return
         }
         this.updatePointers(evte, POINTER_ITEM_ADD)
@@ -611,7 +600,7 @@
                 }
                 _$profile.tapCountRestTimer = window.setTimeout(() => {
                     _$profile.tapCount = 0
-                }, 350)
+                }, 400)
             }
         } else if (_$profile.pointers.length === 1) {
             /* ... */

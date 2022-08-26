@@ -123,7 +123,6 @@
     }
     const bindEvent = (imageElement) => {
         xGesture.attach(imageElement.parentElement, {
-            cssTouchAction: 'none',
             preventDefaultOnPointerdown: true,
             onWheel(evte, { scale, clientX, clientY }, gesture) {
                 evte.preventDefault()
