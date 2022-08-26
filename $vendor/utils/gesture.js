@@ -307,9 +307,8 @@
         return DIRECTION_UP
     }
 
-    Gesture.prototype.handleSwipe = function(evte) {
+    Gesture.prototype.handleSwipe = function(evte, lastOnePointerEvent) {
         const _$profile = this._$profile
-        const lastOnePointerEvent = this.getLastOnePointerEvent()
         const MIN_SWIPE_DISTANCE = 20
         const MAX_TIME_INTERVAL = 200
         let x = 0
@@ -579,7 +578,7 @@
             _$profile.movePositionRange = ''
             _$profile.moveDirection = ''
             if (_$profile.tapCount === 0) {
-                this.handleSwipe(evte)
+                this.handleSwipe(evte, lastOnePointerEvent)
             } else {
                 this.options.onTap && this.options.onTap.call(
                     undefined, 
