@@ -125,6 +125,7 @@
         xGesture.attach(imageElement.parentElement, {
             cssTouchAction: 'none',
             onWheel(evte, { scale, clientX, clientY }, gesture) {
+                evte.preventDefault()
                 const offsetX = clientX - profile.containerWidth / 2
                 const offsetY = clientY - profile.containerHeight / 2
                 const translateOffsetX = offsetX / TransfromManager.scale - TransfromManager.translateX / TransfromManager.scale

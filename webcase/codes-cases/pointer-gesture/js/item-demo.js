@@ -165,7 +165,6 @@
     let eventCount = 0
     let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
-        isPreventDefaultInLongDown: true,
         onLongTap(evte, { clientX, clientY }, gesture) {
             console.log({ clientX, clientY })
             window.clearTimeout(styleUpdateTimer)
@@ -329,7 +328,7 @@
                 cssTouchAction: 'pan-y',
                 onDragMove(evte, { movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY }, gesture) {
                     // console.log({ movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY })
-                    const currentTarget = evte.currentTarget
+                    const currentTarget = itemElement
                     const tranlsteXItemData = self.swipeItemTranlsteXMap[currentTarget.id]
                     tranlsteXItemData.setting += diffX
                     if (tranlsteXItemData.setting > tranlsteXItemData.rightEndPoint) {
@@ -342,7 +341,7 @@
                 },
                 onSwipe(evte, { direction, distX, distY, releaseX, releaseY }, gesture) {
                     console.log({ direction, distX, distY, releaseX, releaseY })
-                    const currentTarget = evte.currentTarget
+                    const currentTarget = itemElement
                     const tranlsteXItemData = self.swipeItemTranlsteXMap[currentTarget.id]
                     if (direction === xGesture.defined.DIRECTION_RIGHT) {
                         tranlsteXItemData.setting = tranlsteXItemData.rightEndPoint
@@ -356,7 +355,7 @@
                 },
                 onPointerup(evte, { clientX, clientY }, gesture) {
                     console.log({ clientX, clientY })
-                    const currentTarget = evte.currentTarget
+                    const currentTarget = itemElement
                     const tranlsteXItemData = self.swipeItemTranlsteXMap[currentTarget.id]
                     if (tranlsteXItemData.setting === tranlsteXItemData.rightEndPoint || tranlsteXItemData.setting === tranlsteXItemData.leftEndPoint) {
                         return
@@ -379,7 +378,7 @@
                 },
                 onPpointercancel(evte, { clientX, clientY }, gesture) {
                     console.log({ clientX, clientY })
-                    const currentTarget = evte.currentTarget
+                    const currentTarget = itemElement
                     const tranlsteXItemData = self.swipeItemTranlsteXMap[currentTarget.id]
                     tranlsteXItemData.setting = tranlsteXItemData.rightEndPoint
                     self.setTransitionStyle(currentTarget, true)
@@ -440,6 +439,7 @@
     xGesture.attach(gestureElement, {
         onWheel(evte, { scale, clientX, clientY }, gesture) {
             console.log({ scale, clientX, clientY })
+            evte.preventDefault()
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
             TransfromManager.scale *= scale

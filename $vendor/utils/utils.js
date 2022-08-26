@@ -13,15 +13,17 @@ async function ven$classOf(target) {
  * @description 同步阻塞
  * @function ven$choke
  * @param {number} delay 阻塞时长
- * @return {undefined}
+ * @return {number}
  */
 function ven$choke(delay = 1000) {
     console.log('%c Synchronous Blocking Start...' + delay +  'ms.', 'color: green; font-size: 18px;') 
     const start = performance.now()
+    let count = 0
     while (performance.now() - start <= delay) {
-        /* ... */
+        ++count
     }
-    console.log('%c Synchronous Blocking End...', 'color: green; font-size: 18px;') 
+    console.log('%c Synchronous Blocking End...', 'color: green; font-size: 18px;')
+    return count
 }
 
 
@@ -94,9 +96,8 @@ function ven$removeAllFrontZero(arr) {
     for (let i = 0; i < arr.length; i++) {
         if (arr[i] === 0 && !flag) {
             continue
-        } else {
-            flag = true
         }
+        flag = true
         res.push(arr[i])
     }
     return res
@@ -293,6 +294,7 @@ function ven$zoomImageByContainer(
     }
 }
 
+
 /**
  * @description 递归向上查找指定 className 的元素节点
  * @function ven$findTargetByClassName
@@ -302,7 +304,7 @@ function ven$zoomImageByContainer(
  * @param {number} index 索引
  * @return {htmllement|null} 
  */
- function ven$findTargetByClassName(element, className, eventPath, index) {
+function ven$findTargetByClassName(element, className, eventPath, index) {
     if (!eventPath) {
         return null
     }
@@ -324,12 +326,12 @@ function ven$zoomImageByContainer(
  * @param {string} className class-name
  * @return {htmllement|null} 
  */
- function ven$findTargetByClassName2(nowElement, className) {
+function ven$findTargetByClassName2(nowElement, className) {
     if ((nowElement.nodeType !== 1 && nowElement.nodeType !== 3) || !nowElement) {
         return null
     }
     if (nowElement.classList.contains(className)) {
         return nowElement
     }
-    return findTargetByClassName2(nowElement.parentElement, className)
+    return ven$findTargetByClassName2(nowElement.parentElement, className)
 }

@@ -42,14 +42,6 @@
          */
         zoomOutWheelRatio: 1 / 1.1,
         /**
-         * 在长按时是否屏蔽默认行为
-         */
-        isPreventDefaultInLongDown: false,
-        /**
-         * 在 wheel 触发时是否屏蔽默认行为
-         */
-        isPreventDefaultInWheel: true,
-        /**
          * onLongTap 触发的延迟时间设置
          */
         delayOfLongTapDispatch: 500,
@@ -136,7 +128,6 @@
     }
     
     Gesture.prototype.init = function() {
-        this._handleTouchstartEvent = this.handleTouchstartEvent.bind(this)
         this._handlePointerdownEvent = this.handlePointerdownEvent.bind(this)
         this._handlePointermoveEvent = this.handlePointermoveEvent.bind(this)
         this._handlePointerupEvent = this.handlePointerupEvent.bind(this)
@@ -144,7 +135,7 @@
         this._handleWheelEvent = this.handleWheelEvent.bind(this)
         this._handleContextmenuEvent = this.handleContextmenuEvent.bind(this)
         /* ... */
-        this.setTouchAction(this.options.cssTouchAction)
+        // this.setTouchAction(this.options.cssTouchAction)
         this.bindEvent()
     }
 
@@ -218,6 +209,14 @@
     /****************************** ******************************/
     /****************************** ******************************/
 
+    Gesture.prototype.getLastOnePointerEvent = function() {
+        const { pointers } = this._$profile
+        if (pointers.length) {
+            return pointers[pointers.length - 1]
+        }
+        return { clientX: -1, clientY: -1, pageX: -1, pageY: -1, radiusX: -1, radiusY: -1, screenX: -1, screenY: -1, rotationAngle: 0, identifier: -1 }
+    }
+
     Gesture.prototype.getCenter = function(pointA, pointB) {
         return { x: (pointA.x + pointB.x) / 2, y: (pointA.y + pointB.y) / 2 }
     }
@@ -232,26 +231,49 @@
 
     Gesture.prototype.updatePointers = function(evte, type) {
         const { pointers } = this._$profile
+        const touches = Array.from(evte.touches || [])
+        const changedTouches = Array.from(evte.changedTouches || [])
+        evte.pointerId = typeof evte.pointerId === 'undefined' && touches.length <= 0 && changedTouches.length <= 0 ? 1 : evte.pointerId
         if (type === POINTER_ITEM_ADD) {
-            pointers.push(evte)
-            return pointers.length - 1
-        }
-        let idx = -1
-        for (let i = 0; i < pointers.length; i++) {
-            if (pointers[i].pointerId === evte.pointerId) {
-                idx = i
-                break
+            if (typeof evte.pointerId !== 'undefined') {
+                pointers.push(evte)
+                return
+            } 
+            for (let i = 0; i < touches.length; i++) {
+                pointers.push(touches[i])
             }
+            return
         }
-        if (idx >= 0) {
-            if (type === POINTER_ITEM_UPDATE) {
-                pointers[idx] = evte
+        if (type === POINTER_ITEM_UPDATE) {
+            for (let i = 0; i < pointers.length; i++) {
+                if (typeof evte.pointerId !== 'undefined') {
+                    if (pointers[i].pointerId === evte.pointerId) {
+                        pointers[i] = evte
+                        break
+                    }
+                    continue
+                }
+                pointers[i] = touches[i]
             }
-            if (type === POINTER_ITEM_DELETE) {
-                pointers.splice(idx, 1)
-            }
+            return
         }
-        return idx
+        if (type === POINTER_ITEM_DELETE) {
+            for (let i = pointers.length - 1; i >= 0; i--) {
+                if (typeof evte.pointerId !== 'undefined') {
+                    if (pointers[i].pointerId === evte.pointerId) {
+                        pointers.splice(i, 1)
+                        break
+                    }
+                    continue
+                } 
+                for (let j = 0; j < changedTouches.length; j++) {
+                    if (pointers[i].identifier === changedTouches[j].identifier) {
+                        pointers.splice(i, 1)
+                    }
+                }
+            }
+            return
+        }
     }
 
     Gesture.prototype.getMovePositionRange = function() {
@@ -287,6 +309,7 @@
 
     Gesture.prototype.handleSwipe = function(evte) {
         const _$profile = this._$profile
+        const lastOnePointerEvent = this.getLastOnePointerEvent()
         const MIN_SWIPE_DISTANCE = 20
         const MAX_TIME_INTERVAL = 200
         let x = 0
@@ -298,8 +321,8 @@
          */
         let i = 0
         while (i <= _$profile.dotsRecordInPointermove.length - 1 && (evte.timeStamp - _$profile.dotsRecordInPointermove[i].timeStamp < MAX_TIME_INTERVAL)) {
-            x = evte.clientX - _$profile.dotsRecordInPointermove[i].x
-            y = evte.clientY - _$profile.dotsRecordInPointermove[i].y
+            x = lastOnePointerEvent.clientX - _$profile.dotsRecordInPointermove[i].x
+            y = lastOnePointerEvent.clientY - _$profile.dotsRecordInPointermove[i].y
             i++
         }
         if (Math.abs(x) > MIN_SWIPE_DISTANCE || Math.abs(y) > MIN_SWIPE_DISTANCE) {
@@ -315,18 +338,12 @@
                     direction: swipeDirection,
                     distX: x,
                     distY: y,
-                    releaseX: evte.clientX,
-                    releaseY: evte.clientY,
+                    releaseX: lastOnePointerEvent.clientX,
+                    releaseY: lastOnePointerEvent.clientY,
                 }, 
                 this
             )
         }
-    }
-
-    Gesture.prototype.handleTouchstartEvent = function(evte) {
-        evte.preventDefault()
-        const _$profile = this._$profile
-        document.querySelector('.view-title').textContent = evte.timeStamp + 'touchstart'
     }
 
     Gesture.prototype.handlePointerdownEvent = function(evte) {
@@ -344,10 +361,17 @@
         this.updatePointers(evte, POINTER_ITEM_ADD)
         _$profile.isPointerdown = true
         if (_$profile.pointers.length === 1) {
-            evte.currentTarget.setPointerCapture(evte.pointerId)
+            document.addEventListener('touchmove', this._handlePointermoveEvent)
+            document.addEventListener('touchend', this._handlePointerupEvent)
+            document.addEventListener('mousemove', this._handlePointermoveEvent)
+            document.addEventListener('mouseup', this._handlePointerupEvent)
+            document.addEventListener('touchcancel', this._handlePointercancelEvent)
+            /* ... */
+            // evte.currentTarget.setPointerCapture(evte.pointerId)
             window.clearTimeout(_$profile.tapCountRestTimer)
-            _$profile.dotsRecordInPointerdown[0] = { x: evte.clientX, y: evte.clientY }
-            _$profile.lastDotsRecordInPointerdown[0] = { x: evte.clientX, y: evte.clientY }
+            const lastOnePointerEvent = this.getLastOnePointerEvent()
+            _$profile.dotsRecordInPointerdown[0] = { x: lastOnePointerEvent.clientX, y: lastOnePointerEvent.clientY }
+            _$profile.lastDotsRecordInPointerdown[0] = { x: lastOnePointerEvent.clientX, y: lastOnePointerEvent.clientY }
             /* ... */
             const pointer1 = _$profile.pointers[0]
             const dotRecordInPointerdown1 = _$profile.dotsRecordInPointerdown[0]
@@ -376,7 +400,6 @@
                 }
             }
             if (_$profile.tapCount === 1) {
-                evte.preventDefault()
                 _$profile.longTapTimeout = window.setTimeout(() => {
                     _$profile.tapCount = 0
                     this.options.onLongTap && this.options.onLongTap.call(
@@ -395,8 +418,9 @@
         }
         if (_$profile.pointers.length === 2) {
             window.clearTimeout(_$profile.longTapTimeout)
-            _$profile.dotsRecordInPointerdown[1] = { x: evte.clientX, y: evte.clientY }
-            _$profile.lastDotsRecordInPointerdown[1] = { x: evte.clientX, y: evte.clientY }
+            const lastOnePointerEvent = this.getLastOnePointerEvent()
+            _$profile.dotsRecordInPointerdown[1] = { x: lastOnePointerEvent.clientX, y: lastOnePointerEvent.clientY }
+            _$profile.lastDotsRecordInPointerdown[1] = { x: lastOnePointerEvent.clientX, y: lastOnePointerEvent.clientY }
             /* ... */
             const pointer1 = _$profile.pointers[0]
             const pointer2 = _$profile.pointers[1]
@@ -416,12 +440,13 @@
             _$profile.lastDotsRecordInPointerdown[0] = { x: _$profile.pointers[0].clientX, y: _$profile.pointers[0].clientY }
             _$profile.lastDotsRecordInPointerdown[1] = { x: _$profile.pointers[1].clientX, y: _$profile.pointers[1].clientY }
         }
+        const lastOnePointerEvent = this.getLastOnePointerEvent()
         this.options.onPointerdown && this.options.onPointerdown.call(
             undefined, 
             evte, 
             {
-                clientX: evte.clientX,
-                clientY: evte.clientY
+                clientX: lastOnePointerEvent.clientX,
+                clientY: lastOnePointerEvent.clientY
             },
             this
         )
@@ -432,7 +457,7 @@
         if (!_$profile.isPointerdown) {
             return
         }
-        const idx = this.updatePointers(evte, POINTER_ITEM_UPDATE)
+        this.updatePointers(evte, POINTER_ITEM_UPDATE)
         if (_$profile.pointers.length === 1) {
             /* ... */
             const pointer1 = _$profile.pointers[0]
@@ -533,12 +558,13 @@
             lastDotRecordInPointerdown2.x = pointer2.clientX
             lastDotRecordInPointerdown2.y = pointer2.clientY
         }
+        const lastOnePointerEvent = this.getLastOnePointerEvent()
         this.options.onPointermove && this.options.onPointermove.call(
             undefined, 
             evte, 
             {
-                clientX: evte.clientX,
-                clientY: evte.clientY
+                clientX: lastOnePointerEvent.clientX,
+                clientY: lastOnePointerEvent.clientY
             },
             this
         )
@@ -549,7 +575,8 @@
         if (!_$profile.isPointerdown) {
             return;
         }
-        const idx = this.updatePointers(evte, POINTER_ITEM_DELETE)
+        const lastOnePointerEvent = this.getLastOnePointerEvent()
+        this.updatePointers(evte, POINTER_ITEM_DELETE)
         if (_$profile.pointers.length === 0) {
             window.clearTimeout(this._$profile.longTapTimeout)
             _$profile.isPointerdown = false
@@ -562,8 +589,8 @@
                     undefined, 
                     evte,
                     {
-                        clientX: evte.clientX,
-                        clientY: evte.clientY
+                        clientX: lastOnePointerEvent.clientX,
+                        clientY: lastOnePointerEvent.clientY
                     },
                     this
                 )
@@ -573,15 +600,15 @@
                         undefined, 
                         evte, 
                         {
-                            clientX: evte.clientX,
-                            clientY: evte.clientY
+                            clientX: lastOnePointerEvent.clientX,
+                            clientY: lastOnePointerEvent.clientY
                         },
                         this
                     )
                 }
                 _$profile.tapCountRestTimer = window.setTimeout(() => {
                     _$profile.tapCount = 0
-                }, 500)
+                }, 350)
             }
         } else if (_$profile.pointers.length === 1) {
             /* ... */
@@ -607,34 +634,46 @@
             undefined, 
             evte, 
             {
-                clientX: evte.clientX,
-                clientY: evte.clientY
+                clientX: lastOnePointerEvent.clientX,
+                clientY: lastOnePointerEvent.clientY
             },
             this
         )
+        if (_$profile.pointers.length <= 0) {
+            document.removeEventListener('touchmove', this._handlePointermoveEvent)
+            document.removeEventListener('touchend', this._handlePointerupEvent)
+            document.removeEventListener('mousemove', this._handlePointermoveEvent)
+            document.removeEventListener('mouseup', this._handlePointerupEvent)
+            document.removeEventListener('touchcancel', this._handlePointercancelEvent)
+        }
     }
 
     Gesture.prototype.handlePointercancelEvent = function(evte) {
         const _$profile = this._$profile
+        const lastOnePointerEvent = this.getLastOnePointerEvent()
         window.clearTimeout(_$profile.longTapTimeout)
         _$profile.isPointerdown = false
         _$profile.tapCount = 0
-        const idx = this.updatePointers(evte, POINTER_ITEM_DELETE)
+        this.updatePointers(evte, POINTER_ITEM_DELETE)
         this.options.onPpointercancel && this.options.onPpointercancel.call(
             undefined, 
             evte, 
             {
-                clientX: evte.clientX,
-                clientY: evte.clientY
+                clientX: lastOnePointerEvent.clientX,
+                clientY: evlastOnePointerEventte.clientY
             },
             this
         )
+        if (_$profile.pointers.length <= 0) {
+            document.removeEventListener('touchmove', this._handlePointermoveEvent)
+            document.removeEventListener('touchend', this._handlePointerupEvent)
+            document.removeEventListener('mousemove', this._handlePointermoveEvent)
+            document.removeEventListener('mouseup', this._handlePointerupEvent)
+            document.removeEventListener('touchcancel', this._handlePointercancelEvent)
+        }
     }
 
     Gesture.prototype.handleWheelEvent = function(evte) {
-        if (this.options.isPreventDefaultInWheel) {
-            evte.preventDefault()
-        }
         const _$profile = this._$profile
         const scale = evte.deltaY > 0 ? this.options.zoomOutWheelRatio : this.options.zoomInWheelRatio
         this.options.onWheel && this.options.onWheel.call(
@@ -650,9 +689,6 @@
     }
 
     Gesture.prototype.handleContextmenuEvent = function(evte) {
-        if (this.options.isPreventDefaultInLongDown) {
-            evte.preventDefault()
-        }
         this.options.onContextmenu && this.options.onContextmenu.call(
             undefined, 
             evte, 
@@ -666,11 +702,8 @@
 
     Gesture.prototype.bindEvent = function() {
         this.containerElements.forEach((item) => {
-            item.addEventListener('touchstart', this._handleTouchstartEvent)
-            item.addEventListener('pointerdown', this._handlePointerdownEvent)
-            item.addEventListener('pointermove', this._handlePointermoveEvent)
-            item.addEventListener('pointerup', this._handlePointerupEvent)
-            item.addEventListener('pointercancel', this._handlePointercancelEvent)
+            item.addEventListener('touchstart', this._handlePointerdownEvent)
+            item.addEventListener('mousedown', this._handlePointerdownEvent)
             item.addEventListener('wheel', this._handleWheelEvent)
             item.addEventListener('contextmenu', this._handleContextmenuEvent)
         })
@@ -678,11 +711,8 @@
 
     Gesture.prototype.unBindEvent = function() {
         this.containerElements.forEach((item) => {
-            item.removeEventListener('touchstart', this._handleTouchstartEvent)
-            item.removeEventListener('pointerdown', this._handlePointerdownEvent)
-            item.removeEventListener('pointermove', this._handlePointermoveEvent)
-            item.removeEventListener('pointerup', this._handlePointerupEvent)
-            item.removeEventListener('pointercancel', this._handlePointercancelEvent)
+            item.removeEventListener('touchstart', this._handlePointerdownEvent)
+            item.removeEventListener('mousedown', this._handlePointerdownEvent)
             item.removeEventListener('wheel', this._handleWheelEvent)
             item.removeEventListener('contextmenu', this._handleContextmenuEvent)
 
