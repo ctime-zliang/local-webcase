@@ -25,18 +25,26 @@
 <body>
     <div class="touchstart-log" style="font-size: 0.16rem; min-height: 25px;"></div>
     <div class="pointerdown-log" style="font-size: 0.16rem; min-height: 25px;"></div>
+    <div class="click-log" style="font-size: 0.16rem; min-height: 25px;"></div>
     <div class="box" id="box" style="width: 200px; height: 200px; background-color: #ff6600;;">.</div>
 </body>
 <script>
 const touchstartLogElement = document.querySelector('.touchstart-log')
 const pointerdownLogElement = document.querySelector('.pointerdown-log')
+const clickLogElement = document.querySelector('.click-log')
 const boxElement = document.getElementById('box')
 
 boxElement.addEventListener('touchstart', function(e) {
-    touchstartLogElement.textContent = e.timeStamp
+    e.preventDefault()
+    touchstartLogElement.textContent = `touchstart ${e.timeStamp}`
 })
 boxElement.addEventListener('pointerdown', function(e) {
-    pointerdownLogElement.textContent = e.timeStamp
+    e.preventDefault()
+    pointerdownLogElement.textContent = `pointerdown ${e.timeStamp}`
+})
+boxElement.addEventListener('click', function(e) {
+    e.preventDefault()
+    clickLogElement.textContent = `click ${e.timeStamp}`
 })
 </script>
 </html>
