@@ -1,34 +1,5 @@
 /****************************** ******************************/
 /****************************** ******************************/
-/** Click ***/
-/****************************** ******************************/
-/****************************** ******************************/
-;(function(sectionElement) {
-    const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
-    const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
-    const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
-    const yAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-y"]')
-
-    let eventCount = 0
-    let styleUpdateTimer = null
-    xGesture.attach(gestureElement, {
-        onClick(evte, { clientX, clientY }, gesture) {
-            console.log({ clientX, clientY })
-            window.clearTimeout(styleUpdateTimer)
-            gestureElement.classList.add(interactiveSelectedClassname)
-            countElement.textContent = ++eventCount
-            xAbsoluteElement.textContent = clientX
-            yAbsoluteElement.textContent = clientY
-            styleUpdateTimer = window.setTimeout(() => {
-                gestureElement.classList.remove(interactiveSelectedClassname)
-            }, 85)
-        },
-    })
-})(globalContainerElement.querySelector('[data-tagitem="click"]'));
-
-
-/****************************** ******************************/
-/****************************** ******************************/
 /** Pointer Down ***/
 /****************************** ******************************/
 /****************************** ******************************/

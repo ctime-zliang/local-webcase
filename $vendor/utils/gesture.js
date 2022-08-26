@@ -120,10 +120,6 @@
              */
             offsetRectAtPointerdown: { x: 0, y: 0 },
             lastOffsetRectAtPointerdown: { x: 0, y: 0 },
-            /**
-             * 其他
-             */
-            __tkp: false
         }
     }
     function Gesture(host, options) {
@@ -147,9 +143,8 @@
         this._handlePointercancelEvent = this.handlePointercancelEvent.bind(this)
         this._handleWheelEvent = this.handleWheelEvent.bind(this)
         this._handleContextmenuEvent = this.handleContextmenuEvent.bind(this)
-        this._handleClickEvent = this.handleClickEvent.bind(this)
         /* ... */
-        // this.setTouchAction(this.options.cssTouchAction)
+        this.setTouchAction(this.options.cssTouchAction)
         this.bindEvent()
     }
 
@@ -216,11 +211,6 @@
 
     Gesture.prototype.onWheel = function(callback) {
         this.options.onWheel = callback
-        return this
-    }
-
-    Gesture.prototype.onClick = function(callback) {
-        this.options.onClick = callback
         return this
     }
 
@@ -318,7 +308,6 @@
             } else {
                 swipeDirection = y > 0 ? DIRECTION_DOWN : DIRECTION_UP
             }
-            _$profile.__tkp = true
             this.options.onSwipe && this.options.onSwipe.call(
                 undefined, 
                 evte, 
@@ -335,12 +324,13 @@
     }
 
     Gesture.prototype.handleTouchstartEvent = function(evte) {
+        evte.preventDefault()
         const _$profile = this._$profile
-        _$profile.__tkp && evte.preventDefault()
         document.querySelector('.view-title').textContent = evte.timeStamp + 'touchstart'
     }
 
     Gesture.prototype.handlePointerdownEvent = function(evte) {
+        evte.preventDefault()
         const _$profile = this._$profile
         /**
          * 屏蔽鼠标中键和右键
@@ -353,7 +343,6 @@
         }
         this.updatePointers(evte, POINTER_ITEM_ADD)
         _$profile.isPointerdown = true
-        _$profile.__tkp = false
         if (_$profile.pointers.length === 1) {
             evte.currentTarget.setPointerCapture(evte.pointerId)
             window.clearTimeout(_$profile.tapCountRestTimer)
@@ -623,7 +612,6 @@
             },
             this
         )
-        _$profile.__tkp = false
     }
 
     Gesture.prototype.handlePointercancelEvent = function(evte) {
@@ -676,41 +664,28 @@
         )
     }
 
-    Gesture.prototype.handleClickEvent = function(evte) {
-        this.options.onClick && this.options.onClick.call(
-            undefined, 
-            evte, 
-            { 
-                clientX: evte.clientX,
-                clientY: evte.clientY
-            },
-            this
-        )
-    }
-
     Gesture.prototype.bindEvent = function() {
         this.containerElements.forEach((item) => {
             item.addEventListener('touchstart', this._handleTouchstartEvent)
-            // item.addEventListener('pointerdown', this._handlePointerdownEvent)
-            // item.addEventListener('pointermove', this._handlePointermoveEvent)
-            // item.addEventListener('pointerup', this._handlePointerupEvent)
-            // item.addEventListener('pointercancel', this._handlePointercancelEvent)
-            // item.addEventListener('wheel', this._handleWheelEvent)
-            // item.addEventListener('contextmenu', this._handleContextmenuEvent)
-            item.addEventListener('click', this._handleClickEvent)
+            item.addEventListener('pointerdown', this._handlePointerdownEvent)
+            item.addEventListener('pointermove', this._handlePointermoveEvent)
+            item.addEventListener('pointerup', this._handlePointerupEvent)
+            item.addEventListener('pointercancel', this._handlePointercancelEvent)
+            item.addEventListener('wheel', this._handleWheelEvent)
+            item.addEventListener('contextmenu', this._handleContextmenuEvent)
         })
     }
 
     Gesture.prototype.unBindEvent = function() {
         this.containerElements.forEach((item) => {
             item.removeEventListener('touchstart', this._handleTouchstartEvent)
-            // item.removeEventListener('pointerdown', this._handlePointerdownEvent)
-            // item.removeEventListener('pointermove', this._handlePointermoveEvent)
-            // item.removeEventListener('pointerup', this._handlePointerupEvent)
-            // item.removeEventListener('pointercancel', this._handlePointercancelEvent)
-            // item.removeEventListener('wheel', this._handleWheelEvent)
-            // item.removeEventListener('contextmenu', this._handleContextmenuEvent)
-            item.removeEventListener('click', this._handleClickEvent)
+            item.removeEventListener('pointerdown', this._handlePointerdownEvent)
+            item.removeEventListener('pointermove', this._handlePointermoveEvent)
+            item.removeEventListener('pointerup', this._handlePointerupEvent)
+            item.removeEventListener('pointercancel', this._handlePointercancelEvent)
+            item.removeEventListener('wheel', this._handleWheelEvent)
+            item.removeEventListener('contextmenu', this._handleContextmenuEvent)
+
         })
     }
 
