@@ -72,7 +72,8 @@
     let gestureElementRect = null
     xGesture.attach(gestureElement, {
         onPointermove(evte, { clientX, clientY }, gesture) {
-            console.log(evte, { clientX, clientY })
+            evte.preventDefault()
+            console.log({ clientX, clientY })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
             gestureElementRect = gestureElement.getBoundingClientRect()
@@ -242,6 +243,7 @@
     let gestureElementRect = null
     xGesture.attach(gestureElement, {
         onDragMove(evte, { movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY }, gesture) {
+            evte.preventDefault()
             console.log({ movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
