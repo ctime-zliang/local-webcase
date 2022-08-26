@@ -202,6 +202,7 @@
     let eventCount = 0
     let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
+        preventDefaultOnPointerdown: true,
         onDoubleTap(evte, { clientX, clientY }, gesture) {
             console.log({ clientX, clientY })
             window.clearTimeout(styleUpdateTimer)

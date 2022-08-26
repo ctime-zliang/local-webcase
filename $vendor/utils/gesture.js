@@ -46,6 +46,10 @@
          */
         delayOfLongTapDispatch: 500,
         /**
+         * 按下时阻止默认事件
+         */
+        preventDefaultOnPointerdown: false,
+        /**
          * 指定 touchAction
          */
         cssTouchAction: 'initial',
@@ -347,7 +351,9 @@
     }
 
     Gesture.prototype.handlePointerdownEvent = function(evte) {
-        evte.preventDefault()
+        if (this.options.preventDefaultOnPointerdown) {
+            evte.preventDefault()
+        }
         const _$profile = this._$profile
         /**
          * 屏蔽鼠标中键和右键
@@ -361,11 +367,8 @@
         this.updatePointers(evte, POINTER_ITEM_ADD)
         _$profile.isPointerdown = true
         if (_$profile.pointers.length === 1) {
-            document.addEventListener('touchmove', this._handlePointermoveEvent)
-            document.addEventListener('touchend', this._handlePointerupEvent)
             document.addEventListener('mousemove', this._handlePointermoveEvent)
             document.addEventListener('mouseup', this._handlePointerupEvent)
-            document.addEventListener('touchcancel', this._handlePointercancelEvent)
             /* ... */
             // evte.currentTarget.setPointerCapture(evte.pointerId)
             window.clearTimeout(_$profile.tapCountRestTimer)
@@ -640,11 +643,8 @@
             this
         )
         if (_$profile.pointers.length <= 0) {
-            document.removeEventListener('touchmove', this._handlePointermoveEvent)
-            document.removeEventListener('touchend', this._handlePointerupEvent)
             document.removeEventListener('mousemove', this._handlePointermoveEvent)
             document.removeEventListener('mouseup', this._handlePointerupEvent)
-            document.removeEventListener('touchcancel', this._handlePointercancelEvent)
         }
     }
 
@@ -665,11 +665,8 @@
             this
         )
         if (_$profile.pointers.length <= 0) {
-            document.removeEventListener('touchmove', this._handlePointermoveEvent)
-            document.removeEventListener('touchend', this._handlePointerupEvent)
             document.removeEventListener('mousemove', this._handlePointermoveEvent)
             document.removeEventListener('mouseup', this._handlePointerupEvent)
-            document.removeEventListener('touchcancel', this._handlePointercancelEvent)
         }
     }
 
@@ -703,6 +700,9 @@
     Gesture.prototype.bindEvent = function() {
         this.containerElements.forEach((item) => {
             item.addEventListener('touchstart', this._handlePointerdownEvent)
+            item.addEventListener('touchmove', this._handlePointermoveEvent)
+            item.addEventListener('touchend', this._handlePointerupEvent)
+            item.addEventListener('touchcancel', this._handlePointercancelEvent)
             item.addEventListener('mousedown', this._handlePointerdownEvent)
             item.addEventListener('wheel', this._handleWheelEvent)
             item.addEventListener('contextmenu', this._handleContextmenuEvent)
@@ -712,6 +712,9 @@
     Gesture.prototype.unBindEvent = function() {
         this.containerElements.forEach((item) => {
             item.removeEventListener('touchstart', this._handlePointerdownEvent)
+            item.removeEventListener('touchmove', this._handlePointermoveEvent)
+            item.removeEventListener('touchend', this._handlePointerupEvent)
+            item.removeEventListener('touchcancel', this._handlePointercancelEvent)
             item.removeEventListener('mousedown', this._handlePointerdownEvent)
             item.removeEventListener('wheel', this._handleWheelEvent)
             item.removeEventListener('contextmenu', this._handleContextmenuEvent)
