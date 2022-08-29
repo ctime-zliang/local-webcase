@@ -14,7 +14,7 @@
 
 .alertmgr-ripple {
 	border-radius: 50%;
-	background-color: #efefef;
+	background-color: #dcdcdc;
 	-webkit-transform: scale(0);
 	transform: scale(0);
 	position: absolute;
@@ -22,9 +22,9 @@
     pointer-events: none;
 }
 .alertmgr-ripple-animation{
-	-webkit-animation: alertmgrRippleAnimation 1s cubic-bezier(0.23, 1, 0.32, 1);
-    -moz-animation: alertmgrRippleAnimation 1s cubic-bezier(0.23, 1, 0.32, 1);
-	animation: alertmgrRippleAnimation 1s cubic-bezier(0.23, 1, 0.32, 1);
+	-webkit-animation: alertmgrRippleAnimation 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+    -moz-animation: alertmgrRippleAnimation 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+	animation: alertmgrRippleAnimation 1.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 

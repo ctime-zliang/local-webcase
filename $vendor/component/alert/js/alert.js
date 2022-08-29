@@ -24,6 +24,7 @@ class AlertManager {
     static _pointerdownY = 0
     static _btns = []
     static _isPointerdown = false
+    static _isFlushCallback = false
 
     static init() {
         if (document.querySelector('.alertmgr-container')) {
@@ -63,6 +64,7 @@ class AlertManager {
                 this._updateBtnsView()
             }
         }
+        this._isFlushCallback = false
         /* ... */        
         this._contentElement.innerHTML = message
         this._wrapperElement.classList.add('alertmgr-wrapper-entrystart', 'alertmgr-transition-duringshort')
@@ -135,6 +137,15 @@ class AlertManager {
         this._lockElement.addEventListener('transitionend', this._transitionsTransitionendHandler)
     }
 
+    static _doCallback(targetElement) {
+        if (this._callback && !this._isFlushCallback) {
+            window.setTimeout(() => {
+                this._isFlushCallback = true
+                this._callback.call(this, targetElement.getAttribute('data-tagitem'))
+            }, 100)
+        }
+    }
+
     static _btnsWrapperTouchstartHandler(e) {
         e.preventDefault()
         const toucher0 = e.changedTouches[0]
@@ -152,9 +163,7 @@ class AlertManager {
         const toucher0 = e.changedTouches[0]
         if (Math.abs(toucher0.clientX - this._pointerdownX) < 8 && Math.abs(toucher0.clientY - this._pointerdownY) < 8) {
             const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn')
-            if (target && this._callback) {
-                this._callback.call(this, target.getAttribute('data-tagitem'))
-            }
+            target && this._doCallback(target)
         }
         this._isPointerdown = false
     }
@@ -177,9 +186,7 @@ class AlertManager {
         }
         if (Math.abs(e.clientX - this._pointerdownX) < 8 && Math.abs(e.clientY - this._pointerdownY) < 8) {
             const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn')
-            if (target && this._callback) {
-                this._callback.call(this, target.getAttribute('data-tagitem'))
-            }
+            target && this._doCallback(target)
         }
         this._isPointerdown = false
     }

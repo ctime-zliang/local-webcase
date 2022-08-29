@@ -21,7 +21,7 @@
             yAbsoluteElement.textContent = clientY
             styleUpdateTimer = window.setTimeout(() => {
                 gestureElement.classList.remove(interactiveSelectedClassname)
-            }, 85)
+            }, 200)
         },
     })
 })(globalContainerElement.querySelector('[data-tagitem="pointerdown"]'));
@@ -50,7 +50,7 @@
             yAbsoluteElement.textContent = clientY
             styleUpdateTimer = window.setTimeout(() => {
                 gestureElement.classList.remove(interactiveSelectedClassname)
-            }, 85)
+            }, 200)
         },
     })
 })(globalContainerElement.querySelector('[data-tagitem="pointerup"]'));
@@ -133,19 +133,13 @@
     }
 
     let eventCount = 0
-    let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
         onTap(evte, { clientX, clientY }, gesture) {
             console.log({ clientX, clientY })
-            window.clearTimeout(styleUpdateTimer)
-            // gestureElement.classList.add(interactiveSelectedClassname)
             countElement.textContent = ++eventCount
             xAbsoluteElement.textContent = clientX
             yAbsoluteElement.textContent = clientY
             rippleAnimation(evte)
-            styleUpdateTimer = window.setTimeout(() => {
-                gestureElement.classList.remove(interactiveSelectedClassname)
-            }, 85)
         },
     })
 })(globalContainerElement.querySelector('[data-tagitem="tap"]'));
@@ -181,7 +175,7 @@
             })
             styleUpdateTimer = window.setTimeout(() => {
                 gestureElement.classList.remove(interactiveSelectedClassname)
-            }, 85)
+            }, 200)
         },
     })
 })(globalContainerElement.querySelector('[data-tagitem="longtap"]'));
@@ -212,7 +206,7 @@
             yAbsoluteElement.textContent = clientY
             styleUpdateTimer = window.setTimeout(() => {
                 gestureElement.classList.remove(interactiveSelectedClassname)
-            }, 85)
+            }, 200)
         },
         onTap(evte, { clientX, clientY }, gesture) {
             console.log(`onTap`, { clientX, clientY })
@@ -532,6 +526,7 @@
     let maxWScale = 10
     let minScale = 0.1
     xGesture.attach(gestureElement, {
+        preventDefaultOnPointerdown: true,
         onPinch(evte, { scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
             console.log({ scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
             window.clearTimeout(styleUpdateTimer)
@@ -607,6 +602,7 @@
 
     let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
+        preventDefaultOnPointerdown: true,
         onRotate(evte, { rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
             console.log({ rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
             window.clearTimeout(styleUpdateTimer)

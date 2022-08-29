@@ -53,10 +53,6 @@
          */
         preventDefaultOnPointerdown: false,
         /**
-         * 长按时阻止默认事件
-         */
-        preventDefaultOnLongpress: false,
-        /**
          * 指定 touchAction
          */
         cssTouchAction: 'initial',
