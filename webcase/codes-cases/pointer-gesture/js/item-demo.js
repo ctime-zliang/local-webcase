@@ -526,7 +526,7 @@
     let maxWScale = 10
     let minScale = 0.1
     xGesture.attach(gestureElement, {
-        preventDefaultOnPointerdown: true,
+        preventDefaultOnDoublePointerdown: true,
         onPinch(evte, { scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
             console.log({ scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
             window.clearTimeout(styleUpdateTimer)
@@ -602,7 +602,7 @@
 
     let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
-        preventDefaultOnPointerdown: true,
+        preventDefaultOnDoublePointerdown: true,
         onRotate(evte, { rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
             console.log({ rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
             window.clearTimeout(styleUpdateTimer)

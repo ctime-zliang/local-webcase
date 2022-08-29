@@ -36,6 +36,9 @@
     right: 0;
     bottom: 0;
     z-index: 999990;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
 }
 .alertmgr-container-show {
     display: block;
@@ -43,6 +46,8 @@
 .alertmgr-container * {
     box-sizing: border-box;
     user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
 }
 .alertmgr-position-wrapper {
     position: relative;
@@ -71,7 +76,7 @@
 }
 .alertmgr-wrapper {
     position: relative;
-    width: 225px;
+    width: 235px;
     min-height: 60px;
     max-height: 200px;
     display: flex;

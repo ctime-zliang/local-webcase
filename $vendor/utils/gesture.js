@@ -49,9 +49,13 @@
          */
         delayOfLongTapDispatch: 500,
         /**
-         * 按下时阻止默认事件
+         * 当存在至少一个指针按下时设置阻止默认事件
          */
         preventDefaultOnPointerdown: false,
+        /**
+         * 当存在两个指针按下时设置阻止默认事件
+         */
+        preventDefaultOnDoublePointerdown: false,
         /**
          * 指定 touchAction
          */
@@ -235,6 +239,7 @@
                 _$profile.pointers.push(evte)
                 return
             } 
+            _$profile.pointers.length = 0
             for (let i = 0; i < touches.length; i++) {
                 _$profile.pointers.push(touches[i])
             }
@@ -342,7 +347,7 @@
     }
 
     Gesture.prototype.handlePointerdownEvent = function(evte) {
-        if (this.options.preventDefaultOnPointerdown || this.options.preventDefaultOnLongpress) {
+        if (this.options.preventDefaultOnPointerdown) {
             evte.preventDefault()
         }
         const _$profile = this._$profile
@@ -355,6 +360,9 @@
         this.updatePointers(evte, POINTER_ITEM_ADD)
         _$profile.isPointerdown = true
         if (_$profile.pointers.length === 1) {
+            if (this.options.preventDefaultOnDoublePointerdown) {
+                evte.preventDefault()
+            }
             document.addEventListener('mousemove', this._handlePointermoveEvent)
             document.addEventListener('mouseup', this._handlePointerupEvent)
             /* ... */
