@@ -361,9 +361,6 @@
         this.updatePointers(evte, POINTER_ITEM_ADD)
         _$profile.isPointerdown = true
         if (_$profile.pointers.length === 1) {
-            if (this.options.preventDefaultOnDoublePointerdown) {
-                evte.preventDefault()
-            }
             document.addEventListener('mousemove', this._handlePointermoveEvent)
             document.addEventListener('mouseup', this._handlePointerupEvent)
             /* ... */
@@ -417,6 +414,9 @@
             _$profile.lastDotsRecordInPointerdown[0] = { x: _$profile.pointers[0].clientX, y: _$profile.pointers[0].clientY }
         }
         if (_$profile.pointers.length === 2) {
+            if (this.options.preventDefaultOnDoublePointerdown) {
+                evte.preventDefault()
+            }
             window.clearTimeout(_$profile.longTapTimeout)
             const lastOnePointerEvent = this.getLastOnePointerEvent()
             _$profile.dotsRecordInPointerdown[1] = { x: lastOnePointerEvent.clientX, y: lastOnePointerEvent.clientY }
