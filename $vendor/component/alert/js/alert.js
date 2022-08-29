@@ -37,7 +37,6 @@ class AlertManager {
         this._btnsWrapperMousedownHandler = this._btnsWrapperMousedownHandler.bind(this)
         this._btnsWrapperMouseupHandler = this._btnsWrapperMouseupHandler.bind(this)
         this._containerContextmenuHandler = this._containerContextmenuHandler.bind(this)
-        this._rippleAnimationEndHandler = this._rippleAnimationEndHandler.bind(this)
         this._transitionsTransitionstartHandler = this._transitionsTransitionstartHandler.bind(this)
         this._transitionsTransitionendHandler = this._transitionsTransitionendHandler.bind(this)
         /* ... */
@@ -118,7 +117,7 @@ class AlertManager {
         this._btns.forEach((item) => {
             htmlString += `
                 <button class="alertmgr-btn alertmgr-${item.type}-btn" data-tagitem="${item.tag}">
-                    <span class="alertmgr-btn-text">${item.text}</span>
+                    <span class="alertmgr-btntext">${item.text}</span>
                 </button>
             `
         })
@@ -138,6 +137,7 @@ class AlertManager {
     }
 
     static _doCallback(targetElement) {
+        targetElement.classList.add('alertmgr-btn-active')
         if (this._callback && !this._isFlushCallback) {
             window.setTimeout(() => {
                 this._isFlushCallback = true
@@ -152,7 +152,6 @@ class AlertManager {
         this._pointerdownX = toucher0.clientX
         this._pointerdownY = toucher0.clientY
         this._isPointerdown = true
-        this._rippleAnimation(e)
     }
 
     static _btnsWrapperTouchendHandler(e) {
@@ -176,7 +175,6 @@ class AlertManager {
         this._pointerdownX = e.clientX
         this._pointerdownY = e.clientY
         this._isPointerdown = true
-        this._rippleAnimation(e)
     }
 
     static _btnsWrapperMouseupHandler(e) {
@@ -209,36 +207,6 @@ class AlertManager {
                 item.style.pointerEvents = 'auto'
             })
         }
-    }
-
-    static _rippleAnimation(e) {
-        let evte = e
-        if (typeof e.changedTouches !== 'undefined') {
-            evte = e.changedTouches[0]
-        }
-        const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn')
-        if (!target || target.nodeName.toUpperCase() !== 'BUTTON') {
-            return
-        }
-        const btnClientWidth = target.offsetWidth
-        const spanElement = document.createElement('span')
-        const targetClientRect = target.getBoundingClientRect()
-        const x = evte.pageX - targetClientRect.left - btnClientWidth / 2
-        const y = evte.pageY - targetClientRect.top - btnClientWidth / 2
-		if (target.firstChild) {
-			target.insertBefore(spanElement, target.firstChild)
-		} else {
-			target.appendChild(spanElement)
-		}
-        spanElement.classList.add('alertmgr-ripple')
-        spanElement.addEventListener('animationend', this._rippleAnimationEndHandler)
-		spanElement.style.cssText = 'width: ' + btnClientWidth + 'px; height: ' + btnClientWidth + 'px; top: ' + y + 'px; left: ' + x + 'px;'
-		spanElement.classList.add('alertmgr-ripple-animation')
-    }
-
-    static _rippleAnimationEndHandler(e) {
-        e.currentTarget.removeEventListener('animationend', this._rippleAnimationEndHandler)
-        e.currentTarget.parentNode.removeChild(e.currentTarget)
     }
 }
 
