@@ -570,14 +570,14 @@
     const yPoiner2Element = sectionElement.querySelector('[data-tagitem="pointer2-y"]')
 
     class TransfromManager {
-        static _rorate = 1
+        static _rotate = 1
 
-        static set rorate(value) {
-            this._rorate = value
+        static set rotate(value) {
+            this._rotate = value
         }
 
-        static get rorate() {
-            return this._rorate
+        static get rotate() {
+            return this._rotate
         }
 
         static setTransitionStyle(targetElement, use = false) {
@@ -613,7 +613,7 @@
             yPoiner1Element.textContent = pointA.y
             xPoiner2Element.textContent = pointB.x
             yPoiner2Element.textContent = pointB.y
-            TransfromManager.rorate = (TransfromManager.rorate + rotate) % 360
+            TransfromManager.rotate = (TransfromManager.rotate + rotate) % 360
             TransfromManager.applyTransfromStyle(evte.currentTarget)
             TransfromManager.updateTextContent(rotateValueElement)
             styleUpdateTimer = window.setTimeout(() => {

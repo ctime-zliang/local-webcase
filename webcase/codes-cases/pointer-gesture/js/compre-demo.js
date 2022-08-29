@@ -229,7 +229,7 @@
             },
             onRotate(evte, { rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
                 console.log({ rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
-                TransfromManager.rorate = (TransfromManager.rorate + rotate) % 360
+                TransfromManager.rotate = (TransfromManager.rotate + rotate) % 360
                 TransfromManager.setTransitionStyle(imageElement, true)
                 TransfromManager.applyTransfromStyle(imageElement)
                 TransfromManager.updateTransformTextContent(transformValueElement)
