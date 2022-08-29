@@ -589,12 +589,12 @@
         }
 
         static applyTransfromStyle(targetElement) {
-            const transform = `rotate(${this._rorate}deg)`
+            const transform = `rotate(${this._rotate}deg)`
             targetElement.style.transform = transform
         }
 
         static updateTextContent(targetElement) {
-            targetElement.textContent = this._rorate
+            targetElement.textContent = this._rotate
         }
     }
 
