@@ -247,6 +247,6 @@
         pointerListElement.innerHTML = htmlStringArray.join(', ')
     }
 
-    // init()
+    init()
     
 })(globalContainerElement.querySelector('[data-tagitem="fullcaseContainer"]'));
