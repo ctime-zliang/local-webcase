@@ -191,6 +191,7 @@
     }
 
     Gesture.prototype.onDoubleTap = function(callback) {
+        this.options.preventDefaultOnPointerdown = true
         this.options.onDoubleTap = callback
         return this
     }
