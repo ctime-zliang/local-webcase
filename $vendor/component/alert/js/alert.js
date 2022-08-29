@@ -116,7 +116,7 @@ class AlertManager {
         let htmlString = ``
         this._btns.forEach((item) => {
             htmlString += `
-                <button class="alertmgr-btn alertmgr-${item.type}-btn" data-tagitem="${item.tag}">
+                <button class="alertmgr-btn alertmgr-btn-eventsno alertmgr-${item.type}-btn" data-tagitem="${item.tag}">
                     <span class="alertmgr-btntext">${item.text}</span>
                 </button>
             `
@@ -204,7 +204,7 @@ class AlertManager {
         if (e.target === this._wrapperElement) {
             this._wrapperElement.classList.remove('alertmgr-transition-duringshort')
             Array.from(this._btnsWrapperElement.querySelectorAll('button')).forEach((item) => {
-                item.style.pointerEvents = 'auto'
+                item.classList.remove('alertmgr-btn-eventsno')
             })
         }
     }

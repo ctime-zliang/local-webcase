@@ -63,7 +63,7 @@
     align-content: center;
     background-color: #ffffff;
     border: 1px solid #dcdcdc;
-    border-radius: 10px;
+    border-radius: 8px;
     opacity: 1;
     transform: translate3d(0, 0, 5px) scale(1);
     -moz-transform: translate3d(0, 0, 5px) scale(1);
@@ -132,6 +132,9 @@
 }
 .alertmgr-btns-wrapper .alertmgr-btn-active {
     background-color: #ececec;
+}
+.alertmgr-btns-wrapper .alertmgr-btn-eventsno {
+    pointer-events: none;
 }
 
 .alertmgr-btns-wrapper .alertmgr-primary-btn {
