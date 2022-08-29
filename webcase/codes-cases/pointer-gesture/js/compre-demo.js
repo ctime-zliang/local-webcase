@@ -229,9 +229,22 @@
             },
             onRotate(evte, { rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
                 console.log({ rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
+                TransfromManager.rorate = (TransfromManager.rorate + rotate) % 360
+                TransfromManager.setTransitionStyle(imageElement, true)
+                TransfromManager.applyTransfromStyle(imageElement)
+                TransfromManager.updateTransformTextContent(transformValueElement)
             },
             onPinch(evte, { scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
                 console.log({ scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
+                TransfromManager.scale *= scale
+                if (TransfromManager.scale > profile.maxWheelScale) {
+                    TransfromManager.scale = profile.maxWheelScale
+                } else if (TransfromManager.scale < profile.minWheelScale) {
+                    TransfromManager.scale = profile.minWheelScale
+                }
+                TransfromManager.setTransitionStyle(imageElement, true)
+                TransfromManager.applyTransfromStyle(imageElement)
+                TransfromManager.updateTransformTextContent(transformValueElement)
             },
         })
     }
