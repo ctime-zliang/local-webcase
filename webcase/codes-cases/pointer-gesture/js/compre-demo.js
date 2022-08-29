@@ -230,7 +230,7 @@
             onRotate(evte, { rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
                 console.log({ rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
                 TransfromManager.rotate = (TransfromManager.rotate + rotate) % 360
-                TransfromManager.setTransitionStyle(imageElement, true)
+                TransfromManager.setTransitionStyle(imageElement, false)
                 TransfromManager.applyTransfromStyle(imageElement)
                 TransfromManager.updateTransformTextContent(transformValueElement)
             },
@@ -242,7 +242,7 @@
                 } else if (TransfromManager.scale < profile.minWheelScale) {
                     TransfromManager.scale = profile.minWheelScale
                 }
-                TransfromManager.setTransitionStyle(imageElement, true)
+                TransfromManager.setTransitionStyle(imageElement, false)
                 TransfromManager.applyTransfromStyle(imageElement)
                 TransfromManager.updateTransformTextContent(transformValueElement)
             },
