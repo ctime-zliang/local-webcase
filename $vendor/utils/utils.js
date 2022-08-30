@@ -50,7 +50,7 @@ async function ven$sleep(delay = 1000) {
  */ 
 function ven$chunk(array, size) {
     const res = []
-	Array.from({ length: Math.ceil(array.length / size) }, (value, index) => {
+	Array.from({ length: Math.ceil(array.length / size), }, (value, index) => {
 		res.push(array.slice(+value * size, (index + 1) * size))
 	})
 	return res 
@@ -209,7 +209,7 @@ function ven$interval(
     interval, 
     scope = undefined
 ) {
-    let handler = { timer: null }
+    let handler = { timer: null, }
     let intv = function() {
         fn.call(scope)
         handler.timer = setTimeout(intv, interval)
@@ -304,7 +304,7 @@ function ven$zoomImageByContainer(
  * @param {number} index 索引
  * @return {htmllement|null} 
  */
-function ven$findTargetByClassName(element, className, eventPath, index) {
+function ven$findTargetByClassName(element, className, eventPath, index = 0) {
     if (!eventPath) {
         return null
     }

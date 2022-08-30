@@ -9,9 +9,9 @@ function __AlertFindTargetByClassName(nowElement, className) {
 }
 
 class AlertManager {
-    static defaultConfirmBtn = { type: 'confirm', tag: 'confirm', text: '确认' }
-    static defaultCancelBtn = { type: 'cancel', tag: 'cancel', text: '取消' }
-    static defaultCloseBtn = { type: 'close', tag: 'close', text: '关闭' }
+    static defaultConfirmBtn = { type: 'confirm', tag: 'confirm', text: '确认', }
+    static defaultCancelBtn = { type: 'cancel', tag: 'cancel', text: '取消', }
+    static defaultCloseBtn = { type: 'close', tag: 'close', text: '关闭', }
     /****************************** ******************************/
     /****************************** ******************************/
     static _containerElemeent = null
@@ -39,6 +39,7 @@ class AlertManager {
         this._containerContextmenuHandler = this._containerContextmenuHandler.bind(this)
         this._transitionsTransitionstartHandler = this._transitionsTransitionstartHandler.bind(this)
         this._transitionsTransitionendHandler = this._transitionsTransitionendHandler.bind(this)
+        this._updateContainerClientRect = this._updateContainerClientRect.bind(this)
         /* ... */
         document.body.appendChild(document.createRange().createContextualFragment(this._template()))
         this._containerElemeent = document.querySelector('.alertmgr-container')
@@ -47,6 +48,7 @@ class AlertManager {
         this._contentElement = this._containerElemeent.querySelector('.alertmgr-message-content')
         this._btnsWrapperElement = this._containerElemeent.querySelector('.alertmgr-btns-wrapper')
         /* ... */
+        this._updateContainerClientRect()
         this._updateBtnsView()
         this._bindEvent()
     }
@@ -134,6 +136,7 @@ class AlertManager {
         this._wrapperElement.addEventListener('transitionend', this._transitionsTransitionendHandler)
         this._lockElement.addEventListener('transitionstart', this._transitionsTransitionstartHandler)
         this._lockElement.addEventListener('transitionend', this._transitionsTransitionendHandler)
+        window.addEventListener('resize', this._updateContainerClientRect)
     }
 
     static _doCallback(targetElement) {
@@ -207,6 +210,11 @@ class AlertManager {
                 item.classList.remove('alertmgr-btn-eventsno')
             })
         }
+    }
+
+    static _updateContainerClientRect() {
+        this._containerElemeent.style.width = `${window.innerWidth}px`
+        this._containerElemeent.style.height = `${window.innerHeight}px`
     }
 }
 

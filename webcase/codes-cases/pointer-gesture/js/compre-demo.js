@@ -78,13 +78,13 @@
         maxWheelScale:  16,
         minWheelScale:  0.1,
         pointerdownTarget: null,
-        imageSrc: document.getElementById(`fullcaseImageAnchor`).getAttribute('data-src')
+        imageSrc: document.getElementById(`fullcaseImageAnchor`).getAttribute('data-src'),
     }
     const initImageDOM = async () => {
         return new Promise((_) => {
             const imageElement = new Image()
             imageElement.onload = function(e) {
-                _({ width: this.width, height: this.height, image: this })
+                _({ width: this.width, height: this.height, image: this, })
             }
             imageElement.style.opacity = '0'
             imageElement.src = profile.imageSrc
@@ -124,7 +124,7 @@
     const bindEvent = (imageElement) => {
         xGesture.attach(imageElement.parentElement, {
             preventDefaultOnPointerdown: true,
-            onWheel(evte, { scale, clientX, clientY }, gesture) {
+            onWheel(evte, { scale, clientX, clientY, }, gesture) {
                 evte.preventDefault()
                 const offsetX = clientX - profile.containerWidth / 2
                 const offsetY = clientY - profile.containerHeight / 2
@@ -142,21 +142,21 @@
                 TransfromManager.applyTransfromStyle(imageElement)
                 TransfromManager.updateTransformTextContent(transformValueElement)
             },
-            onContextmenu(evte, { clientX, clientY }, gesture) {
+            onContextmenu(evte, { clientX, clientY, }, gesture) {
                 evte.preventDefault()
             },
-            onPointerdown(evte, { clientX, clientY }, gesture) {
+            onPointerdown(evte, { clientX, clientY, }, gesture) {
                 profile.pointerdownTarget = evte.target
                 updatePointersPositionShow(gesture.getAllPointers())
             },
-            onPointermove(evte, { clientX, clientY }, gesture) {
+            onPointermove(evte, { clientX, clientY, }, gesture) {
                 updatePointersPositionShow(gesture.getAllPointers())
             },
-            onPointerup(evte, { clientX, clientY }, gesture) {
+            onPointerup(evte, { clientX, clientY, }, gesture) {
                 profile.pointerdownTarget = null
                 updatePointersPositionShow(gesture.getAllPointers())
             },
-            onDragMove(evte, { movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY }, gesture) {
+            onDragMove(evte, { movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY, }, gesture) {
                 if (profile.pointerdownTarget !== imageElement) {
                     return
                 }
@@ -166,7 +166,7 @@
                 TransfromManager.applyTransfromStyle(imageElement)
                 TransfromManager.updateTransformTextContent(transformValueElement)
             },
-            onLongTap(evte, { clientX, clientY }, gesture) {
+            onLongTap(evte, { clientX, clientY, }, gesture) {
                 if (profile.pointerdownTarget !== imageElement) {
                     return
                 }
@@ -185,7 +185,7 @@
                     this.close()
                 })
             },
-            onDoubleTap(evte, { clientX, clientY }, gesture) {
+            onDoubleTap(evte, { clientX, clientY, }, gesture) {
                 if (profile.pointerdownTarget !== imageElement) {
                     return
                 }
@@ -227,15 +227,15 @@
                 TransfromManager.applyTransfromStyle(imageElement)
                 TransfromManager.updateTransformTextContent(transformValueElement)
             },
-            onRotate(evte, { rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
-                console.log({ rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
+            onRotate(evte, { rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB, }, gesture) {
+                console.log({ rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB, })
                 TransfromManager.rotate = (TransfromManager.rotate + rotate) % 360
                 TransfromManager.setTransitionStyle(imageElement, false)
                 TransfromManager.applyTransfromStyle(imageElement)
                 TransfromManager.updateTransformTextContent(transformValueElement)
             },
-            onPinch(evte, { scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
-                console.log({ scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
+            onPinch(evte, { scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB, }, gesture) {
+                console.log({ scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB, })
                 TransfromManager.scale *= scale
                 if (TransfromManager.scale > profile.maxWheelScale) {
                     TransfromManager.scale = profile.maxWheelScale

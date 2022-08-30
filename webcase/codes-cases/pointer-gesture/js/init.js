@@ -10,15 +10,14 @@ var interactiveSelectedClassname = 'gesture-interactive-selected'
     const fullcaseBtnElement = containerElement.querySelector('[data-tagitem="fullcase-btn"]')
     const exitFullcaseBtnElement = containerElement.querySelector('[data-tagitem="exit-fullcase-btn"]')
 
-    xGesture.attach(fullcaseBtnElement)
-    .onTap((evte, { clientX, clientY }, gesture) => {
+    xGesture(fullcaseBtnElement)
+    .onTap((evte, { clientX, clientY, }, gesture) => {
         console.log(evte, gesture)
         fullcaseContainerElement.style.display = 'block'
     })
 
-    xGesture.attach(exitFullcaseBtnElement)
-    .onTap((evte, { clientX, clientY }, gesture) => {
-        console.log(evte, gesture)
+    xGesture(exitFullcaseBtnElement)
+    .onTap((evte, { clientX, clientY, }, gesture) => {
         AlertManager
         .setBtns([AlertManager.defaultConfirmBtn, AlertManager.defaultCancelBtn])
         .open('确定要退出综合案例么?', function(tag) {
@@ -28,8 +27,7 @@ var interactiveSelectedClassname = 'gesture-interactive-selected'
             this.close()
         })
     })
-    .onLongTap((evte, { clientX, clientY }, gesture) => {
-        console.log(evte, gesture)
+    .onLongTap((evte, { clientX, clientY, }, gesture) => {
         AlertManager
         .setBtns([AlertManager.defaultConfirmBtn])
         .open('长按无效哦~', function(tag) {
@@ -40,12 +38,12 @@ var interactiveSelectedClassname = 'gesture-interactive-selected'
     const pageHeaderElement = containerElement.querySelector('.page-header')
     const pageContentElement = containerElement.querySelector('.page-content')
     const pageFooterElement = containerElement.querySelector('.page-footer')
-    xGesture.attach(pageHeaderElement)
-    .onDoubleTap((evte, { clientX, clientY }, gesture) => {
+    xGesture(pageHeaderElement)
+    .onDoubleTap((evte, { clientX, clientY, }, gesture) => {
         pageContentElement.scrollTop = 0
     })
-    xGesture.attach(pageFooterElement)
-    .onDoubleTap((evte, { clientX, clientY }, gesture) => {
+    xGesture(pageFooterElement)
+    .onDoubleTap((evte, { clientX, clientY, }, gesture) => {
         pageContentElement.scrollTop = pageContentElement.scrollHeight
     })
 

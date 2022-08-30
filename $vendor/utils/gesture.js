@@ -2,26 +2,6 @@
 
 ;(function() {
     'use strict'
-    
-    /* define xGesture */
-    const xGesture = {
-        /* xGesture version */
-        version: '1.0.0'
-    }
-    
-    /* export xGesture */
-    if (typeof module !== 'undefined' && module.exports) {
-        module.exports = xGesture
-    } else if (typeof define === 'function' && define.amd) {
-        define( function(){ return xGesture } )
-    } else {
-        (function(){ return this || (0, eval)('this') }()).xGesture = xGesture
-    }
-
-    /****************************** ******************************/
-    /****************************** ******************************/
-    /****************************** ******************************/
-    /****************************** ******************************/
 
     const DIRECTION_UP = 'UP'
     const DIRECTION_DOWN = 'DOWN'
@@ -55,19 +35,19 @@
         /**
          * 当存在两个指针按下时设置阻止默认事件
          */
-        preventDefaultOnDoublePointerdown: false,
-        /**
-         * 指定 touchAction
-         */
-        cssTouchAction: 'initial',
+        preventDefaultOnDoublePointersdown: false,
     }
 
     function createProfile() {
         return {
-            tapCountRestTimer: null,
             longTapTimeout: null,
             isPointerdown: false,
+            /**
+             * 单指情形下
+             *      指针按下次数的计数器
+             */
             tapCount: 0,
+            tapCountRestTimer: null,
             /* ... */
             /**
              * 指针数组
@@ -99,7 +79,7 @@
              *      单次记录 pointer-down/pointer-move/pointer-up 触发时的指针采样坐标
              *      在每一次 pointer-move 触发时, 与之前记录的指针坐标做对比计算, 即可计算出指针移动的距离和方向
              */
-            pointerPositionCache: { x: 0, y: 0 },
+            pointerPositionCache: { x: 0, y: 0, },
             /**
              * 单指情形下
              *      pointer 移动方位
@@ -116,17 +96,17 @@
              *      单次记录 pointer-down/pointer-move 触发时多指的几何中心坐标
              *      在 pointer-up 触发时, 如果当前 pointer 个数不足 2, 直接重置该标记值
              */
-            centerPositionCacheOfMultiPointers: { x: 0, y: 0 },
+            centerPositionCacheOfMultiPointers: { x: 0, y: 0, },
             /**
              * 单指情形下
              *      当前指针的采样坐标与指针按下时记录的坐标的位置偏移量
              */
-            offsetRectAtPointerdown: { x: 0, y: 0 },
-            lastOffsetRectAtPointerdown: { x: 0, y: 0 },
+            offsetRectAtPointerdown: { x: 0, y: 0, },
+            lastOffsetRectAtPointerdown: { x: 0, y: 0, },
             /**
              * 事件触发类型
              */
-            triggerEventType: undefined
+            triggerEventType: undefined,
         }
     }
     function Gesture(host, options) {
@@ -137,7 +117,6 @@
             this.containerElements = Array.from(typeof host.length !== 'undefined' ? host : [host])
         }
         this.options = Object.assign({}, DEFAULT_GUEST_OPTIONS, options)
-        /* ... */
         this._$profile = createProfile()
         this.init()
     }
@@ -206,6 +185,21 @@
         return this
     }
 
+    Gesture.prototype.onSwipe = function(callback) {
+        this.options.onSwipe = callback
+        return this
+    }
+
+    Gesture.prototype.onPinch = function(callback) {
+        this.options.onPinch = callback
+        return this
+    }
+
+    Gesture.prototype.onRotate = function(callback) {
+        this.options.onRotate = callback
+        return this
+    }
+
     /****************************** ******************************/
     /****************************** ******************************/
     /****************************** ******************************/
@@ -219,7 +213,7 @@
     }
 
     Gesture.prototype.getCenter = function(pointA, pointB) {
-        return { x: (pointA.x + pointB.x) / 2, y: (pointA.y + pointB.y) / 2 }
+        return { x: (pointA.x + pointB.x) / 2, y: (pointA.y + pointB.y) / 2, }
     }
 
     Gesture.prototype.getDistance = function(pointA, pointB) {
@@ -281,32 +275,19 @@
     Gesture.prototype.getMovePositionRange = function() {
         const _$profile = this._$profile
         if (Math.abs(_$profile.offsetRectAtPointerdown.x) > Math.abs(_$profile.offsetRectAtPointerdown.y)) {
-            if (_$profile.offsetRectAtPointerdown.x > 0) {
-                return DIRECTION_RIGHT
-            }
-            return DIRECTION_LEFT
+            return _$profile.offsetRectAtPointerdown.x > 0 ? DIRECTION_RIGHT : DIRECTION_LEFT
         }
-        if (_$profile.offsetRectAtPointerdown.y > 0) {
-            return DIRECTION_DOWN
-        }
-        return DIRECTION_UP
+        return _$profile.offsetRectAtPointerdown.y > 0 ? DIRECTION_DOWN : DIRECTION_UP
     }
 
     Gesture.prototype.getMoveDirection = function() {
         const _$profile = this._$profile
-        const pointer1 = _$profile.pointers[0]
-        const diffX = pointer1.clientX - _$profile.pointerPositionCache.x
-        const diffY = pointer1.clientY - _$profile.pointerPositionCache.y
+        const diffX = _$profile.pointers[0].clientX - _$profile.pointerPositionCache.x
+        const diffY = _$profile.pointers[0].clientY - _$profile.pointerPositionCache.y
         if (Math.abs(diffX) > Math.abs(diffY)) {
-            if (diffX > 0) {
-                return DIRECTION_RIGHT
-            }
-            return DIRECTION_LEFT
+            return diffX > 0 ? DIRECTION_RIGHT : DIRECTION_LEFT
         }
-        if (diffY > 0) {
-            return DIRECTION_DOWN
-        }
-        return DIRECTION_UP
+        return diffY > 0 ? DIRECTION_DOWN : DIRECTION_UP
     }
 
     Gesture.prototype.handleSwipe = function(evte, lastOnePointerEvent) {
@@ -364,11 +345,10 @@
             document.addEventListener('mousemove', this._handlePointermoveEvent)
             document.addEventListener('mouseup', this._handlePointerupEvent)
             /* ... */
-            // evte.currentTarget.setPointerCapture(evte.pointerId)
             window.clearTimeout(_$profile.tapCountRestTimer)
             const lastOnePointerEvent = this.getLastOnePointerEvent()
-            _$profile.dotsRecordInPointerdown[0] = { x: lastOnePointerEvent.clientX, y: lastOnePointerEvent.clientY }
-            _$profile.lastDotsRecordInPointerdown[0] = { x: lastOnePointerEvent.clientX, y: lastOnePointerEvent.clientY }
+            _$profile.dotsRecordInPointerdown[0] = { x: lastOnePointerEvent.clientX, y: lastOnePointerEvent.clientY, }
+            _$profile.lastDotsRecordInPointerdown[0] = { x: lastOnePointerEvent.clientX, y: lastOnePointerEvent.clientY, }
             /* ... */
             const pointer1 = _$profile.pointers[0]
             const dotRecordInPointerdown1 = _$profile.dotsRecordInPointerdown[0]
@@ -377,14 +357,11 @@
             _$profile.tapCount++
             _$profile.movePositionRange = ''
             _$profile.moveDirection = ''
-            /* ... */
             _$profile.dotsRecordInPointermove.length = 0
-            /* ... */
             _$profile.offsetRectAtPointerdown.x = 0
             _$profile.offsetRectAtPointerdown.y = 0
             _$profile.lastOffsetRectAtPointerdown.x = 0
             _$profile.lastOffsetRectAtPointerdown.y = 0
-            /* ... */
             _$profile.pointerPositionCache.x = pointer1.clientX
             _$profile.pointerPositionCache.y = pointer1.clientY
             /* ... */
@@ -404,23 +381,23 @@
                         evte, 
                         {
                             clientX: dotRecordInPointerdown1.x,
-                            clientY: dotRecordInPointerdown1.y
+                            clientY: dotRecordInPointerdown1.y,
                         },
                         this
                     )
                 }, this.options.delayOfLongTapDispatch)
             }
             /* ... */
-            _$profile.lastDotsRecordInPointerdown[0] = { x: _$profile.pointers[0].clientX, y: _$profile.pointers[0].clientY }
+            _$profile.lastDotsRecordInPointerdown[0] = { x: _$profile.pointers[0].clientX, y: _$profile.pointers[0].clientY, }
         }
         if (_$profile.pointers.length === 2) {
-            if (this.options.preventDefaultOnDoublePointerdown) {
+            if (this.options.preventDefaultOnDoublePointersdown) {
                 evte.preventDefault()
             }
             window.clearTimeout(_$profile.longTapTimeout)
             const lastOnePointerEvent = this.getLastOnePointerEvent()
-            _$profile.dotsRecordInPointerdown[1] = { x: lastOnePointerEvent.clientX, y: lastOnePointerEvent.clientY }
-            _$profile.lastDotsRecordInPointerdown[1] = { x: lastOnePointerEvent.clientX, y: lastOnePointerEvent.clientY }
+            _$profile.dotsRecordInPointerdown[1] = { x: lastOnePointerEvent.clientX, y: lastOnePointerEvent.clientY, }
+            _$profile.lastDotsRecordInPointerdown[1] = { x: lastOnePointerEvent.clientX, y: lastOnePointerEvent.clientY, }
             /* ... */
             const pointer1 = _$profile.pointers[0]
             const pointer2 = _$profile.pointers[1]
@@ -432,13 +409,11 @@
             _$profile.tapCount = 0
             _$profile.lastOffsetRectAtPointerdown.x = _$profile.offsetRectAtPointerdown.x
             _$profile.lastOffsetRectAtPointerdown.y = _$profile.offsetRectAtPointerdown.y
-            /* ... */
             const center = this.getCenter(dotRecordInPointerdown1, dotRecordInPointerdown2)
             _$profile.centerPositionCacheOfMultiPointers.x = center.x
             _$profile.centerPositionCacheOfMultiPointers.y = center.y
-            /* ... */
-            _$profile.lastDotsRecordInPointerdown[0] = { x: _$profile.pointers[0].clientX, y: _$profile.pointers[0].clientY }
-            _$profile.lastDotsRecordInPointerdown[1] = { x: _$profile.pointers[1].clientX, y: _$profile.pointers[1].clientY }
+            _$profile.lastDotsRecordInPointerdown[0] = { x: _$profile.pointers[0].clientX, y: _$profile.pointers[0].clientY, }
+            _$profile.lastDotsRecordInPointerdown[1] = { x: _$profile.pointers[1].clientX, y: _$profile.pointers[1].clientY, }
         }
         const lastOnePointerEvent = this.getLastOnePointerEvent()
         this.options.onPointerdown && this.options.onPointerdown.call(
@@ -446,7 +421,7 @@
             evte, 
             {
                 clientX: lastOnePointerEvent.clientX,
-                clientY: lastOnePointerEvent.clientY
+                clientY: lastOnePointerEvent.clientY,
             },
             this
         )
@@ -459,18 +434,16 @@
         }
         this.updatePointers(evte, POINTER_ITEM_UPDATE)
         if (_$profile.pointers.length === 1) {
-            /* ... */
             const pointer1 = _$profile.pointers[0]
             const dotRecordInPointerdown1 = _$profile.dotsRecordInPointerdown[0]
             const lastDotRecordInPointerdown1 = _$profile.lastDotsRecordInPointerdown[0]
             /* ... */
             _$profile.offsetRectAtPointerdown.x = pointer1.clientX - dotRecordInPointerdown1.x + _$profile.lastOffsetRectAtPointerdown.x
             _$profile.offsetRectAtPointerdown.y = pointer1.clientY - dotRecordInPointerdown1.y + _$profile.lastOffsetRectAtPointerdown.y
-            /* ... */
             _$profile.dotsRecordInPointermove.unshift({
                 x: pointer1.clientX,
                 y: pointer1.clientY,
-                timeStamp: evte.timeStamp
+                timeStamp: evte.timeStamp,
             })
             if (_$profile.dotsRecordInPointermove.length > _$profile.maxLengthDotsRecordInPointermove) {
                 _$profile.dotsRecordInPointermove.pop()
@@ -493,7 +466,7 @@
                     diffX: pointer1.clientX - _$profile.pointerPositionCache.x,
                     diffY: pointer1.clientY - _$profile.pointerPositionCache.y,
                     clientX: pointer1.clientX,
-                    clientY: pointer1.clientY
+                    clientY: pointer1.clientY,
                 },
                 this
             )
@@ -502,7 +475,6 @@
             _$profile.pointerPositionCache.y = pointer1.clientY
         }
         if (_$profile.pointers.length === 2) {
-            /* ... */
             const pointer1 = _$profile.pointers[0]
             const pointer2 = _$profile.pointers[1]
             const dotRecordInPointerdown1 = _$profile.dotsRecordInPointerdown[0]
@@ -511,12 +483,12 @@
             const lastDotRecordInPointerdown2 = _$profile.lastDotsRecordInPointerdown[1]
             /* ... */
             const center = this.getCenter(
-                { x: pointer1.clientX, y: pointer1.clientY }, 
-                { x: pointer2.clientX, y: pointer2.clientY }
+                { x: pointer1.clientX, y: pointer1.clientY, }, 
+                { x: pointer2.clientX, y: pointer2.clientY, }
             )
             const rotate = this.getAngle(
-                { x: pointer1.clientX, y: pointer1.clientY }, 
-                { x: pointer2.clientX, y: pointer2.clientY }
+                { x: pointer1.clientX, y: pointer1.clientY, }, 
+                { x: pointer2.clientX, y: pointer2.clientY, }
             ) - this.getAngle(lastDotRecordInPointerdown1, lastDotRecordInPointerdown2)
             this.options.onRotate && this.options.onRotate.call(
                 undefined, 
@@ -527,15 +499,15 @@
                     centerY: center.y,
                     lastCenterX: _$profile.centerPositionCacheOfMultiPointers.x,
                     lastCenterY: _$profile.centerPositionCacheOfMultiPointers.y,
-                    pointA: { x: pointer1.clientX, y: pointer1.clientY },
-                    pointB: { x: pointer2.clientX, y: pointer2.clientY }
+                    pointA: { x: pointer1.clientX, y: pointer1.clientY, },
+                    pointB: { x: pointer2.clientX, y: pointer2.clientY, },
                 },
                 this
             )
             const scale = this.getDistance(
-                    { x: pointer1.clientX, y: pointer1.clientY }, 
-                    { x: pointer2.clientX, y: pointer2.clientY }
-                ) / this.getDistance(lastDotRecordInPointerdown1, lastDotRecordInPointerdown2)
+                { x: pointer1.clientX, y: pointer1.clientY, }, 
+                { x: pointer2.clientX, y: pointer2.clientY, }
+            ) / this.getDistance(lastDotRecordInPointerdown1, lastDotRecordInPointerdown2)
             this.options.onPinch && this.options.onPinch.call(
                 undefined, 
                 evte, 
@@ -546,13 +518,12 @@
                     lastCenterX: _$profile.centerPositionCacheOfMultiPointers.x,
                     lastCenterY: _$profile.centerPositionCacheOfMultiPointers.y,
                     pointA: { x: pointer1.clientX, y: pointer1.clientY },
-                    pointB: { x: pointer2.clientX, y: pointer2.clientY }
+                    pointB: { x: pointer2.clientX, y: pointer2.clientY },
                 },
                 this
             )
             _$profile.centerPositionCacheOfMultiPointers.x = center.x
             _$profile.centerPositionCacheOfMultiPointers.y = center.y
-            /* ... */
             lastDotRecordInPointerdown1.x = pointer1.clientX
             lastDotRecordInPointerdown1.y = pointer1.clientY
             lastDotRecordInPointerdown2.x = pointer2.clientX
@@ -564,7 +535,7 @@
             evte, 
             {
                 clientX: lastOnePointerEvent.clientX,
-                clientY: lastOnePointerEvent.clientY
+                clientY: lastOnePointerEvent.clientY,
             },
             this
         )
@@ -590,7 +561,7 @@
                     evte,
                     {
                         clientX: lastOnePointerEvent.clientX,
-                        clientY: lastOnePointerEvent.clientY
+                        clientY: lastOnePointerEvent.clientY,
                     },
                     this
                 )
@@ -601,7 +572,7 @@
                         evte, 
                         {
                             clientX: lastOnePointerEvent.clientX,
-                            clientY: lastOnePointerEvent.clientY
+                            clientY: lastOnePointerEvent.clientY,
                         },
                         this
                     )
@@ -611,14 +582,12 @@
                 }, 400)
             }
         } else if (_$profile.pointers.length === 1) {
-            /* ... */
             const pointer1 = _$profile.pointers[0]
             const dotRecordInPointerdown1 = _$profile.dotsRecordInPointerdown[0]
             const lastDotRecordInPointerdown1 = _$profile.lastDotsRecordInPointerdown[0]
             /* ... */
             dotRecordInPointerdown1.x = pointer1.clientX
             dotRecordInPointerdown1.y = pointer1.clientY
-           /* ... */
             _$profile.pointerPositionCache.x = pointer1.clientX
             _$profile.pointerPositionCache.y = pointer1.clientY
         }
@@ -635,7 +604,7 @@
             evte, 
             {
                 clientX: lastOnePointerEvent.clientX,
-                clientY: lastOnePointerEvent.clientY
+                clientY: lastOnePointerEvent.clientY,
             },
             this
         )
@@ -657,7 +626,7 @@
             evte, 
             {
                 clientX: lastOnePointerEvent.clientX,
-                clientY: evlastOnePointerEventte.clientY
+                clientY: evlastOnePointerEventte.clientY,
             },
             this
         )
@@ -676,7 +645,7 @@
             { 
                 scale,
                 clientX: evte.clientX,
-                clientY: evte.clientY
+                clientY: evte.clientY,
             }, 
             this
         )
@@ -688,7 +657,7 @@
             evte, 
             { 
                 clientX: evte.clientX,
-                clientY: evte.clientY
+                clientY: evte.clientY,
             },
             this
         )
@@ -715,7 +684,6 @@
             item.removeEventListener('mousedown', this._handlePointerdownEvent)
             item.removeEventListener('wheel', this._handleWheelEvent)
             item.removeEventListener('contextmenu', this._handleContextmenuEvent)
-
         })
     }
 
@@ -724,14 +692,26 @@
     /****************************** ******************************/
     /****************************** ******************************/
 
-    xGesture.attach = function(host, options) {
-        return new Gesture(host, options)
+    function xGesture(host, options) {
+        return new Gesture(host, options) 
     }
 
+    xGesture.attach = function(host, options) {
+        return new Gesture(host, options) 
+    }
     xGesture.defined = {
         DIRECTION_UP,
         DIRECTION_DOWN,
         DIRECTION_LEFT,
         DIRECTION_RIGHT
+    }
+    xGesture.version = '1.2.1'
+    
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = xGesture
+    } else if (typeof define === 'function' && define.amd) {
+        define( function(){ return xGesture } )
+    } else {
+        (function(){ return this || (0, eval)('this') }()).xGesture = xGesture
     }
 }());

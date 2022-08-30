@@ -12,7 +12,7 @@
 function ven$debounce(
     fn,
     delay = 500,
-    option = { immediate: false, trailing: false }
+    option = { immediate: false, trailing: false, }
 ) {
     let timer = null   
     return function() {

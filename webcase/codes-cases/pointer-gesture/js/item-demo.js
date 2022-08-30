@@ -12,8 +12,8 @@
     let eventCount = 0
     let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
-        onPointerdown(evte, { clientX, clientY }, gesture) {
-            console.log(evte, { clientX, clientY })
+        onPointerdown(evte, { clientX, clientY, }, gesture) {
+            console.log(evte, { clientX, clientY, })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
             countElement.textContent = ++eventCount
@@ -41,8 +41,8 @@
     let eventCount = 0
     let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
-        onPointerup(evte, { clientX, clientY }, gesture) {
-            console.log(evte, { clientX, clientY })
+        onPointerup(evte, { clientX, clientY, }, gesture) {
+            console.log(evte, { clientX, clientY, })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
             countElement.textContent = ++eventCount
@@ -71,9 +71,9 @@
     let styleUpdateTimer = null
     let gestureElementRect = null
     xGesture.attach(gestureElement, {
-        onPointermove(evte, { clientX, clientY }, gesture) {
+        onPointermove(evte, { clientX, clientY, }, gesture) {
             evte.preventDefault()
-            console.log({ clientX, clientY })
+            console.log({ clientX, clientY, })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
             gestureElementRect = gestureElement.getBoundingClientRect()
@@ -85,8 +85,8 @@
                 gestureElement.classList.remove(interactiveSelectedClassname)
             }, 150)
         },
-        onPpointercancel(evte, { clientX, clientY }, gesture) {
-            console.log({ clientX, clientY })
+        onPpointercancel(evte, { clientX, clientY, }, gesture) {
+            console.log({ clientX, clientY, })
         },
     })
 })(globalContainerElement.querySelector('[data-tagitem="pointermove"]'));
@@ -128,14 +128,14 @@
 		}
         spanElement.classList.add('common-ripple')
         spanElement.addEventListener('animationend', rippleAnimationEndHandler)
-		spanElement.style.cssText = 'width: ' + btnClientWidth + 'px; height: ' + btnClientWidth + 'px; top: ' + y + 'px; left: ' + x + 'px;'
+        spanElement.style.cssText = `width: ${btnClientWidth}px; height: ${btnClientWidth}px; top: ${y}px; left: ${x}px`
 		spanElement.classList.add('common-ripple-animation')
     }
 
     let eventCount = 0
     xGesture.attach(gestureElement, {
-        onTap(evte, { clientX, clientY }, gesture) {
-            console.log({ clientX, clientY })
+        onTap(evte, { clientX, clientY, }, gesture) {
+            console.log({ clientX, clientY, })
             countElement.textContent = ++eventCount
             xAbsoluteElement.textContent = clientX
             yAbsoluteElement.textContent = clientY
@@ -159,8 +159,9 @@
     let eventCount = 0
     let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
-        onLongTap(evte, { clientX, clientY }, gesture) {
-            console.log({ clientX, clientY })
+        onLongTap(evte, { clientX, clientY, }, gesture) {
+            evte.preventDefault()
+            console.log({ clientX, clientY, })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
             countElement.textContent = ++eventCount
@@ -197,8 +198,9 @@
     let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
         preventDefaultOnPointerdown: true,
-        onDoubleTap(evte, { clientX, clientY }, gesture) {
-            console.log({ clientX, clientY })
+        onDoubleTap(evte, { clientX, clientY, }, gesture) {
+            evte.preventDefault()
+            console.log({ clientX, clientY, })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
             countElement.textContent = ++eventCount
@@ -207,9 +209,6 @@
             styleUpdateTimer = window.setTimeout(() => {
                 gestureElement.classList.remove(interactiveSelectedClassname)
             }, 200)
-        },
-        onTap(evte, { clientX, clientY }, gesture) {
-            console.log(`onTap`, { clientX, clientY })
         },
     })
 })(globalContainerElement.querySelector('[data-tagitem="doubletap"]'));
@@ -236,9 +235,9 @@
     let styleUpdateTimer = null
     let gestureElementRect = null
     xGesture.attach(gestureElement, {
-        onDragMove(evte, { movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY }, gesture) {
+        onDragMove(evte, { movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY, }, gesture) {
             evte.preventDefault()
-            console.log({ movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY })
+            console.log({ movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY, })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
             gestureElementRect = gestureElement.getBoundingClientRect()
@@ -321,8 +320,8 @@
         static bindEvent(itemElement) {
             const self = this
             xGesture.attach(itemElement, {
-                onDragMove(evte, { movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY }, gesture) {
-                    console.log({ movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY })
+                onDragMove(evte, { movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY, }, gesture) {
+                    console.log({ movePosition, moveDirection, distX, distY, diffX, diffY, clientX, clientY, })
                     if (!self.moveDirection) {
                         self.moveDirection = moveDirection
                     }
@@ -343,8 +342,8 @@
                     self.setTransitionStyle(currentTarget, false)
                     self.applyTransfromStyle(currentTarget)
                 },
-                onSwipe(evte, { direction, distX, distY, releaseX, releaseY }, gesture) {
-                    console.log({ direction, distX, distY, releaseX, releaseY })
+                onSwipe(evte, { direction, distX, distY, releaseX, releaseY, }, gesture) {
+                    console.log({ direction, distX, distY, releaseX, releaseY, })
                     if (self.moveDirection === xGesture.defined.DIRECTION_UP || self.moveDirection === xGesture.defined.DIRECTION_DOWN) {
                         self.moveDirection = undefined
                         return
@@ -365,8 +364,8 @@
                     self.setTransitionStyle(currentTarget, true)
                     self.applyTransfromStyle(currentTarget)
                 },
-                onPointerup(evte, { clientX, clientY }, gesture) {
-                    console.log({ clientX, clientY })
+                onPointerup(evte, { clientX, clientY, }, gesture) {
+                    console.log({ clientX, clientY, })
                     const currentTarget = itemElement
                     const tranlsteXItemData = self.swipeItemTranlsteXMap[currentTarget.id]
                     if (tranlsteXItemData.setting === tranlsteXItemData.rightEndPoint || tranlsteXItemData.setting === tranlsteXItemData.leftEndPoint) {
@@ -392,8 +391,8 @@
                     self.setTransitionStyle(currentTarget, true)
                     self.applyTransfromStyle(currentTarget)
                 },
-                onPpointercancel(evte, { clientX, clientY }, gesture) {
-                    console.log({ clientX, clientY })
+                onPpointercancel(evte, { clientX, clientY, }, gesture) {
+                    console.log({ clientX, clientY, })
                     const currentTarget = itemElement
                     const tranlsteXItemData = self.swipeItemTranlsteXMap[currentTarget.id]
                     tranlsteXItemData.setting = tranlsteXItemData.rightEndPoint
@@ -454,8 +453,8 @@
     let maxScale = 10
     let minScale = 0.1
     xGesture.attach(gestureElement, {
-        onWheel(evte, { scale, clientX, clientY }, gesture) {
-            console.log({ scale, clientX, clientY })
+        onWheel(evte, { scale, clientX, clientY, }, gesture) {
+            console.log({ scale, clientX, clientY, })
             evte.preventDefault()
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
@@ -526,9 +525,9 @@
     let maxWScale = 10
     let minScale = 0.1
     xGesture.attach(gestureElement, {
-        preventDefaultOnDoublePointerdown: true,
-        onPinch(evte, { scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
-            console.log({ scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
+        preventDefaultOnDoublePointersdown: true,
+        onPinch(evte, { scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB, }, gesture) {
+            console.log({ scale, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB, })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
             xCenterElement.textContent = centerX
@@ -602,9 +601,9 @@
 
     let styleUpdateTimer = null
     xGesture.attach(gestureElement, {
-        preventDefaultOnDoublePointerdown: true,
-        onRotate(evte, { rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB }, gesture) {
-            console.log({ rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB })
+        preventDefaultOnDoublePointersdown: true,
+        onRotate(evte, { rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB, }, gesture) {
+            console.log({ rotate, centerX, centerY, lastCenterX, lastCenterY, pointA, pointB, })
             window.clearTimeout(styleUpdateTimer)
             gestureElement.classList.add(interactiveSelectedClassname)
             xCenterElement.textContent = centerX

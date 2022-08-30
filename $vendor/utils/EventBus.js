@@ -60,14 +60,14 @@ class Ven$EventBus {
 					errorMsg = new Error(`Unknown listening function`)
 				}
 				if (errorMsg) {
-					_({ error: errorMsg, data: null, __arguments: { eventName, params, spaceName: sn } })
+					_({ error: errorMsg, data: null, __arguments: { eventName, params, spaceName: sn, } })
 					return
 				}
 				const fn = handlers[sn][eventName]
 				const res = await fn(params)
-				_({ error: null, data: res, __arguments: { eventName, params, spaceName: sn } })
+				_({ error: null, data: res, __arguments: { eventName, params, spaceName: sn, } })
 			} catch (e) {
-				_({ error: e, data: null, __arguments: { eventName, params, spaceName: sn } })
+				_({ error: e, data: null, __arguments: { eventName, params, spaceName: sn, } })
 			}
 		})
 	}
