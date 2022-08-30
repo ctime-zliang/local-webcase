@@ -309,7 +309,7 @@ function ven$findTargetByClassName(element, className, eventPath, index = 0) {
         return null
     }
     const nowElement = eventPath[index]
-    if ((nowElement.nodeType !== 1 && nowElement.nodeType !== 3) || !nowElement) {
+    if (!nowElement || (nowElement.nodeType !== 1 && nowElement.nodeType !== 3)) {
         return null
     }
     if (element.classList.contains(className)) {
@@ -327,7 +327,7 @@ function ven$findTargetByClassName(element, className, eventPath, index = 0) {
  * @return {htmllement|null} 
  */
 function ven$findTargetByClassName2(nowElement, className) {
-    if ((nowElement.nodeType !== 1 && nowElement.nodeType !== 3) || !nowElement) {
+    if (!nowElement || (nowElement.nodeType !== 1 && nowElement.nodeType !== 3)) {
         return null
     }
     if (nowElement.classList.contains(className)) {

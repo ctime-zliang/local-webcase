@@ -1,5 +1,5 @@
 function __AlertFindTargetByClassName(nowElement, className) {
-    if ((nowElement.nodeType !== 1 && nowElement.nodeType !== 3) || !nowElement) {
+    if (!nowElement || (nowElement.nodeType !== 1 && nowElement.nodeType !== 3)) {
         return null
     }
     if (nowElement.classList.contains(className)) {
