@@ -65,8 +65,7 @@ class AlertManager {
                 this._updateBtnsView()
             }
         }
-        this._isFlushCallback = false
-        /* ... */        
+        this._isFlushCallback = false     
         this._contentElement.innerHTML = message
         this._wrapperElement.classList.add('alertmgr-wrapper-entrystart', 'alertmgr-transition-duringshort')
         this._lockElement.classList.add('alertmgr-lock-entrystart', 'alertmgr-transition-duringshort')
@@ -140,7 +139,6 @@ class AlertManager {
     }
 
     static _doCallback(targetElement) {
-        targetElement.classList.add('alertmgr-btn-active')
         if (this._callback && !this._isFlushCallback) {
             window.setTimeout(() => {
                 this._isFlushCallback = true
@@ -151,6 +149,10 @@ class AlertManager {
 
     static _btnsWrapperTouchstartHandler(e) {
         e.preventDefault()
+        const targetElement = __AlertFindTargetByClassName(e.target, 'alertmgr-btn')
+        if (targetElement) {
+            targetElement.classList.add('alertmgr-btn-active')
+        }
         const toucher0 = e.changedTouches[0]
         this._pointerdownX = toucher0.clientX
         this._pointerdownY = toucher0.clientY
@@ -162,18 +164,25 @@ class AlertManager {
         if (!this._isPointerdown) {
             return
         }
+        const targetElement = __AlertFindTargetByClassName(e.target, 'alertmgr-btn')
         const toucher0 = e.changedTouches[0]
         if (Math.abs(toucher0.clientX - this._pointerdownX) < 8 && Math.abs(toucher0.clientY - this._pointerdownY) < 8) {
-            const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn')
-            target && this._doCallback(target)
+            targetElement && this._doCallback(targetElement)
         }
         this._isPointerdown = false
+        window.setTimeout(() => {
+            targetElement.classList.remove('alertmgr-btn-active')
+        }, 100)
     }
 
     static _btnsWrapperMousedownHandler(e) {
         e.preventDefault()
         if (e.button !== 0) {
             return
+        }
+        const targetElement = __AlertFindTargetByClassName(e.target, 'alertmgr-btn')
+        if (targetElement) {
+            targetElement.classList.add('alertmgr-btn-active')
         }
         this._pointerdownX = e.clientX
         this._pointerdownY = e.clientY
@@ -185,11 +194,14 @@ class AlertManager {
         if (e.button !== 0 || !this._isPointerdown) {
             return
         }
+        const targetElement = __AlertFindTargetByClassName(e.target, 'alertmgr-btn')
         if (Math.abs(e.clientX - this._pointerdownX) < 8 && Math.abs(e.clientY - this._pointerdownY) < 8) {
-            const target = __AlertFindTargetByClassName(e.target, 'alertmgr-btn')
-            target && this._doCallback(target)
+            targetElement && this._doCallback(targetElement)
         }
         this._isPointerdown = false
+        window.setTimeout(() => {
+            targetElement.classList.remove('alertmgr-btn-active')
+        }, 100)
     }
 
     static _containerContextmenuHandler(e) {
