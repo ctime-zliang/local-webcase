@@ -16,7 +16,6 @@
         static set scale(value) {
             this._scale = value
         }
-
         static get scale() {
             return this._scale
         }
@@ -24,7 +23,6 @@
         static set rotate(value) {
             this._rotate = value
         }
-
         static get rotate() {
             return this._rotate
         }
@@ -32,7 +30,6 @@
         static set translateX(value) {
             this._translateX = value
         }
-
         static get translateX() {
             return this._translateX
         }
@@ -40,7 +37,6 @@
         static set translateY(value) {
             this._translateY = value
         }
-
         static get translateY() {
             return this._translateY
         }
@@ -48,7 +44,6 @@
         static set translateZ(value) {
             this._translateZ = value
         }
-
         static get translateZ() {
             return this._translateZ
         }

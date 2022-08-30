@@ -424,7 +424,6 @@
         static set scale(value) {
             this._scale = value
         }
-
         static get scale() {
             return this._scale
         }
@@ -496,7 +495,6 @@
         static set scale(value) {
             this._scale = value
         }
-
         static get scale() {
             return this._scale
         }
@@ -574,7 +572,6 @@
         static set rotate(value) {
             this._rotate = value
         }
-
         static get rotate() {
             return this._rotate
         }
