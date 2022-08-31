@@ -1,0 +1,30 @@
+.virtualscroller-container {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.virtualscroller-wrapper {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: auto;
+    scroll-behavior: auto;
+    background-color: #ffffff;
+}
+.virtualscroller-content, .virtualscroller-listwrapper {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+}
+.virtualscroller-listwrapper .virtualscroller-item {
+    width: 100%;
+    height: 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
+    flex-wrap: nowrap;
+    overflow: hidden;
+}
