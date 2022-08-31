@@ -90,12 +90,12 @@ class VirtualScroller {
         this.containerElement = null
         this.eventHandlers = {}
         this._init()
-        this._bindEvent()
     }
 
     _init() {
         this._initDOM()
-        this.updateClientRect()
+        this._setClientRect()
+        this._bindEvent()
     }
 
     setData(listData) {
@@ -103,7 +103,8 @@ class VirtualScroller {
         this.options.dataAllCount = this.options.listData.length
         this.options.rowsAllHeight = this.options.dataAllCount * this.options.rowItemHeight
         this.options.contentAreaYOffsetMax = this.options.rowsAllHeight - this.options.containerElementClientRect.height
-        this._setContentClientRect()
+        const vsContentElement = this.containerElement.getElementsByClassName(`virtualscroller-content`)[0]
+        vsContentElement.style.height = `${this.options.dataAllCount * this.options.rowItemHeight}px`
         this._insertHtml(this._sliceListData())
     }
 
@@ -112,27 +113,9 @@ class VirtualScroller {
     }
 
     updateClientRect() {
-        /**
-         * 获取自身容器尺寸
-         */
-        this.options.containerElementClientRect = this.containerElement.getBoundingClientRect()
-        /**
-         * 设置滚动内层节点尺寸
-         */
-        const vsContentElement = this.containerElement.getElementsByClassName(`virtualscroller-content`)[0]
-        vsContentElement.style.minHeight = `${this.options.containerElementClientRect.height}px`
-        vsContentElement.style.height = `${this.options.dataAllCount * this.options.rowItemHeight}px`
-        /**
-         * 设置列表包裹层节点尺寸
-         */
-        const vsListWrapperElement = this.containerElement.querySelector(`.virtualscroller-listwrapper`)
-        vsListWrapperElement.style.maxHeight = `${this.options.containerElementClientRect.height}px`
-        vsListWrapperElement.style.minHeight = `${this.options.containerElementClientRect.height}px`
-        vsListWrapperElement.style.height = `${this.options.containerElementClientRect.height}px`
-        /**
-         * 设置滚动内层节点尺寸
-         */
-         this.options.viewRenderCount = Math.ceil(this.options.containerElementClientRect.height / this.options.rowItemHeight) + 2
+        this._setClientRect()
+        this.options.contentAreaYOffsetMax = this.options.rowsAllHeight - this.options.containerElementClientRect.height
+        this._insertHtml(this._sliceListData())
     }
 
     on(eventName, callback) {
@@ -174,12 +157,27 @@ class VirtualScroller {
         this.containerElement = vsContainerElement
     }
 
-    _setContentClientRect() {
+    _setClientRect() {
+        /**
+         * 获取自身容器尺寸
+         */
+        this.options.containerElementClientRect = this.containerElement.getBoundingClientRect()
         /**
          * 设置滚动内层节点尺寸
          */
         const vsContentElement = this.containerElement.getElementsByClassName(`virtualscroller-content`)[0]
+        vsContentElement.style.minHeight = `${this.options.containerElementClientRect.height}px`
         vsContentElement.style.height = `${this.options.dataAllCount * this.options.rowItemHeight}px`
+        /**
+         * 设置列表包裹层节点尺寸
+         */
+        const vsListWrapperElement = this.containerElement.querySelector(`.virtualscroller-listwrapper`)
+        vsListWrapperElement.style.minHeight = `${this.options.containerElementClientRect.height}px`
+        vsListWrapperElement.style.height = `${this.options.containerElementClientRect.height}px`
+        /**
+         * 设置滚动内层节点尺寸
+         */
+        this.options.viewRenderCount = Math.ceil(this.options.containerElementClientRect.height / this.options.rowItemHeight) + 2
     }
 
     _bindEvent() {

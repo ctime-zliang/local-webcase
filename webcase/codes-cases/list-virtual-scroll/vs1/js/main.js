@@ -7,9 +7,8 @@ function dataCreator() {
     return list
 }
 
-
-window.addEventListener('DOMContentLoaded',function() {
-    const virtualScroller = new VirtualScroller(document.querySelector('[data-tagitem="virtual-scroller"]'), {
+function initVirtualScroller(outerContainerElement) {
+    const virtualScroller = new VirtualScroller(outerContainerElement, {
         rowItemHeight: 25,
         createItemRender(itemData, index) {
             if (index % 2 === 0) {
@@ -27,9 +26,29 @@ window.addEventListener('DOMContentLoaded',function() {
         console.log('scroll to bottom!', virtualScroller)
     })
     virtualScroller.on(VirtualScroller.EVENT_CONSTANCE.SCROLLING, () => {
-        console.log('scrolling!', virtualScroller.getRenderedData())
+        console.log('scrolling!')
     })
 
     console.log(virtualScroller.getRenderedData())
     console.log(virtualScroller)
+
+    return virtualScroller
+}
+
+
+window.addEventListener('DOMContentLoaded',function() {
+    const widthAddingRangeElement = document.getElementById('widthAddingRange')
+    const outerContainerElement = document.querySelector('[data-tagitem="virtual-scroller"]')
+    const virtualScroller = initVirtualScroller(outerContainerElement)
+
+    const resizeObserver = new ResizeObserver((entries) => {
+        virtualScroller.updateClientRect()
+    })
+    resizeObserver.observe(outerContainerElement)
+
+    const initOuterContainerElementClientRect = outerContainerElement.getBoundingClientRect()
+    widthAddingRangeElement.addEventListener('input', function(evte) {
+        outerContainerElement.style.height = initOuterContainerElementClientRect.height + +this.value + 'px'
+        console.log(virtualScroller.getRenderedData())
+    })
 })
