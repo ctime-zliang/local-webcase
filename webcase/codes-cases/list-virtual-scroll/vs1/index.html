@@ -12,11 +12,18 @@
 </head>
 
 <body>
-<div>
+<div style="padding: 0 0 10px 0;">
     <input type="range" value="0" id="widthAddingRange" min="-200" max="200" step="1" style="width: 500px;" />
+    <br />
+    <button id="updateItemById">更新指定 ID 项</button>
+    <button id="deleleItemById">删除指定 ID 项</button>
+    <button id="updateItemsByView">更新视口内部分项</button>
+    <button id="deleleItemsByView">删除视口内部分项</button>
+    <button id="addItemsInEnd">列表尾部增加</button>
 </div>
 <div style="width: 300px; height: 500px; border: 1px solid #333333;" data-tagitem="virtual-scroller"></div>
 </body>
+<script type="text/javascript" src="../../../../$vendor/utils/utils.js"></script>
 <script type="text/javascript" src="../../../../$vendor/component/listVirtualScoller/js/virtualScroller.js"></script>
 <script type="text/javascript" src="./js/main.js"></script>
 </html>

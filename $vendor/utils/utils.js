@@ -335,3 +335,27 @@ function ven$findTargetByClassName2(nowElement, className) {
     }
     return ven$findTargetByClassName2(nowElement.parentElement, className)
 }
+
+
+/**
+ * @description 在 JSON 列表中查找指定 key: value 对应的项
+ * @function ven$findList
+ * @param {array<object>} list JSON 列表
+ * @param {string} key 指定 key
+ * @param {string} value 指定 value
+ * @return {object} 
+ */
+function ven$findList(list, key, value) {
+    const res = { index: -1, data: null }
+    if (list.length <= 0) {
+        return res
+    }
+    for (let i = 0; i < list.length; i++) {
+        if (list[i][key] === value) {
+            res.index = i
+            res.data = list[i]
+            break
+        }
+    }
+    return res
+}

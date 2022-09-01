@@ -69,6 +69,10 @@ const createDefaultConfig = () => {
          * 滚动过程中渲染出的真实 DOM 个数
          */
         viewRenderCount: 0,
+        /**
+         * ...
+         */
+        isTriggerByUpdateCall: false
     }
 }
 
@@ -99,17 +103,38 @@ class VirtualScroller {
     }
 
     setData(listData) {
-        this.options.listData = listData
-        this.options.dataAllCount = this.options.listData.length
-        this.options.rowsAllHeight = this.options.dataAllCount * this.options.rowItemHeight
-        this.options.contentAreaYOffsetMax = this.options.rowsAllHeight - this.options.containerElementClientRect.height
-        const vsContentElement = this.containerElement.getElementsByClassName(`virtualscroller-content`)[0]
-        vsContentElement.style.height = `${this.options.dataAllCount * this.options.rowItemHeight}px`
+        this._handleListDataChange(listData)
         this._insertHtml(this._sliceListData())
     }
 
     getRenderedData() {
         return this.options.slicedListData
+    }
+
+    updateData(callback) {
+        if (!(callback instanceof Function)) {
+            return
+        }
+        this.options.isTriggerByUpdateCall = true
+        this._handleListDataChange(callback.call(this, this.options.listData, this.options.viewStartIndex, this.options.viewRenderCount))
+        const slicedListData = this._sliceListData()
+        if (slicedListData.length < this.options.viewRenderCount) {
+            const vsWrapperElement = this.containerElement.getElementsByClassName(`virtualscroller-wrapper`)[0]
+            const vsListWrapperElement = this.containerElement.getElementsByClassName(`virtualscroller-listwrapper`)[0]
+            let scrollTop = vsWrapperElement.scrollTop
+            if (scrollTop <= this.options.contentAreaYOffsetMin) {
+                scrollTop = this.options.contentAreaYOffsetMin
+            }
+            if (scrollTop >= this.options.contentAreaYOffsetMax) {
+                scrollTop = this.options.contentAreaYOffsetMax
+            }
+            this.options.contentAreaYOffset = scrollTop <= 0 ? 0 : scrollTop
+            this.options.viewStartIndex = Math.floor((this.options.contentAreaYOffset / this.options.rowItemHeight)) || 0 
+            this._insertHtml(this._sliceListData())
+            vsListWrapperElement.style.transform = `translate3d(0, ${this.options.contentAreaYOffset}px, 5px)`
+            return
+        }
+        this._insertHtml(slicedListData)
     }
 
     updateClientRect() {
@@ -130,6 +155,15 @@ class VirtualScroller {
 
     /****************************** ******************************/
     /****************************** ******************************/
+
+    _handleListDataChange(listData) {
+        this.options.listData = listData
+        this.options.dataAllCount = this.options.listData.length
+        this.options.rowsAllHeight = this.options.dataAllCount * this.options.rowItemHeight
+        this.options.contentAreaYOffsetMax = this.options.rowsAllHeight - this.options.containerElementClientRect.height
+        const vsContentElement = this.containerElement.getElementsByClassName(`virtualscroller-content`)[0]
+        vsContentElement.style.height = `${this.options.dataAllCount * this.options.rowItemHeight}px`
+    }
 
     _initDOM() {
         const vsOuterFragment = document.createRange().createContextualFragment(createPositionContainer(createVirtualScrollerTemplate()))
@@ -184,6 +218,10 @@ class VirtualScroller {
         const vsWrapperElement = this.containerElement.getElementsByClassName(`virtualscroller-wrapper`)[0]
         const vsListWrapperElement = this.containerElement.getElementsByClassName(`virtualscroller-listwrapper`)[0]
         vsWrapperElement.addEventListener('scroll', (evte) => {
+            if (this.options.isTriggerByUpdateCall) {
+                this.options.isTriggerByUpdateCall = false
+                return
+            }
             let scrollTop = evte.currentTarget.scrollTop
             let isTouchThreshold = false
             /**
@@ -199,7 +237,7 @@ class VirtualScroller {
                 scrollTop = this.options.contentAreaYOffsetMax
                 this._emit(EVENT_CONSTANCE.SCROLL_TO_BOTTOM)
             }
-            this.options.contentAreaYOffset = scrollTop
+            this.options.contentAreaYOffset = scrollTop <= 0 ? 0 : scrollTop
             this.options.viewStartIndex = Math.floor((this.options.contentAreaYOffset / this.options.rowItemHeight)) || 0 
             /**
              * 更新视图
