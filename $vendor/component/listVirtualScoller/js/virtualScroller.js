@@ -36,15 +36,15 @@ const createDefaultConfig = () => {
         /**
          * scroller-content 元素的内顶边距
          */
-        contentAreaYOffset: 0,
+        contentElementOffsetY: 0,
         /**
          * scroller-content 元素的内顶边距可设置的最小值
          */
-        contentAreaYOffsetMin: 0,
+        contentElementOffsetYMin: 0,
         /**
          * scroller-content 元素的内顶边距可设置的最大值
          */
-        contentAreaYOffsetMax: 0,
+        contentElementOffsetYMax: 0,
         /**
          * 列表总高度
          */
@@ -117,29 +117,32 @@ class VirtualScroller {
         }
         this.options.isTriggerByUpdateCall = true
         this._handleListDataChange(callback.call(this, this.options.listData, this.options.viewStartIndex, this.options.viewRenderCount))
+        /**
+         * 对于更新后的数据, 如果截取的数据段无法填满当前视口, 则需要调整截取起始位置并重新截取
+         */
         const slicedListData = this._sliceListData()
-        if (slicedListData.length < this.options.viewRenderCount) {
-            const vsWrapperElement = this.containerElement.getElementsByClassName(`virtualscroller-wrapper`)[0]
-            const vsListWrapperElement = this.containerElement.getElementsByClassName(`virtualscroller-listwrapper`)[0]
-            let scrollTop = vsWrapperElement.scrollTop
-            if (scrollTop <= this.options.contentAreaYOffsetMin) {
-                scrollTop = this.options.contentAreaYOffsetMin
-            }
-            if (scrollTop >= this.options.contentAreaYOffsetMax) {
-                scrollTop = this.options.contentAreaYOffsetMax
-            }
-            this.options.contentAreaYOffset = scrollTop <= 0 ? 0 : scrollTop
-            this.options.viewStartIndex = Math.floor((this.options.contentAreaYOffset / this.options.rowItemHeight)) || 0 
-            this._insertHtml(this._sliceListData())
-            vsListWrapperElement.style.transform = `translate3d(0, ${this.options.contentAreaYOffset}px, 5px)`
+        if (slicedListData.length >= this.options.viewRenderCount) {
+            this._insertHtml(slicedListData)
             return
         }
-        this._insertHtml(slicedListData)
+        const vsWrapperElement = this.containerElement.getElementsByClassName(`virtualscroller-wrapper`)[0]
+        const vsListWrapperElement = this.containerElement.getElementsByClassName(`virtualscroller-listwrapper`)[0]
+        let scrollTop = vsWrapperElement.scrollTop
+        if (scrollTop <= this.options.contentElementOffsetYMin) {
+            scrollTop = this.options.contentElementOffsetYMin
+        }
+        if (scrollTop >= this.options.contentElementOffsetYMax) {
+            scrollTop = this.options.contentElementOffsetYMax
+        }
+        this.options.contentElementOffsetY = scrollTop <= 0 ? 0 : scrollTop
+        this.options.viewStartIndex = Math.floor((this.options.contentElementOffsetY / this.options.rowItemHeight)) || 0 
+        this._insertHtml(this._sliceListData())
+        vsListWrapperElement.style.transform = `translate3d(0, ${this.options.contentElementOffsetY}px, 5px)`
     }
 
     updateClientRect() {
         this._setClientRect()
-        this.options.contentAreaYOffsetMax = this.options.rowsAllHeight - this.options.containerElementClientRect.height
+        this.options.contentElementOffsetYMax = this.options.rowsAllHeight - this.options.containerElementClientRect.height
         this._insertHtml(this._sliceListData())
     }
 
@@ -160,7 +163,10 @@ class VirtualScroller {
         this.options.listData = listData
         this.options.dataAllCount = this.options.listData.length
         this.options.rowsAllHeight = this.options.dataAllCount * this.options.rowItemHeight
-        this.options.contentAreaYOffsetMax = this.options.rowsAllHeight - this.options.containerElementClientRect.height
+        this.options.contentElementOffsetYMax = this.options.rowsAllHeight - this.options.containerElementClientRect.height
+        /**
+         * 更新 content 节点高度, 使得容器滚动条正常显示
+         */
         const vsContentElement = this.containerElement.getElementsByClassName(`virtualscroller-content`)[0]
         vsContentElement.style.height = `${this.options.dataAllCount * this.options.rowItemHeight}px`
     }
@@ -211,7 +217,7 @@ class VirtualScroller {
         /**
          * 设置滚动内层节点尺寸
          */
-        this.options.viewRenderCount = Math.ceil(this.options.containerElementClientRect.height / this.options.rowItemHeight) + 2
+        this.options.viewRenderCount = Math.ceil(this.options.containerElementClientRect.height / this.options.rowItemHeight)
     }
 
     _bindEvent() {
@@ -224,26 +230,20 @@ class VirtualScroller {
             }
             let scrollTop = evte.currentTarget.scrollTop
             let isTouchThreshold = false
-            /**
-             * 滚动阈值判断
-             */
-            if (scrollTop <= this.options.contentAreaYOffsetMin) {
+            if (scrollTop <= this.options.contentElementOffsetYMin) {
                 isTouchThreshold = true
-                scrollTop = this.options.contentAreaYOffsetMin
+                scrollTop = this.options.contentElementOffsetYMin
                 this._emit(EVENT_CONSTANCE.SCROLL_TO_TOP)
             }
-            if (scrollTop >= this.options.contentAreaYOffsetMax) {
+            if (scrollTop >= this.options.contentElementOffsetYMax) {
                 isTouchThreshold = true
-                scrollTop = this.options.contentAreaYOffsetMax
+                scrollTop = this.options.contentElementOffsetYMax
                 this._emit(EVENT_CONSTANCE.SCROLL_TO_BOTTOM)
             }
-            this.options.contentAreaYOffset = scrollTop <= 0 ? 0 : scrollTop
-            this.options.viewStartIndex = Math.floor((this.options.contentAreaYOffset / this.options.rowItemHeight)) || 0 
-            /**
-             * 更新视图
-             */
+            this.options.contentElementOffsetY = scrollTop <= 0 ? 0 : scrollTop
+            this.options.viewStartIndex = Math.floor((this.options.contentElementOffsetY / this.options.rowItemHeight)) || 0 
             this._insertHtml(this._sliceListData())
-            vsListWrapperElement.style.transform = `translate3d(0, ${this.options.contentAreaYOffset}px, 5px)`
+            vsListWrapperElement.style.transform = `translate3d(0, ${this.options.contentElementOffsetY}px, 5px)`
             if (!isTouchThreshold) {
                 this._emit(EVENT_CONSTANCE.SCROLLING)
             }

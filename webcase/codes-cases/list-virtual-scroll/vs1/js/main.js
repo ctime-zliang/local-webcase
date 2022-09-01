@@ -1,4 +1,4 @@
-﻿const MAX_LENGTH = 80
+﻿const MAX_LENGTH = 100
 function dataCreator() {
     const list = []
     for (let i = 0; i < MAX_LENGTH; i++) {
@@ -53,7 +53,7 @@ window.addEventListener('DOMContentLoaded',function() {
 
     document.getElementById('updateItemById').addEventListener('click', function(evte) {
         virtualScroller.updateData((allListData, viewStartIndex, viewRenderCount) => {
-            const findRes = ven$findList(allListData, 'id', 50)
+            const findRes = ven$findList(allListData, 'id', 2)
             if (findRes.index <= -1) {
                 return allListData
             }
@@ -65,7 +65,7 @@ window.addEventListener('DOMContentLoaded',function() {
 
     document.getElementById('deleleItemById').addEventListener('click', function(evte) {
         virtualScroller.updateData((allListData, viewStartIndex, viewRenderCount) => {
-            const findRes = ven$findList(allListData, 'id', 50)
+            const findRes = ven$findList(allListData, 'id', 5)
             if (findRes.index <= -1) {
                 return allListData
             }
