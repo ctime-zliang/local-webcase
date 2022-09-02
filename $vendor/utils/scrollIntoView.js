@@ -48,9 +48,9 @@ function ven$scrollIntoViewByIndex(itemIndex, containerElement) {
  * @param {htmllement} targetElemet 目标元素
  * @param {htmllement} containerElement 容器元素
  * @return {number} 
- *      1 - 元素隐藏于容器视口外上部
- *      2 - 元素处于容器视口内
- *      3 - 元素隐藏于容器视口外下部
+ *      100001 - 元素隐藏于容器视口外上部
+ *      100002 - 元素处于容器视口内
+ *      100003 - 元素隐藏于容器视口外下部
  */
 function ven$getItemPostionByTarget(targetElemet, containerElement) {
     if (!targetElemet) {
@@ -59,11 +59,11 @@ function ven$getItemPostionByTarget(targetElemet, containerElement) {
     const containerElementRect = containerElement.getBoundingClientRect().toJSON()
     const targetElemetRect = targetElemet.getBoundingClientRect().toJSON()
     if (containerElement.scrollTop > targetElemet.offsetTop + targetElemetRect.height / 2) {
-        return 1
+        return 100001
     }
     if (containerElement.scrollTop + containerElementRect.height < targetElemet.offsetTop + targetElemetRect.height / 2) {
-        return 3
+        return 100003
     }   
-    return 2
+    return 100002
 }
 

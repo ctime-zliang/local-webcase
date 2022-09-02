@@ -1,6 +1,3 @@
-/*
-    handler.js
- */
 window.$handler = {	
 	lastEndPathPointsArr: [],
 	/**
@@ -14,20 +11,27 @@ window.$handler = {
 		const _PosRect = {}		
 		_PosRect.canvasRectLeft = canvasRect.left || 0
 		_PosRect.canvasRectTop = canvasRect.top || 0
-		// 鼠标点击时的坐标(相对于 SVG 画布)
+		/**
+         * 鼠标点击时的坐标(相对于 SVG 画布)
+         */
 		_PosRect.downX = +evte.clientX - _PosRect.canvasRectLeft
 		_PosRect.downY = +evte.clientY - _PosRect.canvasRectTop
-		// 获取鼠标点击的 <circle /> 节点的圆心坐标
-		/*
-			需要在此获取被点击元素的 DOM 属性
-			因此调用本函数前需要将此函数的 this 修改为目标 DOM 
-		 */
+		/**
+         * 获取鼠标点击的 <circle /> 节点的圆心坐标
+		 * 
+		 * 需要在此获取被点击元素的 DOM 属性
+		 * 因此调用本函数前需要将此函数的 this 修改为目标 DOM 
+         */
 		_PosRect.circleCenterX = (+this.getAttribute('cx')) || 0
 		_PosRect.circleCenterY = (+this.getAttribute('cy')) || 0
-		// 计算鼠标点击时的坐标(相对于SVG画布) 到 当前点击的<circle />节点的圆心坐标 的差值
+		/**
+         * 计算鼠标点击时的坐标(相对于SVG画布) 到 当前点击的<circle />节点的圆心坐标 的差值
+         */
 		_PosRect.distX = _PosRect.downX - _PosRect.circleCenterX
 		_PosRect.distY = _PosRect.downY - _PosRect.circleCenterY
-		// 获取当前点击的<circle />节点的索引
+		/**
+         * 获取当前点击的<circle />节点的索引
+         */
 		_PosRect.index = String(window.$util.nodeIndexOf(this))		
 		return _PosRect
 	},
@@ -43,11 +47,15 @@ window.$handler = {
 		posRect = {},
 		canvasRect = {}
 	) {
-		const _PosRect = {}		
-		// 鼠标移动时的实时坐标(相对于SVG画布)
+		const _PosRect = {}	
+		/**
+         * 鼠标移动时的实时坐标(相对于SVG画布)
+         */	
 		_PosRect.moveX = +evte.clientX - canvasRect.left || 0
 		_PosRect.moveY = +evte.clientY - canvasRect.top || 0
-		// 计算鼠标移动时的相对于当前点击的<circle />节点的圆心的实时坐标
+		/**
+         * 计算鼠标移动时的相对于当前点击的<circle />节点的圆心的实时坐标
+         */	
 		_PosRect.newX = _PosRect.moveX - posRect.distX
 		_PosRect.newY = _PosRect.moveY - posRect.distY		
 		return _PosRect
@@ -84,8 +92,10 @@ window.$handler = {
      * @return {Object}
      */
 	getRotateCenterRect(index = 0, pathPoints = []) {
-		const _PosRect = {}		
-		// 默认的旋转中心点/控制点
+		const _PosRect = {}
+		/**
+         * 默认的旋转中心点/控制点
+         */	
 		_PosRect.rotateCenterPoint = {
 			x: (pathPoints[4]) ? (pathPoints[4].x || 0) : 0,
 			y: (pathPoints[4]) ? (pathPoints[4].y || 0) : 0
@@ -94,17 +104,23 @@ window.$handler = {
 			x: (pathPoints[0]) ? (pathPoints[0].x || 0) : 0,
 			y: (pathPoints[0]) ? (pathPoints[0].y || 0) : 0
 		}
-		// 点击[顶点]
+		/**
+         * 点击[顶点]
+         */	
 		if (+index === 0) {
 			_PosRect.isCanRotate = true
 			_PosRect.isReverseDirection = false
 			return _PosRect
 		}
-		// 点击[底部中点]
+		/**
+         * 点击[底部中点]
+         */
 		if (+index === 4) {
 			_PosRect.isCanRotate = true
 			_PosRect.isReverseDirection = true
-			// 设置新的旋转中心点/控制点
+			/**
+         	 * 设置新的旋转中心点/控制点
+         	 */
 			_PosRect.rotateCenterPoint = {
 				x: (pathPoints[0]) ? (pathPoints[0].x || 0) : 0,
 				y: (pathPoints[0]) ? (pathPoints[0].y || 0) : 0
@@ -126,19 +142,26 @@ window.$handler = {
      * @return {Object}
      */
 	getPathPointsWhenMove(posRect = {},	pathPoints = []) {
-		// 点击的目标的索引
+		/**
+		 * 点击的目标的索引
+		 */
 		let index = +posRect.index
-		// 坐标点副本
+		/**
+		 * 坐标点副本
+		 */
 		let PathPointsArr = pathPoints.slice(0)
-		// 箭头三角部分内部折角
+		/**
+		 * 箭头三角部分内部折角
+		 */
 		let angleInner = 0
-		// 箭头两侧翼点到对称线的距离
+		/**
+		 * 箭头两侧翼点到对称线的距离
+		 */
 		let distSymLine = 0
 		
 		if (!this.lastEndPathPointsArr || !this.lastEndPathPointsArr.length) {
 			this.lastEndPathPointsArr = pathPoints
-		}		
-		// Action
+		}
 		switch (String(index)) {
 			case '0': {				
 				angleInner = window.$math.getAngle(
@@ -295,8 +318,10 @@ window.$handler = {
 				break;
 			}
 			default:;
-		}		
-		// 记录最后一次事件时的坐标组
+		}
+		/**
+		 * 记录最后一次事件时的坐标组
+		 */	
 		this.lastEndPathPointsArr = PathPointsArr		
 		return PathPointsArr
 	}
