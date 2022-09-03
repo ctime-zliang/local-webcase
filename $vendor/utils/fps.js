@@ -75,8 +75,8 @@
     }
 
     const initViewElement = () => {
-        const bodyElement = document.body
-        bodyElement.appendChild(document.createRange().createContextualFragment(createHtmlString()))
+        const rootElement = document.body || document.documentElement
+        rootElement.appendChild(document.createRange().createContextualFragment(createHtmlString()))
     }
 
     const initElementHandler = (runtimeConfig) => {
