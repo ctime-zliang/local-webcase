@@ -34,7 +34,7 @@ function ven$choke(delay = 1000) {
  * @return {promise<undefined>}
  */
 async function ven$sleep(delay = 1000) {
-    return Promise((_, reject) => {
+    return Promise((_) => {
         window.setTimeout(_, delay)
     })
 }
@@ -91,7 +91,7 @@ function ven$nativeSortSeq(arr) {
  * @return {array<any>}
  */
 function ven$removeAllFrontZero(arr) {
-    let res = []
+    const res = []
     let flag = false
     for (let i = 0; i < arr.length; i++) {
         if (arr[i] === 0 && !flag) {
@@ -158,7 +158,7 @@ function ven$createArray(length, value = undefined) {
  * @return {number} 
  */
 function ven$padNumber(number, allLength) {
-    let len = String(number).length
+    const len = String(number).length
     return Array(allLength > len ? allLength - len + 1 || 0 : 0).join('') + number
 }
 
@@ -209,8 +209,8 @@ function ven$interval(
     interval, 
     scope = undefined
 ) {
-    let handler = { timer: null, }
-    let intv = function() {
+    const handler = { timer: null, }
+    const intv = function() {
         fn.call(scope)
         handler.timer = setTimeout(intv, interval)
     }

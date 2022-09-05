@@ -87,7 +87,13 @@ function ven$unbindEvent(
     if (typeof host === 'string') {
         hostElement = document.querySelector(host)
     }
-    if (!hostElement || !eventName || typeof eventName !== 'string' || typeof arguments[2] == 'undefined') {
+    if (
+        !hostElement 
+        || !eventName 
+        || typeof eventName !== 'string' 
+        || typeof arguments[2] == 'undefined' 
+        || !(handler instanceof Function)
+    ) {
         return
     }
     hostElement.removeEventListener(eventName, handler)

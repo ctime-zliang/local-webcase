@@ -5,8 +5,8 @@
  * @return {array} 
  */ 
 function ven$bubbleSort(arr = []) {
-    let res = arr.slice(0)
-    let len = res.length
+    const res = arr.slice(0)
+    const len = res.length
     let swap = 0
     for (let i = 0; i < len; i++) {
         for (let j = 0; j < len - 1 - i; j++) {
@@ -28,8 +28,8 @@ function ven$bubbleSort(arr = []) {
  * @return {array} 
  */
 function ven$bubbleSortOptimi(arr = []) {
-    let arrCopy = arr.slice(0)
-    let len = arrCopy.length
+    const arrCopy = arr.slice(0)
+    const len = arrCopy.length
     let swap = 0
     let isChange = false
     for (let i = 0; i < len; i++) {
@@ -60,8 +60,8 @@ function ven$bubbleSortOptimi(arr = []) {
  * @return {array} 
  */
 function ven$selectionSort(arr = []) {
-    let arrCopy = arr.slice(0)
-    let len = arrCopy.length
+    const arrCopy = arr.slice(0)
+    const len = arrCopy.length
     let minIndexPos = 0
     let swap = 0
     for (let i = 0; i < len - 1; i++) {
@@ -92,17 +92,16 @@ function ven$selectionSort(arr = []) {
  * @return {array} 
  */
 function ven$quickSeqSort(arr = []) {
-    let arrCopy = arr.slice(0)
-    return recursion(arrCopy)
+    return recursion(arr.slice(0))
 
     function recursion(arr = []) {          
         if (arr.length <= 1) {
             return arr
         }
+        const leftArr = []
+        const rightArr = []
         let middleIndex = Math.floor(arr.length / 2)
         let middleValue = arr.splice(middleIndex, 1)[0]
-        let leftArr = []
-        let rightArr = []
         /**
          * 遍历数组
          * 按照大小归类
@@ -124,17 +123,16 @@ function ven$quickSeqSort(arr = []) {
  * @return {array} 
  */
 function ven$quickInvSort(arr = []) {
-    let arrCopy = arr.slice(0)
-    return recursion(arrCopy)
+    return recursion(arr.slice(0))
 
     function recursion(arr = []){
         if (arr.length <= 1) {
             return arr
         }
+        const leftArr = []
+        const rightArr = []
         let middleIndex = Math.floor(arr.length / 2)
         let middleValue = arr.splice(middleIndex, 1)[0]
-        let leftArr = []
-        let rightArr = []
         /**
          * 遍历数组
          * 按照大小归类
@@ -156,8 +154,8 @@ function ven$quickInvSort(arr = []) {
  * @return {array} 
  */
 function ven$insertSort(arr = []){
-    let arrCopy = arr.slice(0)
-    let len = arrCopy.length
+    const arrCopy = arr.slice(0)
+    const len = arrCopy.length
     let tagValue = 0
     let tagIndex = 0
     for (let i = 1; i < len; i++) {
@@ -209,9 +207,9 @@ function ven$mergeSort(arr = []){
          * 获取数组中间项索引
          * 并按照索引分割数组
          */ 
-        let middleIndex = Math.floor(arr.length / 2)
-        let leftArr = arr.slice(0, middleIndex)
-        let rightArr = arr.slice(middleIndex)
+        const middleIndex = Math.floor(arr.length / 2)
+        const leftArr = arr.slice(0, middleIndex)
+        const rightArr = arr.slice(middleIndex)
         return merge(
             groupRecursion(leftArr),
             groupRecursion(rightArr)
@@ -219,7 +217,7 @@ function ven$mergeSort(arr = []){
     }
 
     function merge(leftArr, rightArr) {
-        let array = [] 
+        const array = [] 
         /**
          * 遍历并对比左数组和右数组
          */  

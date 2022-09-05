@@ -47,7 +47,7 @@ class Ven$EventBus {
 	async exec(eventName, params, spaceName = DEFAULT_NS) {
 		const handlers = this.handlers
 		const sn = spaceName || DEFAULT_NS
-		return new Promise(async _ => {
+		return new Promise(async (_) => {
 			try {
 				let errorMsg = null
 				if (!eventName || typeof eventName !== 'string') {

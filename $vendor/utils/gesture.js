@@ -517,8 +517,8 @@
                     centerY: center.y,
                     lastCenterX: _$profile.centerPositionCacheOfMultiPointers.x,
                     lastCenterY: _$profile.centerPositionCacheOfMultiPointers.y,
-                    pointA: { x: pointer1.clientX, y: pointer1.clientY },
-                    pointB: { x: pointer2.clientX, y: pointer2.clientY },
+                    pointA: { x: pointer1.clientX, y: pointer1.clientY, },
+                    pointB: { x: pointer2.clientX, y: pointer2.clientY, },
                 },
                 this
             )

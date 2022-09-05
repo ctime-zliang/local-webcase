@@ -35,7 +35,7 @@ function ven$setList2Array(list) {
  * @return {ListNode} 
  */
 function ven$setArray2List(arr) {
-    let head = new ListNode(arr[0], null)
+    const head = new ListNode(arr[0], null)
     let p = head
     for (let i = 1; i < arr.length; i++) {
         const node = new ListNode(arr[i], null)

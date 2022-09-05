@@ -18,7 +18,7 @@ function ven$getUnionOfSets(setA, setB) {
  * @return {set}
  */
 function ven$getIntersectOfSets(setA, setB) {
-    return new Set([...setA].filter((item) => {return setB.has(item)}))
+    return new Set([...setA].filter((item) => { return setB.has(item) }))
 }
 
 
@@ -30,5 +30,5 @@ function ven$getIntersectOfSets(setA, setB) {
  * @return {set}
  */
 function ven$getDifferenceOfSets(setA, setB) {
-    return new Set([...setA].filter((item) => {return !setB.has(item)}))
+    return new Set([...setA].filter((item) => { return !setB.has(item) }))
 }

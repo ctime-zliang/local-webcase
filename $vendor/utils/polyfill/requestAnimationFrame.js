@@ -6,7 +6,7 @@
         window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame']
     }
     if (!window.requestAnimationFrame) {
-				window.requestAnimationFrame = function(callback, element) {
+		window.requestAnimationFrame = function(callback, element) {
             const currTime = new Date().getTime()
             const timeToCall = Math.max(0, 16 - (currTime - lastTime))
             const id = window.setTimeout(function() { 
@@ -15,7 +15,7 @@
             lastTime = currTime + timeToCall
             return id
         }
-		}
+	}
     if (!window.cancelAnimationFrame) {
         window.cancelAnimationFrame = function(id) {
             window.clearTimeout(id)

@@ -11,7 +11,7 @@ function ven$naturalSort(array, key = '') {
     const typeArray = []
     const digit = 1
     const letter = 2
-    for (let i =0; i< array.length; i++) {
+    for (let i = 0; i< array.length; i++) {
         indexArray[i] = i
         const string = key ? (array[i][key] || '') : array[i]
         itemArray[i] = string.toUpperCase().match(/\D+|\d+(?:\.\d+)?/g)
@@ -79,7 +79,7 @@ function __ven$naturalSort__naturalCompare(
  * @return {array<string|number|unknown>} 
  */
 function ven$findIntersectionInArrays(data) {
-    let keys = Object.keys(data)
+    const keys = Object.keys(data)
     if (!keys.length) {
         return []
     }

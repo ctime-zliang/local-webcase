@@ -65,9 +65,9 @@ class Ven$StringTrim {
             return string
         }
         return string
-                .replace(/<|&lt;/g, '&lt;')
-                .replace(/>|&gt;/g, '&gt;')
-                .replace(/\'|&#39;/g, '&#39;')
-                .replace(/\"|&quot;/g, '&quot;')
+            .replace(/<|&lt;/g, '&lt;')
+            .replace(/>|&gt;/g, '&gt;')
+            .replace(/\'|&#39;/g, '&#39;')
+            .replace(/\"|&quot;/g, '&quot;')
     }
 }

@@ -7,8 +7,7 @@ class Ven$JsonDiff {
     }
 
     static diff(obj1, obj2) {
-        let diff = {}
-        let key
+        const diff = {}
         let valueOfObj2
         if (this._isFunction(obj1) || this._isFunction(obj2)) {
             throw 'Invalid argument. Function given, Object expected.'
@@ -19,7 +18,7 @@ class Ven$JsonDiff {
                 data: obj1 === undefined ? obj2 : obj1
             }
         }
-        for (key in obj1) {
+        for (let key in obj1) {
             if (this._isFunction(obj1[key])) {
                 continue
             }                
@@ -29,7 +28,7 @@ class Ven$JsonDiff {
             }                
             diff[key] = this.diff(obj1[key], valueOfObj2)
         }
-        for (key in obj2) {
+        for (let key in obj2) {
             if (this._isFunction(obj2[key]) || 'undefined' != typeof diff[key]) {
                 continue
             }                
