@@ -66,4 +66,3 @@ function ven$getItemPostionByTarget(targetElemet, containerElement) {
     }   
     return 100002
 }
-

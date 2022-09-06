@@ -20,7 +20,7 @@ function ListNode(val, next) {
 function ven$setList2Array(list) {
     const arr = []
     arr.push(list.val)
-    while (list.next) {        
+    while (list.next) { 
         list = list.next
         arr.push(list.val)
     }

@@ -23,7 +23,7 @@ function ven$getLCS(stringA, stringB) {
                 if (i === 0 || j === 0) {
                     matrix[i][j] = 1
                 } else {
-                    matrix[i][j] = matrix[i - 1][j - 1] + 1                    
+                    matrix[i][j] = matrix[i - 1][j - 1] + 1
                 }
                 res.count = matrix[i][j]
             } else {

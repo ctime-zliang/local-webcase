@@ -27,12 +27,12 @@ function ven$throttleStamp(fn, delay = 500) {
 function ven$throttleTimeout(fn, delay = 500) {
     let timer = null
     return function() {
-        if (!timer) {           
+        if (!timer) {
             timer = window.setTimeout(() => {
                 timer = null
                 fn.apply(this, arguments)
             }, delay)
-        }        
+        } 
     }
 }
 

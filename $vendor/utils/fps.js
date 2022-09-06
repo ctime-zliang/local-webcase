@@ -66,7 +66,7 @@
                 styleElement.styleSheet.cssText = cssText
             } catch (e) {
                 initStyleError = true
-            }           
+            } 
         } else {
             styleElement.appendChild(document.createTextNode(cssText))
         }

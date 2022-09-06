@@ -5,7 +5,7 @@
  * @return {object|array}
  */
 function ven$deepClone(data) {
-    let wMap = new WeakMap()
+    const wMap = new WeakMap()
     return traverse(data)
 
     function traverse(data){

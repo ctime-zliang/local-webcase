@@ -5,7 +5,7 @@
  * @return {array<object>}
  */
 function ven$dfs1(node = null) {
-    const nodelist = []    
+    const nodelist = []
     return (traverse(node, nodelist), nodelist)
     
     function traverse(node, nodelist) {

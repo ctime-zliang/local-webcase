@@ -14,15 +14,15 @@ function ven$debounce(
     delay = 500,
     option = { immediate: false, trailing: false, }
 ) {
-    let timer = null   
+    let timer = null 
     return function() {
         if (timer) {
             window.clearTimeout(timer)
         }
-        if (!option.immediate) {            
+        if (!option.immediate) { 
             timer = window.setTimeout(() => {
                 fn.apply(this, arguments)
-            }, delay)            
+            }, delay) 
         } else {
             if (!timer) {
                 fn.apply(this, arguments)
@@ -33,6 +33,6 @@ function ven$debounce(
                     fn.apply(this, arguments)
                 }
             }, delay)
-        }        
+        } 
     }
 }

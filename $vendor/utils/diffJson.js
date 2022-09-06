@@ -21,19 +21,19 @@ class Ven$JsonDiff {
         for (let key in obj1) {
             if (this._isFunction(obj1[key])) {
                 continue
-            }                
+            } 
             valueOfObj2 = undefined
             if ('undefined' !== typeof obj2[key]) {
                 valueOfObj2 = obj2[key]
-            }                
+            } 
             diff[key] = this.diff(obj1[key], valueOfObj2)
         }
         for (let key in obj2) {
             if (this._isFunction(obj2[key]) || 'undefined' != typeof diff[key]) {
                 continue
-            }                
+            } 
             diff[key] = this.diff(undefined, obj2[key])
-        }            
+        } 
         return diff
     }
 
@@ -49,7 +49,7 @@ class Ven$JsonDiff {
         }
         if ('undefined' == typeof(value2)) {
             return this.CHANGE_TYPE.VALUE_DELETED
-        }            
+        } 
         return this.CHANGE_TYPE.VALUE_UPDATED
     }
 
