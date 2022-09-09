@@ -15,11 +15,11 @@ class SimpleRectDraw {
             -0.5, -0.5, 
             0.5, -0.5
         ])
+
         /**
          * 创建缓冲区
          */
         const buffer = gl.createBuffer()
-
         /**
          * 将缓冲区绑定到 gl
          * 将顶点数据应用到缓冲区
