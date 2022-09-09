@@ -78,8 +78,18 @@ class SimpleCubeDraw {
                 /**
                  * 创建绕 x, y 轴旋转矩阵
                  */
-                mat4 mx = mat4(1, 0, 0, 0,  0, cosValue, sinValue, 0,  0, -sinValue, cosValue, 0,  0, 0, 0, 1);
-                mat4 my = mat4(cosValue, 0, -sinValue, 0,  0, 1, 0, 0,  sinValue, 0, cosValue, 0,  0, 0, 0, 1);
+                mat4 mx = mat4(
+                    1, 0,         0,        0, 
+                    0, cosValue,  sinValue, 0, 
+                    0, -sinValue, cosValue, 0, 
+                    0, 0,         0,        1
+                );
+                mat4 my = mat4(
+                    cosValue, 0, -sinValue, 0, 
+                    0,        1, 0,         0, 
+                    sinValue, 0, cosValue,  0,
+                    0,        0, 0,         1
+                );
                 gl_Position = mx * my * apos;
             }
         `
