@@ -48,7 +48,6 @@ const head2 = ven$setArray2List(arr2)
 const last1 = findLast(head1)
 const last2 = findLast(head2)
 
-/* 构建相交节点 */
 last1.next = head
 last2.next = head
 

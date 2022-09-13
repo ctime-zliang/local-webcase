@@ -6,7 +6,7 @@
 function $quickSortSeq(arr) {
     return __$quickSortSeqRecusion(arr)
 }
-function __$quickSortSeqRecusion(arr) {
+function __$quickSortSeqRecusion(arr = []) {
     if (arr.length <= 1) {
         return arr
     }

@@ -29,13 +29,13 @@ function ListNode(val, next) {
 }
 
 function mergeTwoLists(l1, l2) { 
-    /*
-        初始化首节点并赋值 
+    /**
+     * 初始化首节点并赋值
      */
     let res = new ListNode(null, null)
     let p = res   
-    /* 
-        如果 
+    /**
+     * 如果 
             l1 or l2 其中任意一个不存在
         则
             退出循环

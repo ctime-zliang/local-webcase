@@ -23,21 +23,27 @@ function fn1(array) {
 }
 
 function fn2(array) {
-    /* 结果集 */
+    /**
+     * 结果集 
+     */
     const res = []
-    /* 路径缓存 */
+    /**
+     * 路径缓存 
+     */
     const path = []
-    /* 
-        递归遍历数组中剩余的元素项
+    /**
+     *  递归遍历数组中剩余的元素项
             选择列表：nums 中不存在于 path 的那些元素
-            结束条件：nums 中的元素全都 path 中出现
+            结束条件：nums 中的元素全都 path 中出现 
      */
     const dfs = (nums, path) => {
         if (path.length == nums.length) {
             return res.push(path.concat())
         }
         for (let i = 0; i < nums.length; i++) {
-            /* 排除不合法的选择 */
+            /**
+             * 排除不合法的选择 
+             */
             if (path.indexOf(nums[i]) > -1) {
                 continue
             }

@@ -33,16 +33,22 @@ function reverseBetween(head, left, right) {
 
 function fn1(head, left, right) {
     let dist = right - left
-    /* 创建起始前置节点 */
+    /**
+     * 创建起始前置节点
+     */
     let point = new ListNode(null)
     point.next = head
-    /* 后一指针到需要反转的起始节点 */
+    /**
+     * 后一指针到需要反转的起始节点
+     */
     let pre = point
     while (pre && left > 1) {
         pre = pre.next
         --left
     }
-    /* 反转区域节点 */
+    /**
+     * 反转区域节点
+     */
     let cur = pre.next
     while (dist > 0) {
         const next = cur.next;

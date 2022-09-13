@@ -83,7 +83,10 @@ function slowAndFast(head) {
     let slow = node
     let fast = node
     let length = 0
-    let count = 2  // 快慢指针相遇的次数
+    /**
+     * 快慢指针相遇的次数
+     */
+    let count = 2 
     let flag = false
     while (fast && fast.next) {
         fast = fast.next.next
