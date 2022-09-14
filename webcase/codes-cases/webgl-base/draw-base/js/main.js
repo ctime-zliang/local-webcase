@@ -5,7 +5,8 @@ function main() {
     // SimpleRectDotDraw.render(gVars.gl)
     // SimpleRectDraw.render(gVars.gl)
     // SimpleTriangleDraw.render(gVars.gl)
-    SimpleCubeDraw.render(gVars.gl)
+    // SimpleCubeDraw.render(gVars.gl)
+    SimpleCube2Draw.render(gVars.gl)
 
     console.log(gVars)
 }

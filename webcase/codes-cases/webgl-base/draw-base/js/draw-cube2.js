@@ -1,4 +1,4 @@
-class SimpleCubeDraw {
+class SimpleCube2Draw {
     static render(gl) {
         const program = this.initShader(gl)
         /**
@@ -18,30 +18,43 @@ class SimpleCubeDraw {
             0.5, 0.5, -0.5,
             -0.5, 0.5, -0.5,
             -0.5, -0.5, -0.5,
-            0.5, -0.5, -0.5,
-            /* ... */
-            0.5, 0.5, 0.5,
-            0.5, 0.5, -0.5,
-            -0.5, 0.5, 0.5,
-            -0.5, 0.5, -0.5,
-            -0.5, -0.5, 0.5,
-            -0.5, -0.5, -0.5,
-            0.5, -0.5, 0.5,
-            0.5, -0.5, -0.5,
+            0.5, -0.5, -0.5
         ])
+        /**
+         * 创建顶点索引数据
+         */
+        const vertexIndexes = new Uint8Array([
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            0, 4,
+            1, 5,
+            2, 6,
+            3, 7
+        ])
+
+        /**
+         * 创建索引缓冲区
+         */
+        const indexesBuffer = gl.createBuffer()
+        /**
+         * 将索引缓冲区绑定到 gl
+         * 将索引数据应用到顶点索引缓冲区
+         */
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexesBuffer)
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, vertexIndexes, gl.STATIC_DRAW)
 
         /**
          * 创建顶点缓冲区
          */
         const buffer = gl.createBuffer()
         /**
-         * 将顶点缓冲区绑定到 gl
+         * 将顶点数据缓冲区绑定到 gl
          * 将顶点数据应用到顶点缓冲区
          */
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
         gl.bufferData(gl.ARRAY_BUFFER, vertexData, gl.STATIC_DRAW)
         /**
-         * 将顶点缓冲区数据传递给位置变量 apos
+         * 将顶点数据缓冲区数据传递给位置变量 apos
          * 并设置允许传递数据
          */
         gl.vertexAttribPointer(aposLocation, 3, gl.FLOAT, false, 0, 0)
@@ -49,16 +62,10 @@ class SimpleCubeDraw {
 
         /**
          * 绘制
-         * LINE_LOOP 模式绘制前 4 个点
-         *      绘制出立方体的某一个面
-         * LINE_LOOP 模式从第 5 个点开始绘制 4 个点
-         *      绘制出立方体的与上述步骤绘制出的面所对立的面
-         * LINES 模式绘制后 8 个点
-         *      用直线将两个面的四个顶点分别一一连接
          */
-        gl.drawArrays(gl.LINE_LOOP, 0, 4)
-        gl.drawArrays(gl.LINE_LOOP, 4, 4)
-        gl.drawArrays(gl.LINES, 8, 8)
+        gl.drawElements(gl.LINE_LOOP,4, gl.UNSIGNED_BYTE, 0)
+        gl.drawElements(gl.LINE_LOOP,4, gl.UNSIGNED_BYTE, 4)
+        gl.drawElements(gl.LINES, 8, gl.UNSIGNED_BYTE, 8)
         console.log(program) 
     }
 
