@@ -63,8 +63,8 @@ class SimpleCube2Draw {
         /**
          * 绘制
          */
-        gl.drawElements(gl.LINE_LOOP,4, gl.UNSIGNED_BYTE, 0)
-        gl.drawElements(gl.LINE_LOOP,4, gl.UNSIGNED_BYTE, 4)
+        gl.drawElements(gl.LINE_LOOP, 4, gl.UNSIGNED_BYTE, 0)
+        gl.drawElements(gl.LINE_LOOP, 4, gl.UNSIGNED_BYTE, 4)
         gl.drawElements(gl.LINES, 8, gl.UNSIGNED_BYTE, 8)
         console.log(program) 
     }
