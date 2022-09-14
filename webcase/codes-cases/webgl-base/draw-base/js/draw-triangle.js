@@ -34,7 +34,7 @@ class SimpleTriangleDraw {
 
         /**
          * 绘制
-         * 填充绘制
+         * gl.TRIANGLES
          */
         gl.drawArrays(gl.TRIANGLES, 0, 3)
         console.log(program) 

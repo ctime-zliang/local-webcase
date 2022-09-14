@@ -10,10 +10,10 @@ class SimpleRectDraw {
          * 创建顶点数据
          */
         const vertexData = new Float32Array([
-            0.5, 0.5, 
-            -0.5, 0.5, 
-            -0.5, -0.5, 
-            0.5, -0.5
+            0.5, 0.5, 0.0, 
+            -0.5, 0.5, 0.0, 
+            -0.5, -0.5, 0.0, 
+            0.5, -0.5, 0.0
         ])
 
         /**
@@ -30,12 +30,12 @@ class SimpleRectDraw {
          * 将缓冲区数据传递给位置变量 apos
          * 并设置允许传递数据
          */
-        gl.vertexAttribPointer(aposLocation, 2, gl.FLOAT, false, 0, 0)
+        gl.vertexAttribPointer(aposLocation, 3, gl.FLOAT, false, 0, 0)
         gl.enableVertexAttribArray(aposLocation)
 
         /**
          * 绘制
-         * 描边绘制, 无填充
+         * gl.LINE_LOOP
          */
         gl.drawArrays(gl.LINE_LOOP, 0, 4)
         console.log(program) 
