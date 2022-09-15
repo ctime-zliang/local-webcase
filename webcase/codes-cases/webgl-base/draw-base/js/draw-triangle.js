@@ -5,7 +5,7 @@ class SimpleTriangleDraw {
          * 获取位置变量 apos
          * 该变量定义在着色器源代码中
          */
-        const aposLocation = gl.getAttribLocation(program, 'apos')
+        const apos = gl.getAttribLocation(program, 'apos')
         /**
          * 创建顶点数据
          */
@@ -15,22 +15,18 @@ class SimpleTriangleDraw {
             1, 0, 0
         ])
 
-        /**
+       /**
          * 创建缓冲区
-         */
-        const buffer = gl.createBuffer()
-        /**
          * 将缓冲区绑定到 gl
          * 将顶点数据应用到缓冲区
-         */
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
-        gl.bufferData(gl.ARRAY_BUFFER, vertexData, gl.STATIC_DRAW)
-        /**
          * 将缓冲区数据传递给位置变量 apos
          * 并设置允许传递数据
          */
-        gl.vertexAttribPointer(aposLocation, 3, gl.FLOAT, false, 0, 0)
-        gl.enableVertexAttribArray(aposLocation)
+        const buffer = gl.createBuffer()
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+        gl.bufferData(gl.ARRAY_BUFFER, vertexData, gl.STATIC_DRAW)
+        gl.vertexAttribPointer(apos, 3, gl.FLOAT, false, 0, 0)
+        gl.enableVertexAttribArray(apos)
 
         /**
          * 绘制
