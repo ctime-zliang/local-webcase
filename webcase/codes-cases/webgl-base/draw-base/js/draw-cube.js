@@ -1,3 +1,6 @@
+/**
+ * 直线绘制拼凑方式
+ */
 class SimpleCubeDraw {
     static render(gl) {
         const program = this.initShader(gl)

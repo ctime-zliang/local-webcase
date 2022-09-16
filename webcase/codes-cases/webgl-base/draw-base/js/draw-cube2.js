@@ -1,3 +1,7 @@
+/**
+ * 索引绘制方式
+ */
+
 class SimpleCube2Draw {
     static render(gl) {
         const program = this.initShader(gl)

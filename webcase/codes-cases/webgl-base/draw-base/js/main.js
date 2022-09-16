@@ -3,13 +3,13 @@ function init() {
     gVars.initCanvasHandler(canvasElement)
 
     const drawGraphicTypeSelectorDataList = [
-        { text: 'Simple Rect Dot', value: 'SimpleRectDotDraw' },
-        { text: 'Simple Rect', value: 'SimpleRectDraw' },
-        { text: 'Simple Triangle', value: 'SimpleTriangleDraw' },
-        { text: 'Simple Cube', value: 'SimpleCubeDraw' },
-        { text: 'Simple Cube2', value: 'SimpleCube2Draw' },
-        { text: ' Simple Gradient Line', value: 'SimpleGradientLineDraw' },
-        { text: ' Simple Gradient Triangle', value: 'SimpleGradientTriangleDraw' },
+        { text: 'Simple Rect Dot', value: 'SimpleRectDotDraw', },
+        { text: 'Simple Rect', value: 'SimpleRectDraw', },
+        { text: 'Simple Triangle', value: 'SimpleTriangleDraw', },
+        { text: 'Simple Cube', value: 'SimpleCubeDraw', },
+        { text: 'Simple Cube2', value: 'SimpleCube2Draw', },
+        { text: ' Simple Gradient Line', value: 'SimpleGradientLineDraw', },
+        { text: ' Simple Gradient Triangle', value: 'SimpleGradientTriangleDraw', }
     ]
     const selectedValue = drawGraphicTypeSelectorDataList[drawGraphicTypeSelectorDataList.length - 1].value
     handlerDrawGraphicTypeSelector(
