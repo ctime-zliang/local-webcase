@@ -28,3 +28,5 @@ class SimpleRectDotDraw {
         return source
     }
 }
+
+window.SimpleRectDotDraw = SimpleRectDotDraw

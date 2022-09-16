@@ -60,3 +60,5 @@ class SimpleRectDraw {
         return source
     }
 }
+
+window.SimpleRectDraw = SimpleRectDraw

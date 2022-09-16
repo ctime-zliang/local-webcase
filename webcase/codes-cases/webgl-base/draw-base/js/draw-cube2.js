@@ -126,3 +126,5 @@ class SimpleCube2Draw {
         return source
     }
 }
+
+window.SimpleCube2Draw = SimpleCube2Draw

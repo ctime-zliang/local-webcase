@@ -359,3 +359,71 @@ function ven$findList(list, key, value) {
     }
     return res
 }
+
+/**
+ * @description 生成 <select /> 标签内的 option 标签 HTML 字符串
+ * @function ven$createSelectOptionsHtmlString
+ * @param {array<object>} dataList JSON 列表
+ *      dataList = [
+ *          {
+ *              text: '显示在页面上的文本'
+ *              value: '该项对应的值' 
+ *              attrs: {
+ *                  'html-prop-key': 'html-prop-value'
+ *              }
+ *          }
+ *      ]
+ *      option = {
+ *          v: 'value'  // 内部生成 option-html 时, 需要遍历 dataList 的每一项, 需要读取每一项的 value, 此配置指定代表 value 的键的名词
+ *          t: 'text'  // 内部生成 option-html 时, 需要遍历 dataList 的每一项, 需要读取每一项的 text, 此配置指定代表 text 的键的名词
+ *          offAutoFill: boolean  // 关闭自动填充默认值(当 selectedValue 的值没有在 datatList 中存在时, 是否自动添加 selectedValue 到 dataList 的末尾)
+ *      }
+ * @param {object} option 配置项
+ * @param {string|number} selectedValue 被选中的值
+ * @return {string} 
+ */
+function ven$createSelectOptionsHtmlString(dataList, option = {}, selectedValue = undefined) {
+    let optionsHtml = ''
+    const _option = option || {}
+    const v = _option.v || 'value'
+    const t = _option.t || 'text'
+    const offAutoFill = typeof _option.offAutoFill === 'undefined' ? false : !!_option.offAutoFill
+    const _dataList = JSON.parse(JSON.stringify(dataList))
+    let isIn = false
+    if (typeof selectedValue !== 'undefined') {
+        for (let i = 0; i < _dataList.length; i++) {
+            if (String(_dataList[i][v]) === String(selectedValue)) {
+                _dataList[i]['selected'] = true
+                isIn = true
+            }
+        }
+        if (!offAutoFill && typeof selectedValue !== 'undefined' && (!isIn || !_dataList.length)) {
+            _dataList.unshift({
+                [v]: selectedValue,
+                [t]: selectedValue,
+            })
+        }
+    }
+    for (let i = 0; i < _dataList.length; i++) {
+        const itemData = _dataList[i]
+        const selected = itemData['selected'] || false
+        const disabled = itemData['disabled'] || false
+        const value = itemData[v]
+        const text = itemData[t]
+        const attrs = itemData['attrs'] || {}
+        const attrKeys = Object.keys(attrs)
+        let attrsString = ''
+        for (let j = 0; j < attrKeys.length; j++) {
+            attrsString += `${attrKeys[i]}="${attrs[attrKeys[i]]}"`
+        }
+        optionsHtml += `
+            <option
+                value="${value}"
+                ${!selected ? '' : 'selected="selected"'}
+                ${!disabled ? '' : 'disabled="disabled"'}
+                ${attrsString}
+            >${text}</option>
+        `
+    }
+    return optionsHtml
+}

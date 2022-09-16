@@ -5,6 +5,22 @@ gVars.initCanvasHandler = (canvasElement) => {
     gVars.gl = gVars.canvasElement.getContext('webgl')
 }
 
+
+const handlerDrawGraphicTypeSelector = (
+    selectorElement, 
+    dataList, 
+    selectedValue,
+    changeCallback
+) => {
+    selectorElement.innerHTML = ven$createSelectOptionsHtmlString(dataList, undefined, selectedValue)
+    selectorElement.addEventListener('input', function(e) {
+        changeCallback && changeCallback(e.currentTarget.value)
+    })
+    window.setTimeout(() => {
+        changeCallback && changeCallback(selectedValue)
+    })
+}
+
 const initShader = (gl, vertexShaderSource, fragmentShaderSource) => {
     /**
      * 创建顶点着色器

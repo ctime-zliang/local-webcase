@@ -1,4 +1,4 @@
-class SimpleGradientLineDraw {
+class SimpleGradientTriangleDraw {
     static render(gl) {
         const program = this.initShader(gl)
         const apos = gl.getAttribLocation(program, 'apos')
@@ -6,11 +6,13 @@ class SimpleGradientLineDraw {
         
         const vertexData = new Float32Array([
             -0.5, 0.5, 0,
-            0.5, 0.5, 0
+            0.5, 0.5, 0,
+            0.5, -0.5, 0
         ])
         const colorData = new Float32Array([
             1, 0, 0,
-            0, 1, 0
+            0, 1, 0,
+            0, 0, 1
         ])
 
         /**
@@ -39,7 +41,7 @@ class SimpleGradientLineDraw {
         gl.vertexAttribPointer(apos, 3, gl.FLOAT, false, 0, 0)
         gl.enableVertexAttribArray(apos)
         
-        gl.drawArrays(gl.LINES, 0, 2)
+        gl.drawArrays(gl.TRIANGLES, 0, 3)
         console.log(program) 
     }
 
@@ -84,4 +86,4 @@ class SimpleGradientLineDraw {
     }
 }
 
-window.SimpleGradientLineDraw = SimpleGradientLineDraw
+window.SimpleGradientTriangleDraw = SimpleGradientTriangleDraw

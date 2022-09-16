@@ -59,3 +59,5 @@ class SimpleTriangleDraw {
         return source
     }
 }
+
+window.SimpleTriangleDraw = SimpleTriangleDraw
