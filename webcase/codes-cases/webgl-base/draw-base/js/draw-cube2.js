@@ -93,7 +93,7 @@ class SimpleCube2Draw {
                     0, cosValue,  sinValue, 0, 
                     0, -sinValue, cosValue, 0, 
                     0, 0,         0,        1
-                );                
+                );
                 mat4 my = mat4(
                     cosValue, 0, -sinValue, 0, 
                     0,        1, 0,         0, 
