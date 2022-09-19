@@ -122,7 +122,7 @@ class SimpleColourfulCubeDraw {
                  * 设置几何体轴旋转角度为30度
                  * 把角度值转化为浮点值
                  */
-                float rotate = radians(45.0);
+                float rotate = radians(-30.0);
                 /**
                  * 求解三角函数对应值
                  */
@@ -132,15 +132,15 @@ class SimpleColourfulCubeDraw {
                  * 创建绕 x, y 轴旋转的旋转矩阵
                  */
                 mat4 mx = mat4(
-                    1, 0,         0,         0, 
-                    0, cosValue,  -sinValue, 0, 
-                    0, sinValue,  cosValue,  0, 
-                    0, 0,         0,         1
+                    1, 0,         0,        0, 
+                    0, cosValue,  sinValue, 0, 
+                    0, -sinValue, cosValue, 0, 
+                    0, 0,         0,        1
                 );
                 mat4 my = mat4(
-                    cosValue, 0, -sinValue, 0, 
+                    cosValue, 0, sinValue, 0, 
                     0,        1, 0,         0, 
-                    sinValue, 0, cosValue,  0,
+                    -sinValue, 0, cosValue,  0,
                     0,        0, 0,         1
                 );
                 gl_Position = mx * my * apos;
