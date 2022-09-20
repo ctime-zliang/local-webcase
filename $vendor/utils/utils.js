@@ -374,8 +374,8 @@ function ven$findList(list, key, value) {
  *          }
  *      ]
  *      option = {
- *          v: 'value'  // 内部生成 option-html 时, 需要遍历 dataList 的每一项, 需要读取每一项的 value, 此配置指定代表 value 的键的名词
- *          t: 'text'  // 内部生成 option-html 时, 需要遍历 dataList 的每一项, 需要读取每一项的 text, 此配置指定代表 text 的键的名词
+ *          v: 'value'  // 内部生成 options-html 时, 需要遍历 dataList 的每一项, 需要读取每一项的 value, 此配置指定代表 value 的键的名称
+ *          t: 'text'  // 内部生成 options-html 时, 需要遍历 dataList 的每一项, 需要读取每一项的 text, 此配置指定代表 text 的键的名称
  *          offAutoFill: boolean  // 关闭自动填充默认值(当 selectedValue 的值没有在 datatList 中存在时, 是否自动添加 selectedValue 到 dataList 的末尾)
  *      }
  * @param {object} option 配置项
