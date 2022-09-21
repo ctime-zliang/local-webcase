@@ -1,4 +1,4 @@
-;(function (sectionElement) {
+;(function(sectionElement) {
 	const imageViewContainerElement = sectionElement.querySelector('[data-tagitem="imageViewContainer"]')
 	const pointerListElement = sectionElement.querySelector('[data-tagitem="pointer-list"]')
 	const transformValueElement = sectionElement.querySelector('[data-tagitem="transform-value"]')
@@ -78,7 +78,7 @@
 	const initImageDOM = async () => {
 		return new Promise(_ => {
 			const imageElement = new Image()
-			imageElement.onload = function (e) {
+			imageElement.onload = function(e) {
 				_({ width: this.width, height: this.height, image: this })
 			}
 			imageElement.style.opacity = '0'
@@ -165,7 +165,7 @@
 				if (profile.pointerdownTarget !== imageElement) {
 					return
 				}
-				AlertManager.setBtns([AlertManager.defaultConfirmBtn, AlertManager.defaultCancelBtn]).open('还原图片状态?', function (tag) {
+				AlertManager.setBtns([AlertManager.defaultConfirmBtn, AlertManager.defaultCancelBtn]).open('还原图片状态?', function(tag) {
 					if (tag === 'confirm') {
 						TransfromManager.rotate = 0
 						TransfromManager.scale = 1

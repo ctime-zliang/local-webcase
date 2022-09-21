@@ -88,7 +88,7 @@ class SimpleLightCubeDraw {
         /**
          * 创建顶点法向量
          */
-         const normalData = new Float32Array([
+        const normalData = new Float32Array([
             /* Z 轴正方向 面 1 */
             0, 0, 1,     0, 0, 1,     0, 0, 1,     0, 0, 1,     0, 0, 1,     0, 0, 1,
             /* X 轴正方向 面 1 */

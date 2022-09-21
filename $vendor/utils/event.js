@@ -25,7 +25,7 @@ function ven$bindEvent(host, eventName, selector = null, callback = null, captur
 		_capture = !!callback
 		_selector = null
 	}
-	const handler = function (e) {
+	const handler = function(e) {
 		if (!_selector) {
 			_callback && _callback.call(this, e)
 			return

@@ -32,7 +32,7 @@ window.$util = {
 	entrustEventBinding(container, eventName, attribute, callback) {
 		container.addEventListener(
 			eventName,
-			function (evte) {
+			function(evte) {
 				let tar = evte.target
 				while (!tar.getAttribute(attribute)) {
 					if (tar === container) {

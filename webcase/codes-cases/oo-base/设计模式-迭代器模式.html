@@ -20,7 +20,7 @@
 		{
 			console.log(`\n-> 迭代器: 内部迭代器`)
 
-			const each = function (array, callback) {
+			const each = function(array, callback) {
 				for (let i = 0; i < array.length; i++) {
 					if (callback instanceof Function) {
 						const res = callback.call(undefined, array[i], i, array)

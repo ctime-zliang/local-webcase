@@ -161,7 +161,9 @@ function ven$padNumber(number, allLength) {
  * @return {undefined}
  */
 function ven$insertArray2Array(operaArr, targetArr, insertIndex) {
-	/* 将 operaArr 插入到 targetArr 的 insertIndex 处 */
+	/**
+	 * 将 operaArr 插入到 targetArr 的 insertIndex 处
+	 */
 	targetArr.splice.apply(targetArr, Array.concat(insertIndex, 0, operaArr))
 }
 
@@ -189,7 +191,7 @@ function ven$createElementFragment(htmlString, useDOMParser = false) {
  */
 function ven$interval(fn, interval, scope = undefined) {
 	const handler = { timer: null }
-	const intv = function () {
+	const intv = function() {
 		fn.call(scope)
 		handler.timer = setTimeout(intv, interval)
 	}

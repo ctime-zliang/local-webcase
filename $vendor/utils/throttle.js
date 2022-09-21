@@ -7,7 +7,7 @@
  */
 function ven$throttleStamp(fn, delay = 500) {
 	let previous = 0
-	return function () {
+	return function() {
 		let now = +new Date()
 		if (now - previous > delay) {
 			fn.apply(this, arguments)
@@ -25,7 +25,7 @@ function ven$throttleStamp(fn, delay = 500) {
  */
 function ven$throttleTimeout(fn, delay = 500) {
 	let timer = null
-	return function () {
+	return function() {
 		if (!timer) {
 			timer = window.setTimeout(() => {
 				timer = null

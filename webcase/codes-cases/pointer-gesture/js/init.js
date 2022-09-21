@@ -5,7 +5,7 @@ AlertManager.init()
 var globalContainerElement = document.getElementById('appContainer')
 var interactiveSelectedClassname = 'gesture-interactive-selected'
 
-;(function (containerElement) {
+;(function(containerElement) {
 	const fullcaseContainerElement = containerElement.querySelector('[data-tagitem="fullcaseContainer"]')
 	const fullcaseBtnElement = containerElement.querySelector('[data-tagitem="fullcase-btn"]')
 	const exitFullcaseBtnElement = containerElement.querySelector('[data-tagitem="exit-fullcase-btn"]')
@@ -17,7 +17,7 @@ var interactiveSelectedClassname = 'gesture-interactive-selected'
 
 	xGesture(exitFullcaseBtnElement)
 		.onTap((evte, { clientX, clientY }, gesture) => {
-			AlertManager.setBtns([AlertManager.defaultConfirmBtn, AlertManager.defaultCancelBtn]).open('确定要退出综合案例么?', function (tag) {
+			AlertManager.setBtns([AlertManager.defaultConfirmBtn, AlertManager.defaultCancelBtn]).open('确定要退出综合案例么?', function(tag) {
 				if (tag === 'confirm') {
 					fullcaseContainerElement.style.display = 'none'
 				}
@@ -25,7 +25,7 @@ var interactiveSelectedClassname = 'gesture-interactive-selected'
 			})
 		})
 		.onLongTap((evte, { clientX, clientY }, gesture) => {
-			AlertManager.setBtns([AlertManager.defaultConfirmBtn]).open('长按无效哦~', function (tag) {
+			AlertManager.setBtns([AlertManager.defaultConfirmBtn]).open('长按无效哦~', function(tag) {
 				this.close()
 			})
 		})

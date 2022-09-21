@@ -1,13 +1,13 @@
 const gVars = {}
 
-gVars.initCanvasHandler = canvasElement => {
+gVars.initCanvasHandler = (canvasElement) => {
 	gVars.canvasElement = canvasElement
 	gVars.gl = gVars.canvasElement.getContext('webgl')
 }
 
 const handlerDrawGraphicTypeSelector = (selectorElement, dataList, selectedValue, changeCallback) => {
 	selectorElement.innerHTML = ven$createSelectOptionsHtmlString(dataList, undefined, selectedValue)
-	selectorElement.addEventListener('input', function (e) {
+	selectorElement.addEventListener('input', function(e) {
 		changeCallback && changeCallback(e.currentTarget.value)
 	})
 	window.setTimeout(() => {

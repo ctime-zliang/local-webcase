@@ -4,7 +4,7 @@
 	/* 引用类型的属性 */
 	this.features = [`move`]
 	/* 本地方法 */
-	this.talk = function () {
+	this.talk = function() {
 		return `I can talk.`
 	}
 }
@@ -12,18 +12,18 @@
 Biological.prototype.phyComposition = [`heart*1`]
 Biological.prototype.ptt = `Biological PTT`
 
-Biological.prototype.eat = function () {
+Biological.prototype.eat = function() {
 	return `A(n) ${this.type} his name is ${this.getName()} is eating.`
 }
 
-Biological.prototype.breathing = function () {
+Biological.prototype.breathing = function() {
 	return `A(n) ${this.type} his name is ${this.getName()} is breathing.`
 }
 
-Biological.prototype.setOriginalName = function (name) {
+Biological.prototype.setOriginalName = function(name) {
 	this.originalName = name
 }
 
-Biological.prototype.getName = function () {
+Biological.prototype.getName = function() {
 	return this.name || this.originalName
 }

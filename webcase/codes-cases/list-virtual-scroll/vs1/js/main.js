@@ -35,7 +35,7 @@ function initVirtualScroller(outerContainerElement) {
 	return virtualScroller
 }
 
-window.addEventListener('DOMContentLoaded', function () {
+window.addEventListener('DOMContentLoaded', function() {
 	const outerContainerElement = document.querySelector('[data-tagitem="virtual-scroller"]')
 	const virtualScroller = initVirtualScroller(outerContainerElement)
 
@@ -45,12 +45,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	resizeObserver.observe(outerContainerElement)
 
 	const initOuterContainerElementClientRect = outerContainerElement.getBoundingClientRect()
-	document.getElementById('widthAddingRange').addEventListener('input', function (evte) {
+	document.getElementById('widthAddingRange').addEventListener('input', function(evte) {
 		outerContainerElement.style.height = initOuterContainerElementClientRect.height + +this.value + 'px'
 		console.log(virtualScroller.getRenderedData())
 	})
 
-	document.getElementById('updateItemById').addEventListener('click', function (evte) {
+	document.getElementById('updateItemById').addEventListener('click', function(evte) {
 		virtualScroller.updateData((allListData, viewStartIndex, viewRenderCount) => {
 			const findRes = ven$findList(allListData, 'id', 2)
 			if (findRes.index <= -1) {
@@ -62,7 +62,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		})
 	})
 
-	document.getElementById('deleleItemById').addEventListener('click', function (evte) {
+	document.getElementById('deleleItemById').addEventListener('click', function(evte) {
 		virtualScroller.updateData((allListData, viewStartIndex, viewRenderCount) => {
 			const findRes = ven$findList(allListData, 'id', 5)
 			if (findRes.index <= -1) {
@@ -73,7 +73,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		})
 	})
 
-	document.getElementById('addItemsInEnd').addEventListener('click', function (evte) {
+	document.getElementById('addItemsInEnd').addEventListener('click', function(evte) {
 		virtualScroller.updateData((allListData, viewStartIndex, viewRenderCount) => {
 			for (let i = 0; i < 10; i++) {
 				const t = allListData.length
@@ -83,7 +83,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		})
 	})
 
-	document.getElementById('updateItemsByView').addEventListener('click', function (evte) {
+	document.getElementById('updateItemsByView').addEventListener('click', function(evte) {
 		virtualScroller.updateData((allListData, viewStartIndex, viewRenderCount) => {
 			const startIndex = viewStartIndex
 			const endIndex = viewStartIndex + 10
@@ -96,7 +96,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		})
 	})
 
-	document.getElementById('deleleItemsByView').addEventListener('click', function (evte) {
+	document.getElementById('deleleItemsByView').addEventListener('click', function(evte) {
 		virtualScroller.updateData((allListData, viewStartIndex, viewRenderCount) => {
 			const startIndex = viewStartIndex + 2
 			const endIndex = viewStartIndex + 2 + 10
