@@ -1,4 +1,4 @@
-"use strict";
+'use strict'
 // /**
 //  *  Projector.
 //  *  used for calculate anchor and new items

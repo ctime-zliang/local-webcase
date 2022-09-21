@@ -1,8 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+'use strict'
+Object.defineProperty(exports, '__esModule', { value: true })
 class MessageScroll {
-    constructor(scrollTop) {
-        this.scrollTop = scrollTop;
-    }
+	constructor(scrollTop) {
+		this.scrollTop = scrollTop
+	}
 }
-exports.MessageScroll = MessageScroll;
+exports.MessageScroll = MessageScroll

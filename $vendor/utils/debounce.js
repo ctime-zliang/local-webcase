@@ -9,30 +9,26 @@
  *      若 option.immediate = false, 则在事件触发终止 delay 毫秒后会执行一次回调, trailing 设置将失效
  * @return {function}
  */
-function ven$debounce(
-    fn,
-    delay = 500,
-    option = { immediate: false, trailing: false, }
-) {
-    let timer = null 
-    return function() {
-        if (timer) {
-            window.clearTimeout(timer)
-        }
-        if (!option.immediate) { 
-            timer = window.setTimeout(() => {
-                fn.apply(this, arguments)
-            }, delay) 
-        } else {
-            if (!timer) {
-                fn.apply(this, arguments)
-            }
-            timer = window.setTimeout(() => {
-                timer = null
-                if (option.trailing) {
-                    fn.apply(this, arguments)
-                }
-            }, delay)
-        } 
-    }
+function ven$debounce(fn, delay = 500, option = { immediate: false, trailing: false }) {
+	let timer = null
+	return function () {
+		if (timer) {
+			window.clearTimeout(timer)
+		}
+		if (!option.immediate) {
+			timer = window.setTimeout(() => {
+				fn.apply(this, arguments)
+			}, delay)
+		} else {
+			if (!timer) {
+				fn.apply(this, arguments)
+			}
+			timer = window.setTimeout(() => {
+				timer = null
+				if (option.trailing) {
+					fn.apply(this, arguments)
+				}
+			}, delay)
+		}
+	}
 }

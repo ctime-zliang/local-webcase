@@ -5,9 +5,8 @@
  * @return {string}
  */
 async function ven$classOf(target) {
-    return Object.prototype.toString.call(target).slice(8, -1).toLowerCase()
+	return Object.prototype.toString.call(target).slice(8, -1).toLowerCase()
 }
-
 
 /**
  * @description 同步阻塞
@@ -16,16 +15,15 @@ async function ven$classOf(target) {
  * @return {number}
  */
 function ven$choke(delay = 1000) {
-    console.log('%c Synchronous Blocking Start...' + delay +  'ms.', 'color: green; font-size: 18px;') 
-    const start = performance.now()
-    let count = 0
-    while (performance.now() - start <= delay) {
-        ++count
-    }
-    console.log('%c Synchronous Blocking End...', 'color: green; font-size: 18px;')
-    return count
+	console.log('%c Synchronous Blocking Start...' + delay + 'ms.', 'color: green; font-size: 18px;')
+	const start = performance.now()
+	let count = 0
+	while (performance.now() - start <= delay) {
+		++count
+	}
+	console.log('%c Synchronous Blocking End...', 'color: green; font-size: 18px;')
+	return count
 }
-
 
 /**
  * @description 异步等待阻塞
@@ -34,11 +32,10 @@ function ven$choke(delay = 1000) {
  * @return {promise<undefined>}
  */
 async function ven$sleep(delay = 1000) {
-    return Promise((_) => {
-        window.setTimeout(_, delay)
-    })
+	return Promise(_ => {
+		window.setTimeout(_, delay)
+	})
 }
-
 
 /**
  * @description 数组分组
@@ -46,16 +43,15 @@ async function ven$sleep(delay = 1000) {
  * @function ven$chunk
  * @param {array} array 被切割的数组
  * @param {number} size 每组尺寸长度
- * @return {array<any>} 
- */ 
+ * @return {array<any>}
+ */
 function ven$chunk(array, size) {
-    const res = []
-	Array.from({ length: Math.ceil(array.length / size), }, (value, index) => {
+	const res = []
+	Array.from({ length: Math.ceil(array.length / size) }, (value, index) => {
 		res.push(array.slice(+value * size, (index + 1) * size))
 	})
-	return res 
+	return res
 }
-
 
 /**
  * @description 判断对象是否为空
@@ -64,12 +60,11 @@ function ven$chunk(array, size) {
  * @return {boolean}
  */
 function ven$isEmptyObject(obj) {
-    for (let attr in obj) {
-        return false
-    }
-    return true
+	for (let attr in obj) {
+		return false
+	}
+	return true
 }
-
 
 /**
  * @description 原生 sort 实现对数字数组升序安排序
@@ -78,11 +73,10 @@ function ven$isEmptyObject(obj) {
  * @return {array<any>}
  */
 function ven$nativeSortSeq(arr) {
-    return arr.sort((a, b) => {
-        return +a - +b
-    })
+	return arr.sort((a, b) => {
+		return +a - +b
+	})
 }
-
 
 /**
  * @description 移除数组前面所有的 0 项
@@ -91,18 +85,17 @@ function ven$nativeSortSeq(arr) {
  * @return {array<any>}
  */
 function ven$removeAllFrontZero(arr) {
-    const res = []
-    let flag = false
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i] === 0 && !flag) {
-            continue
-        }
-        flag = true
-        res.push(arr[i])
-    }
-    return res
+	const res = []
+	let flag = false
+	for (let i = 0; i < arr.length; i++) {
+		if (arr[i] === 0 && !flag) {
+			continue
+		}
+		flag = true
+		res.push(arr[i])
+	}
+	return res
 }
-
 
 /**
  * @description 将 json 依据指定的 keys 排序
@@ -112,56 +105,52 @@ function ven$removeAllFrontZero(arr) {
  * @return {number}
  */
 function ven$sortJsonByKeys(keys, seq = true) {
-    const rev = !!seq ? 1 : -1
-    return (a, b) => {
-        for (let i = 0; i < keys.length; i++) {
-            let key = keys[i]
-            if (a[key] !== b[key]) {
-                if (a[key] > b[key]) {
-                    return rev * 1
-                }
-                return rev * -1
-            }
-        }
-    }
+	const rev = !!seq ? 1 : -1
+	return (a, b) => {
+		for (let i = 0; i < keys.length; i++) {
+			let key = keys[i]
+			if (a[key] !== b[key]) {
+				if (a[key] > b[key]) {
+					return rev * 1
+				}
+				return rev * -1
+			}
+		}
+	}
 }
-
 
 /**
  * @description 在指定上下限范围内生成随机数
  * @function ven$getRandomInArea
  * @param {number} min 指定下限
  * @param {number} max 指定上限
- * @return {number} 
+ * @return {number}
  */
 function ven$getRandomInArea(min = 0, max = Number.MAX_SAFE_INTEGER) {
-    return Math.floor(Math.random() * (max - min + 1)) + min
+	return Math.floor(Math.random() * (max - min + 1)) + min
 }
-
 
 /**
  * @description 生成指定长度的数组并以固定值填充各位
  * @function ven$createArray
  * @param {any} value 默认填充值
- * @return {array<any>} 
+ * @return {array<any>}
  */
 function ven$createArray(length, value = undefined) {
-    return new Array(length + 1).join(value).split('')
+	return new Array(length + 1).join(value).split('')
 }
-
 
 /**
  * @description 以 0 补全数值位数
  * @function ven$padNumber
  * @param {number} number 数值
  * @param {number} allLength 位数
- * @return {number} 
+ * @return {number}
  */
 function ven$padNumber(number, allLength) {
-    const len = String(number).length
-    return Array(allLength > len ? allLength - len + 1 || 0 : 0).join('') + number
+	const len = String(number).length
+	return Array(allLength > len ? allLength - len + 1 || 0 : 0).join('') + number
 }
-
 
 /**
  * @description 在数组插入另一数组的指定位置
@@ -169,32 +158,26 @@ function ven$padNumber(number, allLength) {
  * @param {array<any>} operaArr 需要插入的数组
  * @param {array<any>} targetArr 被插入的数组
  * @param {number} insertIndex 索引位置
- * @return {undefined} 
+ * @return {undefined}
  */
-function ven$insertArray2Array(
-    operaArr, 
-    targetArr, 
-    insertIndex
-) {
-    /* 将 operaArr 插入到 targetArr 的 insertIndex 处 */
-    targetArr.splice.apply(targetArr, Array.concat(insertIndex, 0, operaArr))
+function ven$insertArray2Array(operaArr, targetArr, insertIndex) {
+	/* 将 operaArr 插入到 targetArr 的 insertIndex 处 */
+	targetArr.splice.apply(targetArr, Array.concat(insertIndex, 0, operaArr))
 }
-
 
 /**
  * @description 依据 HTML 字符串生成 DOM 片段
  * @function ven$createElementFragment
  * @param {string} htmlString HTML 字符串
  * @param {boolean} useDOMParser 是否使用 DOMParser API
- * @return {htmllement} 
+ * @return {htmllement}
  */
 function ven$createElementFragment(htmlString, useDOMParser = false) {
-    if (useDOMParser) {
-        return new DOMParser().parseFromString(htmlString, 'text/html')
-    }
-    return document.createRange().createContextualFragment(htmlString)
+	if (useDOMParser) {
+		return new DOMParser().parseFromString(htmlString, 'text/html')
+	}
+	return document.createRange().createContextualFragment(htmlString)
 }
-
 
 /**
  * @description 使用 setTimeout 模拟 setInterval
@@ -202,33 +185,27 @@ function ven$createElementFragment(htmlString, useDOMParser = false) {
  * @param {function} fn 执行函数
  * @param {number} interval 间隔时间
  * @param {object} scope 指定 fn 的作用域
- * @return {{ timer: null }} 
+ * @return {{ timer: null }}
  */
-function ven$interval(
-    fn, 
-    interval, 
-    scope = undefined
-) {
-    const handler = { timer: null, }
-    const intv = function() {
-        fn.call(scope)
-        handler.timer = setTimeout(intv, interval)
-    }
-    handler.timer = setTimeout(intv, interval)
-    return handler.timer
+function ven$interval(fn, interval, scope = undefined) {
+	const handler = { timer: null }
+	const intv = function () {
+		fn.call(scope)
+		handler.timer = setTimeout(intv, interval)
+	}
+	handler.timer = setTimeout(intv, interval)
+	return handler.timer
 }
-
 
 /**
  * @description 奇偶判断
  * @function ven$isOddEven
  * @param {number} number 被检测数
- * @return {boolean} 
+ * @return {boolean}
  */
 function ven$isOddEven(number) {
-    return !!(number & 1)
+	return !!(number & 1)
 }
-
 
 /**
  * @description 缩放图片以适应容器
@@ -238,10 +215,10 @@ function ven$isOddEven(number) {
  * @param {number} containerWidth 容器宽度
  * @param {number} containerHeight 容器高度
  * @return {
- *      { 
- *          width, 
- *          height, 
- *          naturalScale, 
+ *      {
+ *          width,
+ *          height,
+ *          naturalScale,
  *          containerScale,
  *          naturalWidth,
  *          naturalHeight,
@@ -249,51 +226,45 @@ function ven$isOddEven(number) {
  *          containerHeight,
  *          benchmark,
  *      }
- * } 
+ * }
  */
-function ven$zoomImageByContainer(
-    naturalWidth,
-    naturalHeight,
-    containerWidth,
-    containerHeight
-) {
-    const imageRatio = naturalWidth / naturalHeight
-    const containerRatio = containerWidth / containerHeight
-    let width = 0
-    let height = 0
-    let benchmark = 'width'
-    if (imageRatio >= containerRatio) {
-        if (naturalWidth > containerWidth) {
-            width = containerWidth
-            height = (containerWidth / naturalWidth) * naturalHeight
-            benchmark = 'width'
-        } else {
-            width = naturalWidth
-            height = naturalHeight
-        }
-    } else {
-        if (naturalHeight > containerHeight) {
-            width = (containerHeight / naturalHeight) * naturalWidth
-            height = containerHeight
-            benchmark = 'height'
-        } else {
-            width = naturalWidth
-            height = naturalHeight
-        }
-    }
-    return { 
-        width, 
-        height, 
-        naturalScale: width / naturalWidth,
-        containerScale: benchmark === 'width' ? height / containerHeight : width / containerWidth,
-        naturalWidth,
-        naturalHeight,
-        containerWidth,
-        containerHeight,
-        benchmark,
-    }
+function ven$zoomImageByContainer(naturalWidth, naturalHeight, containerWidth, containerHeight) {
+	const imageRatio = naturalWidth / naturalHeight
+	const containerRatio = containerWidth / containerHeight
+	let width = 0
+	let height = 0
+	let benchmark = 'width'
+	if (imageRatio >= containerRatio) {
+		if (naturalWidth > containerWidth) {
+			width = containerWidth
+			height = (containerWidth / naturalWidth) * naturalHeight
+			benchmark = 'width'
+		} else {
+			width = naturalWidth
+			height = naturalHeight
+		}
+	} else {
+		if (naturalHeight > containerHeight) {
+			width = (containerHeight / naturalHeight) * naturalWidth
+			height = containerHeight
+			benchmark = 'height'
+		} else {
+			width = naturalWidth
+			height = naturalHeight
+		}
+	}
+	return {
+		width,
+		height,
+		naturalScale: width / naturalWidth,
+		containerScale: benchmark === 'width' ? height / containerHeight : width / containerWidth,
+		naturalWidth,
+		naturalHeight,
+		containerWidth,
+		containerHeight,
+		benchmark,
+	}
 }
-
 
 /**
  * @description 递归向上查找指定 className 的元素节点
@@ -302,40 +273,38 @@ function ven$zoomImageByContainer(
  * @param {string} className class-name
  * @param {array<Element>} eventPath HTMLEvent Path
  * @param {number} index 索引
- * @return {htmllement|null} 
+ * @return {htmllement|null}
  */
 function ven$findTargetByClassName(element, className, eventPath, index = 0) {
-    if (!eventPath) {
-        return null
-    }
-    const nowElement = eventPath[index]
-    if (!nowElement || (nowElement.nodeType !== 1 && nowElement.nodeType !== 3)) {
-        return null
-    }
-    if (element.classList.contains(className)) {
-        return element
-    }
-    return ven$findTargetByClassName(element.parentElement, className, eventPath, ++index)
+	if (!eventPath) {
+		return null
+	}
+	const nowElement = eventPath[index]
+	if (!nowElement || (nowElement.nodeType !== 1 && nowElement.nodeType !== 3)) {
+		return null
+	}
+	if (element.classList.contains(className)) {
+		return element
+	}
+	return ven$findTargetByClassName(element.parentElement, className, eventPath, ++index)
 }
-
 
 /**
  * @description 递归向上查找指定 className 的元素节点
  * @function ven$findTargetByClassName2
  * @param {htmllement} nowElement HTML 元素
  * @param {string} className class-name
- * @return {htmllement|null} 
+ * @return {htmllement|null}
  */
 function ven$findTargetByClassName2(nowElement, className) {
-    if (!nowElement || (nowElement.nodeType !== 1 && nowElement.nodeType !== 3)) {
-        return null
-    }
-    if (nowElement.classList.contains(className)) {
-        return nowElement
-    }
-    return ven$findTargetByClassName2(nowElement.parentElement, className)
+	if (!nowElement || (nowElement.nodeType !== 1 && nowElement.nodeType !== 3)) {
+		return null
+	}
+	if (nowElement.classList.contains(className)) {
+		return nowElement
+	}
+	return ven$findTargetByClassName2(nowElement.parentElement, className)
 }
-
 
 /**
  * @description 在 JSON 列表中查找指定 key: value 对应的项
@@ -343,21 +312,21 @@ function ven$findTargetByClassName2(nowElement, className) {
  * @param {array<object>} list JSON 列表
  * @param {string} key 指定 key
  * @param {string} value 指定 value
- * @return {object} 
+ * @return {object}
  */
 function ven$findList(list, key, value) {
-    const res = { index: -1, data: null }
-    if (list.length <= 0) {
-        return res
-    }
-    for (let i = 0; i < list.length; i++) {
-        if (list[i][key] === value) {
-            res.index = i
-            res.data = list[i]
-            break
-        }
-    }
-    return res
+	const res = { index: -1, data: null }
+	if (list.length <= 0) {
+		return res
+	}
+	for (let i = 0; i < list.length; i++) {
+		if (list[i][key] === value) {
+			res.index = i
+			res.data = list[i]
+			break
+		}
+	}
+	return res
 }
 
 /**
@@ -367,7 +336,7 @@ function ven$findList(list, key, value) {
  *      dataList = [
  *          {
  *              text: '显示在页面上的文本'
- *              value: '该项对应的值' 
+ *              value: '该项对应的值'
  *              attrs: {
  *                  'html-prop-key': 'html-prop-value'
  *              }
@@ -380,43 +349,43 @@ function ven$findList(list, key, value) {
  *      }
  * @param {object} option 配置项
  * @param {string|number} selectedValue 被选中的值
- * @return {string} 
+ * @return {string}
  */
 function ven$createSelectOptionsHtmlString(dataList, option = {}, selectedValue = undefined) {
-    let optionsHtml = ''
-    const _option = option || {}
-    const v = _option.v || 'value'
-    const t = _option.t || 'text'
-    const offAutoFill = typeof _option.offAutoFill === 'undefined' ? false : !!_option.offAutoFill
-    const _dataList = JSON.parse(JSON.stringify(dataList))
-    let isIn = false
-    if (typeof selectedValue !== 'undefined') {
-        for (let i = 0; i < _dataList.length; i++) {
-            if (String(_dataList[i][v]) === String(selectedValue)) {
-                _dataList[i]['selected'] = true
-                isIn = true
-            }
-        }
-        if (!offAutoFill && typeof selectedValue !== 'undefined' && (!isIn || !_dataList.length)) {
-            _dataList.unshift({
-                [v]: selectedValue,
-                [t]: selectedValue,
-            })
-        }
-    }
-    for (let i = 0; i < _dataList.length; i++) {
-        const itemData = _dataList[i]
-        const selected = itemData['selected'] || false
-        const disabled = itemData['disabled'] || false
-        const value = itemData[v]
-        const text = itemData[t]
-        const attrs = itemData['attrs'] || {}
-        const attrKeys = Object.keys(attrs)
-        let attrsString = ''
-        for (let j = 0; j < attrKeys.length; j++) {
-            attrsString += `${attrKeys[i]}="${attrs[attrKeys[i]]}"`
-        }
-        optionsHtml += `
+	let optionsHtml = ''
+	const _option = option || {}
+	const v = _option.v || 'value'
+	const t = _option.t || 'text'
+	const offAutoFill = typeof _option.offAutoFill === 'undefined' ? false : !!_option.offAutoFill
+	const _dataList = JSON.parse(JSON.stringify(dataList))
+	let isIn = false
+	if (typeof selectedValue !== 'undefined') {
+		for (let i = 0; i < _dataList.length; i++) {
+			if (String(_dataList[i][v]) === String(selectedValue)) {
+				_dataList[i]['selected'] = true
+				isIn = true
+			}
+		}
+		if (!offAutoFill && typeof selectedValue !== 'undefined' && (!isIn || !_dataList.length)) {
+			_dataList.unshift({
+				[v]: selectedValue,
+				[t]: selectedValue,
+			})
+		}
+	}
+	for (let i = 0; i < _dataList.length; i++) {
+		const itemData = _dataList[i]
+		const selected = itemData['selected'] || false
+		const disabled = itemData['disabled'] || false
+		const value = itemData[v]
+		const text = itemData[t]
+		const attrs = itemData['attrs'] || {}
+		const attrKeys = Object.keys(attrs)
+		let attrsString = ''
+		for (let j = 0; j < attrKeys.length; j++) {
+			attrsString += `${attrKeys[i]}="${attrs[attrKeys[i]]}"`
+		}
+		optionsHtml += `
             <option
                 value="${value}"
                 ${!selected ? '' : 'selected="selected"'}
@@ -424,6 +393,6 @@ function ven$createSelectOptionsHtmlString(dataList, option = {}, selectedValue 
                 ${attrsString}
             >${text}</option>
         `
-    }
-    return optionsHtml
+	}
+	return optionsHtml
 }

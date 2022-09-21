@@ -2,134 +2,134 @@ import { h, useLayout } from '../src/index'
 import { testUpdates } from './test-util'
 
 export const change = async t => {
-  let effects = []
+	let effects = []
 
-  const effect = value => {
-    effects.push(`effect ${value}`)
+	const effect = value => {
+		effects.push(`effect ${value}`)
 
-    return () => {
-      effects.push(`cleanUp ${value}`)
-    }
-  }
+		return () => {
+			effects.push(`cleanUp ${value}`)
+		}
+	}
 
-  const Component = ({ deps }) => {
-    useLayout(() => effect(deps[0]), deps)
-    effects = []
+	const Component = ({ deps }) => {
+		useLayout(() => effect(deps[0]), deps)
+		effects = []
 
-    return <div>foo</div>
-  }
+		return <div>foo</div>
+	}
 
-  await testUpdates([
-    {
-      content: <Component deps={[0]} />,
-      test: () => {
-        t.eq(effects, ['effect 0'])
-      }
-    },
-    {
-      content: <Component deps={[1]} />,
-      test: () => {
-        t.eq(effects, ['cleanUp 0', 'effect 1'])
-      }
-    },
-    {
-      content: <Component deps={[1]} />,
-      test: () => {
-        t.eq(effects, [])
-      }
-    },
-    {
-      content: <div>removed</div>,
-      test: () => {
-        t.eq(effects, ['cleanUp 1'])
-      }
-    }
-  ])
+	await testUpdates([
+		{
+			content: <Component deps={[0]} />,
+			test: () => {
+				t.eq(effects, ['effect 0'])
+			},
+		},
+		{
+			content: <Component deps={[1]} />,
+			test: () => {
+				t.eq(effects, ['cleanUp 0', 'effect 1'])
+			},
+		},
+		{
+			content: <Component deps={[1]} />,
+			test: () => {
+				t.eq(effects, [])
+			},
+		},
+		{
+			content: <div>removed</div>,
+			test: () => {
+				t.eq(effects, ['cleanUp 1'])
+			},
+		},
+	])
 }
 
-export const once = async (t) => {
-  let effects = []
+export const once = async t => {
+	let effects = []
 
-  const effect = () => {
-    effects.push(`effect`)
+	const effect = () => {
+		effects.push(`effect`)
 
-    return () => {
-      effects.push(`cleanUp`)
-    }
-  }
+		return () => {
+			effects.push(`cleanUp`)
+		}
+	}
 
-  const Component = () => {
-    effects = []
-    useLayout(effect, [])
+	const Component = () => {
+		effects = []
+		useLayout(effect, [])
 
-    return <div>foo</div>
-  }
+		return <div>foo</div>
+	}
 
-  await testUpdates([
-    {
-      content: <Component />,
-      test: () => {
-        t.eq(effects, ['effect'])
-      }
-    },
-    {
-      content: <Component count={0} />,
-      test: () => {
-        t.eq(effects, [])
-      }
-    },
-    {
-      content: <div>removed</div>,
-      test: () => {
-        t.eq(effects, ['cleanUp'])
-      }
-    }
-  ])
+	await testUpdates([
+		{
+			content: <Component />,
+			test: () => {
+				t.eq(effects, ['effect'])
+			},
+		},
+		{
+			content: <Component count={0} />,
+			test: () => {
+				t.eq(effects, [])
+			},
+		},
+		{
+			content: <div>removed</div>,
+			test: () => {
+				t.eq(effects, ['cleanUp'])
+			},
+		},
+	])
 }
 
 export const every = async t => {
-  let effects = []
+	let effects = []
 
-  const effect = value => {
-    effects.push(`effect ${value}`)
+	const effect = value => {
+		effects.push(`effect ${value}`)
 
-    return () => {
-      effects.push(`cleanUp ${value}`)
-    }
-  }
-    
-  const Component = ({ value }) => {
-    effects = []
-    useLayout(() => effect(value))
+		return () => {
+			effects.push(`cleanUp ${value}`)
+		}
+	}
 
-    return <div>foo</div>
-  }
+	const Component = ({ value }) => {
+		effects = []
+		useLayout(() => effect(value))
 
-  await testUpdates([
-    {
-      content: <Component value={0} />,
-      test: () => {
-        t.eq(effects, ['effect 0'])
-      }
-    },
-    {
-      content: <Component value={1} />,
-      test: () => {
-        t.eq(effects, ['cleanUp 0', 'effect 1'])
-      }
-    },
-    {
-      content: <Component value={2} />,
-      test: () => {
-        t.eq(effects, ['cleanUp 1', 'effect 2'])
-        effects = []
-      }
-    },
-    {
-      content: <div>removed</div>,
-      test: () => {
-        t.eq(effects, ['cleanUp 2'])
-      }
-    }
-  ])
+		return <div>foo</div>
+	}
+
+	await testUpdates([
+		{
+			content: <Component value={0} />,
+			test: () => {
+				t.eq(effects, ['effect 0'])
+			},
+		},
+		{
+			content: <Component value={1} />,
+			test: () => {
+				t.eq(effects, ['cleanUp 0', 'effect 1'])
+			},
+		},
+		{
+			content: <Component value={2} />,
+			test: () => {
+				t.eq(effects, ['cleanUp 1', 'effect 2'])
+				effects = []
+			},
+		},
+		{
+			content: <div>removed</div>,
+			test: () => {
+				t.eq(effects, ['cleanUp 2'])
+			},
+		},
+	])
 }

@@ -1,12 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+'use strict'
+Object.defineProperty(exports, '__esModule', { value: true })
 function list(name) {
-    return fetch("/twitter/" + name, {
-        method: "GET",
-        headers: {
-            "if-api": "true"
-        }
-    })
-        .then(res => res.json());
+	return fetch('/twitter/' + name, {
+		method: 'GET',
+		headers: {
+			'if-api': 'true',
+		},
+	}).then(res => res.json())
 }
-exports.list = list;
+exports.list = list

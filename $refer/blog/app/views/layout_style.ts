@@ -1,16 +1,16 @@
-import { style, cssRule } from "typestyle"
-import { setupPage, normalize, fillParent, horizontal } from "csstips"
+import { style, cssRule } from 'typestyle'
+import { setupPage, normalize, fillParent, horizontal } from 'csstips'
 
 normalize()
-setupPage("#root")
+setupPage('#root')
 
-cssRule("a", {
-	textDecoration: "none"
+cssRule('a', {
+	textDecoration: 'none',
 })
 
-cssRule("*", {
+cssRule('*', {
 	margin: 0,
-	padding: 0
+	padding: 0,
 })
 
 export const CONTAINER = style(fillParent, horizontal)

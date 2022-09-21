@@ -9,7 +9,7 @@ export interface ISlackListType {
 export interface ISlackUserMessage {
 	text: string
 	ts: string
-	type: "message"
+	type: 'message'
 	user: string | ISlackMember
 }
 
@@ -20,10 +20,10 @@ export interface ISlackBotMessage {
 		image_48: string
 		image_72: string
 	}
-	subtype: "bot_message"
+	subtype: 'bot_message'
 	text: string
 	ts: string
-	type: "message"
+	type: 'message'
 	username: string
 }
 

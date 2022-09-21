@@ -1,3 +1,3 @@
 export class MessageScroll {
-  constructor(public scrollTop: number) { }
+	constructor(public scrollTop: number) {}
 }

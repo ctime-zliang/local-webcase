@@ -1,14 +1,14 @@
-import * as React from "react"
-import { style } from "typestyle"
-import { flex } from "csstips"
+import * as React from 'react'
+import { style } from 'typestyle'
+import { flex } from 'csstips'
 
 type Props = {
 	flex?: string
-	flexAlign?: "center"
+	flexAlign?: 'center'
 	flexBasis?: number
-	flexDirection?: "row" | "column"
+	flexDirection?: 'row' | 'column'
 	flexGrow?: number
-	flexWrap?: "wrap" | "nowrap"
+	flexWrap?: 'wrap' | 'nowrap'
 	children?: React.ReactNode[]
 	style?: React.CSSProperties
 }
@@ -20,7 +20,11 @@ export default function Flex(props: Props) {
 		flexBasis: props.flexBasis,
 		flexDirection: props.flexDirection,
 		flexGrow: props.flexGrow,
-		flexWrap: props.flexWrap
+		flexWrap: props.flexWrap,
 	}
-	return <div className={style(flex)} style={props.style || {}}>{props.children}</div>
+	return (
+		<div className={style(flex)} style={props.style || {}}>
+			{props.children}
+		</div>
+	)
 }

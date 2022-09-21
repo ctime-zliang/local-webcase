@@ -1,3 +1,1 @@
-export class Init {
-
-}
+export class Init {}

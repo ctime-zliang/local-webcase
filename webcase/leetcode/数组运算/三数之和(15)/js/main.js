@@ -15,13 +15,13 @@
             若和小于0 说明nums[L] 太小, L右移=
  */
 function loopFind(nums) {
-    /* 排序 */
-    const list = nums.sort((a, b) => {
-        return +a - +b
-    })
-    const res = []
-    for (let i = 0; i < list.length - 2; i++) {
-        /* 
+	/* 排序 */
+	const list = nums.sort((a, b) => {
+		return +a - +b
+	})
+	const res = []
+	for (let i = 0; i < list.length - 2; i++) {
+		/* 
             如果
                 当前位置的值大于 0
             则
@@ -29,25 +29,25 @@ function loopFind(nums) {
             即
                 及后续数字的和永远会大于 0
         */
-        if (list[i] > 0) {
-            break
-        }
-        if (i - 1 >= 0 && list[i - 1] === list[i]) {
-            continue
-        }        
-        let left = i + 1
-        let right = list.length - 1
-        const item1 = list[i]
-        while (left < right) {
-            const item2 = list[left]
-            const item3 = list[right]
-            const sum = item1 + item2 + item3
-            /*
+		if (list[i] > 0) {
+			break
+		}
+		if (i - 1 >= 0 && list[i - 1] === list[i]) {
+			continue
+		}
+		let left = i + 1
+		let right = list.length - 1
+		const item1 = list[i]
+		while (left < right) {
+			const item2 = list[left]
+			const item3 = list[right]
+			const sum = item1 + item2 + item3
+			/*
                 判断三数之和 
              */
-            if (sum === 0) {
-                res.push([item1, item2, item3])
-                /*
+			if (sum === 0) {
+				res.push([item1, item2, item3])
+				/*
                     跳过重复的数字 
                         item2 一开始由 list[left] 赋值而来, 故该 while 循环至少会执行一次
                         当 
@@ -56,27 +56,27 @@ function loopFind(nums) {
                         则
                             将左指针继续往后移
                  */
-                while (left < right && list[left] === item2) {
-                    left++
-                }
-                while (left < right && list[right] === item3) {
-                    right--
-                }
-            } else if (sum > 0) {
-                right--
-            } else {
-                left++
-            }
-        }
-    }
-    return res
+				while (left < right && list[left] === item2) {
+					left++
+				}
+				while (left < right && list[right] === item3) {
+					right--
+				}
+			} else if (sum > 0) {
+				right--
+			} else {
+				left++
+			}
+		}
+	}
+	return res
 }
 
 function threeSum(nums) {
-    return loopFind(nums)
+	return loopFind(nums)
 }
 
-const array = [-1,0,1,2,-1,-4]
+const array = [-1, 0, 1, 2, -1, -4]
 const arr2 = [-3, -2, -1, 0, 1, 2, 3, 4]
 
 console.log(threeSum(arr2))

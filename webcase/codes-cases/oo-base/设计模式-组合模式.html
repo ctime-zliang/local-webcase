@@ -1,23 +1,23 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="./css/main.css" />
-<title>Code Case</title>
-</head>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="./css/main.css" />
+		<title>Code Case</title>
+	</head>
 
-<body>
-<div class="container"></div>
-</body>
-<script type="text/javascript" src="./js/Biological.js"></script>
-<script type="text/javascript" src="./js/main.js"></script>
-<script>
-console.log('%c=> 设计模式-组合模式', 'color: #ff0000;')
+	<body>
+		<div class="container"></div>
+	</body>
+	<script type="text/javascript" src="./js/Biological.js"></script>
+	<script type="text/javascript" src="./js/main.js"></script>
+	<script>
+		console.log('%c=> 设计模式-组合模式', 'color: #ff0000;')
 
-/*
+		/*
     将对象组合成"树"结构, 以表示"部分-整体"的层次结构, 类似"树-叶型"结构
     通过对象的多态表现, 使得外部对单个对象或组合对象的使用具有一致性
         一致操作性, 树叶对象对外接口保存一致
@@ -26,187 +26,178 @@ console.log('%c=> 设计模式-组合模式', 'color: #ff0000;')
     调用顶层对象, 会自行遍历其下的叶对象执行
  */
 
-{
+		{
+			console.log(`\n-> 案例一: 命令执行`)
 
+			class Command {
+				add() {
+					throw new Error(`无法调用此方法.`)
+				}
 
-console.log(`\n-> 案例一: 命令执行`)
+				doTask() {
+					throw new Error(`无法调用此方法.`)
+				}
+			}
 
-class Command {
-    add() {
-        throw new Error(`无法调用此方法.`)
-    }
+			/* 命令管理类 */
+			class MacroCommand extends Command {
+				constructor(name) {
+					super()
+					this._name = name
+					this._cmds = []
+				}
 
-    doTask() {
-        throw new Error(`无法调用此方法.`)
-    }
-}
+				set name(value) {
+					this._name = value
+				}
 
-/* 命令管理类 */
-class MacroCommand extends Command {
-    constructor(name) {
-        super()
-        this._name = name
-        this._cmds = []
-    }
+				get name() {
+					return this._name
+				}
 
-    set name(value) {
-        this._name = value
-    }
+				set cmds(value) {
+					this._cmds = value
+				}
 
-    get name() {
-        return this._name
-    }
+				get cmds() {
+					return this._cmds
+				}
 
-    set cmds(value) {
-        this._cmds = value
-    }
+				add(cmdInstance) {
+					this._cmds.push(cmdInstance)
+				}
 
-    get cmds() {
-        return this._cmds
-    }
+				doTask() {
+					console.log(`正在执行组合命令: ${this._name}.`)
+					for (let i = 0; i < this._cmds.length; i++) {
+						if (this._cmds[i].doTask) {
+							this._cmds[i].doTask()
+						}
+					}
+				}
+			}
 
-    add(cmdInstance) {
-        this._cmds.push(cmdInstance)
-    }
+			class Television extends Command {
+				constructor() {
+					super()
+					this.name = 'Color Television'
+				}
 
-    doTask() {
-        console.log(`正在执行组合命令: ${this._name}.`)
-        for (let i = 0; i < this._cmds.length; i++) {
-            if (this._cmds[i].doTask) {
-                this._cmds[i].doTask()
-            }
-        }
-    }
-}
+				set name(value) {
+					this._name = value
+				}
 
-class Television extends Command {
-    constructor() {
-        super()
-        this.name = 'Color Television'
-    }
+				get name() {
+					return this._name
+				}
 
-    set name(value) {
-        this._name = value
-    }
+				doTask() {
+					console.log(`- ${this.name}: Play TV.`)
+				}
+			}
 
-    get name() {
-        return this._name
-    }
+			class Radio extends Command {
+				constructor() {
+					super()
+					this.name = 'Old Radio'
+				}
 
-    doTask() {
-        console.log(`- ${this.name}: Play TV.`)
-    }
-}
+				set name(value) {
+					this._name = value
+				}
 
-class Radio extends Command {
-    constructor() {
-        super()
-        this.name = 'Old Radio'
-    }
+				get name() {
+					return this._name
+				}
 
-    set name(value) {
-        this._name = value
-    }
+				doTask() {
+					console.log(`- ${this._name}: Play Broadcast.`)
+				}
+			}
 
-    get name() {
-        return this._name
-    }
+			const macroCommand = new MacroCommand('组合命令')
+			const television = new Television()
+			const radio = new Radio()
+			macroCommand.add(television)
+			macroCommand.add(radio)
+			macroCommand.doTask()
 
-    doTask() {
-        console.log(`- ${this._name}: Play Broadcast.`)
-    }
-}
+			console.log(`----------------------------------`)
 
-const macroCommand = new MacroCommand('组合命令')
-const television = new Television()
-const radio = new Radio()
-macroCommand.add(television)
-macroCommand.add(radio)
-macroCommand.doTask()
+			const supperMacroCommand = new MacroCommand('超级组合命令')
+			supperMacroCommand.add(radio)
+			supperMacroCommand.add(macroCommand)
+			supperMacroCommand.doTask()
+			console.log(supperMacroCommand)
+		}
 
-console.log(`----------------------------------`)
+		/************************************************************/
+		/************************************************************/
+		/************************************************************/
 
-const supperMacroCommand = new MacroCommand('超级组合命令')
-supperMacroCommand.add(radio)
-supperMacroCommand.add(macroCommand)
-supperMacroCommand.doTask()
-console.log(supperMacroCommand)
+		{
+			console.log(`\n-> 案例二: 目录扫描`)
 
+			class BaseFile {
+				constructor(name) {
+					this.name = name
+					this.parent = null
+				}
 
-}
+				setParent(parent) {
+					this.parent = parent
+				}
+			}
 
-/************************************************************/
-/************************************************************/
-/************************************************************/
+			class Folder extends BaseFile {
+				constructor(name) {
+					super(name)
+					this.files = []
+				}
 
-{
-   
+				add(file) {
+					file.setParent(this)
+					this.files.push(file)
+				}
 
-console.log(`\n-> 案例二: 目录扫描`)
+				scan() {
+					console.log(`正在扫描文件夹: ${this.name}.`)
+					for (let i = 0; i < this.files.length; i++) {
+						this.files[i].scan()
+					}
+				}
+			}
 
-class BaseFile {
-    constructor(name) {
-        this.name = name
-        this.parent = null
-    }
+			class File extends BaseFile {
+				constructor(name) {
+					super(name)
+					/* ... */
+				}
 
-    setParent(parent) {
-        this.parent = parent
-    }
-}
+				add(file) {
+					throw new Error(`不能向文件中添加文件.`)
+				}
 
-class Folder extends BaseFile {
-    constructor(name) {
-        super(name)
-        this.files = []
-    }
+				scan() {
+					console.log(`- 扫描到文件: ${this.name}.`)
+				}
+			}
 
-    add(file) {
-        file.setParent(this)
-        this.files.push(file)
-    }
+			const documentFolder = new Folder(`Document`)
+			const yuwen = new File(`Yu Wen`)
+			const shuxue = new File(`Shu Xue`)
 
-    scan() {
-        console.log(`正在扫描文件夹: ${this.name}.`)
-        for (let i = 0; i < this.files.length; i++) {
-            this.files[i].scan()
-        }
-    }
-}
+			documentFolder.add(yuwen)
+			documentFolder.add(shuxue)
 
-class File extends BaseFile {
-    constructor(name) {
-        super(name)
-        /* ... */
-    }
+			const tipsFolder = new Folder(`Tips`)
+			const note = new File(`Note`)
 
-    add(file) {
-        throw new Error(`不能向文件中添加文件.`)
-    }
+			tipsFolder.add(note)
+			documentFolder.add(tipsFolder)
 
-    scan() {
-        console.log(`- 扫描到文件: ${this.name}.`)
-    }
-}
-
-const documentFolder = new Folder(`Document`)
-const yuwen = new File(`Yu Wen`)
-const shuxue = new File(`Shu Xue`)
-
-documentFolder.add(yuwen)
-documentFolder.add(shuxue)
-
-const tipsFolder = new Folder(`Tips`)
-const note = new File(`Note`)
-
-tipsFolder.add(note)
-documentFolder.add(tipsFolder)
-
-documentFolder.scan()
-console.log(documentFolder)
-
-
-}
-
-</script>
+			documentFolder.scan()
+			console.log(documentFolder)
+		}
+	</script>
 </html>

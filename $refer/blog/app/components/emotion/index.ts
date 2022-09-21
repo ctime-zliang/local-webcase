@@ -1,2 +1,1 @@
-export { default as Interesting } from "./interesting/interesting"
-
+export { default as Interesting } from './interesting/interesting'

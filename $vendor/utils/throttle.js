@@ -6,16 +6,15 @@
  * @return {function}
  */
 function ven$throttleStamp(fn, delay = 500) {
-    let previous = 0    
-    return function() {
-        let now = +new Date()
-        if (now - previous > delay) {
-            fn.apply(this, arguments)
-            previous = now
-        }
-    }
+	let previous = 0
+	return function () {
+		let now = +new Date()
+		if (now - previous > delay) {
+			fn.apply(this, arguments)
+			previous = now
+		}
+	}
 }
-
 
 /**
  * @description throttle 节流
@@ -25,14 +24,13 @@ function ven$throttleStamp(fn, delay = 500) {
  * @return {function}
  */
 function ven$throttleTimeout(fn, delay = 500) {
-    let timer = null
-    return function() {
-        if (!timer) {
-            timer = window.setTimeout(() => {
-                timer = null
-                fn.apply(this, arguments)
-            }, delay)
-        } 
-    }
+	let timer = null
+	return function () {
+		if (!timer) {
+			timer = window.setTimeout(() => {
+				timer = null
+				fn.apply(this, arguments)
+			}, delay)
+		}
+	}
 }
-

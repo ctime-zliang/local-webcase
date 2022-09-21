@@ -14,77 +14,77 @@
  * }
  */
 function ListNode(val, next) {
-    this.val = (val === undefined ? 0 : val)
-    this.next = (next === undefined ? null : next)
+	this.val = val === undefined ? 0 : val
+	this.next = next === undefined ? null : next
 }
 
-function addTwoNumbers (list1, list2) {
-    const arr1 = ven$setList2Array(list1).reverse()
-    const arr2 = ven$setList2Array(list2).reverse()
-    /**
-     * 获取两个数组的最大长度
-     */
-    const maxLength = Math.max(arr1.length, arr2.length)
-    /**
-     * 数组前导补位
-     */  
-    if (arr1.length < maxLength) {
-        const len = arr1.length
-        for (let i = 0; i < maxLength - len; i++) {
-            arr1.unshift(0)
-        }
-    }
-    if (arr2.length < maxLength) {
-        const len = arr2.length
-        for (let i = 0; i < maxLength - len; i++) {
-            arr2.unshift(0)
-        }
-    }
-    /**
+function addTwoNumbers(list1, list2) {
+	const arr1 = ven$setList2Array(list1).reverse()
+	const arr2 = ven$setList2Array(list2).reverse()
+	/**
+	 * 获取两个数组的最大长度
+	 */
+	const maxLength = Math.max(arr1.length, arr2.length)
+	/**
+	 * 数组前导补位
+	 */
+	if (arr1.length < maxLength) {
+		const len = arr1.length
+		for (let i = 0; i < maxLength - len; i++) {
+			arr1.unshift(0)
+		}
+	}
+	if (arr2.length < maxLength) {
+		const len = arr2.length
+		for (let i = 0; i < maxLength - len; i++) {
+			arr2.unshift(0)
+		}
+	}
+	/**
      * 初始化临时数组
             以 0 填充
-     */ 
-    const temp = []
-    for (let i = 0; i < maxLength + 1; i++) {
-        temp[i] = 0
-    }
-    /**
+     */
+	const temp = []
+	for (let i = 0; i < maxLength + 1; i++) {
+		temp[i] = 0
+	}
+	/**
      * l1:    [0, 9, 4, 2]
         l2:    [9, 4, 6, 5]
         tp: [0, 0, 0, 0, 0] 
 
         从 arr1/arr2 的最末尾开始倒叙遍历
-     */ 
-    let tempIndex = maxLength  // tempIndex = (maxLength - 1) + 1
-    for (let i = maxLength - 1; i >= 0; i--) {
-        /**
-         * 遍历到某一位时, 将三组数组的该位值相加 
-         */ 
-        const sum = arr1[i] + arr2[i] + temp[tempIndex]
-        if (sum >= 10) {
-            temp[tempIndex] = sum - 10
-            temp[tempIndex - 1] = 1
-        } else {
-            temp[tempIndex] = sum
-        }
-        tempIndex--
-    }
-    console.log(temp)
-    /**
-     * 移除数组开头的所有 0 位并反向该数组
      */
-    const newArr = ven$removeAllFrontZero(temp).reverse()
-    /**
-     * 将数组转换成链表
-     */
-    const head = new ListNode(newArr[0], null)
-    let p = head
-    for (let i = 1; i < newArr.length; i++) {
-        const node = new ListNode(newArr[i], null)
-        p.next = node
-        p = node
-    }
-    return head
+	let tempIndex = maxLength // tempIndex = (maxLength - 1) + 1
+	for (let i = maxLength - 1; i >= 0; i--) {
+		/**
+		 * 遍历到某一位时, 将三组数组的该位值相加
+		 */
+		const sum = arr1[i] + arr2[i] + temp[tempIndex]
+		if (sum >= 10) {
+			temp[tempIndex] = sum - 10
+			temp[tempIndex - 1] = 1
+		} else {
+			temp[tempIndex] = sum
+		}
+		tempIndex--
+	}
+	console.log(temp)
+	/**
+	 * 移除数组开头的所有 0 位并反向该数组
+	 */
+	const newArr = ven$removeAllFrontZero(temp).reverse()
+	/**
+	 * 将数组转换成链表
+	 */
+	const head = new ListNode(newArr[0], null)
+	let p = head
+	for (let i = 1; i < newArr.length; i++) {
+		const node = new ListNode(newArr[i], null)
+		p.next = node
+		p = node
+	}
+	return head
 }
 
 /*
@@ -93,7 +93,7 @@ function addTwoNumbers (list1, list2) {
        [9, 4, 6, 5]
     [0, 0, 0, 0, 0]
  */
-const arr1 =    [2, 4, 9]
+const arr1 = [2, 4, 9]
 const arr2 = [5, 6, 4, 9]
 
 const list1 = ven$setArray2List(arr1)

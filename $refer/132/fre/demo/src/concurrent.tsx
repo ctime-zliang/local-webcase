@@ -8,32 +8,32 @@ const BLOCK_FOR = 5
 const NUM_COMPONENTS = 100
 
 const App = () => {
-  const [count, setCount] = useState(0)
+	const [count, setCount] = useState(0)
 
-  useEffect(() => {
-    setTimeout(() => setCount(count + 1), UPDATE_EVERY)
-  })
+	useEffect(() => {
+		setTimeout(() => setCount(count + 1), UPDATE_EVERY)
+	})
 
-  const values = []
+	const values = []
 
-  for (let i = count; i < count + NUM_COMPONENTS; i++) {
-    values.push(i)
-  }
-  return (
-    <div className="wraper">
-      <h1>Count: {count}</h1>
-      {values.map((value, index) => (
-        <SlowComponent key={value} value={value} />
-      ))}
-    </div>
-  )
+	for (let i = count; i < count + NUM_COMPONENTS; i++) {
+		values.push(i)
+	}
+	return (
+		<div className="wraper">
+			<h1>Count: {count}</h1>
+			{values.map((value, index) => (
+				<SlowComponent key={value} value={value} />
+			))}
+		</div>
+	)
 }
 
 const SlowComponent = ({ value }) => {
-  const start = performance.now()
-  while (performance.now() - start < BLOCK_FOR) {}
+	const start = performance.now()
+	while (performance.now() - start < BLOCK_FOR) {}
 
-  return <li className="slow">{value}</li>
+	return <li className="slow">{value}</li>
 }
 
 const app = document.getElementById('app')

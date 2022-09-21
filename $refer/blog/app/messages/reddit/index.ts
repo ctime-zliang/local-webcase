@@ -1,1 +1,1 @@
-export { FetchRedditData } from "./FetchRedditData"
+export { FetchRedditData } from './FetchRedditData'

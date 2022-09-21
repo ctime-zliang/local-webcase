@@ -8,26 +8,26 @@
  * @return {string|number}
  */
 function ven$toFixed(number, digit = 2, fixedDecimal = true) {
-    if (typeof number !== 'number') {
-        number = +number
-    }
-    if (isNaN(number)) {
-        return NaN
-    }
-    digit = digit | 0
-    if (digit <= 0 || (!number && !fixedDecimal)) {
-        return String(Math.round(number))
-    }
-    const p = [1, 10, 100, 1000, 10000][digit] || Math.pow(10, digit) || 10
-    if (fixedDecimal) {
-        const sign = number < 0 ? '-' : ''
-        number = number < 0 ? -number : number
-        number = Math.round(number * p) + ''
-        while (number.length <= digit) {
-            number = '0' + number
-        }
-        number = number.slice(0, -digit) + '.' + number.slice(-digit)
-        return sign + number
-    }
-    return String(Math.round(number * p + 1e-10) / p)
+	if (typeof number !== 'number') {
+		number = +number
+	}
+	if (isNaN(number)) {
+		return NaN
+	}
+	digit = digit | 0
+	if (digit <= 0 || (!number && !fixedDecimal)) {
+		return String(Math.round(number))
+	}
+	const p = [1, 10, 100, 1000, 10000][digit] || Math.pow(10, digit) || 10
+	if (fixedDecimal) {
+		const sign = number < 0 ? '-' : ''
+		number = number < 0 ? -number : number
+		number = Math.round(number * p) + ''
+		while (number.length <= digit) {
+			number = '0' + number
+		}
+		number = number.slice(0, -digit) + '.' + number.slice(-digit)
+		return sign + number
+	}
+	return String(Math.round(number * p + 1e-10) / p)
 }

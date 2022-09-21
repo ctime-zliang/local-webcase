@@ -1,5 +1,5 @@
 export interface IRedditType {
-	kind: string,
+	kind: string
 	data: {
 		after: string
 		before: Optional<string>
@@ -9,7 +9,7 @@ export interface IRedditType {
 }
 
 export interface IRedditListType {
-	kind: string,
+	kind: string
 	data: {
 		approved_by: Optional<string>
 		archived: boolean

@@ -1,3 +1,1 @@
-export class NextPage {
-
-}
+export class NextPage {}

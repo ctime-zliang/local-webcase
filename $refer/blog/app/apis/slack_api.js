@@ -1,5 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+'use strict'
+Object.defineProperty(exports, '__esModule', { value: true })
 // const input$ = new Subject()
 // export const connect = new Observable(observer => {
 //   const channel = socket.channel("slack:lobby", {})
@@ -15,17 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // })
 //   .scan((acc: Array<object>, x) => [x, ...acc], [])
 // export const push = (message: string) => input$.next(message)
-exports.list = (channel, latest) => fetch(`/slack?channel=${channel}&latest=${latest}`, {
-    method: "GET",
-    headers: {
-        "if-api": "true"
-    }
-})
-    .then(res => res.json());
-exports.user = () => fetch("/slack/user", {
-    method: "GET",
-    headers: {
-        "if-api": "true"
-    }
-})
-    .then(res => res.json());
+exports.list = (channel, latest) =>
+	fetch(`/slack?channel=${channel}&latest=${latest}`, {
+		method: 'GET',
+		headers: {
+			'if-api': 'true',
+		},
+	}).then(res => res.json())
+exports.user = () =>
+	fetch('/slack/user', {
+		method: 'GET',
+		headers: {
+			'if-api': 'true',
+		},
+	}).then(res => res.json())

@@ -1,23 +1,23 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="./css/main.css" />
-<title>Code Case</title>
-</head>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="./css/main.css" />
+		<title>Code Case</title>
+	</head>
 
-<body>
-<div class="container"></div>
-</body>
-<script type="text/javascript" src="./js/Biological.js"></script>
-<script type="text/javascript" src="./js/main.js"></script>
-<script>
-console.log('%c=> 设计模式-命令模式', 'color: #ff0000;')
+	<body>
+		<div class="container"></div>
+	</body>
+	<script type="text/javascript" src="./js/Biological.js"></script>
+	<script type="text/javascript" src="./js/main.js"></script>
+	<script>
+		console.log('%c=> 设计模式-命令模式', 'color: #ff0000;')
 
-/*
+		/*
     用一种松耦合的方式来设计程序, 使得请求发送者和请求接收者能够消除彼此之间的耦合关系
     命令模式的四个主要部分:
         - 命令对象
@@ -29,263 +29,254 @@ console.log('%c=> 设计模式-命令模式', 'color: #ff0000;')
             被调用方法所在的对象
  */
 
-{
+		{
+			console.log(`\n-> 案例一: 宏命令`)
 
-
-console.log(`\n-> 案例一: 宏命令`)
-
-/*
+			/*
     宏命令是一组命令的集合, 通过执行宏命令的方式, 可以批次执行命令
  */
 
-class Command {
-    add() {
-        throw new Error(`无法调用此方法.`)
-    }
+			class Command {
+				add() {
+					throw new Error(`无法调用此方法.`)
+				}
 
-    doTask() {
-        throw new Error(`无法调用此方法.`)
-    }
-}
+				doTask() {
+					throw new Error(`无法调用此方法.`)
+				}
+			}
 
-/* 命令管理类 */
-class MacroCommand extends Command {
-    constructor(name) {
-        super()
-        this._name = name
-        this._cmds = []
-    }
+			/* 命令管理类 */
+			class MacroCommand extends Command {
+				constructor(name) {
+					super()
+					this._name = name
+					this._cmds = []
+				}
 
-    set name(value) {
-        this._name = value
-    }
+				set name(value) {
+					this._name = value
+				}
 
-    get name() {
-        return this._name
-    }
+				get name() {
+					return this._name
+				}
 
-    set cmds(value) {
-        this._cmds = value
-    }
+				set cmds(value) {
+					this._cmds = value
+				}
 
-    get cmds() {
-        return this._cmds
-    }
+				get cmds() {
+					return this._cmds
+				}
 
-    add(cmdInstance) {
-        this._cmds.push(cmdInstance)
-    }
+				add(cmdInstance) {
+					this._cmds.push(cmdInstance)
+				}
 
-    doTask() {
-        console.log(`正在执行组合命令: ${this._name}.`)
-        for (let i = 0; i < this._cmds.length; i++) {
-            if (this._cmds[i].doTask) {
-                this._cmds[i].doTask()
-            }
-        }
-    }
-}
+				doTask() {
+					console.log(`正在执行组合命令: ${this._name}.`)
+					for (let i = 0; i < this._cmds.length; i++) {
+						if (this._cmds[i].doTask) {
+							this._cmds[i].doTask()
+						}
+					}
+				}
+			}
 
-class Television extends Command {
-    constructor() {
-        super()
-        this._name = 'Color Television'
-    }
+			class Television extends Command {
+				constructor() {
+					super()
+					this._name = 'Color Television'
+				}
 
-    set name(value) {
-        this._name = value
-    }
+				set name(value) {
+					this._name = value
+				}
 
-    get name() {
-        return this._name
-    }
+				get name() {
+					return this._name
+				}
 
-    doTask() {
-        console.log(`- ${this._name}: Play TV.`)
-    }
-}
+				doTask() {
+					console.log(`- ${this._name}: Play TV.`)
+				}
+			}
 
-class Radio extends Command {
-    constructor() {
-        super()
-        this.name = 'Old Radio'
-    }
+			class Radio extends Command {
+				constructor() {
+					super()
+					this.name = 'Old Radio'
+				}
 
-    set name(value) {
-        this._name = value
-    }
+				set name(value) {
+					this._name = value
+				}
 
-    get name() {
-        return this._name
-    }
+				get name() {
+					return this._name
+				}
 
-    doTask() {
-        console.log(`- ${this_.name}: Play Broadcast.`)
-    }
-}
+				doTask() {
+					console.log(`- ${this_.name}: Play Broadcast.`)
+				}
+			}
 
-const macroCommand = new MacroCommand('宏命令(组合命令)')
-const television = new Television()
-const radio = new Radio()
-macroCommand.add(television)
-macroCommand.add(radio)
-macroCommand.doTask()
+			const macroCommand = new MacroCommand('宏命令(组合命令)')
+			const television = new Television()
+			const radio = new Radio()
+			macroCommand.add(television)
+			macroCommand.add(radio)
+			macroCommand.doTask()
+		}
 
+		/************************************************************/
+		/************************************************************/
+		/************************************************************/
 
-}
+		{
+			console.log(`\n-> 案例二: 服务订餐`)
 
-/************************************************************/
-/************************************************************/
-/************************************************************/
+			/* 接受者 */
+			class Cook {
+				constructor(name) {
+					this._name = name
+				}
 
-{
+				set name(value) {
+					this._name = value
+				}
 
+				get name() {
+					return this._name
+				}
 
-console.log(`\n-> 案例二: 服务订餐`)
+				stirFry() {
+					console.log(`${this._name} 执行炒菜.`)
+				}
+			}
 
-/* 接受者 */
-class Cook {
-    constructor(name) {
-        this._name = name
-    }
+			class Cleaner {
+				constructor(name) {
+					this._name = name
+				}
 
-    set name(value) {
-        this._name = value
-    }
+				set name(value) {
+					this._name = value
+				}
 
-    get name() {
-        return this._name
-    }
+				get name() {
+					return this._name
+				}
 
-    stirFry() {
-        console.log(`${this._name} 执行炒菜.`)
-    }
-}
+				prepare() {
+					console.log(`${this._name} 执行就餐清洁预备.`)
+				}
+			}
 
-class Cleaner {
-    constructor(name) {
-        this._name = name
-    }
+			class Finance {
+				constructor(name) {
+					this._name = name
+				}
 
-    set name(value) {
-        this._name = value
-    }
+				set name(value) {
+					this._name = value
+				}
 
-    get name() {
-        return this._name
-    }
+				get name() {
+					return this._name
+				}
 
-    prepare() {
-        console.log(`${this._name} 执行就餐清洁预备.`)
-    }
-}
+				collection(amount) {
+					console.log(`${this._name} 已收款: ${amount}.`)
+				}
+			}
 
-class Finance {
-    constructor(name) {
-        this._name = name
-    }
+			/* 中介命令 */
+			class WaiterCommand {
+				constructor(cookReceiver, cleanReceiver) {
+					this._cookReceiver = cookReceiver
+					this._cleanReceiver = cleanReceiver
+				}
 
-    set name(value) {
-        this._name = value
-    }
+				set cookReceiver(value) {
+					this._cookReceiver = value
+				}
 
-    get name() {
-        return this._name
-    }
+				get cookReceiver() {
+					return this._cookReceiver
+				}
 
-    collection(amount) {
-        console.log(`${this._name} 已收款: ${amount}.`)
-    }
-}
+				set cleanReceiver(value) {
+					this._cleanReceiver = value
+				}
 
-/* 中介命令 */
-class WaiterCommand {
-    constructor(cookReceiver, cleanReceiver) {
-        this._cookReceiver = cookReceiver
-        this._cleanReceiver = cleanReceiver
-    }
+				get cleanReceiver() {
+					return this._cleanReceiver
+				}
 
-    set cookReceiver(value) {
-        this._cookReceiver = value
-    }
+				book() {
+					console.log(`已接收到订餐指令, 正在执行:`)
+					this._cleanReceiver.prepare()
+					this._cookReceiver.stirFry()
+				}
+			}
 
-    get cookReceiver() {
-        return this._cookReceiver
-    }
+			class CashierCommand {
+				constructor(financeReceiver) {
+					this._financeReceiver = financeReceiver
+				}
 
-    set cleanReceiver(value) {
-        this._cleanReceiver = value
-    }
+				set financeReceiver(value) {
+					this._financeReceiver = value
+				}
 
-    get cleanReceiver() {
-        return this._cleanReceiver
-    }
+				get financeReceiver() {
+					return this._financeReceiver
+				}
 
-    book() {
-        console.log(`已接收到订餐指令, 正在执行:`)
-        this._cleanReceiver.prepare()
-        this._cookReceiver.stirFry()
-    }
-}
+				pay(amount) {
+					this._financeReceiver.collection(amount)
+				}
+			}
 
-class CashierCommand {
-    constructor(financeReceiver) {
-        this._financeReceiver = financeReceiver
-    }
+			/* 发起者 */
+			class Customer {
+				constructor(name) {
+					this.name = name
+				}
 
-    set financeReceiver(value) {
-        this._financeReceiver = value
-    }
+				set name(value) {
+					this._name = value
+				}
 
-    get financeReceiver() {
-        return this._financeReceiver
-    }
+				get name() {
+					return this._name
+				}
 
-    pay(amount) {
-        this._financeReceiver.collection(amount)
-    }
-}
+				book(command) {
+					console.log(`${this._name} 开始订餐.`)
+					command.book()
+				}
 
-/* 发起者 */
-class Customer {
-    constructor(name) {
-        this.name = name
-    }
+				pay(command, amount) {
+					console.log(`${this._name} 开始付款 ${amount}.`)
+					command.pay(amount)
+				}
+			}
 
-    set name(value) {
-        this._name = value
-    }
+			/* 服务发起者 */
+			const zhangsan = new Customer(`zhangsan`)
+			/* 服务接收者 */
+			const cooker = new Cook(`wangdachu`)
+			const cleaner = new Cleaner(`lidama`)
+			const financer = new Finance(`zhangxiansheng`)
+			/* 中介命令 */
+			const waiterCommand = new WaiterCommand(cooker, cleaner)
+			const cashier = new CashierCommand(financer)
 
-    get name() {
-        return this._name
-    }
-
-    book(command) {
-        console.log(`${this._name} 开始订餐.`)
-        command.book()
-    }
-
-    pay(command, amount) {
-        console.log(`${this._name} 开始付款 ${amount}.`)
-        command.pay(amount)
-    }
-}
-
-/* 服务发起者 */
-const zhangsan = new Customer(`zhangsan`)
-/* 服务接收者 */
-const cooker = new Cook(`wangdachu`)
-const cleaner = new Cleaner(`lidama`)
-const financer = new Finance(`zhangxiansheng`)
-/* 中介命令 */
-const waiterCommand = new WaiterCommand(cooker, cleaner)
-const cashier = new CashierCommand(financer)
-
-zhangsan.book(waiterCommand)
-zhangsan.pay(cashier, 100)
-
-
-}
-
-</script>
+			zhangsan.book(waiterCommand)
+			zhangsan.pay(cashier, 100)
+		}
+	</script>
 </html>

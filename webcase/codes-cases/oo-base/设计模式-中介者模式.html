@@ -1,186 +1,182 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="./css/main.css" />
-<title>Code Case</title>
-</head>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="./css/main.css" />
+		<title>Code Case</title>
+	</head>
 
-<body>
-<div class="container"></div>
-</body>
-<script type="text/javascript" src="./js/Biological.js"></script>
-<script type="text/javascript" src="./js/main.js"></script>
-<script>
-console.log('%c=> 设计模式-中介者模式', 'color: #ff0000;')
+	<body>
+		<div class="container"></div>
+	</body>
+	<script type="text/javascript" src="./js/Biological.js"></script>
+	<script type="text/javascript" src="./js/main.js"></script>
+	<script>
+		console.log('%c=> 设计模式-中介者模式', 'color: #ff0000;')
 
-/*
+		/*
     解除对象与对象之间的紧耦合关系
     增加一个中介者, 所有的相关对象都通过中介者对象来通信
     所以当一个对象发生改变时, 只需要通知 中介者对象即可
  */
 
-const delay = async (time) => {
-    return new Promise((_) => {
-        window.setTimeout(() => {
-            _()
-        }, time)
-    })
-}
+		const delay = async time => {
+			return new Promise(_ => {
+				window.setTimeout(() => {
+					_()
+				}, time)
+			})
+		}
 
-{
+		{
+			console.log(`\n-> 游戏玩家通信`)
 
+			const ALIVE_STATE = 'alive'
+			const DIE_STATE = 'die'
 
-console.log(`\n-> 游戏玩家通信`)
+			const DEFAULT_TEAM_STATE = 'init'
+			const WIN_TEAM_STATE = 'win'
+			const LOSE_TEAM_STATE = 'lose'
 
-const ALIVE_STATE = 'alive'
-const DIE_STATE = 'die'
+			/* 中介者 */
+			class PlayerMediator {
+				constructor() {
+					this._teams = {}
+					this._ops = {}
+					this.init()
+				}
 
-const DEFAULT_TEAM_STATE = 'init'
-const WIN_TEAM_STATE = 'win'
-const LOSE_TEAM_STATE = 'lose'
+				init() {
+					this._ops['addPlayer'] = this.addPlayerItem.bind(this)
+					this._ops['playerDead'] = this.handlePlayerDead.bind(this)
+				}
 
-/* 中介者 */
-class PlayerMediator {
-    constructor() {
-        this._teams = {}
-        this._ops = {}
-        this.init()
-    }
+				addPlayerItem(playerItem) {
+					const teamColor = playerItem.teamColor
+					if (!this._teams[teamColor]) {
+						this._teams[teamColor] = {
+							state: DEFAULT_TEAM_STATE,
+							players: [],
+						}
+					}
+					this._teams[teamColor].players.push(playerItem)
+				}
 
-    init() {
-        this._ops['addPlayer'] = this.addPlayerItem.bind(this)
-        this._ops['playerDead'] = this.handlePlayerDead.bind(this)
-    }
+				handlePlayerDead(playerItem) {
+					const teamColor = playerItem.teamColor
+					const teamItem = this._teams[teamColor]
+					const isTeamAllDied = !teamItem.players.find(item => {
+						return item.state === ALIVE_STATE
+					})
+					if (isTeamAllDied) {
+						teamItem.players.forEach(item => {
+							item.lose()
+						})
+						teamItem.state = LOSE_TEAM_STATE
+					}
+					const aliveTeams = Object.values(this._teams).filter(item => {
+						return item.state === DEFAULT_TEAM_STATE
+					})
+					if (aliveTeams.length <= 1) {
+						console.log('%c===>>> winer:', 'color: #ff6600;')
+						aliveTeams[0].players.forEach(item => {
+							item.win()
+						})
+					}
+				}
 
-    addPlayerItem(playerItem) {
-        const teamColor = playerItem.teamColor
-        if (!this._teams[teamColor]) {
-            this._teams[teamColor] = {
-                state: DEFAULT_TEAM_STATE,
-                players: []
-            }
-        }
-        this._teams[teamColor].players.push(playerItem)
-    }
+				reciveMessage() {
+					const message = Array.prototype.shift.call(arguments)
+					if (!this._ops[message]) {
+						console.warn(`Command not defined.`)
+						return
+					}
+					this._ops[message].apply(this, arguments)
+				}
+			}
 
-    handlePlayerDead(playerItem) {
-        const teamColor = playerItem.teamColor
-        const teamItem = this._teams[teamColor]
-        const isTeamAllDied = !teamItem.players.find((item) => {
-            return item.state === ALIVE_STATE
-        })
-        if (isTeamAllDied) {
-            teamItem.players.forEach((item) => {
-                item.lose()
-            })
-            teamItem.state = LOSE_TEAM_STATE
-        }
-        const aliveTeams = Object.values(this._teams).filter((item) => {
-            return item.state === DEFAULT_TEAM_STATE
-        })
-        if (aliveTeams.length <= 1) {
-            console.log('%c===>>> winer:', 'color: #ff6600;')
-            aliveTeams[0].players.forEach((item) => {
-                item.win()
-            })
-        }
-    }
+			const playerMediator = new PlayerMediator()
 
-    reciveMessage() {
-        const message = Array.prototype.shift.call(arguments)
-        if (!this._ops[message]) {
-            console.warn(`Command not defined.`)
-            return
-        }
-        this._ops[message].apply(this, arguments)
-    }
-}
+			class PlayerBase {
+				constructor(name, teamColor) {
+					this._name = name
+					this._teamColor = teamColor
+					this._state = ALIVE_STATE
+				}
 
-const playerMediator = new PlayerMediator()
+				set name(value) {
+					this._name = value
+				}
 
-class PlayerBase {
-    constructor(name, teamColor) {
-        this._name = name        
-        this._teamColor = teamColor
-        this._state = ALIVE_STATE
-    }
+				get name() {
+					return this._name
+				}
 
-    set name(value) {
-        this._name = value
-    }
+				set state(value) {
+					this._state = value
+				}
 
-    get name() {
-        return this._name
-    }
+				get state() {
+					return this._state
+				}
 
-    set state(value) {
-        this._state = value
-    }
+				set teamColor(value) {
+					this._teamColor = value
+				}
 
-    get state() {
-        return this._state
-    }
+				get teamColor() {
+					return this._teamColor
+				}
 
-    set teamColor(value) {
-        this._teamColor = value
-    }
+				win() {
+					console.log(`${this._name} is won.`)
+				}
 
-    get teamColor() {
-        return this._teamColor
-    }
+				lose() {
+					console.log(`${this._name} is lose.`)
+				}
 
-    win() {
-        console.log(`${this._name} is won.`)
-    }
+				die() {
+					this._state = DIE_STATE
+					console.log(`${this._name} is dead.`)
+					/* 向中介者派发消息 */
+					playerMediator.reciveMessage('playerDead', this)
+				}
+			}
 
-    lose() {
-        console.log(`${this._name} is lose.`)
-    }
+			const playerFactory = (name, teamColor) => {
+				const playerItem = new PlayerBase(name, teamColor)
+				playerMediator.reciveMessage('addPlayer', playerItem)
+				return playerItem
+			}
 
-    die() {
-        this._state = DIE_STATE
-        console.log(`${this._name} is dead.`)
-        /* 向中介者派发消息 */
-        playerMediator.reciveMessage('playerDead', this)
-    }
-}
+			const player01 = playerFactory('zhao', 'red')
+			const player02 = playerFactory('qian', 'red')
 
-const playerFactory = (name, teamColor) => {
-    const playerItem = new PlayerBase(name, teamColor)
-    playerMediator.reciveMessage('addPlayer', playerItem)
-    return playerItem
-}
+			const player21 = playerFactory('zhou', 'blue')
+			const player22 = playerFactory('wu', 'blue')
 
-const player01 = playerFactory('zhao', 'red')
-const player02 = playerFactory('qian', 'red')
+			const player31 = playerFactory('sun', 'yellow')
+			const player32 = playerFactory('wang', 'yellow')
 
-const player21 = playerFactory('zhou', 'blue')
-const player22 = playerFactory('wu', 'blue')
+			console.log(playerMediator)
 
-const player31 = playerFactory('sun', 'yellow')
-const player32 = playerFactory('wang', 'yellow')
+			const main = async () => {
+				await delay(1000)
+				player01.die()
+				await delay(500)
+				player02.die()
+				console.log(`==================================`)
+				await delay(800)
+				player31.die()
+				await delay(500)
+				player32.die()
+			}
 
-console.log(playerMediator)
-
-const main = async () => {
-    await delay(1000)
-    player01.die()
-    await delay(500)
-    player02.die()
-    console.log(`==================================`)
-    await delay(800)
-    player31.die()
-    await delay(500)
-    player32.die()
-}
-
-main()
-
-
-}
-</script>
+			main()
+		}
+	</script>
 </html>

@@ -1,4 +1,4 @@
 export type TMessage = {
-	user: string,
+	user: string
 	body: string
 }

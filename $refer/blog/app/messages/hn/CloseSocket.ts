@@ -1,1 +1,1 @@
-export class CloseSocket { }
+export class CloseSocket {}

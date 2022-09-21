@@ -1,5 +1,3 @@
-
-
 // function printEvent(tag, e) {
 //     console.log(`=========================`)
 //     console.log(`事件标记: ${tag}`)
@@ -28,25 +26,25 @@
 //     ven$bindEvent(appContainer, 'click', '.box', function(e) {
 //         printEvent('event-appContainer', e)
 //     }, false)
-    
+
 //     ven$bindEvent(boxLayer1, 'click', function(e) {
 //         printEvent('event-boxLayer1', e)
 //     })
-    
+
 //     ven$bindEvent(boxLayer2, 'click', function(e) {
 //         // e.stopPropagation()
 //         // e.stopImmediatePropagation()
 //         printEvent('event-boxLayer2', e)
 //     })
-    
+
 //     ven$bindEvent(boxLayer2, 'click', function(e) {
 //         printEvent('event-boxLayer2 02', e)
 //     })
-    
+
 //     ven$bindEvent(boxLayer3, 'click', function(e) {
 //         printEvent('event-boxLayer3', e)
 //     })
-    
+
 //     ven$bindEvent(boxLayer4, 'click', function(e) {
 //         printEvent('event-boxLayer4', e)
 //     })

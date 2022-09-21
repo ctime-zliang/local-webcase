@@ -1,50 +1,50 @@
 /* 二叉树结点 */
 class BinaryTreeNode {
-    constructor(key, value) {
-        this._parent = null
-        this._left = null
-        this._right = null
-        this._key = key
-        this._value = value
-    }
+	constructor(key, value) {
+		this._parent = null
+		this._left = null
+		this._right = null
+		this._key = key
+		this._value = value
+	}
 
-    set parent(value) {
-        this._parent = value
-    }
+	set parent(value) {
+		this._parent = value
+	}
 
-    get parent() {
-        return this._parent
-    }
+	get parent() {
+		return this._parent
+	}
 
-    set value(value) {
-        this._value = value
-    }
+	set value(value) {
+		this._value = value
+	}
 
-    get value() {
-        return this._value
-    }
+	get value() {
+		return this._value
+	}
 
-    set key(value) {
-        this._key = value
-    }
+	set key(value) {
+		this._key = value
+	}
 
-    get key() {
-        return this._key
-    }
+	get key() {
+		return this._key
+	}
 
-    set _right(value) {
-        this.__right = value
-    }
+	set _right(value) {
+		this.__right = value
+	}
 
-    get _right() {
-        return this.__right
-    }
+	get _right() {
+		return this.__right
+	}
 
-    set left(value) {
-        this._left = value
-    }
+	set left(value) {
+		this._left = value
+	}
 
-    get left() {
-        return this._left
-    }
+	get left() {
+		return this._left
+	}
 }

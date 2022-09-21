@@ -1,3 +1,3 @@
-import * as React from "react"
+import * as React from 'react'
 
-export default () => <img src={require("./interesting.jpg")} />
+export default () => <img src={require('./interesting.jpg')} />

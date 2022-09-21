@@ -1,4 +1,4 @@
-"use strict";
+'use strict'
 // import { socket } from "../socket/socket"
 // import { Observable, Subject } from "rxjs"
 // const input$ = new Subject()

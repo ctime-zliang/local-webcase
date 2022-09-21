@@ -1,7 +1,6 @@
-// /* 
+// /*
 //     https://zhuanlan.zhihu.com/p/142742003
 //  */
-
 
 // let time = {}
 // function taskTest() {
@@ -18,7 +17,7 @@
 //         console.log(`setTimeout 1`)
 //         time.st1 = performance.now()
 //         // ven$choke(50)
-//         // appContainer.innerHTML = `<div>${Math.random()}</div>`        
+//         // appContainer.innerHTML = `<div>${Math.random()}</div>`
 //         appContainer.innerHTML = createHtmlString()
 //     })
 //     window.setTimeout(() => {

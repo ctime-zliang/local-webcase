@@ -1,3 +1,3 @@
 export class FetchSlackData {
-  constructor() { }
+	constructor() {}
 }

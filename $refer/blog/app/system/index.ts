@@ -1,3 +1,3 @@
-import { System } from "ractor"
+import { System } from 'ractor'
 
-export const system = new System("app")
+export const system = new System('app')

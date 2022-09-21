@@ -1,3 +1,1 @@
-export class FetchRedditData {
-
-}
+export class FetchRedditData {}

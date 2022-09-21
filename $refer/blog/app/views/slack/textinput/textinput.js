@@ -1,4 +1,4 @@
-"use strict";
+'use strict'
 // import * as React from "react"
 // import { TextField } from "office-ui-fabric-react"
 // import { push } from "../../../apis/slack_api"

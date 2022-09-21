@@ -1,6 +1,6 @@
-import { Socket } from "phoenix"
+import { Socket } from 'phoenix'
 
-export const socket = new Socket("/socket", {
+export const socket = new Socket('/socket', {
 	// logger: ((kind: any, msg: any, data: any) => { console.log(`${kind}: ${msg}`, data) })
 })
 

@@ -6,28 +6,26 @@
     如果链表中存在环，则返回 true 。 否则，返回 false 。
  */
 
-
 function findLast(head) {
-    let node = head
-    while (node && node.next) {
-        node = node.next
-    }
-    return node
+	let node = head
+	while (node && node.next) {
+		node = node.next
+	}
+	return node
 }
 
 function linkNode(head, pos) {
-    const lastNode = findLast(head)
-    if (!lastNode) {
-        return null
-    }
-    let node = head
-    while (pos > 0) {
-        pos--
-        node = node.next
-    } 
-    lastNode.next = node
+	const lastNode = findLast(head)
+	if (!lastNode) {
+		return null
+	}
+	let node = head
+	while (pos > 0) {
+		pos--
+		node = node.next
+	}
+	lastNode.next = node
 }
-  
 
 /**
  * Definition for singly-linked list.
@@ -40,11 +38,11 @@ function linkNode(head, pos) {
  * 链表节点
  * @param {any} val 链表节点值
  * @param {ListNode} next 下一个链表节点
- * @return {undefined} 
+ * @return {undefined}
  */
 function ListNode(val, next) {
-    this.val = (val === undefined ? 0 : val)
-    this.next = (next === undefined ? null : next)
+	this.val = val === undefined ? 0 : val
+	this.next = next === undefined ? null : next
 }
 
 /**
@@ -53,59 +51,58 @@ function ListNode(val, next) {
  * @return {ListNode} 单向链表
  */
 function hasCycle(head) {
-    return slowAndFast(head)
+	return slowAndFast(head)
 }
 
 function stringify(head) {
-    try {
-        const i = JSON.parse(JSON.stringify(head))
-        return false
-    } catch (e) {
-        console.warn(e)
-        return true
-    }
+	try {
+		const i = JSON.parse(JSON.stringify(head))
+		return false
+	} catch (e) {
+		console.warn(e)
+		return true
+	}
 }
 
 function addTag(head) {
-    let node = head
-    while (node) {
-        if (node.__visited) {
-            return true
-        }
-        node.__visited = true
-        node = node.next
-    }
-    return false
+	let node = head
+	while (node) {
+		if (node.__visited) {
+			return true
+		}
+		node.__visited = true
+		node = node.next
+	}
+	return false
 }
 
 function slowAndFast(head) {
-    let node = head
-    let slow = node
-    let fast = node
-    let length = 0
-    /**
-     * 快慢指针相遇的次数
-     */
-    let count = 2 
-    let flag = false
-    while (fast && fast.next) {
-        fast = fast.next.next
-        if (fast === slow) {
-            flag = true
-            count--
-            if (count <= 0) {
-                console.log(length)
-                return true
-            }
-        }        
-        slow = slow.next
-        if (flag) {
-            ++length
-        }
-    }
-    return false
+	let node = head
+	let slow = node
+	let fast = node
+	let length = 0
+	/**
+	 * 快慢指针相遇的次数
+	 */
+	let count = 2
+	let flag = false
+	while (fast && fast.next) {
+		fast = fast.next.next
+		if (fast === slow) {
+			flag = true
+			count--
+			if (count <= 0) {
+				console.log(length)
+				return true
+			}
+		}
+		slow = slow.next
+		if (flag) {
+			++length
+		}
+	}
+	return false
 }
-
 
 const arr = [3, 2, 0, -4]
 const pos = 1

@@ -1,4 +1,4 @@
-import { useState, useEffect, render, h } from "../../src/index";
+import { useState, useEffect, render, h } from '../../src/index'
 
 function A1(props) {
 	const { count } = props
@@ -150,4 +150,4 @@ export function UseEffectExecSequentialWrapper(props) {
 	)
 }
 
-render(<UseEffectExecSequentialWrapper />, document.getElementById("app"))
+render(<UseEffectExecSequentialWrapper />, document.getElementById('app'))

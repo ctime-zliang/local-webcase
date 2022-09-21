@@ -1,3 +1,1 @@
-export class TwitterTabChanged {
-  
-}
+export class TwitterTabChanged {}

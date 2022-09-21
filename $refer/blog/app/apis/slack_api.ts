@@ -1,5 +1,5 @@
-import { ISlackListType, ISlackUserType } from "../types/slack_type"
-import { socket } from "../socket/socket"
+import { ISlackListType, ISlackUserType } from '../types/slack_type'
+import { socket } from '../socket/socket'
 
 // const input$ = new Subject()
 
@@ -20,19 +20,17 @@ import { socket } from "../socket/socket"
 // export const push = (message: string) => input$.next(message)
 
 export const list = (channel: string, latest: string): Promise<ISlackListType> =>
-  fetch(`/slack?channel=${channel}&latest=${latest}`, {
-    method: "GET",
-    headers: {
-      "if-api": "true"
-    }
-  })
-    .then(res => res.json())
+	fetch(`/slack?channel=${channel}&latest=${latest}`, {
+		method: 'GET',
+		headers: {
+			'if-api': 'true',
+		},
+	}).then(res => res.json())
 
 export const user = (): Promise<ISlackUserType> =>
-  fetch("/slack/user", {
-    method: "GET",
-    headers: {
-      "if-api": "true"
-    }
-  })
-    .then(res => res.json())
+	fetch('/slack/user', {
+		method: 'GET',
+		headers: {
+			'if-api': 'true',
+		},
+	}).then(res => res.json())

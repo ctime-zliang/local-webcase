@@ -1,6 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+'use strict'
+Object.defineProperty(exports, '__esModule', { value: true })
 class FetchSlackData {
-    constructor() { }
+	constructor() {}
 }
-exports.FetchSlackData = FetchSlackData;
+exports.FetchSlackData = FetchSlackData

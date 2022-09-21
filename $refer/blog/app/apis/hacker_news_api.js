@@ -1,4 +1,4 @@
-"use strict";
+'use strict'
 // import { Observable, AjaxResponse } from "rxjs"
 // import * as firebase from "firebase"
 // firebase.initializeApp({ databaseURL: "hacker-news.firebaseio.com" })

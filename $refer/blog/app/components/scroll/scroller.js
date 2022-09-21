@@ -1,4 +1,4 @@
-"use strict";
+'use strict'
 // /**
 //  * Scroller.
 //  * a component to render data base on the paramater(upperHeight, newItems, underHeight) that received from Projector.
@@ -42,7 +42,7 @@
 //   private resizing = false
 //   /**
 //    * tell projector to project while got asynchronous data
-//    * @param nextProps 
+//    * @param nextProps
 //    */
 //   public componentWillReceiveProps(nextProps: Props) {
 //     this.hasBottomTouched = false
@@ -162,7 +162,7 @@
 //    * if sliding direction is up, scrollTop minus buffer height.
 //    * @param cache cached anchor position
 //    * @param height upperHeight
-//    * 
+//    *
 //    */
 //   public computeUpperPlaceholderHeight(cache: Cache, height: number): number {
 //     const projector = this.projector

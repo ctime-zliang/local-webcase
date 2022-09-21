@@ -3,11 +3,11 @@
  */
 
 function findLast(head) {
-    let node = head
-    while (node && node.next) {
-        node = node.next
-    }
-    return node
+	let node = head
+	while (node && node.next) {
+		node = node.next
+	}
+	return node
 }
 
 /**
@@ -21,21 +21,21 @@ function findLast(head) {
  * 链表节点
  * @param {any} val 链表节点值
  * @param {ListNode} next 下一个链表节点
- * @return {undefined} 
+ * @return {undefined}
  */
 function ListNode(val, next) {
-    this.val = (val === undefined ? 0 : val)
-    this.next = (next === undefined ? null : next)
+	this.val = val === undefined ? 0 : val
+	this.next = next === undefined ? null : next
 }
 
 function getIntersectionNode(head1, head2) {
-    let pA = head1
-    let pB = head2
-    while (pA !== pB) {
-        pA = !pA ? head2 : pA.next
-        pB = !pB ? head1 : pB.next
-    }
-    return pA
+	let pA = head1
+	let pB = head2
+	while (pA !== pB) {
+		pA = !pA ? head2 : pA.next
+		pB = !pB ? head1 : pB.next
+	}
+	return pA
 }
 
 const coms = [8, 4, 5]

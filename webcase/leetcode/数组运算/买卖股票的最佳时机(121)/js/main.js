@@ -7,47 +7,47 @@
  */
 
 function loopCalc(prices) {
-    /**
-     * 初始化最大利润值
-     */
-    let maxProfitValue = 0
-    /**
-     * 初始化交易日自然索引值(以 1 开始)
-     */
-    let dayIndex = 0
-    /**
-     * 遍历整个数组
-     *      计算某一项与其下一项的差值, 并于历史缓存的最大利润值比较, 并保留索引 
-     */
-    for (let i = 0; i < prices.length - 1; i++) {
-        for (let j = i; j < prices.length; j++) {
-            /**
+	/**
+	 * 初始化最大利润值
+	 */
+	let maxProfitValue = 0
+	/**
+	 * 初始化交易日自然索引值(以 1 开始)
+	 */
+	let dayIndex = 0
+	/**
+	 * 遍历整个数组
+	 *      计算某一项与其下一项的差值, 并于历史缓存的最大利润值比较, 并保留索引
+	 */
+	for (let i = 0; i < prices.length - 1; i++) {
+		for (let j = i; j < prices.length; j++) {
+			/**
              *  如果
                     某一项与其下一项的差为负值
                 即
                     表示次日股价是下跌的, 则直接跳过
              */
-            const p = prices[j] - prices[i]
-            if (p < 0) {
-                continue
-            }
-            if (maxProfitValue < p) {
-                maxProfitValue = p
-                dayIndex = j + 1
-            }
-        }
-    }
-    console.log(`dayIndex === ${dayIndex}`)
-    return maxProfitValue
+			const p = prices[j] - prices[i]
+			if (p < 0) {
+				continue
+			}
+			if (maxProfitValue < p) {
+				maxProfitValue = p
+				dayIndex = j + 1
+			}
+		}
+	}
+	console.log(`dayIndex === ${dayIndex}`)
+	return maxProfitValue
 }
 
 function maxCalc(prices) {
-    /**
-     * 假定第一天的交易价格为最低 
-     */
-    let minPrice = prices[0]
-    let maxProfitValue = 0
-     /**
+	/**
+	 * 假定第一天的交易价格为最低
+	 */
+	let minPrice = prices[0]
+	let maxProfitValue = 0
+	/**
      *  遍历整个数组
             遍历到某一项时, 假定这一项在未来(数组当前项的后续所有项)所有项中为最低值
                 如果
@@ -68,21 +68,20 @@ function maxCalc(prices) {
                 则
                     比较当前的利润与历史缓存的利润的大小, 并缓存最大利润 
      */
-    for (let i = 1; i < prices.length; i++) {
-        minPrice = Math.min(prices[i], minPrice)
-        const gotProfitValue = prices[i] - minPrice
-        if (gotProfitValue <= 0) {
-            continue
-        }
-        maxProfitValue = Math.max(gotProfitValue, maxProfitValue)
-    }
-    return maxProfitValue
+	for (let i = 1; i < prices.length; i++) {
+		minPrice = Math.min(prices[i], minPrice)
+		const gotProfitValue = prices[i] - minPrice
+		if (gotProfitValue <= 0) {
+			continue
+		}
+		maxProfitValue = Math.max(gotProfitValue, maxProfitValue)
+	}
+	return maxProfitValue
 }
 
 function maxProfit(prices) {
-    return maxCalc(prices)
+	return maxCalc(prices)
 }
 
 const prices = [7, 1, 5, 3, 6, 4]
 console.log(maxProfit(prices))
-    

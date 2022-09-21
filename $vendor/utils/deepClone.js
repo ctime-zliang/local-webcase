@@ -5,32 +5,31 @@
  * @return {object|array}
  */
 function ven$deepClone(data) {
-    const wMap = new WeakMap()
-    return traverse(data)
+	const wMap = new WeakMap()
+	return traverse(data)
 
-    function traverse(data){
-        const result = {}
-        let keys = []
-        let item = null
+	function traverse(data) {
+		const result = {}
+		let keys = []
+		let item = null
 
-        if (wMap.get(data)) {
-            return wMap.get(data)
-        }
-        keys = Object.keys(data)
-        wMap.set(data, result)
+		if (wMap.get(data)) {
+			return wMap.get(data)
+		}
+		keys = Object.keys(data)
+		wMap.set(data, result)
 
-        for (let i = 0; i < keys.length; i++) {
-            item = data[keys[i]]
-            if (Object.prototype.toString.call(item).slice(8, -1) === 'Object') {
-                result[keys[i]] = traverse(item)
-            } else {
-                result[keys[i]] = item
-            }
-        }        
-        return result    
-    }
+		for (let i = 0; i < keys.length; i++) {
+			item = data[keys[i]]
+			if (Object.prototype.toString.call(item).slice(8, -1) === 'Object') {
+				result[keys[i]] = traverse(item)
+			} else {
+				result[keys[i]] = item
+			}
+		}
+		return result
+	}
 }
-
 
 /**
  * @description JSON 深拷贝
@@ -39,30 +38,30 @@ function ven$deepClone(data) {
  * @return {object|array}
  */
 function ven$deepClone2(data) {
-    return traverse(data)
+	return traverse(data)
 
-    function traverse(data) {
-        if (
-            typeof data !== 'object'
-            || data === null
-            || data instanceof Date
-            || data instanceof ArrayBuffer
-            || data instanceof Uint8ClampedArray
-            || data instanceof Uint8Array
-            || data instanceof Uint16Array
-            || data instanceof Uint32Array
-        ) {
-            return data
-        }
-        if (Array.isArray(data)) {
-            return data.map(traverse)
-        }
-        const obj = {}
-        for (let key in data) {
-            if (data.hasOwnProperty(key)) {
-                obj[key] = traverse(data[key])
-            }
-        }
-        return obj
-    }
+	function traverse(data) {
+		if (
+			typeof data !== 'object' ||
+			data === null ||
+			data instanceof Date ||
+			data instanceof ArrayBuffer ||
+			data instanceof Uint8ClampedArray ||
+			data instanceof Uint8Array ||
+			data instanceof Uint16Array ||
+			data instanceof Uint32Array
+		) {
+			return data
+		}
+		if (Array.isArray(data)) {
+			return data.map(traverse)
+		}
+		const obj = {}
+		for (let key in data) {
+			if (data.hasOwnProperty(key)) {
+				obj[key] = traverse(data[key])
+			}
+		}
+		return obj
+	}
 }

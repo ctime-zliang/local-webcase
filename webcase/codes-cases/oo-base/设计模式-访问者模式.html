@@ -1,120 +1,115 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="./css/main.css" />
-<title>Code Case</title>
-</head>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="./css/main.css" />
+		<title>Code Case</title>
+	</head>
 
-<body>
-<div class="container"></div>
-</body>
-<script type="text/javascript" src="./js/Biological.js"></script>
-<script type="text/javascript" src="./js/main.js"></script>
-<script>
-console.log('%c=> 设计模式-访问者模式', 'color: #ff0000;')
+	<body>
+		<div class="container"></div>
+	</body>
+	<script type="text/javascript" src="./js/Biological.js"></script>
+	<script type="text/javascript" src="./js/main.js"></script>
+	<script>
+		console.log('%c=> 设计模式-访问者模式', 'color: #ff0000;')
 
-/*
+		/*
     使用一个访问者类, 改变元素类的执行算法
     通过此种方式, 元素的执行算法可以随着访问者改变而改变
 
     可以使数据结构与数据操作分离
  */
 
-{
+		{
+			console.log(`\n-> 各科老师查看学生对应科目成绩`)
 
+			class Student {
+				constructor(name) {
+					this._name = name
+					this.init()
+				}
 
-console.log(`\n-> 各科老师查看学生对应科目成绩`)
+				init() {
+					this._chinese = 0
+					this._math = 0
+					this._english = 0
+				}
 
-class Student {
-    constructor(name) {
-        this._name = name
-        this.init()
-    }
+				set chinese(value) {
+					this._chinese = value
+				}
 
-    init() {
-        this._chinese = 0
-        this._math = 0
-        this._english = 0
-    }
+				get chinese() {
+					return this._chinese
+				}
 
-    set chinese(value) {
-        this._chinese = value
-    }
+				set math(value) {
+					this._math = value
+				}
 
-    get chinese() {
-        return this._chinese
-    }
+				get math() {
+					return this._math
+				}
 
-    set math(value) {
-        this._math = value
-    }
+				set english(value) {
+					this._english = value
+				}
 
-    get math() {
-        return this._math
-    }
+				get english() {
+					return this._english
+				}
 
-    set english(value) {
-        this._english = value
-    }
+				accept(visitor) {
+					visitor.visit(this)
+				}
+			}
 
-    get english() {
-        return this._english
-    }
+			class ChineseTeacher {
+				constructor(name) {
+					this._name = name
+				}
 
-    accept(visitor) {
-        visitor.visit(this)
-    }    
-}
+				visit(studentInstance) {
+					console.log(`Chinese Subject Achievement: ${studentInstance.chinese}`)
+				}
+			}
 
-class ChineseTeacher {
-    constructor(name) {
-        this._name = name
-    }
+			class MathTeacher {
+				constructor(name) {
+					this._name = name
+				}
 
-    visit(studentInstance) {
-        console.log(`Chinese Subject Achievement: ${studentInstance.chinese}`)
-    }
-}
+				visit(studentInstance) {
+					console.log(`Math Subject Achievement: ${studentInstance.math}`)
+				}
+			}
 
-class MathTeacher {
-    constructor(name) {
-        this._name = name
-    }
+			class EnglishTeacher {
+				constructor(name) {
+					this._name = name
+				}
 
-    visit(studentInstance) {
-        console.log(`Math Subject Achievement: ${studentInstance.math}`)
-    }
-}
+				visit(studentInstance) {
+					console.log(`English Subject Achievement: ${studentInstance.english}`)
+				}
+			}
 
-class EnglishTeacher {
-    constructor(name) {
-        this._name = name
-    }
+			const xiaoming = new Student('xiaoming')
+			const chineseTeacher = new ChineseTeacher('zhanglaoshi')
+			const mathTeacher = new MathTeacher('wanglaoshi')
+			const englishTeacher = new EnglishTeacher('lilaoshi')
 
-    visit(studentInstance) {
-        console.log(`English Subject Achievement: ${studentInstance.english}`)
-    }
-}
+			xiaoming.chinese = 95
+			xiaoming.math = 98
+			xiaoming.english = 92
 
-const xiaoming = new Student('xiaoming')
-const chineseTeacher = new ChineseTeacher('zhanglaoshi')
-const mathTeacher = new MathTeacher('wanglaoshi')
-const englishTeacher = new EnglishTeacher('lilaoshi')
-
-xiaoming.chinese = 95
-xiaoming.math = 98
-xiaoming.english = 92
-
-xiaoming.accept(chineseTeacher)
-xiaoming.accept(mathTeacher)
-xiaoming.accept(englishTeacher)
-
-
-}
-
-</script>
+			xiaoming.accept(chineseTeacher)
+			xiaoming.accept(mathTeacher)
+			xiaoming.accept(englishTeacher)
+		}
+	</script>
 </html>
