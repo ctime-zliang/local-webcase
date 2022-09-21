@@ -19,7 +19,7 @@ class SimpleGradientTriangleDraw {
          * 创建颜色缓冲区
          * 将颜色缓冲区绑定到 gl
          * 将颜色数据应用到颜色缓冲区
-         * 将颜色缓冲区数据传递给位置变量 apos
+         * 将颜色缓冲区数据传递给位置变量 a_color
          * 并设置允许传递数据
          */
         const colorBuffer = gl.createBuffer()
