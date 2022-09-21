@@ -81,3 +81,61 @@ function ven$findIntersectionInArrays(data) {
 	}, dara[keys[0]])
 	return f
 }
+
+/**
+ * @description 将 json 依据指定的 keys 排序
+ * @function ven$sortJsonByKeys
+ * @param {array} keys 参考字段数组
+ * @param {boolean} seq 升序 or 降序
+ * @return {number}
+ */
+function ven$sortJsonByKeys(keys, seq = true) {
+	const rev = !!seq ? 1 : -1
+	return (a, b) => {
+		for (let i = 0; i < keys.length; i++) {
+			let key = keys[i]
+			if (a[key] !== b[key]) {
+				if (a[key] > b[key]) {
+					return rev * 1
+				}
+				return rev * -1
+			}
+		}
+	}
+}
+
+/**
+ * @description 数组分组
+ *      获取由各项子数组构成的输出数组
+ * @function ven$chunkArray
+ * @param {array} array 被切割的数组
+ * @param {number} size 每组尺寸长度
+ * @return {array<any>}
+ */
+function ven$chunkArray(array, size) {
+	const res = []
+	Array.from({ length: Math.ceil(array.length / size) }, (value, index) => {
+		res.push(array.slice(+value * size, (index + 1) * size))
+	})
+	return res
+}
+
+
+/**
+ * @description 移除数组前面所有的 0 项
+ * @function ven$removeAllFrontZero
+ * @param {array} arr 目标数组
+ * @return {array<any>}
+ */
+function ven$removeAllFrontZero(arr) {
+	const res = []
+	let flag = false
+	for (let i = 0; i < arr.length; i++) {
+		if (arr[i] === 0 && !flag) {
+			continue
+		}
+		flag = true
+		res.push(arr[i])
+	}
+	return res
+}

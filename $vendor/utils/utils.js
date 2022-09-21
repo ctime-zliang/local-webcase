@@ -38,22 +38,6 @@ async function ven$sleep(delay = 1000) {
 }
 
 /**
- * @description 数组分组
- *      获取由各项子数组构成的输出数组
- * @function ven$chunk
- * @param {array} array 被切割的数组
- * @param {number} size 每组尺寸长度
- * @return {array<any>}
- */
-function ven$chunk(array, size) {
-	const res = []
-	Array.from({ length: Math.ceil(array.length / size) }, (value, index) => {
-		res.push(array.slice(+value * size, (index + 1) * size))
-	})
-	return res
-}
-
-/**
  * @description 判断对象是否为空
  * @function ven$isEmptyObject
  * @param {object} obj 被检测对象
@@ -64,59 +48,6 @@ function ven$isEmptyObject(obj) {
 		return false
 	}
 	return true
-}
-
-/**
- * @description 原生 sort 实现对数字数组升序安排序
- * @function ven$nativeSortSeq
- * @param {array} arr 目标数组
- * @return {array<any>}
- */
-function ven$nativeSortSeq(arr) {
-	return arr.sort((a, b) => {
-		return +a - +b
-	})
-}
-
-/**
- * @description 移除数组前面所有的 0 项
- * @function ven$removeAllFrontZero
- * @param {array} arr 目标数组
- * @return {array<any>}
- */
-function ven$removeAllFrontZero(arr) {
-	const res = []
-	let flag = false
-	for (let i = 0; i < arr.length; i++) {
-		if (arr[i] === 0 && !flag) {
-			continue
-		}
-		flag = true
-		res.push(arr[i])
-	}
-	return res
-}
-
-/**
- * @description 将 json 依据指定的 keys 排序
- * @function ven$sortJsonByKeys
- * @param {array} keys 参考字段数组
- * @param {boolean} seq 升序 or 降序
- * @return {number}
- */
-function ven$sortJsonByKeys(keys, seq = true) {
-	const rev = !!seq ? 1 : -1
-	return (a, b) => {
-		for (let i = 0; i < keys.length; i++) {
-			let key = keys[i]
-			if (a[key] !== b[key]) {
-				if (a[key] > b[key]) {
-					return rev * 1
-				}
-				return rev * -1
-			}
-		}
-	}
 }
 
 /**
@@ -131,16 +62,6 @@ function ven$getRandomInArea(min = 0, max = Number.MAX_SAFE_INTEGER) {
 }
 
 /**
- * @description 生成指定长度的数组并以固定值填充各位
- * @function ven$createArray
- * @param {any} value 默认填充值
- * @return {array<any>}
- */
-function ven$createArray(length, value = undefined) {
-	return new Array(length + 1).join(value).split('')
-}
-
-/**
  * @description 以 0 补全数值位数
  * @function ven$padNumber
  * @param {number} number 数值
@@ -150,6 +71,16 @@ function ven$createArray(length, value = undefined) {
 function ven$padNumber(number, allLength) {
 	const len = String(number).length
 	return Array(allLength > len ? allLength - len + 1 || 0 : 0).join('') + number
+}
+
+/**
+ * @description 生成指定长度的数组并以固定值填充各位
+ * @function ven$createArray
+ * @param {any} value 默认填充值
+ * @return {array<any>}
+ */
+ function ven$createArray(length, value = undefined) {
+	return new Array(length + 1).join(value).split('')
 }
 
 /**

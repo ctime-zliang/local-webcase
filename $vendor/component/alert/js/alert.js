@@ -117,7 +117,7 @@ class AlertManager {
 		let htmlString = ``
 		this._btns.forEach((item, index) => {
 			htmlString += `
-                <button class="alertmgr-btn alertmgr-btn-eventsno alertmgr-${item.type}-btn" data-tagitem="${item.tag}">
+                <button data-btn-index=${index} class="alertmgr-btn alertmgr-btn-eventsno alertmgr-${item.type}-btn" data-tagitem="${item.tag}">
                     <span class="alertmgr-btntext">${item.text}</span>
                 </button>
             `

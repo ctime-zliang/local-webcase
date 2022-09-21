@@ -4,7 +4,7 @@
  * @param {array} arr 被排序数组
  * @return {array}
  */
-function ven$bubbleSort(arr = []) {
+function ven$bubbleSort(arr) {
 	const res = arr.slice(0)
 	const len = res.length
 	let swap = 0
@@ -26,7 +26,7 @@ function ven$bubbleSort(arr = []) {
  * @param {array} arr 被排序数组
  * @return {array}
  */
-function ven$bubbleSortOptimi(arr = []) {
+function ven$bubbleSortOptimi(arr) {
 	const arrCopy = arr.slice(0)
 	const len = arrCopy.length
 	let swap = 0
@@ -57,7 +57,7 @@ function ven$bubbleSortOptimi(arr = []) {
  * @param {array} arr 被排序数组
  * @return {array}
  */
-function ven$selectionSort(arr = []) {
+function ven$selectionSort(arr) {
 	const arrCopy = arr.slice(0)
 	const len = arrCopy.length
 	let minIndexPos = 0
@@ -88,10 +88,10 @@ function ven$selectionSort(arr = []) {
  * @param {array} arr 被排序数组
  * @return {array}
  */
-function ven$quickSeqSort(arr = []) {
+function ven$quickSeqSort(arr) {
 	return recursion(arr.slice(0))
 
-	function recursion(arr = []) {
+	function recursion(arr) {
 		if (arr.length <= 1) {
 			return arr
 		}
@@ -118,10 +118,10 @@ function ven$quickSeqSort(arr = []) {
  * @param {array} arr 被排序数组
  * @return {array}
  */
-function ven$quickInvSort(arr = []) {
+function ven$quickInvSort(arr) {
 	return recursion(arr.slice(0))
 
-	function recursion(arr = []) {
+	function recursion(arr) {
 		if (arr.length <= 1) {
 			return arr
 		}
@@ -148,7 +148,7 @@ function ven$quickInvSort(arr = []) {
  * @param {array} arr 被排序数组
  * @return {array}
  */
-function ven$insertSort(arr = []) {
+function ven$insertSort(arr) {
 	const arrCopy = arr.slice(0)
 	const len = arrCopy.length
 	let tagValue = 0
@@ -190,10 +190,10 @@ function ven$insertSort(arr = []) {
  * @param {array} arr 被排序数组
  * @return {array}
  */
-function ven$mergeSort(arr = []) {
+function ven$mergeSort(arr) {
 	return groupRecursion(arr)
 
-	function groupRecursion(arr = []) {
+	function groupRecursion(arr) {
 		if (arr.length <= 1) {
 			return arr
 		}

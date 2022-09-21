@@ -70,7 +70,7 @@ const createDefaultConfig = () => {
 		 */
 		viewRenderCount: 0,
 		/**
-		 * ...
+		 * 滚动行为是否由类接口: updateData 触发
 		 */
 		isTriggerByUpdateCall: false,
 	}
