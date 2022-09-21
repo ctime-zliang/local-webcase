@@ -4,8 +4,16 @@ class SimpleGradientTriangleDraw {
 		const apos = gl.getAttribLocation(program, 'apos')
 		const a_color = gl.getAttribLocation(program, 'a_color')
 
-		const vertexData = new Float32Array([-0.5, 0.5, 0, 0.5, 0.5, 0, 0.5, -0.5, 0])
-		const colorData = new Float32Array([1, 0, 0, 0, 1, 0, 0, 0, 1])
+		const vertexData = new Float32Array([
+            -0.5, 0.5, 0,
+            0.5, 0.5, 0,
+            0.5, -0.5, 0
+        ])
+        const colorData = new Float32Array([
+            1, 0, 0,
+            0, 1, 0,
+            0, 0, 1
+        ])
 
 		/**
 		 * 创建颜色缓冲区

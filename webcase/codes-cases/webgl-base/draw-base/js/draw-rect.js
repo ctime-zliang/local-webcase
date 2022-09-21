@@ -6,10 +6,16 @@ class SimpleRectDraw {
 		 * 该变量定义在着色器源代码中
 		 */
 		const apos = gl.getAttribLocation(program, 'apos')
+		
 		/**
-		 * 创建顶点数据
-		 */
-		const vertexData = new Float32Array([0.5, 0.5, 0.0, -0.5, 0.5, 0.0, -0.5, -0.5, 0.0, 0.5, -0.5, 0.0])
+         * 创建顶点数据
+         */
+		const vertexData = new Float32Array([
+            0.5, 0.5, 0.0, 
+            -0.5, 0.5, 0.0, 
+            -0.5, -0.5, 0.0, 
+            0.5, -0.5, 0.0
+        ])
 
 		/**
 		 * 创建缓冲区
