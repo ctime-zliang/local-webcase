@@ -22,10 +22,6 @@ function drawGraphicsModifiedHandler(selectedValue) {
 			gVars.canvasElement.style.backgroundColor = '#000000'
 			break
 		}
-		case DRAWTYPE_SIMPLE_ROTATING_LIGHT_CUBE: {
-			gVars.canvasElement.style.backgroundColor = '#000000'
-			break
-		}
 		default: {
 			gVars.canvasElement.style.backgroundColor = 'transparent'
 		}
