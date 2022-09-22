@@ -8,7 +8,7 @@ class SimpleRotatingLightCubeDraw {
         this.rAFHandler = null
         this.data = {
             lastTime: 0,
-            xAngle: Math.PI / 4,
+            xAngle: Math.PI / 8,
             // xAngleSpeed: Math.PI / 5000,
             xAngleSpeed: 0,
             yAngle: Math.PI / 4,
