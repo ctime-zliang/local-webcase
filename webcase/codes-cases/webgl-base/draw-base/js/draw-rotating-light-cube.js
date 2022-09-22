@@ -9,10 +9,10 @@ class SimpleRotatingLightCubeDraw {
         this.data = {
             lastTime: 0,
             xAngle: Math.PI / 4,
-            // xAngleSpeed: Math.PI / 3000,
+            // xAngleSpeed: Math.PI / 5000,
             xAngleSpeed: 0,
             yAngle: Math.PI / 4,
-            yAngleSpeed: Math.PI / 3000,
+            yAngleSpeed: Math.PI / 5000,
         }
     }
 
