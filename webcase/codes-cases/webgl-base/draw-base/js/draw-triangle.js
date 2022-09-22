@@ -1,11 +1,20 @@
 class SimpleTriangleDraw {
-	static render(gl) {
-		const program = this.initShader(gl)
+	constructor() {
+        this.gl = null
+        this.program = null
+    }
+
+	init(gl) {
+        this.gl = gl
+        this.program = this._initShader(this.gl)
+    }
+
+	render() {
 		/**
 		 * 获取位置变量 apos
 		 * 该变量定义在着色器源代码中
 		 */
-		const apos = gl.getAttribLocation(program, 'apos')
+		const apos = this.gl.getAttribLocation(this.program, 'apos')
 		
 		/**
          * 创建顶点数据
@@ -23,25 +32,29 @@ class SimpleTriangleDraw {
 		 * 将缓冲区数据传递给位置变量 apos
 		 * 并设置允许传递数据
 		 */
-		const buffer = gl.createBuffer()
-		gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
-		gl.bufferData(gl.ARRAY_BUFFER, vertexData, gl.STATIC_DRAW)
-		gl.vertexAttribPointer(apos, 3, gl.FLOAT, false, 0, 0)
-		gl.enableVertexAttribArray(apos)
+		const buffer = this.gl.createBuffer()
+		this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer)
+		this.gl.bufferData(this.gl.ARRAY_BUFFER, vertexData, this.gl.STATIC_DRAW)
+		this.gl.vertexAttribPointer(apos, 3, this.gl.FLOAT, false, 0, 0)
+		this.gl.enableVertexAttribArray(apos)
 
 		/**
 		 * 绘制
 		 * gl.TRIANGLES
 		 */
-		gl.drawArrays(gl.TRIANGLES, 0, 3)
-		console.log(program)
+		this.gl.drawArrays(this.gl.TRIANGLES, 0, 3)
+		console.log(this.program)
 	}
 
-	static initShader(gl) {
-		return initShader(gl, this.vertexShaderSource(), this.fragmentShaderSource())
+	destory() {
+		console.log(this.constructor.name)
+    }
+
+	_initShader(gl) {
+		return initShader(gl, this._vertexShaderSource(), this._fragmentShaderSource())
 	}
 
-	static vertexShaderSource() {
+	_vertexShaderSource() {
 		const source = `
             attribute vec4 apos;
             void main() {
@@ -51,7 +64,7 @@ class SimpleTriangleDraw {
 		return source
 	}
 
-	static fragmentShaderSource() {
+	_fragmentShaderSource() {
 		const source = `
             void main() {
                 gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);

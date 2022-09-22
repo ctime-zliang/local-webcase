@@ -1,30 +1,39 @@
 /**
  * 直线绘制拼凑方式
  */
-class SimpleLightCubeDraw {
+class SimpleRotatingLightCubeDraw {
     constructor() {
         this.gl = null
         this.program = null
+        this.rAFHandler = null
+        this.data = {
+            lastTime: 0,
+            xAngle: Math.PI / 4,
+            // xAngleSpeed: Math.PI / 3000,
+            xAngleSpeed: 0,
+            yAngle: Math.PI / 4,
+            yAngleSpeed: Math.PI / 3000,
+        }
     }
 
-	init(gl) {
+    init(gl) {
         this.gl = gl
         this.program = this._initShader(this.gl)
     }
 
-	render(gl) {
+	render() {
 		const apos = this.gl.getAttribLocation(this.program, 'apos')
 		const a_color = this.gl.getAttribLocation(this.program, 'a_color')
 		const a_normal = this.gl.getAttribLocation(this.program, 'a_normal')
 		const u_lightColor = this.gl.getUniformLocation(this.program, 'u_lightColor')
-		const u_lightDirection = this.gl.getUniformLocation(this.program, 'u_lightDirection')
+		const u_lightDirection = this.gl.getUniformLocation(this.program, 'u_lightDirection')        
 
 		/**
 		 * 给平行光传入
 		 *      颜色: RGB(1,1,1)
 		 *      方向: 单位向量 (x, y, z)
 		 **/
-         this.gl.uniform3f(u_lightColor, 1.0, 1.0, 1.0)
+        this.gl.uniform3f(u_lightColor, 1.0, 1.0, 1.0)
 		const x = 1 / Math.sqrt(15)
 		const y = 2 / Math.sqrt(15)
 		const z = 3 / Math.sqrt(15)
@@ -154,16 +163,55 @@ class SimpleLightCubeDraw {
 		/**
 		 * 开启深度测试
 		 */
-         this.gl.enable(this.gl.DEPTH_TEST)
-		/**
-		 * 绘制
-		 */
-        this.gl.drawArrays(this.gl.TRIANGLES, 0, 36)
+        this.gl.enable(this.gl.DEPTH_TEST)
+
+        this.data.lastTime = new Date().getTime()        
+        this.rAFHandler = window.requestAnimationFrame(this._draw.bind(this))
+
 		console.log(this.program)
 	}
 
     destory() {
-		console.log(this.constructor.name)
+        console.log(this.constructor.name)
+        window.cancelAnimationFrame(this.rAFHandler)
+    }
+
+    _draw(profile) {
+        const { xAngleSpeed, yAngleSpeed } = this.data
+
+        const u_mx = this.gl.getUniformLocation(this.program, 'u_mx')
+        const u_my = this.gl.getUniformLocation(this.program, 'u_my')
+
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT)
+
+        const nowTime = new Date().getTime()
+        const timeOffset = nowTime - this.data.lastTime
+        this.data.lastTime = nowTime
+
+        this.data.xAngle += timeOffset * xAngleSpeed
+        this.data.yAngle += timeOffset * yAngleSpeed
+        const xSin = Math.sin(this.data.xAngle)
+        const xCos = Math.cos(this.data.xAngle)
+        const ySin = Math.sin(this.data.yAngle)
+        const yCos = Math.cos(this.data.yAngle)
+        const mxArr = new Float32Array([
+            1, 0,    0,     0,
+            0, xCos, -xSin, 0,
+            0, xSin, xCos,  0,
+            0, 0,    0,     1
+        ])
+        const myArr = new Float32Array([
+            yCos, 0, -ySin, 0,  
+            0,    1, 0,     0,  
+            ySin, 0, yCos,  0,  
+            0,    0, 0,     1
+        ])
+        this.gl.uniformMatrix4fv(u_mx, false, mxArr)
+        this.gl.uniformMatrix4fv(u_my, false, myArr)
+
+        this.rAFHandler = window.requestAnimationFrame(this._draw.bind(this))
+
+        this.gl.drawArrays(this.gl.TRIANGLES, 0, 36)
     }
 
 	_initShader(gl) {
@@ -196,38 +244,17 @@ class SimpleLightCubeDraw {
              * uniform 光照方向
              */
             uniform vec3 u_lightDirection;
+            /**
+             * uniform 旋转矩阵
+             */
+            uniform mat4 u_mx;
+            uniform mat4 u_my;
             void main() {
-                /**
-                 * 设置几何体轴旋转角度为30度
-                 * 把角度值转化为浮点值
-                 */
-                float rotate = radians(-30.0);
-                /**
-                 * 求解三角函数对应值
-                 */
-                float cosValue = cos(rotate);
-                float sinValue = sin(rotate);
-                /**
-                 * 创建绕 x, y 轴旋转的旋转矩阵
-                 */
-                mat4 mx = mat4(
-                    1, 0,         0,        0, 
-                    0, cosValue,  sinValue, 0, 
-                    0, -sinValue, cosValue, 0, 
-                    0, 0,         0,        1
-                );
-                mat4 my = mat4(
-                    cosValue, 0, sinValue, 0, 
-                    0,        1, 0,         0, 
-                    -sinValue, 0, cosValue,  0,
-                    0,        0, 0,         1
-                );
-                gl_Position = mx * my * apos;
+                gl_Position = u_mx * u_my * apos;
                 /**
                  * 顶点法向量归一化
                  */
-                // vec3 normal = normalize((mx * my * a_normal).xyz);
-                vec3 normal = normalize((a_normal).xyz);
+                vec3 normal = normalize((u_mx * u_my * a_normal).xyz);
                 /**
                  * 计算平行光方向向量与顶点法向量的点积
                  */
@@ -254,4 +281,4 @@ class SimpleLightCubeDraw {
 	}
 }
 
-window.SimpleLightCubeDraw = SimpleLightCubeDraw
+window.SimpleRotatingLightCubeDraw = SimpleRotatingLightCubeDraw

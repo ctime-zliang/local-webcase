@@ -1,6 +1,8 @@
 const gVars = {}
 
 gVars.initCanvasHandler = (canvasElement) => {
+	gVars.controllerInstance = null
+
 	gVars.canvasElement = canvasElement
 	gVars.gl = gVars.canvasElement.getContext('webgl')
 }

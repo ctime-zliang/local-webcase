@@ -2,10 +2,19 @@
  * 直线绘制拼凑方式
  */
 class SimpleColourfulCubeDraw {
-	static render(gl) {
-		const program = this.initShader(gl)
-		const apos = gl.getAttribLocation(program, 'apos')
-		const a_color = gl.getAttribLocation(program, 'a_color')
+    constructor() {
+        this.gl = null
+        this.program = null
+    }
+
+	init(gl) {
+        this.gl = gl
+        this.program = this._initShader(this.gl)
+    }
+
+	render() {
+		const apos = this.gl.getAttribLocation(this.program, 'apos')
+		const a_color = this.gl.getAttribLocation(this.program, 'a_color')
 		/**
          * 创建顶点数据
          */
@@ -78,11 +87,11 @@ class SimpleColourfulCubeDraw {
 		 * 将颜色缓冲区数据传递给位置变量 a_color
 		 * 并设置允许传递数据
 		 */
-		const colorBuffer = gl.createBuffer()
-		gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer)
-		gl.bufferData(gl.ARRAY_BUFFER, colorData, gl.STATIC_DRAW)
-		gl.vertexAttribPointer(a_color, 3, gl.FLOAT, false, 0, 0)
-		gl.enableVertexAttribArray(a_color)
+		const colorBuffer = this.gl.createBuffer()
+		this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer)
+		this.gl.bufferData(this.gl.ARRAY_BUFFER, colorData, this.gl.STATIC_DRAW)
+		this.gl.vertexAttribPointer(a_color, 3, this.gl.FLOAT, false, 0, 0)
+		this.gl.enableVertexAttribArray(a_color)
 
 		/**
 		 * 创建顶点缓冲区
@@ -91,28 +100,32 @@ class SimpleColourfulCubeDraw {
 		 * 将顶点缓冲区数据传递给位置变量 apos
 		 * 并设置允许传递数据
 		 */
-		const buffer = gl.createBuffer()
-		gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
-		gl.bufferData(gl.ARRAY_BUFFER, vertexData, gl.STATIC_DRAW)
-		gl.vertexAttribPointer(apos, 3, gl.FLOAT, false, 0, 0)
-		gl.enableVertexAttribArray(apos)
+		const buffer = this.gl.createBuffer()
+		this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer)
+		this.gl.bufferData(this.gl.ARRAY_BUFFER, vertexData, this.gl.STATIC_DRAW)
+		this.gl.vertexAttribPointer(apos, 3, this.gl.FLOAT, false, 0, 0)
+		this.gl.enableVertexAttribArray(apos)
 
 		/**
 		 * 开启深度测试
 		 */
-		gl.enable(gl.DEPTH_TEST)
+        this.gl.enable(this.gl.DEPTH_TEST)
 		/**
 		 * 绘制
 		 */
-		gl.drawArrays(gl.TRIANGLES, 0, 36)
-		console.log(program)
+        this.gl.drawArrays(this.gl.TRIANGLES, 0, 36)
+		console.log(this.program)
 	}
 
-	static initShader(gl) {
-		return initShader(gl, this.vertexShaderSource(), this.fragmentShaderSource())
+    destory() {
+		console.log(this.constructor.name)
+    }
+
+	_initShader(gl) {
+		return initShader(gl, this._vertexShaderSource(), this._fragmentShaderSource())
 	}
 
-	static vertexShaderSource() {
+	_vertexShaderSource() {
 		const source = `
             attribute vec4 apos;
             attribute vec4 a_color;
@@ -150,7 +163,7 @@ class SimpleColourfulCubeDraw {
 		return source
 	}
 
-	static fragmentShaderSource() {
+	_fragmentShaderSource() {
 		const source = `
             precision lowp float;
             varying vec4 v_color;

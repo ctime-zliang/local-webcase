@@ -1,15 +1,28 @@
 class SimpleRectDotDraw {
-	static render(gl) {
-		const program = this.initShader(gl)
-		gl.drawArrays(gl.POINTS, 0, 1)
-		console.log(program)
+	constructor() {
+        this.gl = null
+        this.program = null
+    }
+
+	init(gl) {
+        this.gl = gl
+        this.program = this._initShader(this.gl)
+    }
+
+	render() {
+		this.gl.drawArrays(this.gl.POINTS, 0, 1)
+		console.log(this.program)
 	}
 
-	static initShader(gl) {
-		return initShader(gl, this.vertexShaderSource(), this.fragmentShaderSource())
+	destory() {
+		console.log(this.constructor.name)
+    }
+
+	_initShader(gl) {
+		return initShader(gl, this._vertexShaderSource(), this._fragmentShaderSource())
 	}
 
-	static vertexShaderSource() {
+	_vertexShaderSource() {
 		const source = `
             void main() {
                 gl_PointSize = 10.0;
@@ -19,7 +32,7 @@ class SimpleRectDotDraw {
 		return source
 	}
 
-	static fragmentShaderSource() {
+	_fragmentShaderSource() {
 		const source = `
             void main() {
                 gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
