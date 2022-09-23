@@ -53,7 +53,7 @@ class SimpleCube2Draw {
 		 */
 		const indexesBuffer = this.gl.createBuffer()
 		this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexesBuffer)
-		this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, vertexIndexes, gl.STATIC_DRAW)
+		this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, vertexIndexes, this.gl.STATIC_DRAW)
 
 		/**
 		 * 创建顶点缓冲区
