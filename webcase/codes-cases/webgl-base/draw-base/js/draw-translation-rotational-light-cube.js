@@ -1,7 +1,7 @@
 /**
  * 直线绘制拼凑方式
  */
-class SimpleRotatingLightCubeDraw {
+class SimpleTranslationRotationalLightCubeDraw {
     constructor() {
         this.gl = null
         this.program = null
@@ -44,47 +44,47 @@ class SimpleRotatingLightCubeDraw {
          */
 		const vertexData = new Float32Array([
             /* 面 1 */
-            0.5, 0.5, 0.5, 
-            -0.5, 0.5, 0.5, 
-            -0.5, -0.5, 0.5, 
-            0.5, 0.5, 0.5,
-            -0.5, -0.5, 0.5,
-            0.5, -0.5, 0.5,
+            0.25, 0.25, 0.25, 
+            -0.25, 0.25, 0.25, 
+            -0.25, -0.25, 0.25, 
+            0.25, 0.25, 0.25,
+            -0.25, -0.25, 0.25,
+            0.25, -0.25, 0.25,
             /* 面 2 */
-            0.5, 0.5, 0.5,
-            0.5, -0.5, 0.5,
-            0.5, -0.5, -0.5,
-            0.5, 0.5, 0.5,
-            0.5, -0.5, -0.5,
-            0.5, 0.5, -0.5,
+            0.25, 0.25, 0.25,
+            0.25, -0.25, 0.25,
+            0.25, -0.25, -0.25,
+            0.25, 0.25, 0.25,
+            0.25, -0.25, -0.25,
+            0.25, 0.25, -0.25,
             /* 面 3 */
-            0.5, 0.5, 0.5,
-            0.5, 0.5, -0.5,
-            -0.5, 0.5, -0.5,
-            0.5, 0.5, 0.5,
-            -0.5, 0.5, -0.5,
-            -0.5, 0.5, 0.5,
+            0.25, 0.25, 0.25,
+            0.25, 0.25, -0.25,
+            -0.25, 0.25, -0.25,
+            0.25, 0.25, 0.25,
+            -0.25, 0.25, -0.25,
+            -0.25, 0.25, 0.25,
             /* 面 4 */
-            -0.5, 0.5, 0.5,
-            -0.5, 0.5, -0.5,
-            -0.5, -0.5, -0.5,
-            -0.5, 0.5, 0.5,
-            -0.5, -0.5, -0.5,
-            -0.5, -0.5, 0.5,
+            -0.25, 0.25, 0.25,
+            -0.25, 0.25, -0.25,
+            -0.25, -0.25, -0.25,
+            -0.25, 0.25, 0.25,
+            -0.25, -0.25, -0.25,
+            -0.25, -0.25, 0.25,
             /* 面 5 */
-            -0.5, -0.5, -0.5,
-            0.5, -0.5, -0.5,
-            0.5, -0.5, 0.5,
-            -0.5, -0.5, -0.5,
-            0.5, -0.5, 0.5,
-            -0.5, -0.5, 0.5,
+            -0.25, -0.25, -0.25,
+            0.25, -0.25, -0.25,
+            0.25, -0.25, 0.25,
+            -0.25, -0.25, -0.25,
+            0.25, -0.25, 0.25,
+            -0.25, -0.25, 0.25,
             /* 面 6 */
-            0.5, -0.5, -0.5,
-            -0.5, -0.5, -0.5,
-            -0.5, 0.5, -0.5,
-            0.5, -0.5, -0.5,
-            -0.5, 0.5, -0.5,
-            0.5, 0.5, -0.5 
+            0.25, -0.25, -0.25,
+            -0.25, -0.25, -0.25,
+            -0.25, 0.25, -0.25,
+            0.25, -0.25, -0.25,
+            -0.25, 0.25, -0.25,
+            0.25, 0.25, -0.25 
         ])
         /**
          * 创建颜色数据
@@ -166,7 +166,7 @@ class SimpleRotatingLightCubeDraw {
         this.gl.enable(this.gl.DEPTH_TEST)
 
         this.data.lastTime = new Date().getTime()        
-        this.rAFHandler = window.requestAnimationFrame(this._draw.bind(this))
+        this.rAFHandler = window.requestAnimationFrame(this._drawIframe.bind(this))
 
 		console.log(this.program)
 	}
@@ -176,20 +176,19 @@ class SimpleRotatingLightCubeDraw {
         window.cancelAnimationFrame(this.rAFHandler)
     }
 
-    _draw(profile) {
-        const { xAngleSpeed, yAngleSpeed } = this.data
+    _drawIframe(profile) {
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT)
 
+        const { xAngleSpeed, yAngleSpeed } = this.data
         const u_rx = this.gl.getUniformLocation(this.program, 'u_rx')
         const u_ry = this.gl.getUniformLocation(this.program, 'u_ry')
-
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT)
 
         const nowTime = new Date().getTime()
         const timeOffset = nowTime - this.data.lastTime
         this.data.lastTime = nowTime
-
         this.data.xAngle += timeOffset * xAngleSpeed
         this.data.yAngle += timeOffset * yAngleSpeed
+
         const xSin = Math.sin(this.data.xAngle)
         const xCos = Math.cos(this.data.xAngle)
         const ySin = Math.sin(this.data.yAngle)
@@ -209,7 +208,31 @@ class SimpleRotatingLightCubeDraw {
         this.gl.uniformMatrix4fv(u_rx, false, mxArr)
         this.gl.uniformMatrix4fv(u_ry, false, myArr)
 
-        this.rAFHandler = window.requestAnimationFrame(this._draw.bind(this))
+        this._drawTransition(-0.5, 0)
+        this._drawTransition(0.5, 0)
+        this._drawTransition(0, -0.5)
+        this._drawTransition(0, 0.5)
+
+        this.rAFHandler = window.requestAnimationFrame(this._drawIframe.bind(this))
+    }
+
+    _drawTransition(xt = 0, yt = 0) {
+        const u_tx = this.gl.getUniformLocation(this.program, 'u_tx')
+        const u_ty = this.gl.getUniformLocation(this.program, 'u_ty')        
+        const txArr = new Float32Array([
+            1,  0,  0,  0,  
+            0,  1,  0,  0,  
+            0,  0,  1,  0,  
+            xt, 0,  0,  1
+        ])
+        const tyArr = new Float32Array([
+            1, 0, 0, 0,  
+            0, 1, 0, 0,  
+            0, 0, 1, 0,  
+            0, yt, 0, 1
+        ])
+        this.gl.uniformMatrix4fv(u_tx, false, txArr)
+        this.gl.uniformMatrix4fv(u_ty, false, tyArr)
 
         this.gl.drawArrays(this.gl.TRIANGLES, 0, 36)
     }
@@ -249,8 +272,13 @@ class SimpleRotatingLightCubeDraw {
              */
             uniform mat4 u_rx;
             uniform mat4 u_ry;
+            /**
+             * uniform 平移矩阵
+             */
+            uniform mat4 u_tx;
+            uniform mat4 u_ty;
             void main() {
-                gl_Position = u_rx * u_ry * apos;
+                gl_Position = u_tx * u_ty * u_rx * u_ry * apos;
                 /**
                  * 顶点法向量归一化
                  */
@@ -281,4 +309,4 @@ class SimpleRotatingLightCubeDraw {
 	}
 }
 
-window.SimpleRotatingLightCubeDraw = SimpleRotatingLightCubeDraw
+window.SimpleTranslationRotationalLightCubeDraw = SimpleTranslationRotationalLightCubeDraw
