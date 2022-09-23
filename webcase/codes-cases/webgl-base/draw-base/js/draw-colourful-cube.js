@@ -144,19 +144,19 @@ class SimpleColourfulCubeDraw {
                 /**
                  * 创建绕 x, y 轴旋转的旋转矩阵
                  */
-                mat4 mx = mat4(
+                mat4 rx = mat4(
                     1, 0,         0,        0, 
                     0, cosValue,  sinValue, 0, 
                     0, -sinValue, cosValue, 0, 
                     0, 0,         0,        1
                 );
-                mat4 my = mat4(
+                mat4 ry = mat4(
                     cosValue, 0, sinValue, 0, 
                     0,        1, 0,         0, 
                     -sinValue, 0, cosValue,  0,
                     0,        0, 0,         1
                 );
-                gl_Position = mx * my * apos;
+                gl_Position = rx * ry * apos;
                 v_color = a_color;
             }
         `

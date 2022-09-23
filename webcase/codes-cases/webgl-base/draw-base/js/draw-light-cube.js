@@ -210,23 +210,23 @@ class SimpleLightCubeDraw {
                 /**
                  * 创建绕 x, y 轴旋转的旋转矩阵
                  */
-                mat4 mx = mat4(
+                mat4 rx = mat4(
                     1, 0,         0,        0, 
                     0, cosValue,  sinValue, 0, 
                     0, -sinValue, cosValue, 0, 
                     0, 0,         0,        1
                 );
-                mat4 my = mat4(
+                mat4 ry = mat4(
                     cosValue, 0, sinValue, 0, 
                     0,        1, 0,         0, 
                     -sinValue, 0, cosValue,  0,
                     0,        0, 0,         1
                 );
-                gl_Position = mx * my * apos;
+                gl_Position = rx * ry * apos;
                 /**
                  * 顶点法向量归一化
                  */
-                // vec3 normal = normalize((mx * my * a_normal).xyz);
+                // vec3 normal = normalize((rx * ry * a_normal).xyz);
                 vec3 normal = normalize((a_normal).xyz);
                 /**
                  * 计算平行光方向向量与顶点法向量的点积

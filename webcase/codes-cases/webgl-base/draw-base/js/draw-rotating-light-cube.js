@@ -179,8 +179,8 @@ class SimpleRotatingLightCubeDraw {
     _draw(profile) {
         const { xAngleSpeed, yAngleSpeed } = this.data
 
-        const u_mx = this.gl.getUniformLocation(this.program, 'u_mx')
-        const u_my = this.gl.getUniformLocation(this.program, 'u_my')
+        const u_rx = this.gl.getUniformLocation(this.program, 'u_rx')
+        const u_ry = this.gl.getUniformLocation(this.program, 'u_ry')
 
         this.gl.clear(this.gl.COLOR_BUFFER_BIT)
 
@@ -206,8 +206,8 @@ class SimpleRotatingLightCubeDraw {
             ySin, 0, yCos,  0,  
             0,    0, 0,     1
         ])
-        this.gl.uniformMatrix4fv(u_mx, false, mxArr)
-        this.gl.uniformMatrix4fv(u_my, false, myArr)
+        this.gl.uniformMatrix4fv(u_rx, false, mxArr)
+        this.gl.uniformMatrix4fv(u_ry, false, myArr)
 
         this.rAFHandler = window.requestAnimationFrame(this._draw.bind(this))
 
@@ -247,14 +247,14 @@ class SimpleRotatingLightCubeDraw {
             /**
              * uniform 旋转矩阵
              */
-            uniform mat4 u_mx;
-            uniform mat4 u_my;
+            uniform mat4 u_rx;
+            uniform mat4 u_ry;
             void main() {
-                gl_Position = u_mx * u_my * apos;
+                gl_Position = u_rx * u_ry * apos;
                 /**
                  * 顶点法向量归一化
                  */
-                vec3 normal = normalize((u_mx * u_my * a_normal).xyz);
+                vec3 normal = normalize((u_rx * u_ry * a_normal).xyz);
                 /**
                  * 计算平行光方向向量与顶点法向量的点积
                  */
