@@ -1,7 +1,7 @@
 /**
  * 直线绘制拼凑方式
  */
-class SimpleTextureImageDraw {
+class SimpleGrayTextureImageDraw {
     constructor() {
         this.gl = null
         this.program = null
@@ -74,7 +74,7 @@ class SimpleTextureImageDraw {
         const imageInstance = new Image()
         const drawImageTextureHandler = createDrawImageTextureHandler(this.gl, u_Sampler, imageInstance)
         imageInstance.onload = drawImageTextureHandler
-        imageInstance.src = window.$image01
+        imageInstance.src = window.$image02
 
 		console.log(this.program)
 	}
@@ -121,11 +121,13 @@ class SimpleTextureImageDraw {
              */
             uniform sampler2D u_Sampler;
             void main() {
-                gl_FragColor = texture2D(u_Sampler, v_TexturePosition);
+                vec4 texture = texture2D(u_Sampler, v_TexturePosition);
+                float luminance = 0.299 * texture.r + 0.587 * texture.g + 0.114 * texture.b;
+                gl_FragColor = vec4(luminance, luminance, luminance, 1);
             }
         `
 		return source
 	}
 }
 
-window.SimpleTextureImageDraw = SimpleTextureImageDraw
+window.SimpleGrayTextureImageDraw = SimpleGrayTextureImageDraw
