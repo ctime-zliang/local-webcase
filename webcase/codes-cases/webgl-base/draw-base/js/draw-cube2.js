@@ -10,15 +10,15 @@ class SimpleCube2Draw {
 
 	init(gl) {
         this.gl = gl
-        this.program = this._initShader(this.gl)
+        this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
     }
 
 	render() {
 		/**
-		 * 获取位置变量 apos
+		 * 获取位置变量 a_Position
 		 * 该变量定义在着色器源代码中
 		 */
-		const apos = this.gl.getAttribLocation(this.program, 'apos')
+		const a_Position = this.gl.getAttribLocation(this.program, 'a_Position')
 		
 		/**
          * 创建顶点数据
@@ -55,18 +55,7 @@ class SimpleCube2Draw {
 		this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexesBuffer)
 		this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, vertexIndexes, this.gl.STATIC_DRAW)
 
-		/**
-		 * 创建顶点缓冲区
-		 * 将顶点数据缓冲区绑定到 gl
-		 * 将顶点数据应用到顶点缓冲区
-		 * 将顶点数据缓冲区数据传递给位置变量 apos
-		 * 并设置允许传递数据
-		 */
-		const vertextBuffer = this.gl.createBuffer()
-		this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertextBuffer)
-		this.gl.bufferData(this.gl.ARRAY_BUFFER, vertexData, this.gl.STATIC_DRAW)
-		this.gl.vertexAttribPointer(apos, 3, this.gl.FLOAT, false, 0, 0)
-		this.gl.enableVertexAttribArray(apos)
+		const vertextBuffer = createBuffer(this.gl, vertexData, a_Position, 3)
 
 		/**
 		 * 绘制
@@ -81,13 +70,9 @@ class SimpleCube2Draw {
 		console.log(this.constructor.name)
     }
 
-	_initShader(gl) {
-		return initShader(gl, this._vertexShaderSource(), this._fragmentShaderSource())
-	}
-
 	_vertexShaderSource() {
 		const source = `
-            attribute vec4 apos;
+            attribute vec4 a_Position;
             void main() {
                 /**
                  * 设置几何体轴旋转角度为30度
@@ -129,7 +114,7 @@ class SimpleCube2Draw {
                     0, 0, 1, 0, 
                     0, 0, 0, 1 
                 );
-                gl_Position = rx * ry * apos;
+                gl_Position = rx * ry * a_Position;
             }
         `
 		return source

@@ -9,11 +9,11 @@ class SimpleColourfulCubeDraw {
 
 	init(gl) {
         this.gl = gl
-        this.program = this._initShader(this.gl)
+        this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
     }
 
 	render() {
-		const apos = this.gl.getAttribLocation(this.program, 'apos')
+		const a_Position = this.gl.getAttribLocation(this.program, 'a_Position')
 		const a_color = this.gl.getAttribLocation(this.program, 'a_color')
 		/**
          * 创建顶点数据
@@ -80,31 +80,8 @@ class SimpleColourfulCubeDraw {
             0.5, 0.5, 0.5,     0.5, 0.5, 0.5,     0.5, 0.5, 0.5,     0.5, 0.5, 0.5,     0.5, 0.5, 0.5,     0.5, 0.5, 0.5 
         ])
 
-		/**
-		 * 创建颜色缓冲区
-		 * 将颜色缓冲区绑定到 gl
-		 * 将颜色数据应用到颜色缓冲区
-		 * 将颜色缓冲区数据传递给位置变量 a_color
-		 * 并设置允许传递数据
-		 */
-		const colorBuffer = this.gl.createBuffer()
-		this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer)
-		this.gl.bufferData(this.gl.ARRAY_BUFFER, colorData, this.gl.STATIC_DRAW)
-		this.gl.vertexAttribPointer(a_color, 3, this.gl.FLOAT, false, 0, 0)
-		this.gl.enableVertexAttribArray(a_color)
-
-		/**
-		 * 创建顶点缓冲区
-		 * 将顶点缓冲区绑定到 gl
-		 * 将顶点数据应用到顶点缓冲区
-		 * 将顶点缓冲区数据传递给位置变量 apos
-		 * 并设置允许传递数据
-		 */
-		const vertextBuffer = this.gl.createBuffer()
-		this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertextBuffer)
-		this.gl.bufferData(this.gl.ARRAY_BUFFER, vertexData, this.gl.STATIC_DRAW)
-		this.gl.vertexAttribPointer(apos, 3, this.gl.FLOAT, false, 0, 0)
-		this.gl.enableVertexAttribArray(apos)
+		const vertextBuffer = createBuffer(this.gl, vertexData, a_Position, 3)
+        const colorBuffer = createBuffer(this.gl, colorData, a_color, 3)
 
 		/**
 		 * 开启深度测试
@@ -121,13 +98,9 @@ class SimpleColourfulCubeDraw {
 		console.log(this.constructor.name)
     }
 
-	_initShader(gl) {
-		return initShader(gl, this._vertexShaderSource(), this._fragmentShaderSource())
-	}
-
 	_vertexShaderSource() {
 		const source = `
-            attribute vec4 apos;
+            attribute vec4 a_Position;
             attribute vec4 a_color;
             varying vec4 v_color;
             void main() {
@@ -156,7 +129,7 @@ class SimpleColourfulCubeDraw {
                     -sinValue, 0, cosValue,  0,
                     0,        0, 0,         1
                 );
-                gl_Position = rx * ry * apos;
+                gl_Position = rx * ry * a_Position;
                 v_color = a_color;
             }
         `

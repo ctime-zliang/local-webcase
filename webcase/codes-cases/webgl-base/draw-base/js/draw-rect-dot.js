@@ -6,7 +6,7 @@ class SimpleRectDotDraw {
 
 	init(gl) {
         this.gl = gl
-        this.program = this._initShader(this.gl)
+        this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
     }
 
 	render() {
@@ -17,10 +17,6 @@ class SimpleRectDotDraw {
 	destory() {
 		console.log(this.constructor.name)
     }
-
-	_initShader(gl) {
-		return initShader(gl, this._vertexShaderSource(), this._fragmentShaderSource())
-	}
 
 	_vertexShaderSource() {
 		const source = `

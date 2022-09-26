@@ -18,11 +18,11 @@ class SimpleTranslationRotationalLightCubeDraw {
 
     init(gl) {
         this.gl = gl
-        this.program = this._initShader(this.gl)
+        this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
     }
 
 	render() {
-		const apos = this.gl.getAttribLocation(this.program, 'apos')
+		const a_Position = this.gl.getAttribLocation(this.program, 'a_Position')
 		const a_color = this.gl.getAttribLocation(this.program, 'a_color')
 		const a_normal = this.gl.getAttribLocation(this.program, 'a_normal')
 		const u_lightColor = this.gl.getUniformLocation(this.program, 'u_lightColor')
@@ -121,44 +121,9 @@ class SimpleTranslationRotationalLightCubeDraw {
             0, 0, -1,     0, 0, -1,     0, 0, -1,     0, 0, -1,     0, 0, -1,     0, 0, -1
         ])
 
-		/**
-		 * 创建颜色缓冲区
-		 * 将颜色缓冲区绑定到 gl
-		 * 将颜色数据应用到颜色缓冲区
-		 * 将颜色缓冲区数据传递给位置变量 a_color
-		 * 并设置允许传递数据
-		 */
-		const colorBuffer = this.gl.createBuffer()
-		this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer)
-		this.gl.bufferData(this.gl.ARRAY_BUFFER, colorData, this.gl.STATIC_DRAW)
-		this.gl.vertexAttribPointer(a_color, 3, this.gl.FLOAT, false, 0, 0)
-		this.gl.enableVertexAttribArray(a_color)
-
-		/**
-		 * 创建顶点法向量缓冲区
-		 * 将顶点法向量缓冲区绑定到 gl
-		 * 将顶点法向量数据应用到顶点法向量缓冲区
-		 * 将顶点法向量缓冲区数据传递给位置变量 a_normal
-		 * 并设置允许传递数据
-		 */
-		const normalBuffer = this.gl.createBuffer()
-		this.gl.bindBuffer(this.gl.ARRAY_BUFFER, normalBuffer)
-		this.gl.bufferData(this.gl.ARRAY_BUFFER, normalData, this.gl.STATIC_DRAW)
-		this.gl.vertexAttribPointer(a_normal, 3, this.gl.FLOAT, false, 0, 0)
-		this.gl.enableVertexAttribArray(a_normal)
-
-		/**
-		 * 创建顶点缓冲区
-		 * 将顶点缓冲区绑定到 gl
-		 * 将顶点数据应用到顶点缓冲区
-		 * 将顶点缓冲区数据传递给位置变量 apos
-		 * 并设置允许传递数据
-		 */
-		const vertextBuffer = this.gl.createBuffer()
-		this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertextBuffer)
-		this.gl.bufferData(this.gl.ARRAY_BUFFER, vertexData, this.gl.STATIC_DRAW)
-		this.gl.vertexAttribPointer(apos, 3, this.gl.FLOAT, false, 0, 0)
-		this.gl.enableVertexAttribArray(apos)
+		const vertextBuffer = createBuffer(this.gl, vertexData, a_Position, 3)
+        const colorBuffer = createBuffer(this.gl, colorData, a_color, 3)
+        const normalBuffer = createBuffer(this.gl, normalData, a_normal, 3)
 
 		/**
 		 * 开启深度测试
@@ -237,16 +202,12 @@ class SimpleTranslationRotationalLightCubeDraw {
         this.gl.drawArrays(this.gl.TRIANGLES, 0, 36)
     }
 
-	_initShader(gl) {
-		return initShader(gl, this._vertexShaderSource(), this._fragmentShaderSource())
-	}
-
 	_vertexShaderSource() {
 		const source = `
             /**
              * attribute 顶点位置变量
              */
-            attribute vec4 apos;
+            attribute vec4 a_Position;
             /**
              * attribute 顶点颜色变量
              */
@@ -278,7 +239,7 @@ class SimpleTranslationRotationalLightCubeDraw {
             uniform mat4 u_tx;
             uniform mat4 u_ty;
             void main() {
-                gl_Position = u_tx * u_ty * u_rx * u_ry * apos;
+                gl_Position = u_tx * u_ty * u_rx * u_ry * a_Position;
                 /**
                  * 顶点法向量归一化
                  */

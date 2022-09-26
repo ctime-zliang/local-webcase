@@ -89,3 +89,27 @@ function createDrawImageTextureHandler(gl, u_Sampler, imageInstance) {
 		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
 	}
 }
+
+const createBuffer = (gl, data, vertex, n) => {
+	/**
+	 * 创建顶点缓冲区
+	 */
+	const buffer = gl.createBuffer()
+	/**
+	 * 将顶点缓冲区绑定到 gl
+	 */
+	gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+	/**
+	 * 将顶点数据应用到顶点缓冲区
+	 */
+	gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW)
+	/**
+	 * 将顶点缓冲区数据 data 传递给位置变量 vertex
+	 */
+	gl.vertexAttribPointer(vertex, n, gl.FLOAT, false, 0, 0)
+	/**
+	 * 设置允许传递数据
+	 */
+	gl.enableVertexAttribArray(vertex)
+	return buffer
+}

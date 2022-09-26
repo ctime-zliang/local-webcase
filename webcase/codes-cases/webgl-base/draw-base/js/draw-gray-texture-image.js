@@ -9,7 +9,7 @@ class SimpleGrayTextureImageDraw {
 
 	init(gl) {
         this.gl = gl
-        this.program = this._initShader(this.gl)
+        this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
     }
 
 	render() {
@@ -45,31 +45,8 @@ class SimpleGrayTextureImageDraw {
             1.0, 0.0, 0.0,
         ])
 
-		/**
-		 * 创建顶点缓冲区
-		 * 将顶点缓冲区绑定到 gl
-		 * 将顶点数据应用到顶点缓冲区
-		 * 将顶点缓冲区数据传递给位置变量 a_Position
-		 * 并设置允许传递数据
-		 */
-		const vertextBuffer = this.gl.createBuffer()
-		this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertextBuffer)
-		this.gl.bufferData(this.gl.ARRAY_BUFFER, vertexData, this.gl.STATIC_DRAW)
-		this.gl.vertexAttribPointer(a_Position, 3, this.gl.FLOAT, false, 0, 0)
-		this.gl.enableVertexAttribArray(a_Position)
-
-        /**
-		 * 创建纹理顶点缓冲区
-		 * 将纹理顶点缓冲区绑定到 gl
-		 * 将纹理顶点数据应用到纹理顶点缓冲区
-		 * 将纹理顶点缓冲区数据传递给位置变量 a_TexturePostion
-		 * 并设置允许传递数据
-		 */
-        const textureBuffer = this.gl.createBuffer()
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, textureBuffer)
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, textureVertexData, this.gl.STATIC_DRAW)
-        this.gl.vertexAttribPointer(a_TexturePosition, 3, this.gl.FLOAT, false, 0, 0)
-        this.gl.enableVertexAttribArray(a_TexturePosition)
+        const vertextBuffer = createBuffer(this.gl, vertexData, a_Position, 3)
+		const textureBuffer = createBuffer(this.gl, textureVertexData, a_TexturePosition, 3)
 
         const imageInstance = new Image()
         const drawImageTextureHandler = createDrawImageTextureHandler(this.gl, u_Sampler, imageInstance)
@@ -82,10 +59,6 @@ class SimpleGrayTextureImageDraw {
     destory() {
 		console.log(this.constructor.name)
     }
-
-	_initShader(gl) {
-		return initShader(gl, this._vertexShaderSource(), this._fragmentShaderSource())
-	}
 
 	_vertexShaderSource() {
 		const source = `
