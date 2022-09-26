@@ -102,7 +102,13 @@ class SimpleGrayTextureImageDraw {
              */
             varying vec2 v_TexturePosition;
             void main() {
+                /**
+                 * 逐顶点处理
+                 */
                 gl_Position = a_Position;
+                /**
+                 * 纹理坐标插值计算
+                 */
                 v_TexturePosition = a_TexturePosition;
             }
         `
@@ -122,6 +128,9 @@ class SimpleGrayTextureImageDraw {
             uniform sampler2D u_Sampler;
             void main() {
                 vec4 texture = texture2D(u_Sampler, v_TexturePosition);
+                /**
+                 * 计算 RGB 三个分量光能量之和, 也即亮度
+                 */
                 float luminance = 0.299 * texture.r + 0.587 * texture.g + 0.114 * texture.b;
                 gl_FragColor = vec4(luminance, luminance, luminance, 1);
             }

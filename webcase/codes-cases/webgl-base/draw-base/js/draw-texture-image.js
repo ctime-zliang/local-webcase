@@ -102,7 +102,13 @@ class SimpleTextureImageDraw {
              */
             varying vec2 v_TexturePosition;
             void main() {
+                /**
+                 * 逐顶点处理
+                 */
                 gl_Position = a_Position;
+                /**
+                 * 纹理坐标插值计算
+                 */
                 v_TexturePosition = a_TexturePosition;
             }
         `
@@ -121,6 +127,9 @@ class SimpleTextureImageDraw {
              */
             uniform sampler2D u_Sampler;
             void main() {
+                /**
+                 * 采集纹素, 逐片元赋值像素值
+                 */
                 gl_FragColor = texture2D(u_Sampler, v_TexturePosition);
             }
         `
