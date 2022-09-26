@@ -18,7 +18,7 @@ class SimpleTextureImageDraw {
         const u_Sampler = this.gl.getUniformLocation(this.program, 'u_Sampler')
 		/**
          * 创建顶点数据
-         *      以坐标原点为中心
+         *      以直角坐标系坐标原点为中心
          */
 		const vertexData = new Float32Array([
             /* 左上角 */
