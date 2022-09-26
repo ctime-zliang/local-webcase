@@ -100,8 +100,8 @@ class SimpleColourfulCubeDraw {
 		 * 将顶点缓冲区数据传递给位置变量 apos
 		 * 并设置允许传递数据
 		 */
-		const buffer = this.gl.createBuffer()
-		this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer)
+		const vertextBuffer = this.gl.createBuffer()
+		this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertextBuffer)
 		this.gl.bufferData(this.gl.ARRAY_BUFFER, vertexData, this.gl.STATIC_DRAW)
 		this.gl.vertexAttribPointer(apos, 3, this.gl.FLOAT, false, 0, 0)
 		this.gl.enableVertexAttribArray(apos)

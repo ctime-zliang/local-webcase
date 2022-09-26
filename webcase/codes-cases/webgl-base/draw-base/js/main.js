@@ -9,6 +9,7 @@ const DRAWTYPE_SIMPLE_COLOURFUL_CUBE = 'SimpleColourfulCubeDraw'
 const DRAWTYPE_SIMPLE_LIGHT_CUBE = 'SimpleLightCubeDraw'
 const DRAWTYPE_SIMPLE_ROTATIONAL_LIGHT_CUBE = 'SimpleRotationalLightCubeDraw'
 const DRAWTYPE_SIMPLE_TRANSLATION_ROTATIONAL_LIGHT_CUBE = 'SimpleTranslationRotationalLightCubeDraw'
+const DRAWTYPE_SIMPLE_TEXTURE_IMAGE = 'SimpleTextureImageDraw'
 
 function drawGraphicsModifiedHandler(selectedValue) {
 	if (gVars.controllerInstance) {
@@ -34,17 +35,18 @@ function init() {
 	gVars.initCanvasHandler(canvasElement)
 
 	const drawGraphicTypeSelectorDataList = [
-		{ text: '简单矩形色块/点', value: DRAWTYPE_SIMPLE_RECT_DOT },
-		{ text: '简单矩形', value: DRAWTYPE_SIMPLE_RECT },
-		{ text: '简单三角形', value: DRAWTYPE_SIMPLE_TRIANGLE },
-		{ text: '简单立方体', value: DRAWTYPE_SIMPLE_CUBE },
-		{ text: '简单立方体2', value: DRAWTYPE_SIMPLE_CUBE2 },
-		{ text: '简单颜色线性渐变线条', value: DRAWTYPE_SIMPLE_GRADIENT_LINE },
-		{ text: '简单颜色线性渐变三角形', value: DRAWTYPE_SIMPLE_GRADIENT_TRIANGLE },
-		{ text: '简单多色立方体', value: DRAWTYPE_SIMPLE_COLOURFUL_CUBE },
-		{ text: '简单平行光光照立方体', value: DRAWTYPE_SIMPLE_LIGHT_CUBE },
-		{ text: '简单平行光光照旋转立方体', value: DRAWTYPE_SIMPLE_ROTATIONAL_LIGHT_CUBE },
-		{ text: '简单平行光光照旋转立方体平移多绘制', value: DRAWTYPE_SIMPLE_TRANSLATION_ROTATIONAL_LIGHT_CUBE }
+		{ text: 'Simple Rect Dot', value: DRAWTYPE_SIMPLE_RECT_DOT },
+		{ text: 'Simple Rect', value: DRAWTYPE_SIMPLE_RECT },
+		{ text: 'Simple Triangle', value: DRAWTYPE_SIMPLE_TRIANGLE },
+		{ text: 'Simple Cube', value: DRAWTYPE_SIMPLE_CUBE },
+		{ text: 'Simple Cube 2', value: DRAWTYPE_SIMPLE_CUBE2 },
+		{ text: 'Simple Gradient Line', value: DRAWTYPE_SIMPLE_GRADIENT_LINE },
+		{ text: 'Simple Gradient Triangle', value: DRAWTYPE_SIMPLE_GRADIENT_TRIANGLE },
+		{ text: 'Simple Colourful Cube', value: DRAWTYPE_SIMPLE_COLOURFUL_CUBE },
+		{ text: 'Simple Light Cube', value: DRAWTYPE_SIMPLE_LIGHT_CUBE },
+		{ text: 'Simple Rotational Light Cube', value: DRAWTYPE_SIMPLE_ROTATIONAL_LIGHT_CUBE },
+		{ text: 'Simple Translation Rotational Light Cube', value: DRAWTYPE_SIMPLE_TRANSLATION_ROTATIONAL_LIGHT_CUBE },
+		{ text: 'Simple Texture Image', value: DRAWTYPE_SIMPLE_TEXTURE_IMAGE }
 	]
 	const selectedValue = drawGraphicTypeSelectorDataList[drawGraphicTypeSelectorDataList.length - 1].value
 	handlerDrawGraphicTypeSelector(
