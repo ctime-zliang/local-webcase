@@ -11,6 +11,7 @@ const DRAWTYPE_SIMPLE_ROTATIONAL_LIGHT_CUBE = 'SimpleRotationalLightCubeDraw'
 const DRAWTYPE_SIMPLE_TRANSLATION_ROTATIONAL_LIGHT_CUBE = 'SimpleTranslationRotationalLightCubeDraw'
 const DRAWTYPE_SIMPLE_TEXTURE_IMAGE = 'SimpleTextureImageDraw'
 const DRAWTYPE_SIMPLE_GRAY_TEXTURE_IMAGE = 'SimpleGrayTextureImageDraw'
+const DRAWTYPE_SIMPLE_CHARTLET_LIGHT_CUBE = 'SimpleChartletLightCubeDraw'
 
 function drawGraphicsModifiedHandler(selectedValue) {
 	if (gVars.controllerInstance) {
@@ -48,14 +49,15 @@ function init() {
 		{ text: 'Simple Rotational Light Cube', value: DRAWTYPE_SIMPLE_ROTATIONAL_LIGHT_CUBE },
 		{ text: 'Simple Translation Rotational Light Cube', value: DRAWTYPE_SIMPLE_TRANSLATION_ROTATIONAL_LIGHT_CUBE },
 		{ text: 'Simple Texture Image', value: DRAWTYPE_SIMPLE_TEXTURE_IMAGE },
-		{ text: 'Simple Gray Texture Image', value: DRAWTYPE_SIMPLE_GRAY_TEXTURE_IMAGE }
+		{ text: 'Simple Gray Texture Image', value: DRAWTYPE_SIMPLE_GRAY_TEXTURE_IMAGE },
+		{ text: 'Simple Chartlet Light Cude', value: DRAWTYPE_SIMPLE_CHARTLET_LIGHT_CUBE }
 	]
 	const selectedValue = drawGraphicTypeSelectorDataList[drawGraphicTypeSelectorDataList.length - 1].value
 	handlerDrawGraphicTypeSelector(
 		document.getElementById('drawGraphicTypeSelector'),
 		drawGraphicTypeSelectorDataList,
 		selectedValue,
-		controllerName => {
+		(controllerName) => {
 			if (!window[controllerName]) {
 				console.warn(`${controllerName} is not found on window.`)
 				return

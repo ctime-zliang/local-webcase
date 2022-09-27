@@ -67,11 +67,11 @@ class SimpleTextureImageDraw {
              */
             attribute vec4 a_Position;
             /**
-             * 顶点纹理坐标
+             * 纹理顶点坐标
              */
             attribute vec2 a_TexturePosition;
             /**
-             * 计算差值后的顶点纹理坐标
+             * 计算差值后的纹理顶点坐标
              */
             varying vec2 v_TexturePosition;
             void main() {
@@ -80,7 +80,7 @@ class SimpleTextureImageDraw {
                  */
                 gl_Position = a_Position;
                 /**
-                 * 纹理坐标插值计算
+                 * 纹理顶点坐标差值计算
                  */
                 v_TexturePosition = a_TexturePosition;
             }
@@ -92,11 +92,11 @@ class SimpleTextureImageDraw {
 		const source = `
             precision highp float;
             /**
-             * 接收 计算差值后的顶点纹理坐标
+             * 接收 计算差值后的纹理顶点坐标
              */
             varying vec2 v_TexturePosition;
             /**
-             * 纹理图片像素数据
+             * 图片纹理像素数据
              */
             uniform sampler2D u_Sampler;
             void main() {

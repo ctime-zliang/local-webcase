@@ -17,7 +17,7 @@ const handlerDrawGraphicTypeSelector = (selectorElement, dataList, selectedValue
 	})
 }
 
-const initShader = (gl, vertexShaderSource, fragmentShaderSource) => {
+const initShader = (gl, vertexShaderSource, fragmentShaderSource, notUseprogram = false) => {
 	/**
 	 * 创建顶点着色器
 	 */
@@ -44,7 +44,9 @@ const initShader = (gl, vertexShaderSource, fragmentShaderSource) => {
 	gl.attachShader(program, vertexShader)
 	gl.attachShader(program, fragmentShader)
 	gl.linkProgram(program)
-	gl.useProgram(program)
+	if (!notUseprogram) {
+		gl.useProgram(program)
+	}
 
 	return program
 }

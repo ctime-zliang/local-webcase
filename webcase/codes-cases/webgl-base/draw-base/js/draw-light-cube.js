@@ -21,7 +21,7 @@ class SimpleLightCubeDraw {
 
 		/**
 		 * 给平行光传入
-		 *      颜色: RGB(1,1,1)
+		 *      颜色: RGB(1, 1, 1)
 		 *      方向: 单位向量 (x, y, z)
 		 **/
         this.gl.uniform3f(u_lightColor, 1.0, 1.0, 1.0)
