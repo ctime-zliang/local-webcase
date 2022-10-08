@@ -34,7 +34,7 @@ function main() {
 	ven$bindEvent(containerElement, 'change', '[data-tagitem="index-range"]', function(e) {
 		const itemIndex = +this.value
 		setItemSelectedByIndex(itemIndex)
-		ven$scrollIntoViewByIndex(itemIndex, ulElement)
+		ven$scrollIntoViewByIndexVertical(itemIndex, ulElement)
 	})
 	ven$bindEvent(containerElement.querySelector('.ulist'), 'scroll', function(e) {
 		console.log(ven$getItemPostionByTarget(ulElement.querySelector('.ulist-item-active'), ulElement))

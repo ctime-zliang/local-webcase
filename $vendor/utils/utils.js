@@ -10,11 +10,11 @@ async function ven$classOf(target) {
 
 /**
  * @description 同步阻塞
- * @function ven$choke
+ * @function ven$blocking
  * @param {number} delay 阻塞时长
  * @return {number}
  */
-function ven$choke(delay = 1000) {
+function ven$blocking(delay = 1000) {
 	console.log('%c Synchronous Blocking Start...' + delay + 'ms.', 'color: green; font-size: 18px;')
 	const start = performance.now()
 	let count = 0

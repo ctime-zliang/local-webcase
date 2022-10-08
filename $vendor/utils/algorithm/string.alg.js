@@ -11,9 +11,9 @@ function ven$getLCS(stringA, stringB) {
 		return res
 	}
 	const matrix = []
+	const [longString, shortString] = __ven$getLCS__swap(stringA, stringB)
 	let maxSubstringLength = 0
 	let maxRightEndIndex = 0
-	const [longString, shortString] = __ven$getLCS__swap(stringA, stringB)
 	for (let i = 0; i < longString.length; i++) {
 		if (!matrix[i]) {
 			matrix[i] = []

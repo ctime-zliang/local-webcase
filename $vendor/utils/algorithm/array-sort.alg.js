@@ -5,19 +5,19 @@
  * @return {array}
  */
 function ven$bubbleSort(arr) {
-	const res = arr.slice(0)
-	const len = res.length
+	const arrCopy = arr.slice(0)
+	const len = arrCopy.length
 	let swap = 0
 	for (let i = 0; i < len; i++) {
 		for (let j = 0; j < len - 1 - i; j++) {
-			if (res[j] > res[j + 1]) {
-				swap = res[j + 1]
-				res[j + 1] = res[j]
-				res[j] = swap
+			if (arrCopy[j] > arrCopy[j + 1]) {
+				swap = arrCopy[j + 1]
+				arrCopy[j + 1] = arrCopy[j]
+				arrCopy[j] = swap
 			}
 		}
 	}
-	return res
+	return arrCopy
 }
 
 /**
@@ -191,7 +191,7 @@ function ven$insertSort(arr) {
  * @return {array}
  */
 function ven$mergeSort(arr) {
-	return groupRecursion(arr)
+	return groupRecursion(arr.slice(0))
 
 	function groupRecursion(arr) {
 		if (arr.length <= 1) {

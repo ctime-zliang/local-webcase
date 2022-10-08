@@ -16,7 +16,7 @@
 //         })
 //         console.log(`setTimeout 1`)
 //         time.st1 = performance.now()
-//         // ven$choke(50)
+//         // ven$blocking(50)
 //         // appContainer.innerHTML = `<div>${Math.random()}</div>`
 //         appContainer.innerHTML = createHtmlString()
 //     })

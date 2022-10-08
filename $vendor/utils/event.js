@@ -1,7 +1,7 @@
 /**
  * @description 绑定事件
  * @function ven$bindEvent
- * @param {htmllement | string} host 事件的真实宿主元素或用于捕获宿主的选择器
+ * @param {htmllement|string} host 事件的真实宿主元素或用于捕获宿主的选择器
  * @param {string} eventName 事件名称
  * @param {string} selector 触发事件的元素选择器(可选)
  *      如果此项不是一个字符串, 则内部将把此参数作为 callback 处理
@@ -65,7 +65,7 @@ function __ven$bindEvent__captureTargetElement(selector, startChildElement, endP
 /**
  * @description 解除绑定事件
  * @function ven$unbindEvent
- * @param {htmllement | string} host 事件的真实宿主元素或用于捕获宿主的选择器
+ * @param {htmllement|string} host 事件的真实宿主元素或用于捕获宿主的选择器
  * @param {string} eventName 事件名称
  * @param {function} handler 事件处理器
  *      此处的 handler 必须是使用 ven$bindEvent 函数后返回的 handler

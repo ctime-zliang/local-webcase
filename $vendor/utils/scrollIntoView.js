@@ -1,14 +1,14 @@
 /**
- * @description 依将目标元素自动滚动到视口内
+ * @description 依将目标元素自动滚动到视口内 - 垂直滚动
  *      如果元素处于视口外下部, 则滚动到底部对其为止
  *      如果元素处于视口外上部, 则滚动到顶部对其为止
  *      如果元素处于视口内, 则不做处理
- * @function ven$scrollIntoViewByIndex
+ * @function ven$scrollIntoViewByIndexVertical
  * @param {number} itemIndex 目标元素的序列索引
  * @param {htmllement} containerElement 容器元素
  * @return {undefined}
  */
-function ven$scrollIntoViewByIndex(itemIndex, containerElement) {
+function ven$scrollIntoViewByIndexVertical(itemIndex, containerElement) {
 	const containerElementRect = containerElement.getBoundingClientRect().toJSON()
 	const targetElemet = containerElement.children[itemIndex]
 	if (!targetElemet) {
@@ -52,7 +52,7 @@ function ven$scrollIntoViewByIndex(itemIndex, containerElement) {
  *      100003 - 元素隐藏于容器视口外下部
  */
 function ven$getItemPostionByTarget(targetElemet, containerElement) {
-	if (!targetElemet) {
+	if (!targetElemet || !containerElement) {
 		return null
 	}
 	const containerElementRect = containerElement.getBoundingClientRect().toJSON()
