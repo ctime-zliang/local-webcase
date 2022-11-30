@@ -19,8 +19,8 @@ function ListNode(val, next) {
 }
 
 function addTwoNumbers(list1, list2) {
-	const arr1 = ven$setList2Array(list1).reverse()
-	const arr2 = ven$setList2Array(list2).reverse()
+	const arr1 = ven$setSinglyLinkList2Array(list1).reverse()
+	const arr2 = ven$setSinglyLinkList2Array(list2).reverse()
 	/**
 	 * 获取两个数组的最大长度
 	 */
@@ -96,7 +96,7 @@ function addTwoNumbers(list1, list2) {
 const arr1 = [2, 4, 9]
 const arr2 = [5, 6, 4, 9]
 
-const list1 = ven$setArray2List(arr1)
-const list2 = ven$setArray2List(arr2)
+const list1 = ven$setArray2SinglyLinkList(arr1)
+const list2 = ven$setArray2SinglyLinkList(arr2)
 
 console.log(addTwoNumbers(list1, list2))
