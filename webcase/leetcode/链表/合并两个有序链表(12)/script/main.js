@@ -10,24 +10,6 @@ function findLast(head) {
 	return node
 }
 
-/**
- * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
- * }
- */
-/**
- * 链表节点
- * @param {any} val 链表节点值
- * @param {ListNode} next 下一个链表节点
- * @return {undefined}
- */
-function ListNode(val, next) {
-	this.val = val === undefined ? 0 : val
-	this.next = next === undefined ? null : next
-}
-
 function mergeTwoLists(l1, l2) {
 	/**
 	 * 初始化首节点并赋值
@@ -62,8 +44,8 @@ function mergeTwoLists(l1, l2) {
 const arr1 = []
 const arr2 = []
 
-const head1 = ven$setArray2List(arr1)
-const head2 = ven$setArray2List(arr2)
+const head1 = ven$setArray2SinglyLinkList(arr1)
+const head2 = ven$setArray2SinglyLinkList(arr2)
 
 console.log(head1, head2)
 

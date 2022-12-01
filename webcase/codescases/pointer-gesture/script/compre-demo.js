@@ -165,7 +165,7 @@
 				if (profile.pointerdownTarget !== imageElement) {
 					return
 				}
-				AlertManager.setBtns([AlertManager.defaultConfirmBtn, AlertManager.defaultCancelBtn]).open('还原图片状态?', function(tag) {
+				Ven$AlertManager.setBtns([Ven$AlertManager.defaultConfirmBtn, Ven$AlertManager.defaultCancelBtn]).open('还原图片状态?', function(tag) {
 					if (tag === 'confirm') {
 						TransfromManager.rotate = 0
 						TransfromManager.scale = 1

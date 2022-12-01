@@ -8,7 +8,7 @@ function __AlertFindTargetByClassName(nowElement, className) {
 	return __AlertFindTargetByClassName(nowElement.parentElement, className)
 }
 
-class AlertManager {
+class Ven$AlertManager {
 	static defaultConfirmBtn = { type: 'confirm', tag: 'confirm', text: '确认' }
 	static defaultCancelBtn = { type: 'cancel', tag: 'cancel', text: '取消' }
 	static defaultCloseBtn = { type: 'close', tag: 'close', text: '关闭' }

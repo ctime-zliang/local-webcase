@@ -12,3 +12,9 @@ class Ven$LinkListNodeBase {
 		this.prev = prev === undefined ? null : prev
 	}
 }
+
+class Ven$SinglyLinkListNode extends Ven$LinkListNodeBase {
+	constructor(val, next) {
+		super(val, next)
+	}
+}

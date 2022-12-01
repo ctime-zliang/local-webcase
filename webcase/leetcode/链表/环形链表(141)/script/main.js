@@ -27,29 +27,6 @@ function linkNode(head, pos) {
 	lastNode.next = node
 }
 
-/**
- * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
- * }
- */
-/**
- * 链表节点
- * @param {any} val 链表节点值
- * @param {ListNode} next 下一个链表节点
- * @return {undefined}
- */
-function ListNode(val, next) {
-	this.val = val === undefined ? 0 : val
-	this.next = next === undefined ? null : next
-}
-
-/**
- * 链表反转
- * @param {ListNode} head 单向链表的起始节点(头节点)
- * @return {ListNode} 单向链表
- */
 function hasCycle(head) {
 	return slowAndFast(head)
 }
@@ -106,7 +83,7 @@ function slowAndFast(head) {
 
 const arr = [3, 2, 0, -4]
 const pos = 1
-const head = ven$setArray2List(arr)
+const head = ven$setArray2SinglyLinkList(arr)
 
 linkNode(head, pos)
 console.log(head)

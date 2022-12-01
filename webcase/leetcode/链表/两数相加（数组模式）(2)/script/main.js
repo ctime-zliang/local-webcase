@@ -6,17 +6,6 @@
     你可以假设除了数字 0 之外，这两个数都不会以 0 开头
  */
 
-/**
- * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
- * }
- */
-function ListNode(val, next) {
-	this.val = val === undefined ? 0 : val
-	this.next = next === undefined ? null : next
-}
 
 function addTwoNumbers(list1, list2) {
 	const arr1 = ven$setSinglyLinkList2Array(list1).reverse()

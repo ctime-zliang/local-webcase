@@ -163,8 +163,8 @@
 			countElement.textContent = ++eventCount
 			xAbsoluteElement.textContent = clientX
 			yAbsoluteElement.textContent = clientY
-			AlertManager.open(`触发了 longTap 事件`, {
-				btns: [AlertManager.defaultConfirmBtn, AlertManager.defaultCancelBtn],
+			Ven$AlertManager.open(`触发了 longTap 事件`, {
+				btns: [Ven$AlertManager.defaultConfirmBtn, Ven$AlertManager.defaultCancelBtn],
 				callback(tag) {
 					console.log(tag)
 					this.close()

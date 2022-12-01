@@ -1,8 +1,8 @@
 /**
  * @description 链表反转
  * @function ven$reverseList
- * @param {ListNode} head 单项链表的起始节点(头节点)
- * @return {ListNode} 单项链表
+ * @param {Ven$LinkListNode} head 单向链表的起始节点(头节点)
+ * @return {Ven$LinkListNode} 单向链表
  */
 function ven$reverseList(head) {
 	if (!head || !head.next) {
