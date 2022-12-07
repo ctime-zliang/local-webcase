@@ -1,4 +1,4 @@
-;(function(sectionElement) {
+;(function (sectionElement) {
 	const imageViewContainerElement = sectionElement.querySelector('[data-tagitem="imageViewContainer"]')
 	const pointerListElement = sectionElement.querySelector('[data-tagitem="pointer-list"]')
 	const transformValueElement = sectionElement.querySelector('[data-tagitem="transform-value"]')
@@ -78,7 +78,7 @@
 	const initImageDOM = async () => {
 		return new Promise(_ => {
 			const imageElement = new Image()
-			imageElement.onload = function(e) {
+			imageElement.onload = function (e) {
 				_({ width: this.width, height: this.height, image: this })
 			}
 			imageElement.style.opacity = '0'
@@ -165,18 +165,21 @@
 				if (profile.pointerdownTarget !== imageElement) {
 					return
 				}
-				Ven$AlertManager.setBtns([Ven$AlertManager.defaultConfirmBtn, Ven$AlertManager.defaultCancelBtn]).open('还原图片状态?', function(tag) {
-					if (tag === 'confirm') {
-						TransfromManager.rotate = 0
-						TransfromManager.scale = 1
-						TransfromManager.translateX = 0
-						TransfromManager.translateY = 0
-						TransfromManager.setTransitionStyle(imageElement, true)
-						TransfromManager.applyTransfromStyle(imageElement)
-						TransfromManager.updateTransformTextContent(transformValueElement)
+				Ven$AlertManager.setBtns([Ven$AlertManager.defaultConfirmBtn, Ven$AlertManager.defaultCancelBtn]).open(
+					'还原图片状态?',
+					function (tag) {
+						if (tag === 'confirm') {
+							TransfromManager.rotate = 0
+							TransfromManager.scale = 1
+							TransfromManager.translateX = 0
+							TransfromManager.translateY = 0
+							TransfromManager.setTransitionStyle(imageElement, true)
+							TransfromManager.applyTransfromStyle(imageElement)
+							TransfromManager.updateTransformTextContent(transformValueElement)
+						}
+						this.close()
 					}
-					this.close()
-				})
+				)
 			},
 			onDoubleTap(evte, { clientX, clientY }, gesture) {
 				if (profile.pointerdownTarget !== imageElement) {

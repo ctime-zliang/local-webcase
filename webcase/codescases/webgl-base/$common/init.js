@@ -1,6 +1,6 @@
 const gVars = {}
 
-gVars.initCanvasHandler = (canvasElement) => {
+gVars.initCanvasHandler = canvasElement => {
 	gVars.controllerInstance = null
 
 	gVars.canvasElement = canvasElement
@@ -9,7 +9,7 @@ gVars.initCanvasHandler = (canvasElement) => {
 
 const handlerDrawGraphicTypeSelector = (selectorElement, dataList, selectedValue, changeCallback) => {
 	selectorElement.innerHTML = ven$createSelectOptionsHtmlString(dataList, undefined, selectedValue)
-	selectorElement.addEventListener('input', function(e) {
+	selectorElement.addEventListener('input', function (e) {
 		changeCallback && changeCallback(e.currentTarget.value)
 	})
 	window.setTimeout(() => {

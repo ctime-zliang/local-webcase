@@ -30,4 +30,3 @@ function ven$setArray2SinglyLinkList(arr) {
 	}
 	return head
 }
-

@@ -1,6 +1,6 @@
 /* 参考引用 Github 源码 */
 
-;(function() {
+;(function () {
 	'use strict'
 
 	const DIRECTION_UP = 'UP'
@@ -120,7 +120,7 @@
 		this.init()
 	}
 
-	Gesture.prototype.init = function() {
+	Gesture.prototype.init = function () {
 		this._handlePointerdownEvent = this.handlePointerdownEvent.bind(this)
 		this._handlePointermoveEvent = this.handlePointermoveEvent.bind(this)
 		this._handlePointerupEvent = this.handlePointerupEvent.bind(this)
@@ -130,71 +130,71 @@
 		this.bindEvent()
 	}
 
-	Gesture.prototype.destory = function() {
+	Gesture.prototype.destory = function () {
 		this.unBindEvent()
 	}
 
-	Gesture.prototype.getAllPointers = function() {
+	Gesture.prototype.getAllPointers = function () {
 		return this._$profile.pointers
 	}
 
-	Gesture.prototype.onPointerdown = function(callback) {
+	Gesture.prototype.onPointerdown = function (callback) {
 		this.options.onPointerdown = callback
 		return this
 	}
 
-	Gesture.prototype.onPointerup = function(callback) {
+	Gesture.prototype.onPointerup = function (callback) {
 		this.options.onPointerup = callback
 		return this
 	}
 
-	Gesture.prototype.onPointermove = function(callback) {
+	Gesture.prototype.onPointermove = function (callback) {
 		this.options.onPointermove = callback
 		return this
 	}
 
-	Gesture.prototype.onPpointercancel = function(callback) {
+	Gesture.prototype.onPpointercancel = function (callback) {
 		this.options.onPpointercancel = callback
 		return this
 	}
 
-	Gesture.prototype.onTap = function(callback) {
+	Gesture.prototype.onTap = function (callback) {
 		this.options.onTap = callback
 		return this
 	}
 
-	Gesture.prototype.onLongTap = function(callback) {
+	Gesture.prototype.onLongTap = function (callback) {
 		this.options.onLongTap = callback
 		return this
 	}
 
-	Gesture.prototype.onDoubleTap = function(callback) {
+	Gesture.prototype.onDoubleTap = function (callback) {
 		this.options.preventDefaultOnPointerdown = true
 		this.options.onDoubleTap = callback
 		return this
 	}
 
-	Gesture.prototype.onDragMove = function(callback) {
+	Gesture.prototype.onDragMove = function (callback) {
 		this.options.onDragMove = callback
 		return this
 	}
 
-	Gesture.prototype.onWheel = function(callback) {
+	Gesture.prototype.onWheel = function (callback) {
 		this.options.onWheel = callback
 		return this
 	}
 
-	Gesture.prototype.onSwipe = function(callback) {
+	Gesture.prototype.onSwipe = function (callback) {
 		this.options.onSwipe = callback
 		return this
 	}
 
-	Gesture.prototype.onPinch = function(callback) {
+	Gesture.prototype.onPinch = function (callback) {
 		this.options.onPinch = callback
 		return this
 	}
 
-	Gesture.prototype.onRotate = function(callback) {
+	Gesture.prototype.onRotate = function (callback) {
 		this.options.onRotate = callback
 		return this
 	}
@@ -203,7 +203,7 @@
 	/****************************** ******************************/
 	/****************************** ******************************/
 
-	Gesture.prototype.getLastOnePointerEvent = function() {
+	Gesture.prototype.getLastOnePointerEvent = function () {
 		const { pointers } = this._$profile
 		if (pointers.length) {
 			return pointers[pointers.length - 1]
@@ -222,19 +222,19 @@
 		}
 	}
 
-	Gesture.prototype.getCenter = function(pointA, pointB) {
+	Gesture.prototype.getCenter = function (pointA, pointB) {
 		return { x: (pointA.x + pointB.x) / 2, y: (pointA.y + pointB.y) / 2 }
 	}
 
-	Gesture.prototype.getDistance = function(pointA, pointB) {
+	Gesture.prototype.getDistance = function (pointA, pointB) {
 		return Math.hypot(pointA.x - pointB.x, pointA.y - pointB.y)
 	}
 
-	Gesture.prototype.getAngle = function(pointA, pointB) {
+	Gesture.prototype.getAngle = function (pointA, pointB) {
 		return (Math.atan2(pointA.y - pointB.y, pointA.x - pointB.x) * 180) / Math.PI
 	}
 
-	Gesture.prototype.updatePointers = function(evte, type) {
+	Gesture.prototype.updatePointers = function (evte, type) {
 		const _$profile = this._$profile
 		const touches = Array.from(evte.touches || [])
 		const changedTouches = Array.from(evte.changedTouches || [])
@@ -282,7 +282,7 @@
 		}
 	}
 
-	Gesture.prototype.getMovePositionRange = function() {
+	Gesture.prototype.getMovePositionRange = function () {
 		const _$profile = this._$profile
 		if (Math.abs(_$profile.offsetRectAtPointerdown.x) > Math.abs(_$profile.offsetRectAtPointerdown.y)) {
 			return _$profile.offsetRectAtPointerdown.x > 0 ? DIRECTION_RIGHT : DIRECTION_LEFT
@@ -290,7 +290,7 @@
 		return _$profile.offsetRectAtPointerdown.y > 0 ? DIRECTION_DOWN : DIRECTION_UP
 	}
 
-	Gesture.prototype.getMoveDirection = function() {
+	Gesture.prototype.getMoveDirection = function () {
 		const _$profile = this._$profile
 		const diffX = _$profile.pointers[0].clientX - _$profile.pointerPositionCache.x
 		const diffY = _$profile.pointers[0].clientY - _$profile.pointerPositionCache.y
@@ -300,7 +300,7 @@
 		return diffY > 0 ? DIRECTION_DOWN : DIRECTION_UP
 	}
 
-	Gesture.prototype.handleSwipe = function(evte, lastOnePointerEvent) {
+	Gesture.prototype.handleSwipe = function (evte, lastOnePointerEvent) {
 		const _$profile = this._$profile
 		const MIN_SWIPE_DISTANCE = 20
 		const MAX_TIME_INTERVAL = 200
@@ -326,7 +326,8 @@
 			} else {
 				swipeDirection = y > 0 ? DIRECTION_DOWN : DIRECTION_UP
 			}
-			this.options.onSwipe && this.options.onSwipe.call(
+			this.options.onSwipe &&
+				this.options.onSwipe.call(
 					undefined,
 					evte,
 					{
@@ -341,7 +342,7 @@
 		}
 	}
 
-	Gesture.prototype.handlePointerdownEvent = function(evte) {
+	Gesture.prototype.handlePointerdownEvent = function (evte) {
 		if (this.options.preventDefaultOnPointerdown) {
 			evte.preventDefault()
 		}
@@ -389,7 +390,8 @@
 			if (_$profile.tapCount === 1) {
 				_$profile.longTapTimeout = window.setTimeout(() => {
 					_$profile.tapCount = 0
-					this.options.onLongTap && this.options.onLongTap.call(
+					this.options.onLongTap &&
+						this.options.onLongTap.call(
 							undefined,
 							evte,
 							{
@@ -429,7 +431,8 @@
 			_$profile.lastDotsRecordInPointerdown[1] = { x: _$profile.pointers[1].clientX, y: _$profile.pointers[1].clientY }
 		}
 		const lastOnePointerEvent = this.getLastOnePointerEvent()
-		this.options.onPointerdown && this.options.onPointerdown.call(
+		this.options.onPointerdown &&
+			this.options.onPointerdown.call(
 				undefined,
 				evte,
 				{
@@ -440,7 +443,7 @@
 			)
 	}
 
-	Gesture.prototype.handlePointermoveEvent = function(evte) {
+	Gesture.prototype.handlePointermoveEvent = function (evte) {
 		const _$profile = this._$profile
 		if (!_$profile.isPointerdown) {
 			return
@@ -468,7 +471,8 @@
 			}
 			_$profile.moveDirection = this.getMoveDirection()
 			/* ... */
-			this.options.onDragMove && this.options.onDragMove.call(
+			this.options.onDragMove &&
+				this.options.onDragMove.call(
 					undefined,
 					evte,
 					{
@@ -499,7 +503,8 @@
 			const rotate =
 				this.getAngle({ x: pointer1.clientX, y: pointer1.clientY }, { x: pointer2.clientX, y: pointer2.clientY }) -
 				this.getAngle(lastDotRecordInPointerdown1, lastDotRecordInPointerdown2)
-			this.options.onRotate && this.options.onRotate.call(
+			this.options.onRotate &&
+				this.options.onRotate.call(
 					undefined,
 					evte,
 					{
@@ -516,7 +521,8 @@
 			const scale =
 				this.getDistance({ x: pointer1.clientX, y: pointer1.clientY }, { x: pointer2.clientX, y: pointer2.clientY }) /
 				this.getDistance(lastDotRecordInPointerdown1, lastDotRecordInPointerdown2)
-			this.options.onPinch && this.options.onPinch.call(
+			this.options.onPinch &&
+				this.options.onPinch.call(
 					undefined,
 					evte,
 					{
@@ -538,7 +544,8 @@
 			lastDotRecordInPointerdown2.y = pointer2.clientY
 		}
 		const lastOnePointerEvent = this.getLastOnePointerEvent()
-		this.options.onPointermove && this.options.onPointermove.call(
+		this.options.onPointermove &&
+			this.options.onPointermove.call(
 				undefined,
 				evte,
 				{
@@ -549,7 +556,7 @@
 			)
 	}
 
-	Gesture.prototype.handlePointerupEvent = function(evte) {
+	Gesture.prototype.handlePointerupEvent = function (evte) {
 		const _$profile = this._$profile
 		if (!_$profile.isPointerdown) {
 			return
@@ -564,7 +571,8 @@
 			if (_$profile.tapCount === 0) {
 				this.handleSwipe(evte, lastOnePointerEvent)
 			} else {
-				this.options.onTap && this.options.onTap.call(
+				this.options.onTap &&
+					this.options.onTap.call(
 						undefined,
 						evte,
 						{
@@ -575,7 +583,8 @@
 					)
 				if (_$profile.tapCount >= 2) {
 					_$profile.tapCount = 0
-					this.options.onDoubleTap && this.options.onDoubleTap.call(
+					this.options.onDoubleTap &&
+						this.options.onDoubleTap.call(
 							undefined,
 							evte,
 							{
@@ -607,7 +616,8 @@
 			_$profile.centerPositionCacheOfMultiPointers.x = 0
 			_$profile.centerPositionCacheOfMultiPointers.y = 0
 		}
-		this.options.onPointerup && this.options.onPointerup.call(
+		this.options.onPointerup &&
+			this.options.onPointerup.call(
 				undefined,
 				evte,
 				{
@@ -622,14 +632,15 @@
 		}
 	}
 
-	Gesture.prototype.handlePointercancelEvent = function(evte) {
+	Gesture.prototype.handlePointercancelEvent = function (evte) {
 		const _$profile = this._$profile
 		const lastOnePointerEvent = this.getLastOnePointerEvent()
 		window.clearTimeout(_$profile.longTapTimeout)
 		_$profile.isPointerdown = false
 		_$profile.tapCount = 0
 		this.updatePointers(evte, POINTER_ITEM_DELETE)
-		this.options.onPpointercancel && this.options.onPpointercancel.call(
+		this.options.onPpointercancel &&
+			this.options.onPpointercancel.call(
 				undefined,
 				evte,
 				{
@@ -644,10 +655,11 @@
 		}
 	}
 
-	Gesture.prototype.handleWheelEvent = function(evte) {
+	Gesture.prototype.handleWheelEvent = function (evte) {
 		const _$profile = this._$profile
 		const scale = evte.deltaY > 0 ? this.options.zoomOutWheelRatio : this.options.zoomInWheelRatio
-		this.options.onWheel && this.options.onWheel.call(
+		this.options.onWheel &&
+			this.options.onWheel.call(
 				undefined,
 				evte,
 				{
@@ -659,8 +671,9 @@
 			)
 	}
 
-	Gesture.prototype.handleContextmenuEvent = function(evte) {
-		this.options.onContextmenu && this.options.onContextmenu.call(
+	Gesture.prototype.handleContextmenuEvent = function (evte) {
+		this.options.onContextmenu &&
+			this.options.onContextmenu.call(
 				undefined,
 				evte,
 				{
@@ -671,7 +684,7 @@
 			)
 	}
 
-	Gesture.prototype.bindEvent = function() {
+	Gesture.prototype.bindEvent = function () {
 		this.containerElements.forEach(item => {
 			item.addEventListener('touchstart', this._handlePointerdownEvent)
 			item.addEventListener('touchmove', this._handlePointermoveEvent)
@@ -683,7 +696,7 @@
 		})
 	}
 
-	Gesture.prototype.unBindEvent = function() {
+	Gesture.prototype.unBindEvent = function () {
 		this.containerElements.forEach(item => {
 			item.removeEventListener('touchstart', this._handlePointerdownEvent)
 			item.removeEventListener('touchmove', this._handlePointermoveEvent)
@@ -704,7 +717,7 @@
 		return new Gesture(host, options)
 	}
 
-	xGesture.attach = function(host, options) {
+	xGesture.attach = function (host, options) {
 		return new Gesture(host, options)
 	}
 	xGesture.defined = {
@@ -718,11 +731,11 @@
 	if (typeof module !== 'undefined' && module.exports) {
 		module.exports = xGesture
 	} else if (typeof define === 'function' && define.amd) {
-		define(function() {
+		define(function () {
 			return xGesture
 		})
 	} else {
-		;(function() {
+		;(function () {
 			return this || (0, eval)('this')
 		})().xGesture = xGesture
 	}

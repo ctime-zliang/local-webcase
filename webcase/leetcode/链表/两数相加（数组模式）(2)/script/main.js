@@ -6,7 +6,6 @@
     你可以假设除了数字 0 之外，这两个数都不会以 0 开头
  */
 
-
 function addTwoNumbers(list1, list2) {
 	const arr1 = ven$setSinglyLinkList2Array(list1).reverse()
 	const arr2 = ven$setSinglyLinkList2Array(list2).reverse()

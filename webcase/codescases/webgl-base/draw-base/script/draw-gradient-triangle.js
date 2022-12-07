@@ -1,31 +1,33 @@
 class SimpleGradientTriangleDraw {
 	constructor() {
-        this.gl = null
-        this.program = null
-    }
+		this.gl = null
+		this.program = null
+	}
 
 	init(gl) {
-        this.gl = gl
-        this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
-    }
+		this.gl = gl
+		this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
+	}
 
 	render() {
 		const a_Position = this.gl.getAttribLocation(this.program, 'a_Position')
 		const a_color = this.gl.getAttribLocation(this.program, 'a_color')
 
+		// prettier-ignore
 		const vertexData = new Float32Array([
             -0.5, 0.5, 0,
             0.5, 0.5, 0,
             0.5, -0.5, 0
         ])
-        const colorData = new Float32Array([
+		// prettier-ignore
+		const colorData = new Float32Array([
             1, 0, 0,
             0, 1, 0,
             0, 0, 1
         ])
 
 		const vertextBuffer = createBuffer(this.gl, vertexData, a_Position, 3)
-        const colorBuffer = createBuffer(this.gl, colorData, a_color, 3)
+		const colorBuffer = createBuffer(this.gl, colorData, a_color, 3)
 
 		this.gl.drawArrays(this.gl.TRIANGLES, 0, 3)
 		console.log(this.program)
@@ -33,7 +35,7 @@ class SimpleGradientTriangleDraw {
 
 	destory() {
 		console.log(this.constructor.name)
-    }
+	}
 
 	_vertexShaderSource() {
 		const source = `

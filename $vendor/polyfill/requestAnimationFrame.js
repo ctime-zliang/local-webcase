@@ -1,4 +1,4 @@
-;(function() {
+;(function () {
 	const vendors = ['webkit', 'moz']
 	let lastTime = 0
 	for (let x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
@@ -6,10 +6,10 @@
 		window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame']
 	}
 	if (!window.requestAnimationFrame) {
-		window.requestAnimationFrame = function(callback, element) {
+		window.requestAnimationFrame = function (callback, element) {
 			const currTime = new Date().getTime()
 			const timeToCall = Math.max(0, 16 - (currTime - lastTime))
-			const id = window.setTimeout(function() {
+			const id = window.setTimeout(function () {
 				callback(currTime + timeToCall)
 			}, timeToCall)
 			lastTime = currTime + timeToCall
@@ -17,7 +17,7 @@
 		}
 	}
 	if (!window.cancelAnimationFrame) {
-		window.cancelAnimationFrame = function(id) {
+		window.cancelAnimationFrame = function (id) {
 			window.clearTimeout(id)
 		}
 	}

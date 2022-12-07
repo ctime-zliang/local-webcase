@@ -3,7 +3,7 @@
 /** Pointer Down ***/
 /****************************** ******************************/
 /****************************** ******************************/
-;(function(sectionElement) {
+;(function (sectionElement) {
 	const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
 	const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
 	const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
@@ -31,7 +31,7 @@
 /** Pointer Up ***/
 /****************************** ******************************/
 /****************************** ******************************/
-;(function(sectionElement) {
+;(function (sectionElement) {
 	const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
 	const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
 	const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
@@ -59,7 +59,7 @@
 /** Pointer Move ***/
 /****************************** ******************************/
 /****************************** ******************************/
-;(function(sectionElement) {
+;(function (sectionElement) {
 	const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
 	const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="absolute-x"]')
 	const yAbsoluteElement = sectionElement.querySelector('[data-tagitem="absolute-y"]')
@@ -94,7 +94,7 @@
 /** Tap ***/
 /****************************** ******************************/
 /****************************** ******************************/
-;(function(sectionElement) {
+;(function (sectionElement) {
 	const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
 	const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
 	const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
@@ -146,7 +146,7 @@
 /** Long Tap ***/
 /****************************** ******************************/
 /****************************** ******************************/
-;(function(sectionElement) {
+;(function (sectionElement) {
 	const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
 	const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
 	const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
@@ -182,7 +182,7 @@
 /** Double Tap ***/
 /****************************** ******************************/
 /****************************** ******************************/
-;(function(sectionElement) {
+;(function (sectionElement) {
 	const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
 	const countElement = sectionElement.querySelector('[data-tagitem="event-count"]')
 	const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="event-absolute-x"]')
@@ -212,7 +212,7 @@
 /** Drag Move ***/
 /****************************** ******************************/
 /****************************** ******************************/
-;(function(sectionElement) {
+;(function (sectionElement) {
 	const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
 	const xAbsoluteElement = sectionElement.querySelector('[data-tagitem="absolute-x"]')
 	const yAbsoluteElement = sectionElement.querySelector('[data-tagitem="absolute-y"]')
@@ -256,7 +256,7 @@
 /** Swipe ***/
 /****************************** ******************************/
 /****************************** ******************************/
-;(function(sectionElement) {
+;(function (sectionElement) {
 	class SwipeManager {
 		static translateX = 0
 		static swipeContainerElement = null
@@ -407,7 +407,7 @@
 /** Wheel ***/
 /****************************** ******************************/
 /****************************** ******************************/
-;(function(sectionElement) {
+;(function (sectionElement) {
 	const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
 	const targetImageElement = sectionElement.querySelector('[data-tagitem="target-image"]')
 	const scaleValueElement = sectionElement.querySelector('[data-tagitem="scale-value"]')
@@ -471,7 +471,7 @@
 /** Pinch ***/
 /****************************** ******************************/
 /****************************** ******************************/
-;(function(sectionElement) {
+;(function (sectionElement) {
 	const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
 	const targetImageElement = sectionElement.querySelector('[data-tagitem="target-image"]')
 	const pinchValueElement = sectionElement.querySelector('[data-tagitem="pinch-value"]')
@@ -547,7 +547,7 @@
 /** Rotate ***/
 /****************************** ******************************/
 /****************************** ******************************/
-;(function(sectionElement) {
+;(function (sectionElement) {
 	const gestureElement = sectionElement.querySelector('[data-tagitem="gesture"]')
 	const targetImageElement = sectionElement.querySelector('[data-tagitem="target-image"]')
 	const rotateValueElement = sectionElement.querySelector('[data-tagitem="rotate-value"]')

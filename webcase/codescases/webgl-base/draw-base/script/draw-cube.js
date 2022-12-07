@@ -2,15 +2,15 @@
  * 直线绘制拼凑方式
  */
 class SimpleCubeDraw {
-    constructor() {
-        this.gl = null
-        this.program = null
-    }
+	constructor() {
+		this.gl = null
+		this.program = null
+	}
 
 	init(gl) {
-        this.gl = gl
-        this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
-    }
+		this.gl = gl
+		this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
+	}
 
 	render() {
 		/**
@@ -18,10 +18,11 @@ class SimpleCubeDraw {
 		 * 该变量定义在着色器源代码中
 		 */
 		const a_Position = this.gl.getAttribLocation(this.program, 'a_Position')
-		
+
 		/**
-         * 创建顶点数据
-         */
+		 * 创建顶点数据
+		 */
+		// prettier-ignore
 		const vertexData = new Float32Array([
             0.5, 0.5, 0.5,
             -0.5, 0.5, 0.5,
@@ -54,15 +55,15 @@ class SimpleCubeDraw {
 		 * LINES 模式绘制后 8 个点
 		 *      用直线将两个面的四个顶点分别一一连接
 		 */
-        this.gl.drawArrays(this.gl.LINE_LOOP, 0, 4)
+		this.gl.drawArrays(this.gl.LINE_LOOP, 0, 4)
 		this.gl.drawArrays(this.gl.LINE_LOOP, 4, 4)
 		this.gl.drawArrays(this.gl.LINES, 8, 8)
 		console.log(this.program)
 	}
 
-    destory() {
+	destory() {
 		console.log(this.constructor.name)
-    }
+	}
 
 	_vertexShaderSource() {
 		const source = `

@@ -79,7 +79,7 @@ function ven$padNumber(number, allLength) {
  * @param {any} value 默认填充值
  * @return {array<any>}
  */
- function ven$createArray(length, value = undefined) {
+function ven$createArray(length, value = undefined) {
 	return new Array(length + 1).join(value).split('')
 }
 
@@ -122,7 +122,7 @@ function ven$createElementFragment(htmlString, useDOMParser = false) {
  */
 function ven$interval(fn, interval, scope = undefined) {
 	const handler = { timer: null }
-	const intv = function() {
+	const intv = function () {
 		fn.call(scope)
 		handler.timer = setTimeout(intv, interval)
 	}

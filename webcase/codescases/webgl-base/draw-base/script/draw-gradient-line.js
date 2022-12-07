@@ -1,29 +1,23 @@
 class SimpleGradientLineDraw {
 	constructor() {
-        this.gl = null
-        this.program = null
-    }
+		this.gl = null
+		this.program = null
+	}
 
 	init(gl) {
-        this.gl = gl
-        this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
-    }
+		this.gl = gl
+		this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
+	}
 
 	render() {
 		const a_Position = this.gl.getAttribLocation(this.program, 'a_Position')
 		const a_color = this.gl.getAttribLocation(this.program, 'a_color')
 
-		const vertexData = new Float32Array([
-            -0.5, 0.5, 0,
-            0.5, 0.5, 0
-        ])
-        const colorData = new Float32Array([
-            1, 0, 0,
-            0, 1, 0
-        ])
+		const vertexData = new Float32Array([-0.5, 0.5, 0, 0.5, 0.5, 0])
+		const colorData = new Float32Array([1, 0, 0, 0, 1, 0])
 
 		const vertextBuffer = createBuffer(this.gl, vertexData, a_Position, 3)
-        const colorBuffer = createBuffer(this.gl, colorData, a_color, 3)
+		const colorBuffer = createBuffer(this.gl, colorData, a_color, 3)
 
 		this.gl.drawArrays(this.gl.LINES, 0, 2)
 		console.log(this.program)
@@ -31,7 +25,7 @@ class SimpleGradientLineDraw {
 
 	destory() {
 		console.log(this.constructor.name)
-    }
+	}
 
 	_vertexShaderSource() {
 		const source = `

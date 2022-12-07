@@ -6,7 +6,7 @@
  */
 function ven$dfs1(node = null) {
 	const nodelist = []
-	return (traverse(node, nodelist), nodelist)
+	return traverse(node, nodelist), nodelist
 
 	function traverse(node, nodelist) {
 		const children = []

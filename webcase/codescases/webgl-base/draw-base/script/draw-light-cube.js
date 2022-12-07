@@ -2,15 +2,15 @@
  * 直线绘制拼凑方式
  */
 class SimpleLightCubeDraw {
-    constructor() {
-        this.gl = null
-        this.program = null
-    }
+	constructor() {
+		this.gl = null
+		this.program = null
+	}
 
 	init(gl) {
-        this.gl = gl
-        this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
-    }
+		this.gl = gl
+		this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
+	}
 
 	render(gl) {
 		const a_Position = this.gl.getAttribLocation(this.program, 'a_Position')
@@ -24,15 +24,16 @@ class SimpleLightCubeDraw {
 		 *      颜色: RGB(1, 1, 1)
 		 *      方向: 单位向量 (x, y, z)
 		 **/
-        this.gl.uniform3f(u_lightColor, 1.0, 1.0, 1.0)
+		this.gl.uniform3f(u_lightColor, 1.0, 1.0, 1.0)
 		const x = 1 / Math.sqrt(15)
 		const y = 2 / Math.sqrt(15)
 		const z = 3 / Math.sqrt(15)
 		this.gl.uniform3f(u_lightDirection, x, y, -z)
 
 		/**
-         * 创建顶点数据
-         */
+		 * 创建顶点数据
+		 */
+		// prettier-ignore
 		const vertexData = new Float32Array([
             /* 面 1 */
             0.5, 0.5, 0.5, 
@@ -77,10 +78,11 @@ class SimpleLightCubeDraw {
             -0.5, 0.5, -0.5,
             0.5, 0.5, -0.5 
         ])
-        /**
-         * 创建颜色数据
-         */
-        const colorData = new Float32Array([
+		/**
+		 * 创建颜色数据
+		 */
+		// prettier-ignore
+		const colorData = new Float32Array([
             /* 红色 面 1 */
             1, 0, 0,     1, 0, 0,     1, 0, 0,     1, 0, 0,     1, 0, 0,     1, 0, 0,
             /* 绿色 面 1 */
@@ -94,10 +96,11 @@ class SimpleLightCubeDraw {
             /* 灰色 面 1 */
             0.5, 0.5, 0.5,     0.5, 0.5, 0.5,     0.5, 0.5, 0.5,     0.5, 0.5, 0.5,     0.5, 0.5, 0.5,     0.5, 0.5, 0.5 
         ])
-        /**
-         * 创建顶点法向量
-         */
-        const normalData = new Float32Array([
+		/**
+		 * 创建顶点法向量
+		 */
+		// prettier-ignore
+		const normalData = new Float32Array([
             /* Z 轴正方向 面 1 */
             0, 0, 1,     0, 0, 1,     0, 0, 1,     0, 0, 1,     0, 0, 1,     0, 0, 1,
             /* X 轴正方向 面 1 */
@@ -112,24 +115,24 @@ class SimpleLightCubeDraw {
             0, 0, -1,     0, 0, -1,     0, 0, -1,     0, 0, -1,     0, 0, -1,     0, 0, -1
         ])
 
-        const vertextBuffer = createBuffer(this.gl, vertexData, a_Position, 3)
-        const colorBuffer = createBuffer(this.gl, colorData, a_color, 3)
-        const normalBuffer = createBuffer(this.gl, normalData, a_normal, 3)
+		const vertextBuffer = createBuffer(this.gl, vertexData, a_Position, 3)
+		const colorBuffer = createBuffer(this.gl, colorData, a_color, 3)
+		const normalBuffer = createBuffer(this.gl, normalData, a_normal, 3)
 
 		/**
 		 * 开启深度测试
 		 */
-         this.gl.enable(this.gl.DEPTH_TEST)
+		this.gl.enable(this.gl.DEPTH_TEST)
 		/**
 		 * 绘制
 		 */
-        this.gl.drawArrays(this.gl.TRIANGLES, 0, 36)
+		this.gl.drawArrays(this.gl.TRIANGLES, 0, 36)
 		console.log(this.program)
 	}
 
-    destory() {
+	destory() {
 		console.log(this.constructor.name)
-    }
+	}
 
 	_vertexShaderSource() {
 		const source = `

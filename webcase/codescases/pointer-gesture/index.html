@@ -11,13 +11,13 @@
 		<title>Code Case</title>
 		<style></style>
 		<script>
-			;(function() {
+			;(function () {
 				function __resetFontSizeClac() {
 					const _fontSize = document.documentElement.clientWidth / 3.75
 					return _fontSize > 100 ? 100 : _fontSize
 				}
 				document.documentElement.style.fontSize = __resetFontSizeClac() + 'px'
-				window.onresize = function() {
+				window.onresize = function () {
 					document.documentElement.style.fontSize = __resetFontSizeClac() + 'px'
 				}
 			})()

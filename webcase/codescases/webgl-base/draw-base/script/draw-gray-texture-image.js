@@ -2,24 +2,25 @@
  * 直线绘制拼凑方式
  */
 class SimpleGrayTextureImageDraw {
-    constructor() {
-        this.gl = null
-        this.program = null
-    }
+	constructor() {
+		this.gl = null
+		this.program = null
+	}
 
 	init(gl) {
-        this.gl = gl
-        this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
-    }
+		this.gl = gl
+		this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
+	}
 
 	render() {
 		const a_Position = this.gl.getAttribLocation(this.program, 'a_Position')
-        const a_TexturePosition = this.gl.getAttribLocation(this.program, 'a_TexturePosition')
-        const u_Sampler = this.gl.getUniformLocation(this.program, 'u_Sampler')
+		const a_TexturePosition = this.gl.getAttribLocation(this.program, 'a_TexturePosition')
+		const u_Sampler = this.gl.getUniformLocation(this.program, 'u_Sampler')
 		/**
-         * 创建顶点数据
-         *      以直角坐标系坐标原点为中心
-         */
+		 * 创建顶点数据
+		 *      以直角坐标系坐标原点为中心
+		 */
+		// prettier-ignore
 		const vertexData = new Float32Array([
             /* 左上角 */
             -0.5, 0.5, 0.0, 
@@ -30,11 +31,12 @@ class SimpleGrayTextureImageDraw {
             /* 右下角 */
             0.5, -0.5, 0.0,
         ])
-        /**
-         * 创建纹理顶点数据
-         *      以第一象限的中点为中心
-         */
-        const textureVertexData = new Float32Array([
+		/**
+		 * 创建纹理顶点数据
+		 *      以第一象限的中点为中心
+		 */
+		// prettier-ignore
+		const textureVertexData = new Float32Array([
             /* 左上角 */
             0.0, 1.0, 0.0, 
             /* 左下角 */
@@ -45,20 +47,20 @@ class SimpleGrayTextureImageDraw {
             1.0, 0.0, 0.0,
         ])
 
-        const vertextBuffer = createBuffer(this.gl, vertexData, a_Position, 3)
+		const vertextBuffer = createBuffer(this.gl, vertexData, a_Position, 3)
 		const textureBuffer = createBuffer(this.gl, textureVertexData, a_TexturePosition, 3)
 
-        const imageInstance = new Image()
-        const drawImageTextureHandler = createDrawImageTextureHandler(this.gl, u_Sampler, imageInstance)
-        imageInstance.onload = drawImageTextureHandler
-        imageInstance.src = window.$image02
+		const imageInstance = new Image()
+		const drawImageTextureHandler = createDrawImageTextureHandler(this.gl, u_Sampler, imageInstance)
+		imageInstance.onload = drawImageTextureHandler
+		imageInstance.src = window.$image02
 
 		console.log(this.program)
 	}
 
-    destory() {
+	destory() {
 		console.log(this.constructor.name)
-    }
+	}
 
 	_vertexShaderSource() {
 		const source = `

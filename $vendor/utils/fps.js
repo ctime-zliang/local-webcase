@@ -56,7 +56,7 @@
 		return htmlString
 	}
 
-	const initViewStyle = (cssText) => {
+	const initViewStyle = cssText => {
 		const styleElement = document.createElement('style')
 		const headElement = document.head || document.getElementsByTagName('head')[0]
 		let initStyleError = false
@@ -79,7 +79,7 @@
 		rootElement.appendChild(document.createRange().createContextualFragment(createHtmlString()))
 	}
 
-	const initElementHandler = (runtimeConfig) => {
+	const initElementHandler = runtimeConfig => {
 		runtimeConfig.containerElement = document.getElementById('_fpsMonitorContainer')
 		runtimeConfig.wrapperElement = document.getElementById('_fpsMonitorWrapper')
 		runtimeConfig.rAFCountItemElement = runtimeConfig.containerElement.querySelector('[data-tagitem="_fps-raf-count"]')
@@ -117,7 +117,7 @@
 		window.fpsRuntimeConfig = runtimeConfig
 	}
 
-	const countRAF = (timeStamp) => {
+	const countRAF = timeStamp => {
 		const now = performance.now()
 		runtimeConfig._rAFCountInEveryInterval++
 		if (now - runtimeConfig._rAFSetCountLastTime >= runtimeConfig.interval) {
@@ -131,7 +131,7 @@
 		window.requestAnimationFrame(countRAF)
 	}
 
-	const countRIC = (deadline) => {
+	const countRIC = deadline => {
 		const now = performance.now()
 		runtimeConfig._rICCountInEveryInterval++
 		if (now - runtimeConfig._rICSetCountLastTime >= 1000) {

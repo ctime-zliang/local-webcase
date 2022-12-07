@@ -3,15 +3,15 @@
  */
 
 class SimpleCube2Draw {
-    constructor() {
-        this.gl = null
-        this.program = null
-    }
+	constructor() {
+		this.gl = null
+		this.program = null
+	}
 
 	init(gl) {
-        this.gl = gl
-        this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
-    }
+		this.gl = gl
+		this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
+	}
 
 	render() {
 		/**
@@ -19,10 +19,11 @@ class SimpleCube2Draw {
 		 * 该变量定义在着色器源代码中
 		 */
 		const a_Position = this.gl.getAttribLocation(this.program, 'a_Position')
-		
+
 		/**
-         * 创建顶点数据
-         */
+		 * 创建顶点数据
+		 */
+		// prettier-ignore
 		const vertexData = new Float32Array([
             0.5, 0.5, 0.5,
             -0.5, 0.5, 0.5,
@@ -34,10 +35,11 @@ class SimpleCube2Draw {
             -0.5, -0.5, -0.5,
             0.5, -0.5, -0.5
         ])
-        /**
-         * 创建顶点索引数据
-         */
-        const vertexIndexes = new Uint8Array([
+		/**
+		 * 创建顶点索引数据
+		 */
+		// prettier-ignore
+		const vertexIndexes = new Uint8Array([
             0, 1, 2, 3,
             4, 5, 6, 7,
             0, 4,
@@ -60,15 +62,15 @@ class SimpleCube2Draw {
 		/**
 		 * 绘制
 		 */
-        this.gl.drawElements(this.gl.LINE_LOOP, 4, this.gl.UNSIGNED_BYTE, 0)
-        this.gl.drawElements(this.gl.LINE_LOOP, 4, this.gl.UNSIGNED_BYTE, 4)
-        this.gl.drawElements(this.gl.LINES, 8, this.gl.UNSIGNED_BYTE, 8)
+		this.gl.drawElements(this.gl.LINE_LOOP, 4, this.gl.UNSIGNED_BYTE, 0)
+		this.gl.drawElements(this.gl.LINE_LOOP, 4, this.gl.UNSIGNED_BYTE, 4)
+		this.gl.drawElements(this.gl.LINES, 8, this.gl.UNSIGNED_BYTE, 8)
 		console.log(this.program)
 	}
 
-    destory() {
+	destory() {
 		console.log(this.constructor.name)
-    }
+	}
 
 	_vertexShaderSource() {
 		const source = `
@@ -120,7 +122,7 @@ class SimpleCube2Draw {
 		return source
 	}
 
-    _fragmentShaderSource() {
+	_fragmentShaderSource() {
 		const source = `
             void main() {
                 gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);

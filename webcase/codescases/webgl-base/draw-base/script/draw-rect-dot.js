@@ -1,13 +1,13 @@
 class SimpleRectDotDraw {
 	constructor() {
-        this.gl = null
-        this.program = null
-    }
+		this.gl = null
+		this.program = null
+	}
 
 	init(gl) {
-        this.gl = gl
-        this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
-    }
+		this.gl = gl
+		this.program = initShader(this.gl, this._vertexShaderSource(), this._fragmentShaderSource())
+	}
 
 	render() {
 		this.gl.drawArrays(this.gl.POINTS, 0, 1)
@@ -16,7 +16,7 @@ class SimpleRectDotDraw {
 
 	destory() {
 		console.log(this.constructor.name)
-    }
+	}
 
 	_vertexShaderSource() {
 		const source = `
