@@ -53,7 +53,7 @@ function ven$setArray2SinglyLinkList(arr) {
  * @description 将数组转换成双向链表
  * @function ven$setArray2DoublyLinkList
  * @param {array} arr 数组
- * @return {Ven$SinglyLinkListNode}
+ * @return {Ven$DoublyLinkListNode}
  */
  function ven$setArray2DoublyLinkList(arr) {
 	const head = new Ven$DoublyLinkListNode(arr[0], undefined, undefined)
