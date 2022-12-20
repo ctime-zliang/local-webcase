@@ -15310,7 +15310,6 @@
 						psi = p[off++]
 						fa = p[off++]
 						fs = p[off++]
-
 						;(x1 = cpx), (y1 = cpy)
 						cpx = p[off++]
 						cpy = p[off++]
@@ -15323,7 +15322,6 @@
 						psi = p[off++]
 						fa = p[off++]
 						fs = p[off++]
-
 						;(x1 = cpx), (y1 = cpy)
 						cpx += p[off++]
 						cpy += p[off++]
@@ -89611,7 +89609,6 @@
 			var itemSize = this.itemSize
 
 			this._orient === 'horizontal' && itemSize.reverse()
-
 			;(itemSize[0] == null || isNaN(itemSize[0])) && (itemSize[0] = DEFAULT_BAR_BOUND[0])
 			;(itemSize[1] == null || isNaN(itemSize[1])) && (itemSize[1] = DEFAULT_BAR_BOUND[1])
 		},
@@ -91081,9 +91078,7 @@
 
 			function has(obj, state, visualType) {
 				return (
-					obj &&
-					obj[state] &&
-					(isObject$1(obj[state]) ? obj[state].hasOwnProperty(visualType) : obj[state] === visualType) // e.g., inRange: 'symbol'
+					obj && obj[state] && (isObject$1(obj[state]) ? obj[state].hasOwnProperty(visualType) : obj[state] === visualType) // e.g., inRange: 'symbol'
 				)
 			}
 

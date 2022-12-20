@@ -37,7 +37,7 @@ function ven$setArray2SinglyLinkList(arr) {
  * @param {array} arr 数组
  * @return {Ven$SinglyLinkListNode}
  */
- function ven$setArray2CyclicLinkList(arr) {
+function ven$setArray2CyclicLinkList(arr) {
 	const head = new Ven$SinglyLinkListNode(arr[0], undefined)
 	let p = head
 	for (let i = 1; i < arr.length; i++) {
@@ -55,7 +55,7 @@ function ven$setArray2SinglyLinkList(arr) {
  * @param {array} arr 数组
  * @return {Ven$DoublyLinkListNode}
  */
- function ven$setArray2DoublyLinkList(arr) {
+function ven$setArray2DoublyLinkList(arr) {
 	const head = new Ven$DoublyLinkListNode(arr[0], undefined, undefined)
 	let p = head
 	let t = null
@@ -68,4 +68,3 @@ function ven$setArray2SinglyLinkList(arr) {
 	}
 	return head
 }
-

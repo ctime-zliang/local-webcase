@@ -1391,13 +1391,11 @@
 
 	Http.interceptor = { before: before, method: method, jsonp: jsonp, json: json, form: form, header: header, cors: cors }
 	Http.interceptors = ['before', 'method', 'jsonp', 'json', 'form', 'header', 'cors']
-
 	;['get', 'delete', 'head', 'jsonp'].forEach(function (method$$1) {
 		Http[method$$1] = function (url, options$$1) {
 			return this(assign(options$$1 || {}, { url: url, method: method$$1 }))
 		}
 	})
-
 	;['post', 'put', 'patch'].forEach(function (method$$1) {
 		Http[method$$1] = function (url, body, options$$1) {
 			return this(assign(options$$1 || {}, { url: url, method: method$$1, body: body }))

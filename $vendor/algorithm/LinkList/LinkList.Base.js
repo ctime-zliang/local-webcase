@@ -20,7 +20,7 @@ class Ven$SinglyLinkListNode {
  * @param {Ven$DoublyLinkListNode} prev 上一个链表节点
  * @return {undefined}
  */
- class Ven$DoublyLinkListNode {
+class Ven$DoublyLinkListNode {
 	constructor(val, next, prev) {
 		this.val = val === undefined ? undefined : val
 		this.next = next === undefined ? null : next
