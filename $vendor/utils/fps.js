@@ -148,12 +148,13 @@
 		runtimeConfig.rAFCountItemElement.innerHTML = `RAF COUNT: <span>${runtimeConfig.rAFCount.toFixed(4)}</span>`
 		runtimeConfig.rAFIntervalCountItemElement.innerHTML = `RAF COUNT: <span>${runtimeConfig.rAFIntervalCount.toFixed(4)}</span>`
 		runtimeConfig.rICCountItemElement.innerHTML = `RIC COUNT: <span>${runtimeConfig.rICCount.toFixed(4)}</span>`
-		if (runtimeConfig.rAFCount >= runtimeConfig.warning[0] && runtimeConfig.rAFCount <= runtimeConfig.warning[1]) {
+		const rAFCount = runtimeConfig.rAFCount >> 0
+		if (rAFCount >= runtimeConfig.warning[0] && rAFCount <= runtimeConfig.warning[1]) {
 			runtimeConfig.wrapperElement.classList.add('_fps-monitor-tips-warning')
 		} else {
 			runtimeConfig.wrapperElement.classList.remove('_fps-monitor-tips-warning')
 		}
-		if (runtimeConfig.rAFCount >= runtimeConfig.serious[0] && runtimeConfig.rAFCount <= runtimeConfig.serious[1]) {
+		if (rAFCount >= runtimeConfig.serious[0] && rAFCount <= runtimeConfig.serious[1]) {
 			runtimeConfig.wrapperElement.classList.add('_fps-monitor-tips-serious')
 		} else {
 			runtimeConfig.wrapperElement.classList.remove('_fps-monitor-tips-serious')
