@@ -158,8 +158,7 @@
 	}
 
 	const countRAF = timeStamp => {
-		const now = performance.now()
-		runtimeConfig._rAFCountInEveryInterval++
+		const now = timeStamp
 		if (now - runtimeConfig._rAFSetCountLastTime >= runtimeConfig.interval) {
 			runtimeConfig.rAFCount = runtimeConfig._rAFCountInEveryInterval / ((now - runtimeConfig._rAFSetCountLastTime) / 1000)
 			runtimeConfig.rAFIntervalCount = runtimeConfig._rAFCountInEveryInterval
@@ -168,6 +167,7 @@
 			runtimeConfig._rAFCountInEveryInterval = 0
 			runtimeConfig._rAFSetCountLastTime = now
 		}
+		runtimeConfig._rAFCountInEveryInterval++
 		window.requestAnimationFrame(countRAF)
 	}
 
