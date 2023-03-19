@@ -1,3 +1,13 @@
+/**
+ * 向量 A(ax, ay) 和 向量 B(bx, by)
+ *      叉乘
+ *           = ax * by - bx * ay
+ *           = |a| * |b| * sin(夹角)
+ *      点乘
+ *          = ax * bx + ay * by
+ *          = |a| * |b| * cos(夹角)
+ */
+
 class Vector2 {
     constructor(x, y) {
         this.x = x
