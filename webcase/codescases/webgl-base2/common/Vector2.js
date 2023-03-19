@@ -22,6 +22,10 @@ class Vector2 {
         return Math.atan2(this.y, this.x)
     }
 
+    get dirDeg() {
+        return Math.atan2(this.y, this.x) * (180/Math.PI)
+    }
+
     copy() {
         return new Vector2(this.x, this.y)
     }
