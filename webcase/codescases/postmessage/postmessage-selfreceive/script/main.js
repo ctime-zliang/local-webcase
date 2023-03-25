@@ -13,25 +13,22 @@ function prefixClickedAction(e) {
 }
 
 function mainClickedAction(e) {
-    window.setTimeout(() => {
-        gVars.startTimer = performance.now()
-        let sendBuffer = gVars.buffer
-        window.postMessage(gVars, '*')
-        sendBuffer = undefined
-        // if (gVars.buffer) {
-        //     const int32 = new Int32Array(gVars.buffer)
-        //     int32[0] = 1
-        // }
-        if (gVars.json) {
-            gVars.json.c = 3
-        }
-    })
+    gVars.startTimer = performance.now()
+    let sendBuffer = gVars.buffer
+    window.postMessage(gVars, '*')
+    // if (gVars.buffer) {
+    //     const int32 = new Int32Array(gVars.buffer)
+    //     int32[0] = 1
+    // }
+    if (gVars.json) {
+        gVars.json.c = 3
+    }
 }
 
 function messageHandler(e) {
     const { data } = e
     const now = performance.now()
-    console.log(now - gVars.startTimer)
+    console.log(now - data.startTimer)
     // if (data.buffer) {
     //     const int32 = new Int32Array(data.buffer)
     //     int32[0] = 1
