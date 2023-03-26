@@ -36,6 +36,9 @@ const triangles = earcut(points)
 const position = new Float32Array(points)
 const cells = new Uint16Array(triangles)
 
+console.log(points)
+console.log(triangles)
+
 function initWebGLProgram(gl) {
 	const vertexShader = gl.createShader(gl.VERTEX_SHADER)
 	gl.shaderSource(vertexShader, vertex)
@@ -85,7 +88,7 @@ function canvasMousemoveHandler1(e) {
 
 	const colorLoc = gl.getUniformLocation(program, 'u_color')
 	const flag = isPointInPath({vertices, cells}, new Vector2(offsetX, offsetY))
-	console.log(flag)
+	
 	if (flag) {
 		gl.uniform4fv(colorLoc, [0, 0.5, 0, 1])
 	} else {

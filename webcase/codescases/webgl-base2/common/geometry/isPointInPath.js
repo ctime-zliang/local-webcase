@@ -28,7 +28,7 @@ function inTriangle(p1, p2, p3, point) {
     return s1 === s2 && s2 === s3
 }
   
-function isPointInPath({vertices, cells}, point) {
+function isPointInPath({ vertices, cells }, point) {
     let ret = false
     for(let i = 0; i < cells.length; i += 3) {
         const p1 = new Vector2(vertices[cells[i]].x, vertices[cells[i]].y)
