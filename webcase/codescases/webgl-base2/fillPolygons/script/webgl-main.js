@@ -80,14 +80,14 @@ function fillWebGLBuffer(gl, program, positionData, cellsData) {
 function canvasMousemoveHandler1(e) {
 	const gl = gVars.webglContext
 	const program = gVars.webglProgram
-	const canvasRect = this.getBoundingClientRect().toJSON()
-	const offsetX = e.clientX - canvasRect.left
-	const offsetY = e.clientY - canvasRect.top
+	const offsetX = 2 * (e.clientX - gVars.canvasRect.left) / gVars.canvasRect.width - 1.0
+  	const offsetY = 1.0 - 2 * (e.clientY - gVars.canvasRect.top) / gVars.canvasRect.height
 
 	gl.clear(gl.COLOR_BUFFER_BIT)
 
 	const colorLoc = gl.getUniformLocation(program, 'u_color')
-	const flag = isPointInPath({vertices, cells}, new Vector2(offsetX, offsetY))
+	const vp = new Vector2(offsetX, offsetY)
+	const flag = isPointInPath({vertices, cells}, vp)
 	
 	if (flag) {
 		gl.uniform4fv(colorLoc, [0, 0.5, 0, 1])
@@ -102,6 +102,7 @@ function bindEvent() {
 }
 
 function main() {
+	gVars.canvasRect = canvasElement.getBoundingClientRect().toJSON()
 	gVars.webglContext = initWebGLContext(canvasElement)
 	console.log(gVars)
 
