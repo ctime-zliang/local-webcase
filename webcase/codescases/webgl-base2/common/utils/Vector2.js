@@ -2,10 +2,10 @@
  * 向量 A(ax, ay) 和 向量 B(bx, by)
  *      叉乘
  *           = ax * by - bx * ay
- *           = |a| * |b| * sin(夹角)
+ *           = |a| * |b| * sin(θ)
  *      点乘
  *          = ax * bx + ay * by
- *          = |a| * |b| * cos(夹角)
+ *          = |a| * |b| * cos(θ)
  */
 
 class Vector2 {
@@ -60,6 +60,11 @@ class Vector2 {
 		return this.scale(1 / this.length)
 	}
 
+	/**
+	 * 将向量 v0(x0, y0) 旋转 θ 角度后
+	 * 		x = x0 * cos(θ) - y0 * sin(θ)
+	 * 		y = x0 * sin(θ) + x0 * cos(θ)
+	 */
 	rotate(rad) {
 		const c = Math.cos(rad)
 		const s = Math.sin(rad)
