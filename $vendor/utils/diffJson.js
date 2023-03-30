@@ -28,7 +28,7 @@ class Ven$JsonDiff {
 		return Object.prototype.toString.call(target).slice(8, -1).toLowerCase() === 'null'
 	}
 
-	static isNull(target) {
+	static isRegexp(target) {
 		return Object.prototype.toString.call(target).slice(8, -1).toLowerCase() === 'regexp'
 	}
 
