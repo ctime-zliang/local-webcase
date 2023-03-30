@@ -49,7 +49,7 @@ let _new = {
 	g: new Date('2017.11.25'),
 	h: 'i am updated really',
 }
-let res = Ven$JsonDiff.diff(_old, _new)
+let res = Ven$JsonDiff.exec(_old, _new)
 
 // output
 console.log(_old)
