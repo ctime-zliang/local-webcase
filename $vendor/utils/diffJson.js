@@ -20,6 +20,46 @@ class Ven$JsonDiff {
 		return Object.prototype.toString.call(target).slice(8, -1).toLowerCase() === 'date'
 	}
 
+	static isUndefined(target) {
+		return Object.prototype.toString.call(target).slice(8, -1).toLowerCase() === 'undefined'
+	}
+
+	static isNull(target) {
+		return Object.prototype.toString.call(target).slice(8, -1).toLowerCase() === 'null'
+	}
+
+	static isNull(target) {
+		return Object.prototype.toString.call(target).slice(8, -1).toLowerCase() === 'regexp'
+	}
+
+	static isError(target) {
+		return Object.prototype.toString.call(target).slice(8, -1).toLowerCase() === 'error'
+	}
+
+	static isMap(target) {
+		return Object.prototype.toString.call(target).slice(8, -1).toLowerCase() === 'map'
+	}
+
+	static isWeakMap(target) {
+		return Object.prototype.toString.call(target).slice(8, -1).toLowerCase() === 'weakmap'
+	}
+
+	static isSet(target) {
+		return Object.prototype.toString.call(target).slice(8, -1).toLowerCase() === 'set'
+	}
+
+	static isWeakSet(target) {
+		return Object.prototype.toString.call(target).slice(8, -1).toLowerCase() === 'weakset'
+	}
+
+	static isSymbol(target) {
+		return Object.prototype.toString.call(target).slice(8, -1).toLowerCase() === 'symbol'
+	}
+
+	static isBigInt(target) {
+		return Object.prototype.toString.call(target).slice(8, -1).toLowerCase() === 'bigint'
+	}
+
 	static isPrimitiveValue(target) {
 		return !this.isObject(target) && !this.isArray(target)
 	}
