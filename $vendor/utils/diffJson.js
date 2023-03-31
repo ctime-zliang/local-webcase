@@ -115,7 +115,7 @@ class Ven$JsonDiff {
 	}
 
 	/**
-	 * @description exec 主函数
+	 * @description diff 主函数
 	 * @function exec
 	 * @param {object|array} obj1 对象 1(基准对象)
 	 * @param {object|array} obj2 对象 2(被检查对象)
