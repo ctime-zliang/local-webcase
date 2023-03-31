@@ -22,10 +22,21 @@
 	],
 	g: new Date('2017.11.25'),
 	h: 'i am updated',
+	i: [
+		{ name: '', cache: [1] }
+	],
+	j: [
+		{ name: '', cache: { a: 1 } }
+	],
+	k: [
+		{ name: '', cache: [1] }
+	],
+	l: [
+		{ name: '', cache: [] }
+	],
 }
 let _new = {
 	a: 'i am unchanged',
-
 	c: 'i am created',
 	e: {
 		a: '1',
@@ -48,6 +59,18 @@ let _new = {
 	],
 	g: new Date('2017.11.25'),
 	h: 'i am updated really',
+	i: [
+		{ name: '', cache: { a: 1 } }
+	],
+	j: [
+		{ name: '', cache: [] }
+	],
+	k: [
+		{ name: '', cache: [] }
+	],
+	l: [
+		{ name: '', cache: {} }
+	],
 }
 let res = Ven$JsonDiff.exec(_old, _new)
 
