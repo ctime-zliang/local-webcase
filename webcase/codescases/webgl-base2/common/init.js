@@ -10,12 +10,7 @@ function init2DContext(canvasElement) {
 	return canvasElement.getContext('2d')
 }
 
-function setShaderProgram(
-	gl, 
-	vertexShaderSource, 
-	fragmentShaderSource, 
-	notUseprogram = false
-) {
+function setShaderProgram(gl, vertexShaderSource, fragmentShaderSource, notUseprogram = false) {
 	/**
 	 * 创建顶点着色器
 	 */
@@ -62,7 +57,7 @@ function setShaderProgram(
 	}
 	if (!notUseprogram) {
 		gl.useProgram(program)
-	}	
+	}
 	return program
 }
 

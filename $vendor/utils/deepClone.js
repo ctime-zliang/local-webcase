@@ -73,13 +73,13 @@ function ven$deepClone2(data) {
  * @return {promise<object|array|null>}
  */
 function ven$deepClone3(json) {
-	return new Promise((resolve) => {
+	return new Promise(resolve => {
 		try {
-		  	const { port1, port2 } = new MessageChannel()	
-		  	port2.onmessage = function (e) {
+			const { port1, port2 } = new MessageChannel()
+			port2.onmessage = function (e) {
 				resolve(e.data)
-		  	}
-		  	port1.postMessage(json)
+			}
+			port1.postMessage(json)
 		} catch (e) {
 			resolve(null)
 		}

@@ -8,19 +8,19 @@ window.gVars = gVars
 function prefixClickedAction(e) {}
 
 function mainClickedAction(e) {
-    setTimeoutTest()
-    setMessageTimeoutTest()
+	setTimeoutTest()
+	setMessageTimeoutTest()
 }
 
 function bindEvent() {
-    const prefixBtnElement = document.getElementById('prefixBtn')
-    const mainBtnElement = document.getElementById('mainBtn')
-    prefixBtnElement.addEventListener('click', prefixClickedAction)   
-    mainBtnElement.addEventListener('click', mainClickedAction)
+	const prefixBtnElement = document.getElementById('prefixBtn')
+	const mainBtnElement = document.getElementById('mainBtn')
+	prefixBtnElement.addEventListener('click', prefixClickedAction)
+	mainBtnElement.addEventListener('click', mainClickedAction)
 }
 
 function main() {
-    bindEvent()
+	bindEvent()
 }
 
 window.addEventListener('DOMContentLoaded', main)
