@@ -30,12 +30,12 @@ function canvasMousemoveHandler1(e) {
 	gVars.canvasContext.clearRect(0, 0, gVars.canvasElement.width, gVars.canvasElement.height)
 
 	if (gVars.canvasContext.isPointInPath(offsetX, offsetY)) {
-		baseDraw(points, gVars.canvasContext, {
+		baseCanvasDraw(points, gVars.canvasContext, {
 			isClosePath: true,
 			fillStyle: 'red',
 		})
 	} else {
-		baseDraw(points, gVars.canvasContext, {
+		baseCanvasDraw(points, gVars.canvasContext, {
 			isClosePath: true,
 			fillStyle: 'blue',
 		})
@@ -54,7 +54,7 @@ function main() {
 
 	tranlate2DContext1(gVars.canvasContext, canvasElement.width, canvasElement.height)
 
-	baseDraw(points, gVars.canvasContext, {
+	baseCanvasDraw(points, gVars.canvasContext, {
 		isClosePath: true,
 	})
 }

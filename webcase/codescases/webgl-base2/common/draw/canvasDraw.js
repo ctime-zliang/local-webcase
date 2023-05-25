@@ -1,4 +1,4 @@
-function baseDraw(points, ctx, optional = {}) {
+function baseCanvasDraw(points, ctx, optional = {}) {
 	const defaultStrokeStyle = 'black'
 	const defaultIsClose = false
 	const defaultFillStyle = null
@@ -37,7 +37,7 @@ function drawArc(centerX, centerY, radius, startRad = 0, endRad = 2 * Math.PI) {
 	)
 	return {
 		render(ctx, optional = {}) {
-			generator(startRad, endRad).render(baseDraw, ctx, optional)
+			generator(startRad, endRad).render(baseCanvasDraw, ctx, optional)
 		},
 	}
 }
@@ -56,7 +56,7 @@ function drawEllipse(centerX, centerY, aAxle, bAxle, startRad = 0, endRad = 2 * 
 	)
 	return {
 		render(ctx, optional = {}) {
-			generator(startRad, endRad).render(baseDraw, ctx, optional)
+			generator(startRad, endRad).render(baseCanvasDraw, ctx, optional)
 		},
 	}
 }
@@ -75,7 +75,7 @@ function drawPara(p, startRad = 0, endRad = 2 * Math.PI) {
 	)
 	return {
 		render(ctx, optional = {}) {
-			generator(startRad, endRad).render(baseDraw, ctx, optional)
+			generator(startRad, endRad).render(baseCanvasDraw, ctx, optional)
 		},
 	}
 }
