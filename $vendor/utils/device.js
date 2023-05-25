@@ -12,19 +12,30 @@ function ven$getDPR() {
  * @function ven$getDPI
  * @return {number}
  */
-function ven$getDPI(absolute = false) {
-	const arrDPI = new Array(2)
-	const dpr = ven$getDPR()
+function ven$getDPI() {
+	const DPI = new Array(2)
+	const DPR = ven$getDPR()
 	const tmpNode = document.createElement('div')
-	tmpNode.style.cssText = `height: 1in; left: -100%; position: absolute; top: -100%; width: 1in;`
+	tmpNode.style.cssText = `height: 1in; width: 1in; left: -100%; top: -100%; position: absolute;`
 	document.body.appendChild(tmpNode)
-	arrDPI[0] = parseInt(tmpNode.offsetWidth)
-	arrDPI[1] = parseInt(tmpNode.offsetHeight)
+	DPI[0] = parseInt(tmpNode.offsetWidth) * DPR
+	DPI[1] = parseInt(tmpNode.offsetHeight) * DPR
 	tmpNode.parentNode.removeChild(tmpNode)
-	if (absolute === true) {
-		return arrDPI
-	}
-	arrDPI[0] *= dpr
-	arrDPI[1] *= dpr
-	return arrDPI
+	return DPI
+}
+
+/**
+ * @description 获取设备 DPI
+ * @function ven$getAbsoluteDPI
+ * @return {number}
+ */
+ function ven$getAbsoluteDPI() {
+	const DPI = new Array(2)
+	const tmpNode = document.createElement('div')
+	tmpNode.style.cssText = `height: 1in; width: 1in; left: -100%; top: -100%; position: absolute;`
+	document.body.appendChild(tmpNode)
+	DPI[0] = parseInt(tmpNode.offsetWidth)
+	DPI[1] = parseInt(tmpNode.offsetHeight)
+	tmpNode.parentNode.removeChild(tmpNode)
+	return DPI
 }
