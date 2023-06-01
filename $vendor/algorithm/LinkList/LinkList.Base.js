@@ -1,7 +1,7 @@
 /**
  * @description 单向链表节点
  * @class Ven$SinglyLinkListNode
- * @param {any} val 链表节点值
+ * @param {any} val 节点值
  * @param {Ven$SinglyLinkListNode} next 下一个链表节点
  * @return {undefined}
  */
@@ -15,7 +15,7 @@ class Ven$SinglyLinkListNode {
 /**
  * @description 双向链表节点
  * @class Ven$DoublyLinkListNode
- * @param {any} val 链表节点值
+ * @param {any} val 节点值
  * @param {Ven$DoublyLinkListNode} next 下一个链表节点
  * @param {Ven$DoublyLinkListNode} prev 上一个链表节点
  * @return {undefined}
