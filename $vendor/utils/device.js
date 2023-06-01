@@ -29,7 +29,7 @@ function ven$getDPI() {
  * @function ven$getAbsoluteDPI
  * @return {number}
  */
- function ven$getAbsoluteDPI() {
+function ven$getAbsoluteDPI() {
 	const DPI = new Array(2)
 	const tmpNode = document.createElement('div')
 	tmpNode.style.cssText = `height: 1in; width: 1in; left: -100%; top: -100%; position: absolute;`
