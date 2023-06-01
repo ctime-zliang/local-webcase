@@ -1,3 +1,7 @@
+const ven$TreeUtils = {
+	insertTreeNode(referenceTreeNode, newTreeNode) {},
+}
+
 /**
  * @description Tree 结构基本节点
  * @class Ven$TreeNode
@@ -11,7 +15,7 @@ class Ven$TreeNode {
 }
 
 /**
- * @description Binary Tree 结构基本节点
+ * @description BinaryTree 结构基本节点
  * @class Ven$BinaryTreeNode
  * @param {any} val 节点值
  * @return {undefined}
@@ -25,18 +29,24 @@ class Ven$BinaryTreeNode extends Ven$TreeNode {
 }
 
 /**
- * @description BinarySearchTree
+ * @description BinarySearchTree 二叉搜索树
+ *      left.val < parent.val < right.val
  * @class Ven$BinarySearchTree
  * @param {any} val 节点值
  * @return {undefined}
  */
-class Ven$BinarySearchTree extends Ven$BinaryTreeNode {
-	constructor(val) {
-		super(val)
+class Ven$BinarySearchTree {
+	constructor() {
 		this.root = null
 	}
 
-	insert(val) {}
+	insert(val) {
+		const newTreeNode = new Ven$BinaryTreeNode(val)
+		if (this.root === null) {
+			this.root = newTreeNode
+			return
+		}
+	}
 
 	remove(val) {}
 
