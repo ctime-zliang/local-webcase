@@ -44,8 +44,8 @@ function mergeTwoLists(l1, l2) {
 const arr1 = []
 const arr2 = []
 
-const head1 = ven$setArray2SinglyLinkList(arr1)
-const head2 = ven$setArray2SinglyLinkList(arr2)
+const head1 = ven$setArray2SinglyLinkedList(arr1)
+const head2 = ven$setArray2SinglyLinkedList(arr2)
 
 console.log(head1, head2)
 

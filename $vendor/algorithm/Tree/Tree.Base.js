@@ -6,7 +6,6 @@ const ven$TreeUtils = {
  * @description Tree 结构基本节点
  * @class Ven$TreeNode
  * @param {any} val 节点值
- * @return {undefined}
  */
 class Ven$TreeNode {
 	constructor(val) {
@@ -18,7 +17,6 @@ class Ven$TreeNode {
  * @description BinaryTree 结构基本节点
  * @class Ven$BinaryTreeNode
  * @param {any} val 节点值
- * @return {undefined}
  */
 class Ven$BinaryTreeNode extends Ven$TreeNode {
 	constructor(val) {
@@ -32,8 +30,6 @@ class Ven$BinaryTreeNode extends Ven$TreeNode {
  * @description BinarySearchTree 二叉搜索树
  *      left.val < parent.val < right.val
  * @class Ven$BinarySearchTree
- * @param {any} val 节点值
- * @return {undefined}
  */
 class Ven$BinarySearchTree {
 	constructor() {

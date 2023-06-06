@@ -41,7 +41,7 @@ function fn1(head, left, right) {
 }
 
 const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-const list = ven$setArray2SinglyLinkList(arr)
+const list = ven$setArray2SinglyLinkedList(arr)
 
 const a = reverseBetween(list, 3, 7)
-console.log(ven$setSinglyLinkList2Array(a))
+console.log(ven$setSinglyLinkedList2Array(a))

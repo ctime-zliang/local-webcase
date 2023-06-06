@@ -18,6 +18,6 @@ function reverseList(head) {
 }
 
 const arr = [1, 2, 3, 4, 5]
-const list = ven$setArray2SinglyLinkList(arr)
+const list = ven$setArray2SinglyLinkedList(arr)
 
 console.log(reverseList(list))

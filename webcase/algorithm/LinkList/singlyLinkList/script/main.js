@@ -1,12 +1,12 @@
 const array = [3, 5, 8, 1, 9, 6]
 
 function main() {
-	const singlyLinkList = ven$setArray2SinglyLinkList(array)
-	const cyclicLinkList = ven$setArray2CyclicLinkList(array)
-	console.log(`Singly Link List`, singlyLinkList)
-	console.log(`Cyclic Link List`, cyclicLinkList)
+	const singlyLinkedList = ven$setArray2SinglyLinkedList(array)
+	const cyclicLinkedList = ven$setArray2CyclicLinkedList(array)
+	console.log(`Singly Link List`, singlyLinkedList)
+	console.log(`Cyclic Link List`, cyclicLinkedList)
 
-	const translateArray = ven$setSinglyLinkList2Array(singlyLinkList)
+	const translateArray = ven$setSinglyLinkedList2Array(singlyLinkedList)
 	console.log(`Translate Array`, translateArray)
 }
 

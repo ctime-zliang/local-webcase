@@ -1,10 +1,10 @@
 /**
  * @description 链表反转
- * @function ven$reverseSinglyList
- * @param {Ven$LinkListNode} head 单向链表的起始节点(头节点)
- * @return {Ven$LinkListNode} 单向链表
+ * @function ven$reverseSinglyLinkedList
+ * @param {Ven$LinkedListNode} head 单向链表的起始节点(头节点)
+ * @return {Ven$LinkedListNode} 单向链表
  */
-function ven$reverseSinglyList(head) {
+function ven$reverseSinglyLinkedList(head) {
 	if (!head || !head.next) {
 		return head
 	}

@@ -24,9 +24,9 @@ const coms = [8, 4, 5]
 const arr1 = [4, 1]
 const arr2 = [5, 0, 1]
 
-const head = ven$setArray2SinglyLinkList(coms)
-const head1 = ven$setArray2SinglyLinkList(arr1)
-const head2 = ven$setArray2SinglyLinkList(arr2)
+const head = ven$setArray2SinglyLinkedList(coms)
+const head1 = ven$setArray2SinglyLinkedList(arr1)
+const head2 = ven$setArray2SinglyLinkedList(arr2)
 const last1 = findLast(head1)
 const last2 = findLast(head2)
 
