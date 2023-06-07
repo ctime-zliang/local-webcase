@@ -51,7 +51,7 @@ class Ven$BaseLinkedList {
 			if (current.val === val) {
 				return i
 			}
-			current = current.val
+			current = current.next
 		}
 		return -1
 	}
@@ -81,7 +81,11 @@ class Ven$BaseLinkedList {
 			str += `${current.val}, `
 			current = current.next
 		}
-		return str.substring(-1)
+		if (this._length > 0) {
+			str = str.slice(0, -2)
+		}
+		str += `)`
+		return str
 	}
 }
 
@@ -101,8 +105,8 @@ class Ven$SinglyLinkedList extends Ven$BaseLinkedList {
 			this._length++
 			return newItem
 		}
-		let lastNode = this.getItemAt(this._length - 1)
-		lastNode.next = newItem
+		let lastItem = this.getItemAt(this._length - 1)
+		lastItem.next = newItem
 		this._length++
 		return newItem
 	}
@@ -120,8 +124,9 @@ class Ven$SinglyLinkedList extends Ven$BaseLinkedList {
 			return newItem
 		}
 		const prevItem = this.getItemAt(index - 1)
-		newItem.next = prevItem.next
+		const current = prevItem.next
 		prevItem.next = newItem
+		newItem.next = current
 		this._length++
 		return newItem
 	}
@@ -137,8 +142,28 @@ class Ven$SinglyLinkedList extends Ven$BaseLinkedList {
 			return true
 		}
 		const prevItem = this.getItemAt(index - 1)
-		prevItem.next = prevItem.next
+		const current = prevItem.next
+		prevItem.next = current.next
 		this._length--
+		return true
+	}
+
+	updateItem(val, index) {
+		if (index < 0 || index > this._length - 1) {
+			console.warn(`update index out of bounds.`)
+			return false
+		}
+		const newItem = new Ven$SinglyLinkedListNode(val)
+		if (index === 0) {
+			newItem.next = this._head.next
+			this._head = newItem
+			return true
+		}
+		const prevItem = this.getItemAt(index - 1)
+		const current = prevItem.next
+		const nextItem = current.next
+		prevItem.next = newItem
+		newItem.next = nextItem
 		return true
 	}
 }
@@ -154,6 +179,10 @@ class Ven$DoublyLinkedList extends Ven$BaseLinkedList {
 	}
 
 	getItemAt(index) {
+		if (index < 0 || index > this._length - 1) {
+			console.warn(`query index out of bounds.`)
+			return null
+		}
 		if (index >= Math.floor(this._length / 2)) {
 			let current = this._tail
 			for (let i = this._length - 1; i > index; i--) {
@@ -193,17 +222,19 @@ class Ven$DoublyLinkedList extends Ven$BaseLinkedList {
 			return newItem
 		}
 		if (index === this._length - 1) {
-			this._tail.next = newItem
-			newItem.prev = this._tail
-			this._tail = newItem
+			this._tail.prev.next = newItem
+			newItem.prev = this._tail.prev
+			this._tail.prev = newItem
+			newItem.next = this._tail
 			this._length++
 			return
 		}
-		const prevItem = this.getItemAt(index - 1)
-		newItem.next = prevItem.next
-		prevItem.next.prev = newItem
-		prevItem.next = newItem
+		const current = this.getItemAt(index)
+		const prevItem = current.prev
+		newItem.next = current
+		current.prev = newItem
 		newItem.prev = prevItem
+		prevItem.next = newItem
 		this._length++
 		return newItem
 	}
@@ -222,17 +253,48 @@ class Ven$DoublyLinkedList extends Ven$BaseLinkedList {
 			return true
 		}
 		if (index === this._length - 1) {
+			this._tail.prev.next = null
 			this._tail = this._tail.prev
-			if (this._tail.prev) {
-				this._tail.prev.next = this._tail
-			}
 			this._length--
 			return true
 		}
-		const prevItem = this.getItemAt(index - 1)
-		prevItem.next = prevItem.next.next
-		prevItem.next.next.prev = prevItem
+		const current = this.getItemAt(index)
+		const prevItem = current.prev
+		prevItem.next = current.next
+		current.next.prev = prevItem
 		this._length--
+		return true
+	}
+
+	updateItem(val, index) {
+		if (index < 0 || index > this._length - 1) {
+			console.warn(`update index out of bounds.`)
+			return false
+		}
+		const newItem = new Ven$DoublyLinkedListNode(val)
+		if (index === 0) {
+			if (this._head.next) {
+				this._head.next.prev = newItem
+				newItem.next = this._head.next
+			}
+			this._head = newItem
+			return true
+		}
+		if (index === this._length - 1) {
+			if (this._tail.prev) {
+				this._tail.prev.next = newItem
+				newItem.prev = this._tail.prev
+			}
+			this._tail = newItem
+			return true
+		}
+		const current = this.getItemAt(index)
+		const prevItem = current.prev
+		const nextItem = current.next
+		prevItem.next = newItem
+		newItem.prev = prevItem
+		nextItem.prev = newItem
+		newItem.next = nextItem
 		return true
 	}
 
