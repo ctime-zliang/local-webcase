@@ -1,5 +1,19 @@
 const ven$TreeUtils = {
-	insertTreeNode(referenceTreeNode, newTreeNode) {},
+	insertItem(referenceItem, newItem) {
+		if (newItem.val > referenceItem.val) {
+			if (referenceItem.right === null) {
+				referenceItem.right = newItem
+				return
+			}
+			ven$TreeUtils.insertItem(referenceItem.right, newItem)
+			return
+		}
+		if (referenceItem.left === null) {
+			referenceItem.left = newItem
+			return
+		}
+		ven$TreeUtils.insertItem(referenceItem.left, newItem)
+	},
 }
 
 /**
@@ -28,7 +42,7 @@ class Ven$BinaryTreeNode extends Ven$TreeNode {
 
 /**
  * @description BinarySearchTree 二叉搜索树
- *      left.val < parent.val < right.val
+ *      val(left.val) < val(parent.val) < val(right.val)
  * @class Ven$BinarySearchTree
  */
 class Ven$BinarySearchTree {
@@ -36,25 +50,12 @@ class Ven$BinarySearchTree {
 		this.root = null
 	}
 
-	insert(val) {
-		const newTreeNode = new Ven$BinaryTreeNode(val)
+	insertItem(val) {
+		const newItem = new Ven$BinaryTreeNode(val)
 		if (this.root === null) {
-			this.root = newTreeNode
+			this.root = newItem
 			return
 		}
+		ven$TreeUtils.insertItem(this.root, newItem)
 	}
-
-	remove(val) {}
-
-	search(val) {}
-
-	inOrderTraverse() {}
-
-	preOrderTraverse() {}
-
-	postOrderTraverse() {}
-
-	min() {}
-
-	max() {}
 }
