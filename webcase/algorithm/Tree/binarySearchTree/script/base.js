@@ -17,6 +17,14 @@ function main() {
 	binarySearchTree.insertItem(25)
 	binarySearchTree.insertItem(19)
 
+	console.log(binarySearchTree.hasItem(9))
+	// console.log(binarySearchTree.preOrderTraverseByRecursion())
+	// console.log(binarySearchTree.preOrderTraverseByStack())
+	// console.log(binarySearchTree.inOrderTraverseByRecursion())
+	// console.log(binarySearchTree.inOrderTraverseByStack())
+	// console.log(binarySearchTree.postOrderTraverseByRecursion())
+	// console.log(binarySearchTree.postOrderTraverseByStack())
+
 	console.log(`Binary Search Tree`, binarySearchTree)
 }
 

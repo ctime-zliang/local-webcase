@@ -56,6 +56,10 @@ class Ven$BaseLinkedList {
 		return -1
 	}
 
+	hasItem(val) {
+		return this.indexOf(val) !== -1
+	}
+
 	size() {
 		return this._length
 	}
