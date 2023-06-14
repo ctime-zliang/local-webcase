@@ -1,28 +1,63 @@
 /**
  * @description 单向链表节点
  * @class Ven$SinglyLinkedListNode
- * @param {any} val 节点值
+ * @param {any} key 节点值
  * @param {Ven$SinglyLinkedListNode} next 下一个链表节点
  */
 class Ven$SinglyLinkedListNode {
-	constructor(val, next = undefined) {
-		this.val = val === undefined ? undefined : val
-		this.next = next === undefined ? null : next
+	constructor(key, next = undefined) {
+		this._key = key === undefined ? undefined : key
+		this._next = next === undefined ? null : next
+	}
+
+	get key() {
+		return this._key
+	}
+	set key(value) {
+		this._key = value
+	}
+
+	get next() {
+		return this._next
+	}
+	set next(value) {
+		this._next = value
 	}
 }
 
 /**
  * @description 双向链表节点
  * @class Ven$DoublyLinkedListNode
- * @param {any} val 节点值
+ * @param {any} key 节点值
  * @param {Ven$DoublyLinkedListNode} next 下一个链表节点
  * @param {Ven$DoublyLinkedListNode} prev 上一个链表节点
  */
 class Ven$DoublyLinkedListNode {
-	constructor(val, next = undefined, prev = undefined) {
-		this.val = val === undefined ? undefined : val
-		this.next = next === undefined ? null : next
-		this.prev = prev === undefined ? null : prev
+	constructor(key, next = undefined, prev = undefined) {
+		this._key = key === undefined ? undefined : key
+		this._next = next === undefined ? null : next
+		this._prev = prev === undefined ? null : prev
+	}
+
+	get key() {
+		return this._key
+	}
+	set key(value) {
+		this._key = value
+	}
+
+	get prev() {
+		return this._prev
+	}
+	set prev(value) {
+		this._prev = value
+	}
+
+	get next() {
+		return this._next
+	}
+	set next(value) {
+		this._next = value
 	}
 }
 
@@ -45,10 +80,10 @@ class Ven$BaseLinkedList {
 		return current
 	}
 
-	indexOf(val) {
+	indexOf(key) {
 		let current = this._head
 		for (let i = 0; i < this._length; i++) {
-			if (current.val === val) {
+			if (current._key === key) {
 				return i
 			}
 			current = current.next
@@ -56,8 +91,8 @@ class Ven$BaseLinkedList {
 		return -1
 	}
 
-	hasItem(val) {
-		return this.indexOf(val) !== -1
+	hasItem(key) {
+		return this.indexOf(key) !== -1
 	}
 
 	size() {
@@ -82,7 +117,7 @@ class Ven$BaseLinkedList {
 		let str = `linkedlist (`
 		let current = this._head
 		for (let i = 0; i < this._length; i++) {
-			str += `${current.val}, `
+			str += `${current._key}, `
 			current = current.next
 		}
 		if (this._length > 0) {
@@ -102,8 +137,8 @@ class Ven$SinglyLinkedList extends Ven$BaseLinkedList {
 		super()
 	}
 
-	appendItem(val) {
-		const newItem = new Ven$SinglyLinkedListNode(val)
+	appendItem(key) {
+		const newItem = new Ven$SinglyLinkedListNode(key)
 		if (this._head === null) {
 			this._head = newItem
 			this._length++
@@ -115,12 +150,12 @@ class Ven$SinglyLinkedList extends Ven$BaseLinkedList {
 		return newItem
 	}
 
-	insertItem(val, index) {
+	insertItem(key, index) {
 		if (index < 0 || index > this._length - 1) {
 			console.warn(`insert index out of bounds.`)
 			return null
 		}
-		const newItem = new Ven$SinglyLinkedListNode(val)
+		const newItem = new Ven$SinglyLinkedListNode(key)
 		if (index === 0) {
 			newItem.next = this._head
 			this._head = newItem
@@ -152,12 +187,12 @@ class Ven$SinglyLinkedList extends Ven$BaseLinkedList {
 		return true
 	}
 
-	updateItem(val, index) {
+	updateItem(key, index) {
 		if (index < 0 || index > this._length - 1) {
 			console.warn(`update index out of bounds.`)
 			return false
 		}
-		const newItem = new Ven$SinglyLinkedListNode(val)
+		const newItem = new Ven$SinglyLinkedListNode(key)
 		if (index === 0) {
 			newItem.next = this._head.next
 			this._head = newItem
@@ -197,8 +232,8 @@ class Ven$DoublyLinkedList extends Ven$BaseLinkedList {
 		return super.getItemAt(index)
 	}
 
-	appendItem(val) {
-		const newItem = new Ven$DoublyLinkedListNode(val)
+	appendItem(key) {
+		const newItem = new Ven$DoublyLinkedListNode(key)
 		if (this._head === null) {
 			this._head = newItem
 			this._tail = newItem
@@ -212,12 +247,12 @@ class Ven$DoublyLinkedList extends Ven$BaseLinkedList {
 		return newItem
 	}
 
-	insertItem(val, index) {
+	insertItem(key, index) {
 		if (index < 0 || index > this._length - 1) {
 			console.warn(`insert index out of bounds.`)
 			return null
 		}
-		const newItem = new Ven$DoublyLinkedListNode(val)
+		const newItem = new Ven$DoublyLinkedListNode(key)
 		if (index === 0) {
 			this._head.prev = newItem
 			newItem.next = this._head
@@ -270,12 +305,12 @@ class Ven$DoublyLinkedList extends Ven$BaseLinkedList {
 		return true
 	}
 
-	updateItem(val, index) {
+	updateItem(key, index) {
 		if (index < 0 || index > this._length - 1) {
 			console.warn(`update index out of bounds.`)
 			return false
 		}
-		const newItem = new Ven$DoublyLinkedListNode(val)
+		const newItem = new Ven$DoublyLinkedListNode(key)
 		if (index === 0) {
 			if (this._head.next) {
 				this._head.next.prev = newItem

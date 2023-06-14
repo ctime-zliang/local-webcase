@@ -6,10 +6,10 @@
  */
 function ven$setSinglyLinkedList2Array(list) {
 	const arr = []
-	arr.push(list.val)
+	arr.push(list.key)
 	while (list.next) {
 		list = list.next
-		arr.push(list.val)
+		arr.push(list.key)
 	}
 	return arr
 }

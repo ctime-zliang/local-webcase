@@ -1,6 +1,6 @@
 /**
  * @description BinarySearchTree 二叉搜索树
- *      val(left._val) < val(parent._val) < val(right._val)
+ *      val(left.key) < val(parent.key) < val(right.key)
  * @class Ven$BinarySearchTree
  */
 class Ven$BinarySearchTree {
@@ -8,44 +8,51 @@ class Ven$BinarySearchTree {
 		this._root = null
 	}
 
-	insertItem(val) {
-		const newItem = new Ven$BinaryTreeNode(val)
-		if (this._root === null) {
-			this._root = newItem
+	get root() {
+		return this._root
+	}
+	set root(value) {
+		this._root = value
+	}
+
+	insertItem(key) {
+		const newItem = new Ven$BinaryTreeNode(key)
+		if (this.root === null) {
+			this.root = newItem
 			return
 		}
-		ven$TreeUtils.insertItem(this._root, newItem)
+		ven$TreeUtils.insertItem(this.root, newItem)
 	}
 
 	max() {
-		let item = this._root
-		let val = undefined
+		let item = this.root
+		let key = undefined
 		while (item) {
-			val = item._val
-			item = item._right
+			key = item.key
+			item = item.right
 		}
-		return val
+		return key
 	}
 
 	min() {
-		let item = this._root
-		let val = undefined
+		let item = this.root
+		let key = undefined
 		while (item) {
-			val = item._val
-			item = item._left
+			key = item.key
+			item = item.left
 		}
-		return val
+		return key
 	}
 
-	hasItem(val) {
-		let item = this._root
+	hasItem(key) {
+		let item = this.root
 		while (item) {
-			if (val < item._val) {
-				item = item._left
+			if (key < item.key) {
+				item = item.left
 				continue
 			}
-			if (val > item._val) {
-				item = item._right
+			if (key > item.key) {
+				item = item.right
 				continue
 			}
 			return true
@@ -53,35 +60,35 @@ class Ven$BinarySearchTree {
 		return false
 	}
 
-	removeItem(val) {
-		if (this._root === null) {
+	removeItem(key) {
+		if (this.root === null) {
 			return false
 		}
-		ven$TreeUtils.removeItem(this._root, val)
+		ven$TreeUtils.removeItem(this.root, key)
 		return true
 	}
 
 	preOrderTraverseByRecursion() {
-		return ven$TreeUtils.preOrderTraverseByRecursion(this._root)
+		return ven$TreeUtils.preOrderTraverseByRecursion(this.root)
 	}
 
 	preOrderTraverseByStack() {
-		return ven$TreeUtils.preOrderTraverseByStack(this._root)
+		return ven$TreeUtils.preOrderTraverseByStack(this.root)
 	}
 
 	inOrderTraverseByRecursion() {
-		return ven$TreeUtils.inOrderTraverseByRecursion(this._root)
+		return ven$TreeUtils.inOrderTraverseByRecursion(this.root)
 	}
 
 	inOrderTraverseByStack() {
-		return ven$TreeUtils.inOrderTraverseByStack(this._root)
+		return ven$TreeUtils.inOrderTraverseByStack(this.root)
 	}
 
 	postOrderTraverseByRecursion() {
-		return ven$TreeUtils.postOrderTraverseByRecursion(this._root)
+		return ven$TreeUtils.postOrderTraverseByRecursion(this.root)
 	}
 
 	postOrderTraverseByStack() {
-		return ven$TreeUtils.postOrderTraverseByStack(this._root)
+		return ven$TreeUtils.postOrderTraverseByStack(this.root)
 	}
 }
