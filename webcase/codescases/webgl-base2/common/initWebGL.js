@@ -1,5 +1,3 @@
-const PI = Math.PI
-
 function initWebGLContext(canvasElement) {
 	gVars.canvasElement = canvasElement
 	return canvasElement.getContext('webgl')
