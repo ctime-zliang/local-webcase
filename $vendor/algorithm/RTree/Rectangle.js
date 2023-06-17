@@ -1,108 +1,152 @@
-class Ven$Rectangle {
+class Ven$Rtree_Rectangle {
 	static overlapRectangle(rectA, rectB) {
-		if ((rectA.height === 0 && rectA.width === 0) || (rectB.height === 0 && rectB.width === 0)) {
+		if ((rectA.h === 0 && rectA.w === 0) || (rectB.h === 0 && rectB.w === 0)) {
 			return (
-				rectA.startX <= rectB.startX + rectB.width &&
-				rectA.startX + rectA.width >= rectB.startX &&
-				rectA.startY <= rectB.startY + rectB.height &&
-				rectA.startY + rectA.height >= rectB.startY
+				rectA.sx <= rectB.sx + rectB.w && rectA.sx + rectA.w >= rectB.sx && rectA.sy <= rectB.sy + rectB.h && rectA.sy + rectA.h >= rectB.sy
 			)
 		}
-		return (
-			rectA.startX < rectB.startX + rectB.width &&
-			rectA.startX + rectA.width > rectB.startX &&
-			rectA.startY < rectB.startY + rectB.height &&
-			rectA.startY + rectA.height > rectB.startY
-		)
+		return rectA.sx < rectB.sx + rectB.w && rectA.sx + rectA.w > rectB.sx && rectA.sy < rectB.sy + rectB.h && rectA.sy + rectA.h > rectB.sy
 	}
 
 	static containsRectangle(rectA, rectB) {
-		return (
-			rectA.startX + rectA.width <= rectB.startX + rectB.width &&
-			rectA.startX >= rectB.startX &&
-			rectA.startY + rectA.height <= rectB.startY + rectB.height &&
-			rectA.startY >= rectB.startY
-		)
+		return rectA.sx + rectA.w <= rectB.sx + rectB.w && rectA.sx >= rectB.sx && rectA.sy + rectA.h <= rectB.sy + rectB.h && rectA.sy >= rectB.sy
 	}
 
-	constructor(startX, startY, width, height) {
-		this._startX = 0
-		this._startY = 0
-		this._width = 0
-		this._height = 0
-		this._endX = 0
-		this._endY = 0
+	static expandRectangle(expandRect, referenceRect) {
+		let nx = 0
+		let ny = 0
+		let expandRectEX = expandRect.sx + expandRect.w
+		let expandRectEY = recexpandRecttA.sy + expandRect.h
+		let referenceRectEX = referenceRect.sx + referenceRect.w
+		let referenceRectEY = referenceRect.sy + referenceRect.h
+		if (expandRect.sx > referenceRect.sx) {
+			nx = referenceRect.sx
+		} else {
+			nx = expandRect.sx
+		}
+		if (expandRect.sy > referenceRect.sy) {
+			ny = referenceRect.sy
+		} else {
+			ny = expandRect.sy
+		}
+		if (expandRectEX > referenceRectEX) {
+			expandRect.w = expandRectEX - nx
+		} else {
+			expandRect.w = referenceRectEX - nx
+		}
+		if (expandRectEY > referenceRectEY) {
+			expandRect.h = expandRectEY - ny
+		} else {
+			expandRect.h = referenceRectEY - ny
+		}
+		expandRect.sx = nx
+		expandRect.sy = ny
+		expandRect.reset(expandRect.sx, expandRect.sy, expandRect.w, expandRect.h)
+	}
+
+	static makeMBR(nodes, expandRect) {
+		if (!nodes.length || !expandRect) {
+			return
+		}
+		expandRect.reset(nodes[0].x, nodes[0].y, nodes[0].w, nodes[0].h)
+		for (let i = 1; i < nodes.length; i++) {
+			Ven$Rtree_Rectangle.expandRectangle(expandRect, nodes[i])
+		}
+	}
+
+	static squarifiedRatio(l, w, fill) {
+		const lperi = (l + w) / 2
+		const larea = l * w
+		const lgeo = larea / (lperi * lperi)
+		return (larea * fill) / lgeo
+	}
+
+	constructor(sx, sy, w, h) {
+		this._sx = 0
+		this._sy = 0
+		this._w = 0
+		this._h = 0
+		this._ex = 0
+		this._ey = 0
 		this._p = false
-		this.reset(startX, startY, width, height)
+		this.reset(sx, sy, w, h)
 	}
 
-	get startX() {
-		return this._startX
+	get sx() {
+		return this._sx
 	}
 
-	get startY() {
-		return this._startY
+	get sy() {
+		return this._sy
 	}
 
-	get endX() {
-		return this._endX
+	get ex() {
+		return this._ex
 	}
 
-	get endY() {
-		return this._endY
+	get ey() {
+		return this._ey
 	}
 
 	get p() {
 		return this._p
 	}
 
-	reset(startX, startY, width, height) {
-		this._startX = startX
-		this._startY = startY
-		this._width = width
-		this._height = height
-		this._endX = this._startX + this._width
-		this._endY = this._startY + this._height
-		this._p = this._width + this._height ? false : true
+	get w() {
+		return this._w
+	}
+
+	get h() {
+		return this._h
+	}
+
+	reset(sx, sy, w, h) {
+		this._sx = sx
+		this._sy = sy
+		this._w = w
+		this._h = h
+		this._ex = this._sx + this._w
+		this._ey = this._sy + this._h
+		this._p = this._w + this._h ? false : true
 	}
 
 	overlap(rect) {
 		if (this.p || rect.p) {
-			return this.startX <= a.endX && this.endX >= a.startX && this.startY <= a.endY && this.endY >= a.startY
+			return this.sx <= rect.ex && this.ex >= rect.sx && this.sy <= rect.ey && this.ey >= rect.sy
 		}
-		return this.startX < a.endX && this.endX > a.startX && this.startY < a.endY && this.endY > a.startY
+		return this.sx < rect.ex && this.ex > rect.sx && this.sy < rect.ey && this.ey > rect.sy
 	}
 
 	expand(rect) {
 		let nx = 0
 		let ny = 0
-		let startX = 0
-		let startY = 0
-		let width = 0
-		let height = 0
-		if (this.startX > rect.startX) {
-			nx = rect.startX
+		let sx = 0
+		let sy = 0
+		let w = 0
+		let h = 0
+		if (this.sx > rect.sx) {
+			nx = rect.sx
 		} else {
-			nx = this.startX
+			nx = this.sx
 		}
-		if (this.startY > rect.startY) {
-			ny = rect.startY
+		if (this.sy > rect.sy) {
+			ny = rect.sy
 		} else {
-			ny = this.startY
+			ny = this.sy
 		}
-		if (endX > rect.endX) {
-			width = endX - nx
+		if (ex > rect.ex) {
+			w = ex - nx
 		} else {
-			width = rect.endX - nx
+			w = rect.endX - nx
 		}
-		if (endY > rect.endY) {
-			height = this.endY - ny
+		if (ey > rect.ey) {
+			h = this.ey - ny
 		} else {
-			height = rect.endY - ny
+			h = rect.ey - ny
 		}
-		startX = nx
-		startY = ny
-		this.reset(startX, startY, width, height)
+		sx = nx
+		sx = ny
+		this.reset(sx, sy, w, h)
 		return this
 	}
 }
