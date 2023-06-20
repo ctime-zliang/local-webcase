@@ -12,7 +12,7 @@ function Ven$Rtree_flatten(tree) {
 	return result
 }
 
-function Ven$Rtree_removeSubtree(rect, obj, root) {
+function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 	let hitStack = []
 	let countStack = []
 	let retArray = []
@@ -125,15 +125,15 @@ function Ven$Rtree_chooseLeafSubtree(rect, root) {
 	return bestChoiceStack
 }
 
-function Ven$Rtree_linearSplit(nodes) {
+function Ven$Rtree_linearSplit(nodes, minWidth) {
 	const n = Ven$Rtree_pickLinear(nodes)
 	while (nodes.length > 0) {
-		Ven$Rtree_pickNext(nodes, n[0], n[1])
+		Ven$Rtree_pickNext(nodes, n[0], n[1], minWidth)
 	}
 	return n
 }
 
-function Ven$Rtree_pickNext(nodes, a, b) {
+function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 	const areaA = Ven$Rtree_Rectangle.squarifiedRatio(a.w, a.h, a.nodes.length + 1)
 	const areaB = Ven$Rtree_Rectangle.squarifiedRatio(b.w, b.h, b.nodes.length + 1)
 	let highAreaDelta
@@ -268,7 +268,7 @@ function Ven$Rtree_searchSubtree(rect, returnNode, returnArray, root) {
 	return returnArray
 }
 
-function Ven$Rtree_insertSubtree(node, root) {
+function Ven$Rtree_insertSubtree(node, root, maxWidth, minWidth) {
 	let bc
 	if (root.nodes.length === 0) {
 		root.sx = node.sx
@@ -312,7 +312,7 @@ function Ven$Rtree_insertSubtree(node, root) {
 					h: bc.h,
 				}
 			} else {
-				let a = linearSplit(bc.nodes)
+				let a = Ven$Rtree_linearSplit(bc.nodes, minWidth)
 				retObj = a
 				if (treeStack.length < 1) {
 					bc.nodes.push(a[0])
@@ -335,19 +335,19 @@ function Ven$Rtree_insertSubtree(node, root) {
 	}
 }
 
-function Ven$Rtree_removeArea(rect) {
+function Ven$Rtree_removeArea(rect, minWidth) {
 	let numberDeleted = 1
 	let retArray = []
 	let deleted
 	while (numberDeleted > 0) {
-		deleted = Ven$Rtree_removeSubtree(rect, false, rootTree)
+		deleted = Ven$Rtree_removeSubtree(rect, false, rootTree, minWidth)
 		numberDeleted = deleted.length
 		retArray = retArray.concat(deleted)
 	}
 	return retArray
 }
 
-function Ven$Rtree_removeObj(rect, obj) {
-	let retArray = Ven$Rtree_removeSubtree(rect, obj, rootTree)
+function Ven$Rtree_removeObj(rect, obj, minWidth) {
+	let retArray = Ven$Rtree_removeSubtree(rect, obj, rootTree, minWidth)
 	return retArray
 }

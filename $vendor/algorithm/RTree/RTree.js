@@ -27,11 +27,11 @@ class Ven$RTree {
 	}
 
 	insertSubtree(node, root) {
-		Ven$Rtree_insertSubtree(node, root)
+		Ven$Rtree_insertSubtree(node, root, this, this.maxWidth, this.minWidth)
 	}
 
 	getTree() {
-		return this.rootTree
+		return this.root
 	}
 
 	setTree(newTree, where) {
@@ -43,27 +43,29 @@ class Ven$RTree {
 
 	search(rect, returnNode, returnArray) {
 		returnArray = returnArray || []
-		return Ven$Rtree_searchSubtree(rect, returnNode, returnArray, this.rootTree)
+		return Ven$Rtree_searchSubtree(rect, returnNode, returnArray, this.getTree())
 	}
 
 	remove(rect, obj) {
 		if (!obj || typeof obj === 'function') {
-			return Ven$Rtree_removeArea(rect, obj)
+			return Ven$Rtree_removeArea(rect, obj, this.minWidth)
 		} else {
-			return Ven$Rtree_removeObj(rect, obj)
+			return Ven$Rtree_removeObj(rect, obj, this.minWidth)
 		}
 	}
 
 	insert(rect, obj) {
 		let retArray = Ven$Rtree_insertSubtree(
 			{
-				x: rect.x,
-				y: rect.y,
+				sx: rect.sx,
+				sy: rect.sy,
 				w: rect.w,
 				h: rect.h,
 				leaf: obj,
 			},
-			this.rootTree
+			this.getTree(),
+			this.maxWidth,
+			this.minWidth
 		)
 		return retArray
 	}

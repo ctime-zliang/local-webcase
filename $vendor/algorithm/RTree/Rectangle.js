@@ -16,7 +16,7 @@ class Ven$Rtree_Rectangle {
 		let nx = 0
 		let ny = 0
 		let expandRectEX = expandRect.sx + expandRect.w
-		let expandRectEY = recexpandRecttA.sy + expandRect.h
+		let expandRectEY = expandRect.sy + expandRect.h
 		let referenceRectEX = referenceRect.sx + referenceRect.w
 		let referenceRectEY = referenceRect.sy + referenceRect.h
 		if (expandRect.sx > referenceRect.sx) {
@@ -41,7 +41,7 @@ class Ven$Rtree_Rectangle {
 		}
 		expandRect.sx = nx
 		expandRect.sy = ny
-		expandRect.reset(expandRect.sx, expandRect.sy, expandRect.w, expandRect.h)
+		return expandRect
 	}
 
 	static makeMBR(nodes, expandRect) {
@@ -75,29 +75,50 @@ class Ven$Rtree_Rectangle {
 	get sx() {
 		return this._sx
 	}
+	set sx(value) {
+		this._sx = value
+	}
 
 	get sy() {
 		return this._sy
+	}
+	set sy(value) {
+		this._sy = value
 	}
 
 	get ex() {
 		return this._ex
 	}
+	set ex(value) {
+		this._ex = value
+	}
 
 	get ey() {
 		return this._ey
+	}
+	set ey(value) {
+		this._ey = value
 	}
 
 	get p() {
 		return this._p
 	}
+	set p(value) {
+		this._p = value
+	}
 
 	get w() {
 		return this._w
 	}
+	set w(value) {
+		this._w = value
+	}
 
 	get h() {
 		return this._h
+	}
+	set h(value) {
+		this._h = value
 	}
 
 	reset(sx, sy, w, h) {
