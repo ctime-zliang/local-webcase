@@ -5,7 +5,7 @@ function Ven$Rtree_flatten(tree) {
 		const current = treeCopy.pop()
 		if (current.nodes) {
 			treeCopy = treeCopy.concat(current.nodes)
-		} else if (current.leaf) {
+		} else if (current.data) {
 			result.push(current)
 		}
 	}
@@ -41,8 +41,8 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 				ltree = tree.nodes[i]
 				if (Ven$Rtree_Rectangle.overlapRectangle(retObj, ltree)) {
 					if (
-						(retObj.target && ltree.leaf === retObj.target) ||
-						(!retObj.target && (ltree.leaf || Ven$Rtree_Rectangle.containsRectangle(ltree, retObj)))
+						(retObj.target && ltree.data === retObj.target) ||
+						(!retObj.target && (ltree.data || Ven$Rtree_Rectangle.containsRectangle(ltree, retObj)))
 					) {
 						if (ltree.nodes) {
 							retArray = Ven$Rtree_flatten(tree.nodes.splice(i, 1))
@@ -90,38 +90,66 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 	return retArray
 }
 
-function Ven$Rtree_chooseLeafSubtree(rect, root) {
+function Ven$Rtree_chooseLeafSubtree(itemData, root) {
 	let bestChoiceIndex = -1
 	let bestChoiceStack = []
 	let bestChoiceArea
-	let first = true
+	// let first = true
 	bestChoiceStack.push(root)
+	/**
+	 * 根节点的子节点列表
+	 */
 	let nodes = root.nodes
 
-	while (first || bestChoiceIndex !== -1) {
-		if (first) {
-			first = false
-		} else {
+	let loopCount = 0
+	do {
+		if (loopCount >= 1) {
 			bestChoiceStack.push(nodes[bestChoiceIndex])
 			nodes = nodes[bestChoiceIndex].nodes
 			bestChoiceIndex = -1
 		}
+		loopCount++
 		for (let i = nodes.length - 1; i >= 0; i--) {
 			let ltree = nodes[i]
-			if (ltree.leaf) {
+			if (ltree.data) {
 				bestChoiceIndex = -1
 				break
 			}
 			let oldLRatio = Ven$Rtree_Rectangle.squarifiedRatio(ltree.w, ltree.h, ltree.nodes.length + 1)
-			let nw = Math.max(ltree.sx + ltree.w, rect.sx + rect.w) - Math.min(ltree.sx, rect.sx)
-			let nh = Math.max(ltree.sy + ltree.h, rect.sy + rect.h) - Math.min(ltree.sy, rect.sy)
+			let nw = Math.max(ltree.sx + ltree.w, itemData.sx + itemData.w) - Math.min(ltree.sx, itemData.sx)
+			let nh = Math.max(ltree.sy + ltree.h, itemData.sy + itemData.h) - Math.min(ltree.sy, itemData.sy)
 			let lratio = Ven$Rtree_Rectangle.squarifiedRatio(nw, nh, ltree.nodes.length + 2)
 			if (bestChoiceIndex < 0 || Math.abs(lratio - oldLRatio) < bestChoiceArea) {
 				bestChoiceArea = Math.abs(lratio - oldLRatio)
 				bestChoiceIndex = i
 			}
 		}
-	}
+	} while (bestChoiceIndex !== -1)
+
+	// while (first || bestChoiceIndex !== -1) {
+	// 	if (first) {
+	// 		first = false
+	// 	} else {
+	// 		bestChoiceStack.push(nodes[bestChoiceIndex])
+	// 		nodes = nodes[bestChoiceIndex].nodes
+	// 		bestChoiceIndex = -1
+	// 	}
+	// 	for (let i = nodes.length - 1; i >= 0; i--) {
+	// 		let ltree = nodes[i]
+	// 		if (ltree.data) {
+	// 			bestChoiceIndex = -1
+	// 			break
+	// 		}
+	// 		let oldLRatio = Ven$Rtree_Rectangle.squarifiedRatio(ltree.w, ltree.h, ltree.nodes.length + 1)
+	// 		let nw = Math.max(ltree.sx + ltree.w, rect.sx + rect.w) - Math.min(ltree.sx, rect.sx)
+	// 		let nh = Math.max(ltree.sy + ltree.h, rect.sy + rect.h) - Math.min(ltree.sy, rect.sy)
+	// 		let lratio = Ven$Rtree_Rectangle.squarifiedRatio(nw, nh, ltree.nodes.length + 2)
+	// 		if (bestChoiceIndex < 0 || Math.abs(lratio - oldLRatio) < bestChoiceArea) {
+	// 			bestChoiceArea = Math.abs(lratio - oldLRatio)
+	// 			bestChoiceIndex = i
+	// 		}
+	// 	}
+	// }
 	return bestChoiceStack
 }
 
@@ -255,9 +283,9 @@ function Ven$Rtree_searchSubtree(rect, returnNode, returnArray, root) {
 			if (Ven$Rtree_Rectangle.overlapRectangle(rect, ltree)) {
 				if (ltree.nodes) {
 					hitStack.push(ltree.nodes)
-				} else if (ltree.leaf) {
+				} else if (ltree.data) {
 					if (!returnNode) {
-						returnArray.push(ltree.leaf)
+						returnArray.push(ltree.data)
 					} else {
 						returnArray.push(ltree)
 					}
@@ -268,18 +296,21 @@ function Ven$Rtree_searchSubtree(rect, returnNode, returnArray, root) {
 	return returnArray
 }
 
-function Ven$Rtree_insertSubtree(node, root, maxWidth, minWidth) {
+function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 	let bc
+	/**
+	 * 当根节点不存在数据时, 即该树为空, 执行插入时首先填充根节点
+	 */
 	if (root.nodes.length === 0) {
-		root.sx = node.sx
-		root.sy = node.sy
-		root.w = node.w
-		root.h = node.h
-		root.nodes.push(node)
+		root.sx = itemData.sx
+		root.sy = itemData.sy
+		root.w = itemData.w
+		root.h = itemData.h
+		root.nodes.push(itemData)
 		return
 	}
-	let treeStack = Ven$Rtree_chooseLeafSubtree(node, root)
-	let retObj = node
+	let treeStack = Ven$Rtree_chooseLeafSubtree(itemData, root)
+	let retObj = itemData
 	let pbc
 	while (treeStack.length > 0) {
 		if (bc && bc.nodes && bc.nodes.length === 0) {
@@ -294,7 +325,7 @@ function Ven$Rtree_insertSubtree(node, root, maxWidth, minWidth) {
 		} else {
 			bc = treeStack.pop()
 		}
-		if (retObj.leaf || retObj.nodes || Array.isArray(retObj)) {
+		if (retObj.data || retObj.nodes || Array.isArray(retObj)) {
 			if (Array.isArray(retObj)) {
 				for (let ai = 0; ai < retObj.length; ai++) {
 					Ven$Rtree_Rectangle.expandRectangle(bc, retObj[ai])
