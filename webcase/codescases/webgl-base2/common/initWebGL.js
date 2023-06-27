@@ -1,5 +1,3 @@
-const PI = Math.PI
-
 function initWebGLContext(canvasElement) {
 	gVars.canvasElement = canvasElement
 	return canvasElement.getContext('webgl')
@@ -61,6 +59,23 @@ function createProgram(gl, vertexShader, fragmentShader) {
 	gl.deleteProgram(program)
 }
 
+function createBuffer(gl, bufferTypedArray) {
+	/**
+	 * 创建缓冲池
+	 */
+	const buffer = gl.createBuffer()
+	/**
+	 * 绑定缓冲池
+	 */
+	gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+	/**
+	 * 对缓冲池填充数据
+	 */
+	gl.bufferData(gl.ARRAY_BUFFER, bufferTypedArray, gl.STATIC_DRAW)
+	return buffer
+}
+
+
 function initWebGL(gl, vertexShaderSouce, fragmentShaderSouce) {
 	/**
 	 * 创建并初始化着色器
@@ -77,3 +92,4 @@ function initWebGL(gl, vertexShaderSouce, fragmentShaderSouce) {
 	gl.useProgram(program)
 	return program
 }
+
