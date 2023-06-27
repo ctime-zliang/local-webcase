@@ -22,8 +22,7 @@ function drawSingleDot(gl) {
 	const a_position = gl.getAttribLocation(program, 'a_position')
 	gl.vertexAttrib3f(a_position, 0.5, 0.5, 0.0)
 	gl.drawArrays(gl.POINTS, 0, 1)
-} 
-
+}
 
 function main() {
 	gVars.canvasRect = canvasElement.getBoundingClientRect().toJSON()
