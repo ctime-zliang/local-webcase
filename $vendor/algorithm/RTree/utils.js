@@ -91,11 +91,9 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 }
 
 function Ven$Rtree_chooseLeafSubtree(itemData, root) {
+	const bestChoiceStack = [root]
 	let bestChoiceIndex = -1
-	let bestChoiceStack = []
 	let bestChoiceArea
-	// let first = true
-	bestChoiceStack.push(root)
 	/**
 	 * 根节点的子节点列表
 	 */
@@ -110,46 +108,21 @@ function Ven$Rtree_chooseLeafSubtree(itemData, root) {
 		}
 		loopCount++
 		for (let i = nodes.length - 1; i >= 0; i--) {
-			let ltree = nodes[i]
-			if (ltree.data) {
+			const childItem = nodes[i]
+			if (childItem.data) {
 				bestChoiceIndex = -1
 				break
 			}
-			let oldLRatio = Ven$Rtree_Rectangle.squarifiedRatio(ltree.w, ltree.h, ltree.nodes.length + 1)
-			let nw = Math.max(ltree.sx + ltree.w, itemData.sx + itemData.w) - Math.min(ltree.sx, itemData.sx)
-			let nh = Math.max(ltree.sy + ltree.h, itemData.sy + itemData.h) - Math.min(ltree.sy, itemData.sy)
-			let lratio = Ven$Rtree_Rectangle.squarifiedRatio(nw, nh, ltree.nodes.length + 2)
-			if (bestChoiceIndex < 0 || Math.abs(lratio - oldLRatio) < bestChoiceArea) {
-				bestChoiceArea = Math.abs(lratio - oldLRatio)
+			const oldChildItemRatio = Ven$Rtree_Rectangle.squarifiedRatio(childItem.w, childItem.h, childItem.nodes.length + 1)
+			const nw = Math.max(childItem.sx + childItem.w, itemData.sx + itemData.w) - Math.min(childItem.sx, itemData.sx)
+			const nh = Math.max(childItem.sy + childItem.h, itemData.sy + itemData.h) - Math.min(childItem.sy, itemData.sy)
+			const childItemRatio = Ven$Rtree_Rectangle.squarifiedRatio(nw, nh, childItem.nodes.length + 2)
+			if (bestChoiceIndex < 0 || Math.abs(childItemRatio - oldChildItemRatio) < bestChoiceArea) {
+				bestChoiceArea = Math.abs(childItemRatio - oldChildItemRatio)
 				bestChoiceIndex = i
 			}
 		}
 	} while (bestChoiceIndex !== -1)
-
-	// while (first || bestChoiceIndex !== -1) {
-	// 	if (first) {
-	// 		first = false
-	// 	} else {
-	// 		bestChoiceStack.push(nodes[bestChoiceIndex])
-	// 		nodes = nodes[bestChoiceIndex].nodes
-	// 		bestChoiceIndex = -1
-	// 	}
-	// 	for (let i = nodes.length - 1; i >= 0; i--) {
-	// 		let ltree = nodes[i]
-	// 		if (ltree.data) {
-	// 			bestChoiceIndex = -1
-	// 			break
-	// 		}
-	// 		let oldLRatio = Ven$Rtree_Rectangle.squarifiedRatio(ltree.w, ltree.h, ltree.nodes.length + 1)
-	// 		let nw = Math.max(ltree.sx + ltree.w, rect.sx + rect.w) - Math.min(ltree.sx, rect.sx)
-	// 		let nh = Math.max(ltree.sy + ltree.h, rect.sy + rect.h) - Math.min(ltree.sy, rect.sy)
-	// 		let lratio = Ven$Rtree_Rectangle.squarifiedRatio(nw, nh, ltree.nodes.length + 2)
-	// 		if (bestChoiceIndex < 0 || Math.abs(lratio - oldLRatio) < bestChoiceArea) {
-	// 			bestChoiceArea = Math.abs(lratio - oldLRatio)
-	// 			bestChoiceIndex = i
-	// 		}
-	// 	}
-	// }
 	return bestChoiceStack
 }
 
@@ -204,43 +177,44 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 }
 
 function Ven$Rtree_pickLinear(nodes) {
-	let lowestHighX = nodes.length - 1
-	let highestLowX = 0
-	let lowestHighY = nodes.length - 1
-	let highestLowY = 0
+	let lowestEndX = nodes.length - 1
+	let highestStartX = 0
+	let lowestEndY = nodes.length - 1
+	let highestStartY = 0
+	/* ... */
 	let t1
 	let t2
 
 	for (let i = nodes.length - 2; i >= 0; i--) {
-		let l = nodes[i]
-		if (l.sx > nodes[highestLowX].sx) {
-			highestLowX = i
-		} else if (l.sx + l.w < nodes[lowestHighX].sx + nodes[lowestHighX].w) {
-			lowestHighX = i
+		const childItem = nodes[i]
+		if (childItem.sx > nodes[highestStartX].sx) {
+			highestStartX = i
+		} else if (childItem.sx + childItem.w < nodes[lowestEndX].sx + nodes[lowestEndX].w) {
+			lowestEndX = i
 		}
-		if (l.sy > nodes[highestLowY].sy) {
-			highestLowY = i
-		} else if (l.sy + l.h < nodes[lowestHighY].sy + nodes[lowestHighY].h) {
-			lowestHighY = i
+		if (childItem.sy > nodes[highestStartY].sy) {
+			highestStartY = i
+		} else if (childItem.sy + childItem.h < nodes[lowestEndY].sy + nodes[lowestEndY].h) {
+			lowestEndY = i
 		}
 	}
-	let dx = Math.abs(nodes[lowestHighX].sx + nodes[lowestHighX].w - nodes[highestLowX].sx)
-	let dy = Math.abs(nodes[lowestHighY].sy + nodes[lowestHighY].h - nodes[highestLowY].sy)
+	const dx = Math.abs(nodes[lowestEndX].sx + nodes[lowestEndX].w - nodes[highestStartX].sx)
+	const dy = Math.abs(nodes[lowestEndY].sy + nodes[lowestEndY].h - nodes[highestStartY].sy)
 	if (dx > dy) {
-		if (lowestHighX > highestLowX) {
-			t1 = nodes.splice(lowestHighX, 1)[0]
-			t2 = nodes.splice(highestLowX, 1)[0]
+		if (lowestEndX > highestStartX) {
+			t1 = nodes.splice(lowestEndX, 1)[0]
+			t2 = nodes.splice(highestStartX, 1)[0]
 		} else {
-			t2 = nodes.splice(highestLowX, 1)[0]
-			t1 = nodes.splice(lowestHighX, 1)[0]
+			t2 = nodes.splice(highestStartX, 1)[0]
+			t1 = nodes.splice(lowestEndX, 1)[0]
 		}
 	} else {
-		if (lowestHighY > highestLowY) {
-			t1 = nodes.splice(lowestHighY, 1)[0]
-			t2 = nodes.splice(highestLowY, 1)[0]
+		if (lowestEndY > highestStartY) {
+			t1 = nodes.splice(lowestEndY, 1)[0]
+			t2 = nodes.splice(highestStartY, 1)[0]
 		} else {
-			t2 = nodes.splice(highestLowY, 1)[0]
-			t1 = nodes.splice(lowestHighY, 1)[0]
+			t2 = nodes.splice(highestStartY, 1)[0]
+			t1 = nodes.splice(lowestEndY, 1)[0]
 		}
 	}
 	return [

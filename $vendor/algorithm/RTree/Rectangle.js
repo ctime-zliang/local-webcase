@@ -12,13 +12,13 @@ class Ven$Rtree_Rectangle {
 		return rectA.sx + rectA.w <= rectB.sx + rectB.w && rectA.sx >= rectB.sx && rectA.sy + rectA.h <= rectB.sy + rectB.h && rectA.sy >= rectB.sy
 	}
 
-    /**
-     * 读取 referenceRect 的尺寸数据来修改 expandRect 的尺寸数据
-     * 使得 expandRect 占用范围能够"覆盖" referenceRect
-     * 
-     * expandRect - 待扩展的矩形
-     * referenceRect - 被覆盖的矩形
-     */
+	/**
+	 * 读取 referenceRect 的尺寸数据来修改 expandRect 的尺寸数据
+	 * 使得 expandRect 占用范围能够"覆盖" referenceRect
+	 *
+	 * expandRect - 待扩展的矩形
+	 * referenceRect - 被覆盖的矩形
+	 */
 	static expandRectangle(expandRect, referenceRect) {
 		let nx = 0
 		let ny = 0

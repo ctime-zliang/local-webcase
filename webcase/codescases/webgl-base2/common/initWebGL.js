@@ -75,7 +75,6 @@ function createBuffer(gl, bufferTypedArray) {
 	return buffer
 }
 
-
 function initWebGL(gl, vertexShaderSouce, fragmentShaderSouce) {
 	/**
 	 * 创建并初始化着色器
@@ -92,4 +91,3 @@ function initWebGL(gl, vertexShaderSouce, fragmentShaderSouce) {
 	gl.useProgram(program)
 	return program
 }
-

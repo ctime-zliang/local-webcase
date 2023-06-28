@@ -1,13 +1,13 @@
 class Ven$RTree {
 	constructor(width) {
 		this.root = null
-        /**
-         * 任意节点可包含的最小子节点个数
-         */
+		/**
+		 * 任意节点可包含的最小子节点个数
+		 */
 		this.minWidth = 2
-        /**
-         * 任意节点可包含的最大子节点个数
-         */
+		/**
+		 * 任意节点可包含的最大子节点个数
+		 */
 		this.maxWidth = 4
 		this.inital(width)
 	}
@@ -19,9 +19,9 @@ class Ven$RTree {
 			minWidth = Math.floor(width / 2.0)
 			maxWidth = width
 		}
-        /**
-         * 根节点不存储具体的内容数据
-         */
+		/**
+		 * 根节点不存储具体的内容数据
+		 */
 		let rootTree = {
 			sx: 0,
 			sy: 0,
