@@ -177,60 +177,74 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 }
 
 function Ven$Rtree_pickLinear(nodes) {
-	let lowestEndX = nodes.length - 1
-	let highestStartX = 0
-	let lowestEndY = nodes.length - 1
-	let highestStartY = 0
-	/* ... */
-	let t1
-	let t2
-
+	/**
+	 * 在一个平面上分布着 nodes[i] 元素
+	 * 遍历 [0, 倒数第二个] 区间内的元素
+	 * 		找到起始 X 坐标(sx)最大的元素对应的索引 indexHighestStartX
+	 * 		找到起始 Y 坐标(sy)最大的元素对应的索引 indexHighestStartY
+	 * 		找到结束 X 坐标(ex)最小的元素对应的索引 indexLowestEndX
+	 * 		找到结束 Y 坐标(ey)最小的元素对应的索引 indexLowestEndY
+	 */
+	let indexLowestEndX = nodes.length - 1
+	let indexHighestStartX = 0
+	let indexLowestEndY = nodes.length - 1
+	let indexHighestStartY = 0
 	for (let i = nodes.length - 2; i >= 0; i--) {
 		const childItem = nodes[i]
-		if (childItem.sx > nodes[highestStartX].sx) {
-			highestStartX = i
-		} else if (childItem.sx + childItem.w < nodes[lowestEndX].sx + nodes[lowestEndX].w) {
-			lowestEndX = i
+		if (childItem.sx > nodes[indexHighestStartX].sx) {
+			indexHighestStartX = i
+		} else if (childItem.sx + childItem.w < nodes[indexLowestEndX].sx + nodes[indexLowestEndX].w) {
+			indexLowestEndX = i
 		}
-		if (childItem.sy > nodes[highestStartY].sy) {
-			highestStartY = i
-		} else if (childItem.sy + childItem.h < nodes[lowestEndY].sy + nodes[lowestEndY].h) {
-			lowestEndY = i
+		if (childItem.sy > nodes[indexHighestStartY].sy) {
+			indexHighestStartY = i
+		} else if (childItem.sy + childItem.h < nodes[indexLowestEndY].sy + nodes[indexLowestEndY].h) {
+			indexLowestEndY = i
 		}
 	}
-	const dx = Math.abs(nodes[lowestEndX].sx + nodes[lowestEndX].w - nodes[highestStartX].sx)
-	const dy = Math.abs(nodes[lowestEndY].sy + nodes[lowestEndY].h - nodes[highestStartY].sy)
+	const lowestEndX = nodes[indexLowestEndX].sx + nodes[indexLowestEndX].w
+	const lowestEndY = nodes[indexLowestEndY].sy + nodes[indexLowestEndY].h
+	const highestStartX = nodes[indexHighestStartX].sx
+	const highestStartY = nodes[indexHighestStartY].sy
+	const dx = Math.abs(lowestEndX - highestStartX)
+	const dy = Math.abs(lowestEndY - highestStartY)
+	let itemLowestEnd
+	let itemHighestStart
+	/**
+	 * 通过 index 数据使用 splice 删除数组元素并获取 index 对应的元素时
+	 * 需要从较大的 index 值开始查找并删除, 以防止 splice 修改原数组导致后续的 index 查找元素出错
+	 */
 	if (dx > dy) {
-		if (lowestEndX > highestStartX) {
-			t1 = nodes.splice(lowestEndX, 1)[0]
-			t2 = nodes.splice(highestStartX, 1)[0]
+		if (indexLowestEndX > indexHighestStartX) {
+			itemLowestEnd = nodes.splice(indexLowestEndX, 1)[0]
+			itemHighestStart = nodes.splice(indexHighestStartX, 1)[0]
 		} else {
-			t2 = nodes.splice(highestStartX, 1)[0]
-			t1 = nodes.splice(lowestEndX, 1)[0]
+			itemHighestStart = nodes.splice(indexHighestStartX, 1)[0]
+			itemLowestEnd = nodes.splice(indexLowestEndX, 1)[0]
 		}
 	} else {
-		if (lowestEndY > highestStartY) {
-			t1 = nodes.splice(lowestEndY, 1)[0]
-			t2 = nodes.splice(highestStartY, 1)[0]
+		if (indexLowestEndY > indexHighestStartY) {
+			itemLowestEnd = nodes.splice(indexLowestEndY, 1)[0]
+			itemHighestStart = nodes.splice(indexHighestStartY, 1)[0]
 		} else {
-			t2 = nodes.splice(highestStartY, 1)[0]
-			t1 = nodes.splice(lowestEndY, 1)[0]
+			itemHighestStart = nodes.splice(indexHighestStartY, 1)[0]
+			itemLowestEnd = nodes.splice(indexLowestEndY, 1)[0]
 		}
 	}
 	return [
 		{
-			sx: t1.sx,
-			sy: t1.sy,
-			w: t1.w,
-			h: t1.h,
-			nodes: [t1],
+			sx: itemLowestEnd.sx,
+			sy: itemLowestEnd.sy,
+			w: itemLowestEnd.w,
+			h: itemLowestEnd.h,
+			nodes: [itemLowestEnd],
 		},
 		{
-			sx: t2.sx,
-			sy: t2.sy,
-			w: t2.w,
-			h: t2.h,
-			nodes: [t2],
+			sx: itemHighestStart.sx,
+			sy: itemHighestStart.sy,
+			w: itemHighestStart.w,
+			h: itemHighestStart.h,
+			nodes: [itemHighestStart],
 		},
 	]
 }
