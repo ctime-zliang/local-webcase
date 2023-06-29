@@ -211,8 +211,8 @@ function Ven$Rtree_pickLinear(nodes) {
 	let itemLowestEnd
 	let itemHighestStart
 	/**
-	 * 通过 index 数据使用 splice 删除数组元素并获取 index 对应的元素时
-	 * 需要从较大的 index 值开始查找并删除, 以防止 splice 修改原数组导致后续的 index 查找元素出错
+	 * 通过 index 使用 splice 方法删除数组元素并获取 index 对应的元素
+	 * 需要从较大的 index 开始查找并删除, 以防止 splice 方法修改原数组导致后续的 index 查找元素出错
 	 */
 	if (dx > dy) {
 		if (indexLowestEndX > indexHighestStartX) {
