@@ -140,27 +140,32 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 	let highAreaDelta
 	let highAreaNode
 	let lowestGrowthGroup
-
 	for (let i = nodes.length - 1; i >= 0; i--) {
-		let l = nodes[i]
-		let newAreaA = {}
-		newAreaA.sx = Math.min(a.sx, l.sx)
-		newAreaA.sy = Math.min(a.sy, l.sy)
-		newAreaA.w = Math.max(a.sx + a.w, l.sx + l.w) - newAreaA.sx
-		newAreaA.h = Math.max(a.sy + a.h, l.sy + l.h) - newAreaA.sy
+		let item = nodes[i]
+		let newAreaA = { sx: 0, sy: 0, ex: 0, ey: 0, w: 0, h: 0 }
+		newAreaA.sx = Math.min(a.sx, item.sx)
+		newAreaA.sy = Math.min(a.sy, item.sy)
+		newAreaA.ex = Math.max(a.sx + a.w, item.sx + item.w)
+		newAreaA.ey = Math.max(a.sy + a.h, item.sy + item.h)
+		newAreaA.w = newAreaA.ex - newAreaA.sx
+		newAreaA.h = newAreaA.ey - newAreaA.sy
 		let changeNewAreaA = Math.abs(Ven$Rtree_Rectangle.squarifiedRatio(newAreaA.w, newAreaA.h, a.nodes.length + 2) - areaA)
 		/* ... */
-		let newAreaB = {}
-		newAreaB.sx = Math.min(b.sx, l.sx)
-		newAreaB.sy = Math.min(b.sy, l.sy)
-		newAreaB.w = Math.max(b.sx + b.w, l.sx + l.w) - newAreaB.sx
-		newAreaB.h = Math.max(b.sy + b.h, l.sy + l.h) - newAreaB.sy
+		let newAreaB = { sx: 0, sy: 0, ex: 0, ey: 0, w: 0, h: 0 }
+		newAreaB.sx = Math.min(b.sx, item.sx)
+		newAreaB.sy = Math.min(b.sy, item.sy)
+		newAreaB.ex = Math.max(b.sx + b.w, item.sx + item.w)
+		newAreaB.ey = Math.max(b.sy + b.h, item.sy + item.h)
+		newAreaB.w = newAreaB.ex - newAreaB.sx
+		newAreaB.h = newAreaB.ey - newAreaB.sy
 		let changeNewAreaB = Math.abs(Ven$Rtree_Rectangle.squarifiedRatio(newAreaB.w, newAreaB.h, b.nodes.length + 2) - areaB)
-		/* ... */
-		if (!highAreaNode || !highAreaDelta || Math.abs(changeNewAreaB - changeNewAreaA) < highAreaDelta) {
+		/**
+		 * old if: !highAreaNode || !highAreaDelta || Math.abs(changeNewAreaB - changeNewAreaA) < highAreaDelta
+		 */
+		if (i === nodes.length - 1 || Math.abs(changeNewAreaB - changeNewAreaA) <= highAreaDelta) {
 			highAreaNode = i
 			highAreaDelta = Math.abs(changeNewAreaB - changeNewAreaA)
-			lowestGrowthGroup = changeNewAreaB < changeNewAreaA ? b : a
+			lowestGrowthGroup = changeNewAreaA >= changeNewAreaB ? a : b
 		}
 	}
 	const tempNode = nodes.splice(highAreaNode, 1)[0]
@@ -211,6 +216,18 @@ function Ven$Rtree_pickLinear(nodes) {
 	let itemLowestEnd
 	let itemHighestStart
 	/**
+	 * 存在一个由
+	 * 		x1 = lowestEndX
+	 * 		x2 = highestStartX
+	 * 		y1 = lowestEndY
+	 * 		y2 = highestStartY
+	 * 4 条直线构成的矩形 R
+	 * 该矩形 R 即为能够包裹住当前所有 nodes 元素的最小外接矩形
+	 *
+	 * 获取该矩形 R 的长轴 L
+	 * 获取该矩形 R 的长轴 L 垂直的两条短边 L1 与 L2
+	 * 删除与 L1 和 L2 相切(接触)的两个元素
+	 *
 	 * 通过 index 使用 splice 方法删除数组元素并获取 index 对应的元素
 	 * 需要从较大的 index 开始查找并删除, 以防止 splice 方法修改原数组导致后续的 index 查找元素出错
 	 */
@@ -285,7 +302,6 @@ function Ven$Rtree_searchSubtree(rect, returnNode, returnArray, root) {
 }
 
 function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
-	let bc
 	/**
 	 * 当根节点不存在数据时, 即该树为空, 执行插入时首先填充根节点
 	 */
@@ -299,6 +315,7 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 	}
 	let treeStack = Ven$Rtree_chooseLeafSubtree(itemData, root)
 	let retObj = itemData
+	let bc
 	let pbc
 	while (treeStack.length > 0) {
 		if (bc && bc.nodes && bc.nodes.length === 0) {

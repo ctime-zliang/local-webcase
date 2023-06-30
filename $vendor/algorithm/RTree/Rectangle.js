@@ -62,10 +62,12 @@ class Ven$Rtree_Rectangle {
 	}
 
 	static squarifiedRatio(l, w, fill) {
-		const lperi = (l + w) / 2
-		const larea = l * w
-		const lgeo = larea / (lperi * lperi)
-		return (larea * fill) / lgeo
+		// const lperi = (l + w) / 2
+		// const larea = l * w
+		// const lgeo = larea / (lperi * lperi)
+		// return (larea * fill) / lgeo
+		const a = (l + w) / 2
+		return a * a * fill
 	}
 
 	constructor(sx, sy, w, h) {
