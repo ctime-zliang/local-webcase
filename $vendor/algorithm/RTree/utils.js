@@ -142,30 +142,30 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 	let lowestGrowthGroup
 	for (let i = nodes.length - 1; i >= 0; i--) {
 		let item = nodes[i]
-		let newAreaA = { sx: 0, sy: 0, ex: 0, ey: 0, w: 0, h: 0 }
-		newAreaA.sx = Math.min(a.sx, item.sx)
-		newAreaA.sy = Math.min(a.sy, item.sy)
-		newAreaA.ex = Math.max(a.sx + a.w, item.sx + item.w)
-		newAreaA.ey = Math.max(a.sy + a.h, item.sy + item.h)
-		newAreaA.w = newAreaA.ex - newAreaA.sx
-		newAreaA.h = newAreaA.ey - newAreaA.sy
-		let changeNewAreaA = Math.abs(Ven$Rtree_Rectangle.squarifiedRatio(newAreaA.w, newAreaA.h, a.nodes.length + 2) - areaA)
+		const tempAreaA = { sx: 0, sy: 0, ex: 0, ey: 0, w: 0, h: 0 }
+		tempAreaA.sx = Math.min(a.sx, item.sx)
+		tempAreaA.sy = Math.min(a.sy, item.sy)
+		tempAreaA.ex = Math.max(a.sx + a.w, item.sx + item.w)
+		tempAreaA.ey = Math.max(a.sy + a.h, item.sy + item.h)
+		tempAreaA.w = tempAreaA.ex - tempAreaA.sx
+		tempAreaA.h = tempAreaA.ey - tempAreaA.sy
+		let changeTempAreaA = Math.abs(Ven$Rtree_Rectangle.squarifiedRatio(tempAreaA.w, tempAreaA.h, a.nodes.length + 2) - areaA)
 		/* ... */
-		let newAreaB = { sx: 0, sy: 0, ex: 0, ey: 0, w: 0, h: 0 }
-		newAreaB.sx = Math.min(b.sx, item.sx)
-		newAreaB.sy = Math.min(b.sy, item.sy)
-		newAreaB.ex = Math.max(b.sx + b.w, item.sx + item.w)
-		newAreaB.ey = Math.max(b.sy + b.h, item.sy + item.h)
-		newAreaB.w = newAreaB.ex - newAreaB.sx
-		newAreaB.h = newAreaB.ey - newAreaB.sy
-		let changeNewAreaB = Math.abs(Ven$Rtree_Rectangle.squarifiedRatio(newAreaB.w, newAreaB.h, b.nodes.length + 2) - areaB)
+		const tempAreaB = { sx: 0, sy: 0, ex: 0, ey: 0, w: 0, h: 0 }
+		tempAreaB.sx = Math.min(b.sx, item.sx)
+		tempAreaB.sy = Math.min(b.sy, item.sy)
+		tempAreaB.ex = Math.max(b.sx + b.w, item.sx + item.w)
+		tempAreaB.ey = Math.max(b.sy + b.h, item.sy + item.h)
+		tempAreaB.w = tempAreaB.ex - tempAreaB.sx
+		tempAreaB.h = tempAreaB.ey - tempAreaB.sy
+		let changeTempAreaB = Math.abs(Ven$Rtree_Rectangle.squarifiedRatio(newAreaB.w, newAreaB.h, b.nodes.length + 2) - areaB)
 		/**
-		 * old if: !highAreaNode || !highAreaDelta || Math.abs(changeNewAreaB - changeNewAreaA) < highAreaDelta
+		 * old if: !highAreaNode || !highAreaDelta || Math.abs(changeTempAreaB - changeTempAreaA) < highAreaDelta
 		 */
-		if (i === nodes.length - 1 || Math.abs(changeNewAreaB - changeNewAreaA) <= highAreaDelta) {
+		if (i === nodes.length - 1 || Math.abs(changeTempAreaB - changeTempAreaA) <= highAreaDelta) {
 			highAreaNode = i
-			highAreaDelta = Math.abs(changeNewAreaB - changeNewAreaA)
-			lowestGrowthGroup = changeNewAreaA >= changeNewAreaB ? a : b
+			highAreaDelta = Math.abs(changeTempAreaB - changeTempAreaA)
+			lowestGrowthGroup = changeTempAreaA >= changeTempAreaB ? a : b
 		}
 	}
 	const tempNode = nodes.splice(highAreaNode, 1)[0]
