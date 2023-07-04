@@ -140,8 +140,11 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 	let highAreaDelta
 	let highAreaNode
 	let lowestGrowthGroup
+	/**
+	 * 遍历 nodes 并找出其中"最靠近"对象 a 或 b 的元素
+	 */
 	for (let i = nodes.length - 1; i >= 0; i--) {
-		let item = nodes[i]
+		const item = nodes[i]
 		const tempAreaA = { sx: 0, sy: 0, ex: 0, ey: 0, w: 0, h: 0 }
 		tempAreaA.sx = Math.min(a.sx, item.sx)
 		tempAreaA.sy = Math.min(a.sy, item.sy)
@@ -149,7 +152,7 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 		tempAreaA.ey = Math.max(a.sy + a.h, item.sy + item.h)
 		tempAreaA.w = tempAreaA.ex - tempAreaA.sx
 		tempAreaA.h = tempAreaA.ey - tempAreaA.sy
-		let changeTempAreaA = Math.abs(Ven$Rtree_Rectangle.squarifiedRatio(tempAreaA.w, tempAreaA.h, a.nodes.length + 2) - areaA)
+		const changeTempAreaA = Math.abs(Ven$Rtree_Rectangle.squarifiedRatio(tempAreaA.w, tempAreaA.h, a.nodes.length + 2) - areaA)
 		/* ... */
 		const tempAreaB = { sx: 0, sy: 0, ex: 0, ey: 0, w: 0, h: 0 }
 		tempAreaB.sx = Math.min(b.sx, item.sx)
@@ -158,7 +161,7 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 		tempAreaB.ey = Math.max(b.sy + b.h, item.sy + item.h)
 		tempAreaB.w = tempAreaB.ex - tempAreaB.sx
 		tempAreaB.h = tempAreaB.ey - tempAreaB.sy
-		let changeTempAreaB = Math.abs(Ven$Rtree_Rectangle.squarifiedRatio(newAreaB.w, newAreaB.h, b.nodes.length + 2) - areaB)
+		const changeTempAreaB = Math.abs(Ven$Rtree_Rectangle.squarifiedRatio(tempAreaB.w, tempAreaB.h, b.nodes.length + 2) - areaB)
 		/**
 		 * old if: !highAreaNode || !highAreaDelta || Math.abs(changeTempAreaB - changeTempAreaA) < highAreaDelta
 		 */
