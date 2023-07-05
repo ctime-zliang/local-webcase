@@ -137,12 +137,14 @@ function Ven$Rtree_linearSplit(nodes, minWidth) {
 function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 	const areaA = Ven$Rtree_Rectangle.squarifiedRatio(a.w, a.h, a.nodes.length + 1)
 	const areaB = Ven$Rtree_Rectangle.squarifiedRatio(b.w, b.h, b.nodes.length + 1)
-	let highAreaDelta
-	let highAreaNode
-	let lowestGrowthGroup
 	/**
 	 * 遍历 nodes 并找出其中"最靠近"对象 a 或 b 的元素
 	 */
+	let highAreaDelta
+	let lowestGrowthGroup
+	let highAreaNodeIndex = -1
+	const debugIdA = Ven$Rtree_getHashIden()
+	const debugIdB = Ven$Rtree_getHashIden()
 	for (let i = nodes.length - 1; i >= 0; i--) {
 		const item = nodes[i]
 		const tempAreaA = { sx: 0, sy: 0, ex: 0, ey: 0, w: 0, h: 0 }
@@ -152,7 +154,9 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 		tempAreaA.ey = Math.max(a.sy + a.h, item.sy + item.h)
 		tempAreaA.w = tempAreaA.ex - tempAreaA.sx
 		tempAreaA.h = tempAreaA.ey - tempAreaA.sy
+		Ven$Rtree_debugUpdateRectangleAuxiliary(debugIdA, tempAreaA, 'blue')
 		const changeTempAreaA = Math.abs(Ven$Rtree_Rectangle.squarifiedRatio(tempAreaA.w, tempAreaA.h, a.nodes.length + 2) - areaA)
+
 		/* ... */
 		const tempAreaB = { sx: 0, sy: 0, ex: 0, ey: 0, w: 0, h: 0 }
 		tempAreaB.sx = Math.min(b.sx, item.sx)
@@ -161,21 +165,25 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 		tempAreaB.ey = Math.max(b.sy + b.h, item.sy + item.h)
 		tempAreaB.w = tempAreaB.ex - tempAreaB.sx
 		tempAreaB.h = tempAreaB.ey - tempAreaB.sy
+		Ven$Rtree_debugUpdateRectangleAuxiliary(debugIdB, tempAreaB, 'green')
 		const changeTempAreaB = Math.abs(Ven$Rtree_Rectangle.squarifiedRatio(tempAreaB.w, tempAreaB.h, b.nodes.length + 2) - areaB)
 		/**
-		 * old if: !highAreaNode || !highAreaDelta || Math.abs(changeTempAreaB - changeTempAreaA) < highAreaDelta
+		 * old if: !highAreaNodeIndex || !highAreaDelta || Math.abs(changeTempAreaB - changeTempAreaA) < highAreaDelta
 		 */
 		if (i === nodes.length - 1 || Math.abs(changeTempAreaB - changeTempAreaA) <= highAreaDelta) {
-			highAreaNode = i
+			highAreaNodeIndex = i
 			highAreaDelta = Math.abs(changeTempAreaB - changeTempAreaA)
 			lowestGrowthGroup = changeTempAreaA >= changeTempAreaB ? a : b
 		}
 	}
-	const tempNode = nodes.splice(highAreaNode, 1)[0]
-	if (a.nodes.length + nodes.length + 1 <= minWidth) {
+	Ven$Rtree_debugRemoveRectangleAuxiliary(debugIdA)
+	Ven$Rtree_debugRemoveRectangleAuxiliary(debugIdB)
+	const nodesInitLength = nodes.length
+	const tempNode = nodes.splice(highAreaNodeIndex, 1)[0]
+	if (a.nodes.length + nodesInitLength <= minWidth) {
 		a.nodes.push(tempNode)
 		Ven$Rtree_Rectangle.expandRectangle(a, tempNode)
-	} else if (b.nodes.length + nodes.length + 1 <= minWidth) {
+	} else if (b.nodes.length + nodesInitLength <= minWidth) {
 		b.nodes.push(tempNode)
 		Ven$Rtree_Rectangle.expandRectangle(b, tempNode)
 	} else {
@@ -314,6 +322,7 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 		root.w = itemData.w
 		root.h = itemData.h
 		root.nodes.push(itemData)
+		Ven$Rtree_debugUpdateRectangleAuxiliary(root.id, root)
 		return
 	}
 	let treeStack = Ven$Rtree_chooseLeafSubtree(itemData, root)
@@ -342,6 +351,7 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 			} else {
 				Ven$Rtree_Rectangle.expandRectangle(bc, retObj)
 				bc.nodes.push(retObj)
+				Ven$Rtree_debugUpdateRectangleAuxiliary(bc.id, bc)
 			}
 			if (bc.nodes.length <= maxWidth) {
 				retObj = {
