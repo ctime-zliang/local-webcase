@@ -98,8 +98,9 @@ function Ven$Rtree_chooseLeafSubtree(itemData, root) {
 	 * 根节点的子节点列表
 	 */
 	let nodes = root.nodes
-
 	let loopCount = 0
+	const debugId0 = Ven$Rtree_getHashIden()
+	const debugId1 = Ven$Rtree_getHashIden()
 	do {
 		if (loopCount >= 1) {
 			bestChoiceStack.push(nodes[bestChoiceIndex])
@@ -114,23 +115,39 @@ function Ven$Rtree_chooseLeafSubtree(itemData, root) {
 				break
 			}
 			const oldChildItemRatio = Ven$Rtree_Rectangle.squarifiedRatio(childItem.w, childItem.h, childItem.nodes.length + 1)
-			const nw = Math.max(childItem.sx + childItem.w, itemData.sx + itemData.w) - Math.min(childItem.sx, itemData.sx)
-			const nh = Math.max(childItem.sy + childItem.h, itemData.sy + itemData.h) - Math.min(childItem.sy, itemData.sy)
-			const childItemRatio = Ven$Rtree_Rectangle.squarifiedRatio(nw, nh, childItem.nodes.length + 2)
-			if (bestChoiceIndex < 0 || Math.abs(childItemRatio - oldChildItemRatio) < bestChoiceArea) {
-				bestChoiceArea = Math.abs(childItemRatio - oldChildItemRatio)
+			const sx = Math.min(childItem.sx, itemData.sx)
+			const sy = Math.min(childItem.sy, itemData.sy)
+			const ex = Math.max(childItem.sx + childItem.w, itemData.sx + itemData.w)
+			const ey = Math.max(childItem.sy + childItem.h, itemData.sy + itemData.h)
+			const newW = ex - sx
+			const newH = ey - sy
+			Ven$Rtree_debugUpdateRectangleAuxiliary(debugId0, childItem, '#440000')
+			Ven$Rtree_debugUpdateRectangleAuxiliary(debugId1, { sx, sy, w: newW, h: newH }, '#440000')
+			const newChildItemRatio = Ven$Rtree_Rectangle.squarifiedRatio(newW, newH, childItem.nodes.length + 2)
+			if (bestChoiceIndex < 0 || Math.abs(newChildItemRatio - oldChildItemRatio) < bestChoiceArea) {
+				bestChoiceArea = Math.abs(newChildItemRatio - oldChildItemRatio)
 				bestChoiceIndex = i
 			}
 		}
 	} while (bestChoiceIndex !== -1)
+	Ven$Rtree_debugRemoveRectangleAuxiliary(debugId0)
+	Ven$Rtree_debugRemoveRectangleAuxiliary(debugId1)
 	return bestChoiceStack
 }
 
 function Ven$Rtree_linearSplit(nodes, minWidth) {
 	const n = Ven$Rtree_pickLinear(nodes)
+	const debugId0 = Ven$Rtree_getHashIden()
+	const debugId1 = Ven$Rtree_getHashIden()
+	Ven$Rtree_debugUpdateRectangleAuxiliary(debugId0, n[0], '#440000')
+	Ven$Rtree_debugUpdateRectangleAuxiliary(debugId1, n[1], '#880000')
 	while (nodes.length > 0) {
 		Ven$Rtree_pickNext(nodes, n[0], n[1], minWidth)
+		Ven$Rtree_debugUpdateRectangleAuxiliary(debugId0, n[0], '#440000')
+		Ven$Rtree_debugUpdateRectangleAuxiliary(debugId1, n[1], '#880000')
 	}
+	Ven$Rtree_debugRemoveRectangleAuxiliary(debugId0)
+	Ven$Rtree_debugRemoveRectangleAuxiliary(debugId1)
 	return n
 }
 
@@ -138,7 +155,7 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 	const areaA = Ven$Rtree_Rectangle.squarifiedRatio(a.w, a.h, a.nodes.length + 1)
 	const areaB = Ven$Rtree_Rectangle.squarifiedRatio(b.w, b.h, b.nodes.length + 1)
 	/**
-	 * 遍历 nodes 并找出其中"最靠近"对象 a 或 b 的元素
+	 * 遍历 nodes 并找出其中"最靠近"对象 a 或对象 b 的元素
 	 */
 	let highAreaDelta
 	let lowestGrowthGroup
@@ -147,26 +164,27 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 	const debugIdB = Ven$Rtree_getHashIden()
 	for (let i = nodes.length - 1; i >= 0; i--) {
 		const item = nodes[i]
-		const tempAreaA = { sx: 0, sy: 0, ex: 0, ey: 0, w: 0, h: 0 }
-		tempAreaA.sx = Math.min(a.sx, item.sx)
-		tempAreaA.sy = Math.min(a.sy, item.sy)
-		tempAreaA.ex = Math.max(a.sx + a.w, item.sx + item.w)
-		tempAreaA.ey = Math.max(a.sy + a.h, item.sy + item.h)
-		tempAreaA.w = tempAreaA.ex - tempAreaA.sx
-		tempAreaA.h = tempAreaA.ey - tempAreaA.sy
-		Ven$Rtree_debugUpdateRectangleAuxiliary(debugIdA, tempAreaA, 'blue')
-		const changeTempAreaA = Math.abs(Ven$Rtree_Rectangle.squarifiedRatio(tempAreaA.w, tempAreaA.h, a.nodes.length + 2) - areaA)
-
+		const tempItemA = { sx: 0, sy: 0, ex: 0, ey: 0, w: 0, h: 0 }
+		tempItemA.sx = Math.min(a.sx, item.sx)
+		tempItemA.sy = Math.min(a.sy, item.sy)
+		tempItemA.ex = Math.max(a.sx + a.w, item.sx + item.w)
+		tempItemA.ey = Math.max(a.sy + a.h, item.sy + item.h)
+		tempItemA.w = tempItemA.ex - tempItemA.sx
+		tempItemA.h = tempItemA.ey - tempItemA.sy
+		Ven$Rtree_debugUpdateRectangleAuxiliary(debugIdA, tempItemA, '#444400')
+		const tempItemAreaA = Ven$Rtree_Rectangle.squarifiedRatio(tempItemA.w, tempItemA.h, a.nodes.length + 2)
+		const changeTempAreaA = Math.abs(tempItemAreaA - areaA)
 		/* ... */
-		const tempAreaB = { sx: 0, sy: 0, ex: 0, ey: 0, w: 0, h: 0 }
-		tempAreaB.sx = Math.min(b.sx, item.sx)
-		tempAreaB.sy = Math.min(b.sy, item.sy)
-		tempAreaB.ex = Math.max(b.sx + b.w, item.sx + item.w)
-		tempAreaB.ey = Math.max(b.sy + b.h, item.sy + item.h)
-		tempAreaB.w = tempAreaB.ex - tempAreaB.sx
-		tempAreaB.h = tempAreaB.ey - tempAreaB.sy
-		Ven$Rtree_debugUpdateRectangleAuxiliary(debugIdB, tempAreaB, 'green')
-		const changeTempAreaB = Math.abs(Ven$Rtree_Rectangle.squarifiedRatio(tempAreaB.w, tempAreaB.h, b.nodes.length + 2) - areaB)
+		const tempItemB = { sx: 0, sy: 0, ex: 0, ey: 0, w: 0, h: 0 }
+		tempItemB.sx = Math.min(b.sx, item.sx)
+		tempItemB.sy = Math.min(b.sy, item.sy)
+		tempItemB.ex = Math.max(b.sx + b.w, item.sx + item.w)
+		tempItemB.ey = Math.max(b.sy + b.h, item.sy + item.h)
+		tempItemB.w = tempItemB.ex - tempItemB.sx
+		tempItemB.h = tempItemB.ey - tempItemB.sy
+		Ven$Rtree_debugUpdateRectangleAuxiliary(debugIdB, tempItemB, '#448800')
+		const tempItemAreaB = Ven$Rtree_Rectangle.squarifiedRatio(tempItemB.w, tempItemB.h, b.nodes.length + 2)
+		const changeTempAreaB = Math.abs(tempItemAreaB - areaB)
 		/**
 		 * old if: !highAreaNodeIndex || !highAreaDelta || Math.abs(changeTempAreaB - changeTempAreaA) < highAreaDelta
 		 */
@@ -183,13 +201,15 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 	if (a.nodes.length + nodesInitLength <= minWidth) {
 		a.nodes.push(tempNode)
 		Ven$Rtree_Rectangle.expandRectangle(a, tempNode)
-	} else if (b.nodes.length + nodesInitLength <= minWidth) {
+		return
+	}
+	if (b.nodes.length + nodesInitLength <= minWidth) {
 		b.nodes.push(tempNode)
 		Ven$Rtree_Rectangle.expandRectangle(b, tempNode)
-	} else {
-		lowestGrowthGroup.nodes.push(tempNode)
-		Ven$Rtree_Rectangle.expandRectangle(lowestGrowthGroup, tempNode)
+		return
 	}
+	lowestGrowthGroup.nodes.push(tempNode)
+	Ven$Rtree_Rectangle.expandRectangle(lowestGrowthGroup, tempNode)
 }
 
 function Ven$Rtree_pickLinear(nodes) {
@@ -266,6 +286,7 @@ function Ven$Rtree_pickLinear(nodes) {
 			w: itemLowestEnd.w,
 			h: itemLowestEnd.h,
 			nodes: [itemLowestEnd],
+			id: 'pickRoot0',
 		},
 		{
 			sx: itemHighestStart.sx,
@@ -273,6 +294,7 @@ function Ven$Rtree_pickLinear(nodes) {
 			w: itemHighestStart.w,
 			h: itemHighestStart.h,
 			nodes: [itemHighestStart],
+			id: 'pickRoot1',
 		},
 	]
 }
