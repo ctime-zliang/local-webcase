@@ -93,7 +93,7 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 function Ven$Rtree_chooseLeafSubtree(itemData, root) {
 	const bestChoiceStack = [root]
 	let bestChoiceIndex = -1
-	let bestChoiceArea
+	let bestChoiceArea = 0
 	/**
 	 * 根节点的子节点列表
 	 */
@@ -197,13 +197,14 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 	Ven$Rtree_debugRemoveRectangleAuxiliary(debugIdA)
 	Ven$Rtree_debugRemoveRectangleAuxiliary(debugIdB)
 	const nodesInitLength = nodes.length
+	const dist = minWidth - nodesInitLength
 	const tempNode = nodes.splice(highAreaNodeIndex, 1)[0]
-	if (a.nodes.length + nodesInitLength <= minWidth) {
+	if (a.nodes.length <= dist) {
 		a.nodes.push(tempNode)
 		Ven$Rtree_Rectangle.expandRectangle(a, tempNode)
 		return
 	}
-	if (b.nodes.length + nodesInitLength <= minWidth) {
+	if (b.nodes.length <= dist) {
 		b.nodes.push(tempNode)
 		Ven$Rtree_Rectangle.expandRectangle(b, tempNode)
 		return
@@ -286,7 +287,6 @@ function Ven$Rtree_pickLinear(nodes) {
 			w: itemLowestEnd.w,
 			h: itemLowestEnd.h,
 			nodes: [itemLowestEnd],
-			id: 'pickRoot0',
 		},
 		{
 			sx: itemHighestStart.sx,
@@ -294,7 +294,6 @@ function Ven$Rtree_pickLinear(nodes) {
 			w: itemHighestStart.w,
 			h: itemHighestStart.h,
 			nodes: [itemHighestStart],
-			id: 'pickRoot1',
 		},
 	]
 }
@@ -385,7 +384,7 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 			} else {
 				let a = Ven$Rtree_linearSplit(bc.nodes, minWidth)
 				retObj = a
-				if (treeStack.length < 1) {
+				if (treeStack.length <= 0) {
 					bc.nodes.push(a[0])
 					treeStack.push(bc)
 					retObj = a[1]
@@ -402,6 +401,7 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 				w: bc.w,
 				h: bc.h,
 			}
+			Ven$Rtree_debugUpdateRectangleAuxiliary(bc.id, bc)
 		}
 	}
 }

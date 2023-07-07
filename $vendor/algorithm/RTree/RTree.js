@@ -1,3 +1,8 @@
+/**
+ * https://www.cnblogs.com/cmi-sh-love/p/kong-jian-shud-ju-suo-yinRTree-wan-quan-jie-xi-jiJa.html
+ * https://www.cnblogs.com/chentianwei/p/11736243.html
+ */
+
 class Ven$RTree {
 	constructor(width) {
 		this.root = null
