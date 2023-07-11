@@ -91,23 +91,34 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 }
 
 function Ven$Rtree_chooseLeafSubtree(itemData, root) {
+	/**
+	 * 从 root 到对应叶子节点的路径上的所有节点(包含边界节点本身)
+	 */
 	const bestChoiceStack = [root]
 	let bestChoiceIndex = -1
 	let bestChoiceArea = 0
 	/**
-	 * 根节点的子节点列表
+	 * 根节点的直接子节点列表
 	 */
 	let nodes = root.nodes
-	let loopCount = 0
 	const debugId0 = Ven$Rtree_getHashIden()
 	const debugId1 = Ven$Rtree_getHashIden()
 	do {
-		if (loopCount >= 1) {
+		if (bestChoiceIndex !== -1) {
 			bestChoiceStack.push(nodes[bestChoiceIndex])
 			nodes = nodes[bestChoiceIndex].nodes
 			bestChoiceIndex = -1
 		}
-		loopCount++
+		/**
+		 * 遍历树的某一层的所有节点 nodes
+		 * 取 nodes[i] 并与当前传入的节点构建矩形 R[i]
+		 * 找到面积最小的矩形 R[i] 并记录索引 bestChoiceIndex
+		 *
+		 * 在下一轮外循环中获取 nodes[bestChoiceIndex] 的所有子节点 nodes
+		 * 并再次执行同样的遍历操作
+		 *
+		 * 当 nodes 为叶子节点时, 即退出整个查找循环(do-while)
+		 */
 		for (let i = nodes.length - 1; i >= 0; i--) {
 			const childItem = nodes[i]
 			if (childItem.data) {
@@ -256,9 +267,10 @@ function Ven$Rtree_pickLinear(nodes) {
 	 * 4 条直线构成的矩形 R
 	 * 该矩形 R 即为能够包裹住当前所有 nodes 元素的最小外接矩形
 	 *
-	 * 获取该矩形 R 的长轴 L
-	 * 获取该矩形 R 的长轴 L 垂直的两条短边 L1 与 L2
-	 * 删除与 L1 和 L2 相切(接触)的两个元素
+	 * 获取该矩形 R 的两条短边 L1 与 L2
+	 * 删除与 L1 和 L2 相切(接触)的两个元素 A 和 B
+	 * 分别由 A 和 B 的尺寸数据生成 MBR 节点 MA 和 MB, 并将 A 和 B 作为其子节点
+	 * 返回 MA 和 MB
 	 *
 	 * 通过 index 使用 splice 方法删除数组元素并获取 index 对应的元素
 	 * 需要从较大的 index 开始查找并删除, 以防止 splice 方法修改原数组导致后续的 index 查找元素出错
@@ -336,6 +348,7 @@ function Ven$Rtree_searchSubtree(rect, returnNode, returnArray, root) {
 function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 	/**
 	 * 当根节点不存在数据时, 即该树为空, 执行插入时首先填充根节点
+	 * 即该节点(root)的 MBR 即为当前被插入的节点的尺寸的数据值
 	 */
 	if (root.nodes.length === 0) {
 		root.sx = itemData.sx
