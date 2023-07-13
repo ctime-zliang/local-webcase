@@ -75,7 +75,7 @@ class Ven$RTree {
 				sy: rect.sy,
 				w: rect.w,
 				h: rect.h,
-				data: data,
+				leaf: data,
 			},
 			this.getTree(),
 			this.maxWidth,

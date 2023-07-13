@@ -5,7 +5,7 @@ function Ven$Rtree_flatten(tree) {
 		const current = treeCopy.pop()
 		if (current.nodes) {
 			treeCopy = treeCopy.concat(current.nodes)
-		} else if (current.data) {
+		} else if (current.leaf) {
 			result.push(current)
 		}
 	}
@@ -41,8 +41,8 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 				ltree = tree.nodes[i]
 				if (Ven$Rtree_Rectangle.overlapRectangle(retObj, ltree)) {
 					if (
-						(retObj.target && ltree.data === retObj.target) ||
-						(!retObj.target && (ltree.data || Ven$Rtree_Rectangle.containsRectangle(ltree, retObj)))
+						(retObj.target && ltree.leaf === retObj.target) ||
+						(!retObj.target && (ltree.leaf || Ven$Rtree_Rectangle.containsRectangle(ltree, retObj)))
 					) {
 						if (ltree.nodes) {
 							retArray = Ven$Rtree_flatten(tree.nodes.splice(i, 1))
@@ -91,9 +91,6 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 }
 
 function Ven$Rtree_chooseLeafSubtree(itemData, root) {
-	/**
-	 * 从 root 到对应叶子节点的路径上的所有节点(包含边界节点本身)
-	 */
 	const bestChoiceStack = [root]
 	let bestChoiceIndex = -1
 	let bestChoiceArea = 0
@@ -103,37 +100,41 @@ function Ven$Rtree_chooseLeafSubtree(itemData, root) {
 	let nodes = root.nodes
 	const debugId0 = Ven$Rtree_getHashIden()
 	const debugId1 = Ven$Rtree_getHashIden()
+	/**
+	 * 从当前的 root 逐层往下遍历, 直到遍历到叶子节点即终止循环
+	 *
+	 * 遍历树的某一层的所有节点 nodes
+	 * 取 nodes[i] 的"正方化"面积值 SQ(i)
+	 * 取 nodes[i] 和 itemData 构建的矩形 R[i] 的"正方化"面积值 SQ(di)
+	 * 找到 SQ(di) 和 SQ(i) 的差的最小值并记录索引 bestChoiceIndex = i
+	 *
+	 * 在下一轮外循环中获取 nodes[bestChoiceIndex] 的所有子节点 nodes
+	 * 并再次执行同样的遍历操作
+	 *
+	 * 当 nodes[i] 为叶子节点时, 即退出整个查找循环(do-while)
+	 * 遍历过程使用 bestChoiceStack 记录从 root 到 nodes[i] 的父节点的路径(节点集合)
+	 */
 	do {
 		if (bestChoiceIndex !== -1) {
 			bestChoiceStack.push(nodes[bestChoiceIndex])
 			nodes = nodes[bestChoiceIndex].nodes
 			bestChoiceIndex = -1
 		}
-		/**
-		 * 遍历树的某一层的所有节点 nodes
-		 * 取 nodes[i] 并与当前传入的节点构建矩形 R[i]
-		 * 找到面积最小的矩形 R[i] 并记录索引 bestChoiceIndex
-		 *
-		 * 在下一轮外循环中获取 nodes[bestChoiceIndex] 的所有子节点 nodes
-		 * 并再次执行同样的遍历操作
-		 *
-		 * 当 nodes 为叶子节点时, 即退出整个查找循环(do-while)
-		 */
 		for (let i = nodes.length - 1; i >= 0; i--) {
 			const childItem = nodes[i]
-			if (childItem.data) {
+			if (childItem.leaf) {
 				bestChoiceIndex = -1
 				break
 			}
-			const oldChildItemRatio = Ven$Rtree_Rectangle.squarifiedRatio(childItem.w, childItem.h, childItem.nodes.length + 1)
+			Ven$Rtree_debugUpdateRectangleAuxiliary(debugId0, childItem, '#440000')
 			const sx = Math.min(childItem.sx, itemData.sx)
 			const sy = Math.min(childItem.sy, itemData.sy)
 			const ex = Math.max(childItem.sx + childItem.w, itemData.sx + itemData.w)
 			const ey = Math.max(childItem.sy + childItem.h, itemData.sy + itemData.h)
 			const newW = ex - sx
 			const newH = ey - sy
-			Ven$Rtree_debugUpdateRectangleAuxiliary(debugId0, childItem, '#440000')
 			Ven$Rtree_debugUpdateRectangleAuxiliary(debugId1, { sx, sy, w: newW, h: newH }, '#440000')
+			const oldChildItemRatio = Ven$Rtree_Rectangle.squarifiedRatio(childItem.w, childItem.h, childItem.nodes.length + 1)
 			const newChildItemRatio = Ven$Rtree_Rectangle.squarifiedRatio(newW, newH, childItem.nodes.length + 2)
 			if (bestChoiceIndex < 0 || Math.abs(newChildItemRatio - oldChildItemRatio) < bestChoiceArea) {
 				bestChoiceArea = Math.abs(newChildItemRatio - oldChildItemRatio)
@@ -147,6 +148,11 @@ function Ven$Rtree_chooseLeafSubtree(itemData, root) {
 }
 
 function Ven$Rtree_linearSplit(nodes, minWidth) {
+	/**
+	 * 将 nodes 分割成两棵树
+	 * 首先通过构建矩形策略从 nodes 中选择两个节点生成两棵树的根节点
+	 * 将剩下的节点分配到两棵树
+	 */
 	const n = Ven$Rtree_pickLinear(nodes)
 	const debugId0 = Ven$Rtree_getHashIden()
 	const debugId1 = Ven$Rtree_getHashIden()
@@ -166,7 +172,16 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 	const areaA = Ven$Rtree_Rectangle.squarifiedRatio(a.w, a.h, a.nodes.length + 1)
 	const areaB = Ven$Rtree_Rectangle.squarifiedRatio(b.w, b.h, b.nodes.length + 1)
 	/**
-	 * 遍历 nodes 并找出其中"最靠近"对象 a 或对象 b 的元素
+	 * "正方化"起始节点 a, 记作 SQ(A)
+	 * "正方化"起始节点 b, 记作 SQ(B)
+	 *
+	 * 逐一遍历 nodes
+	 * 取任意的 nodes[i] 并"正方化"后取值记作 SQ(nodes[i])
+	 * 计算 SQ(nodes[i]) 和 SQ(A) 的差的绝对值, 记作 DA
+	 * 计算 SQ(nodes[i]) 和 SQ(B) 的差的绝对值, 记作 DB
+	 * 取 DA 和 DB 中的最小值 m, 并记录对应的索引 highAreaNodeIndex = i
+	 *
+	 * 从 nodes 中删除 highAreaNodeIndex 位置处的元素, 并将该元素插入到 a 或 b 的子节点列表中
 	 */
 	let highAreaDelta
 	let lowestGrowthGroup
@@ -227,7 +242,7 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 function Ven$Rtree_pickLinear(nodes) {
 	/**
 	 * 在一个平面上分布着 nodes[i] 元素
-	 * 遍历 [0, 倒数第二个] 区间内的元素
+	 * 遍历 [0, nodes.length - 2(倒数第二个)] 区间内的元素
 	 * 		找到起始 X 坐标(sx)最大的元素对应的索引 indexHighestStartX
 	 * 		找到起始 Y 坐标(sy)最大的元素对应的索引 indexHighestStartY
 	 * 		找到结束 X 坐标(ex)最小的元素对应的索引 indexLowestEndX
@@ -250,6 +265,23 @@ function Ven$Rtree_pickLinear(nodes) {
 			indexLowestEndY = i
 		}
 	}
+	/**
+	 * 存在一个由
+	 * 		x1 = lowestEndX
+	 * 		x2 = highestStartX
+	 * 		y1 = lowestEndY
+	 * 		y2 = highestStartY
+	 * 4 条直线构成的矩形 R
+	 *
+	 * 获取该矩形 R 的两条短边 L1 与 L2
+	 * 找到 L1 和 L2 所在的直线 x1 和 x2(或 y1 和 y2)
+	 * 继续在 nodes 依据索引定位到决定 x1 和 x2(或 y1 和 y2) 直线坐标的元素 nodes[idx1] 和 nodes[idx2], 记作 A 和 B
+	 * 分别由 A 和 B 的尺寸数据生成 MBR 节点 MA 和 MB, 并将 A 和 B 作为其子节点
+	 * 返回 MA 和 MB
+	 *
+	 * 通过 index 使用 splice 方法删除数组元素并获取 index 对应的元素
+	 * 需要从较大的 index 开始查找并删除, 以防止 splice 方法修改原数组导致后续的 index 查找元素出错
+	 */
 	const lowestEndX = nodes[indexLowestEndX].sx + nodes[indexLowestEndX].w
 	const lowestEndY = nodes[indexLowestEndY].sy + nodes[indexLowestEndY].h
 	const highestStartX = nodes[indexHighestStartX].sx
@@ -258,23 +290,6 @@ function Ven$Rtree_pickLinear(nodes) {
 	const dy = Math.abs(lowestEndY - highestStartY)
 	let itemLowestEnd
 	let itemHighestStart
-	/**
-	 * 存在一个由
-	 * 		x1 = lowestEndX
-	 * 		x2 = highestStartX
-	 * 		y1 = lowestEndY
-	 * 		y2 = highestStartY
-	 * 4 条直线构成的矩形 R
-	 * 该矩形 R 即为能够包裹住当前所有 nodes 元素的最小外接矩形
-	 *
-	 * 获取该矩形 R 的两条短边 L1 与 L2
-	 * 删除与 L1 和 L2 相切(接触)的两个元素 A 和 B
-	 * 分别由 A 和 B 的尺寸数据生成 MBR 节点 MA 和 MB, 并将 A 和 B 作为其子节点
-	 * 返回 MA 和 MB
-	 *
-	 * 通过 index 使用 splice 方法删除数组元素并获取 index 对应的元素
-	 * 需要从较大的 index 开始查找并删除, 以防止 splice 方法修改原数组导致后续的 index 查找元素出错
-	 */
 	if (dx > dy) {
 		if (indexLowestEndX > indexHighestStartX) {
 			itemLowestEnd = nodes.splice(indexLowestEndX, 1)[0]
@@ -332,9 +347,9 @@ function Ven$Rtree_searchSubtree(rect, returnNode, returnArray, root) {
 			if (Ven$Rtree_Rectangle.overlapRectangle(rect, ltree)) {
 				if (ltree.nodes) {
 					hitStack.push(ltree.nodes)
-				} else if (ltree.data) {
+				} else if (ltree.leaf) {
 					if (!returnNode) {
-						returnArray.push(ltree.data)
+						returnArray.push(ltree.leaf)
 					} else {
 						returnArray.push(ltree)
 					}
@@ -363,6 +378,7 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 	let retObj = itemData
 	let bc
 	let pbc
+	let level = treeStack.length
 	while (treeStack.length > 0) {
 		if (bc && bc.nodes && bc.nodes.length === 0) {
 			pbc = bc // Past bc
@@ -376,7 +392,7 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 		} else {
 			bc = treeStack.pop()
 		}
-		if (retObj.data || retObj.nodes || Array.isArray(retObj)) {
+		if (retObj.leaf || retObj.nodes || Array.isArray(retObj)) {
 			if (Array.isArray(retObj)) {
 				for (let ai = 0; ai < retObj.length; ai++) {
 					Ven$Rtree_Rectangle.expandRectangle(bc, retObj[ai])
@@ -396,7 +412,13 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 				}
 			} else {
 				let a = Ven$Rtree_linearSplit(bc.nodes, minWidth)
+				a[0].id = 'node-' + level + '-l'
+				a[1].id = 'node-' + level + '-r'
 				retObj = a
+				/**
+				 * 当当前分裂的节点为 root 节点的直接子节点时, treeStack 已经为空
+				 * 将分裂后的树重新挂在到 root 节点
+				 */
 				if (treeStack.length <= 0) {
 					bc.nodes.push(a[0])
 					treeStack.push(bc)
