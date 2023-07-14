@@ -179,7 +179,7 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 	 * 取任意的 nodes[i] 并"正方化"后取值记作 SQ(nodes[i])
 	 * 计算 SQ(nodes[i]) 和 SQ(A) 的差的绝对值, 记作 DA
 	 * 计算 SQ(nodes[i]) 和 SQ(B) 的差的绝对值, 记作 DB
-	 * 取 DA 和 DB 中的最小值 m, 并记录对应的索引 highAreaNodeIndex = i
+	 * 取整个遍历周期内 DA 和 DB 的差的最小值 m, 并记录对应的索引 highAreaNodeIndex = i
 	 *
 	 * 从 nodes 中删除 highAreaNodeIndex 位置处的元素, 并将该元素插入到 a 或 b 的子节点列表中
 	 */
@@ -242,7 +242,10 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 function Ven$Rtree_pickLinear(nodes) {
 	/**
 	 * 在一个平面上分布着 nodes[i] 元素
-	 * 遍历 [0, nodes.length - 2(倒数第二个)] 区间内的元素
+	 * nodes 的长度即为其父节点当前的子节点个数, 且父节点存在一个最大子节点个数限制 M
+	 * 当 nodes.length 值在某一个处理过程中已经大于了 M, 则会立即开始分裂
+	 * 因此 [0, nodes.length - 2] 区间内的元素个数即等于 M
+	 * 遍历 [0, nodes.length - 2] 区间内的元素
 	 * 		找到起始 X 坐标(sx)最大的元素对应的索引 indexHighestStartX
 	 * 		找到起始 Y 坐标(sy)最大的元素对应的索引 indexHighestStartY
 	 * 		找到结束 X 坐标(ex)最小的元素对应的索引 indexLowestEndX
@@ -374,6 +377,10 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 		Ven$Rtree_debugUpdateRectangleAuxiliary(root.id, root)
 		return
 	}
+	/**
+	 * 将目标节点插入到当前树中
+	 * 获取从根节点到最终插入位置的路径上的节点集合
+	 */
 	let treeStack = Ven$Rtree_chooseLeafSubtree(itemData, root)
 	let retObj = itemData
 	let bc
@@ -414,10 +421,13 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 				let a = Ven$Rtree_linearSplit(bc.nodes, minWidth)
 				a[0].id = 'node-' + level + '-l'
 				a[1].id = 'node-' + level + '-r'
+				a.forEach(item => {
+					Ven$Rtree_debugUpdateRectangleAuxiliary(item.id, item)
+				})
 				retObj = a
 				/**
 				 * 当当前分裂的节点为 root 节点的直接子节点时, treeStack 已经为空
-				 * 将分裂后的树重新挂在到 root 节点
+				 * 将分裂后的子树重新挂在到 root 节点
 				 */
 				if (treeStack.length <= 0) {
 					bc.nodes.push(a[0])
