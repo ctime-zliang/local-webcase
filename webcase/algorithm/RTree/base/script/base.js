@@ -33,7 +33,7 @@ function main() {
 	]
 	drawRect(TestGetData, document.getElementById('appContainer'))
 
-	TestGetData.forEach(v => {
+	TestGetData.forEach((v, i) => {
 		rtree.insert(v[0], v[1])
 	})
 	const result = rtree.search({
