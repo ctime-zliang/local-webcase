@@ -388,7 +388,7 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 	let level = treeStack.length
 	while (treeStack.length > 0) {
 		if (bc && bc.nodes && bc.nodes.length === 0) {
-			pbc = bc // Past bc
+			pbc = bc
 			bc = treeStack.pop()
 			for (let t = 0; t < bc.nodes.length; t++) {
 				if (bc.nodes[t] === pbc || bc.nodes[t].nodes.length === 0) {
@@ -419,14 +419,14 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 				}
 			} else {
 				let a = Ven$Rtree_linearSplit(bc.nodes, minWidth)
-				a[0].id = 'node-' + level + '-l'
-				a[1].id = 'node-' + level + '-r'
+				a[0].id = 'node-' + level + '-a'
+				a[1].id = 'node-' + level + '-b'
 				a.forEach(item => {
 					Ven$Rtree_debugUpdateRectangleAuxiliary(item.id, item)
 				})
 				retObj = a
 				/**
-				 * 当当前分裂的节点为 root 节点的直接子节点时, treeStack 已经为空
+				 * 当当前分裂的节点为 root 节点的直接子节点集合时, treeStack 已经为空
 				 * 将分裂后的子树重新挂在到 root 节点
 				 */
 				if (treeStack.length <= 0) {
