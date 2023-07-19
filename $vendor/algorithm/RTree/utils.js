@@ -101,6 +101,10 @@ function Ven$Rtree_chooseLeafSubtree(itemData, root) {
 	const debugId0 = Ven$Rtree_getHashIden()
 	const debugId1 = Ven$Rtree_getHashIden()
 	/**
+	 * 假设某一层的所有节点 nodes 均为非叶子节点
+	 * 将被插入的节点(itemData) 逐一包含进 nodes[i] 中, 生成矩形 R(i)
+	 * 取该层 nodes 遍历过程中 R(i) 的面积最小时对应的节点项 nodes[i], 则判定其为最佳子节点, 并继续对该最佳子节点的子节点执行同样的操作
+	 *
 	 * 从当前的 root 逐层往下遍历, 直到遍历到叶子节点即终止循环
 	 *
 	 * 遍历树的某一层的所有节点 nodes
@@ -112,6 +116,7 @@ function Ven$Rtree_chooseLeafSubtree(itemData, root) {
 	 * 并再次执行同样的遍历操作
 	 *
 	 * 当 nodes[i] 为叶子节点时, 即退出整个查找循环(do-while)
+	 *
 	 * 遍历过程使用 bestChoiceStack 记录从 root 到 nodes[i] 的父节点的路径(节点集合)
 	 */
 	do {
@@ -183,7 +188,7 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth) {
 	 *
 	 * 从 nodes 中删除 highAreaNodeIndex 位置处的元素, 并将该元素插入到 a 或 b 的子节点列表中
 	 */
-	let highAreaDelta
+	let highAreaDelta = 0
 	let lowestGrowthGroup
 	let highAreaNodeIndex = -1
 	const debugIdA = Ven$Rtree_getHashIden()
@@ -385,14 +390,14 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 	let retObj = itemData
 	let bc
 	let pbc
-	let level = treeStack.length
 	while (treeStack.length > 0) {
 		if (bc && bc.nodes && bc.nodes.length === 0) {
 			pbc = bc
 			bc = treeStack.pop()
 			for (let t = 0; t < bc.nodes.length; t++) {
 				if (bc.nodes[t] === pbc || bc.nodes[t].nodes.length === 0) {
-					bc.nodes.splice(t, 1)
+					const item = bc.nodes.splice(t, 1)
+					Ven$Rtree_debugRemoveRectangleAuxiliary(item[0].id)
 					break
 				}
 			}
@@ -403,6 +408,7 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 			if (Array.isArray(retObj)) {
 				for (let ai = 0; ai < retObj.length; ai++) {
 					Ven$Rtree_Rectangle.expandRectangle(bc, retObj[ai])
+					Ven$Rtree_debugUpdateRectangleAuxiliary(bc.id, bc)
 				}
 				bc.nodes = bc.nodes.concat(retObj)
 			} else {
@@ -419,8 +425,8 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 				}
 			} else {
 				let a = Ven$Rtree_linearSplit(bc.nodes, minWidth)
-				a[0].id = 'node-' + level + '-a'
-				a[1].id = 'node-' + level + '-b'
+				a[0].id = 'node-' + Ven$Rtree_getHashIden() + '-a'
+				a[1].id = 'node-' + Ven$Rtree_getHashIden() + '-b'
 				a.forEach(item => {
 					Ven$Rtree_debugUpdateRectangleAuxiliary(item.id, item)
 				})
@@ -434,9 +440,6 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 					treeStack.push(bc)
 					retObj = a[1]
 				}
-				/*else {
-                    delete bc;
-                }*/
 			}
 		} else {
 			Ven$Rtree_Rectangle.expandRectangle(bc, retObj)
