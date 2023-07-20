@@ -368,17 +368,17 @@ function Ven$Rtree_searchSubtree(rect, returnNode, returnArray, root) {
 	return returnArray
 }
 
-function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
+function Ven$Rtree_insertSubtree(leafItem, root, maxWidth, minWidth) {
 	/**
 	 * 当根节点不存在数据时, 即该树为空, 执行插入时首先填充根节点
 	 * 即该节点(root)的 MBR 即为当前被插入的节点的尺寸的数据值
 	 */
 	if (root.nodes.length === 0) {
-		root.sx = itemData.sx
-		root.sy = itemData.sy
-		root.w = itemData.w
-		root.h = itemData.h
-		root.nodes.push(itemData)
+		root.sx = leafItem.sx
+		root.sy = leafItem.sy
+		root.w = leafItem.w
+		root.h = leafItem.h
+		root.nodes.push(leafItem)
 		Ven$Rtree_debugUpdateRectangleAuxiliary(root.id, root)
 		return
 	}
@@ -386,16 +386,29 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 	 * 将目标节点插入到当前树中
 	 * 获取从根节点到最终插入位置的路径上的节点集合
 	 */
-	let treeStack = Ven$Rtree_chooseLeafSubtree(itemData, root)
-	let retObj = itemData
+	let treeStack = Ven$Rtree_chooseLeafSubtree(leafItem, root)
+	let retObj = leafItem
 	let bc
 	let pbc
+	let expandRect = null
 	while (treeStack.length > 0) {
-		if (bc && bc.nodes && bc.nodes.length === 0) {
+		/**
+		 * 对 bc.nodes.length === 0
+		 *
+		 * 当在某一轮循环中同时满足:
+		 * 		1. bc 为非 root 节点
+		 * 		2. bc 的直接子节点个数因超过最大限值而发生裂变
+		 * 则此时 bc 的子节点列表会在裂变后清空
+		 *
+		 * 继续取 bc 的父节点, 记作 P
+		 * 		即 treeStack.pop()
+		 * 遍历 P 的直接子节点列表, 删除 p.nodes 中的直接子节点列表为空的项(包括 bc)
+		 */
+		if (bc && bc.nodes && bc.nodes.length <= 0) {
 			pbc = bc
 			bc = treeStack.pop()
 			for (let t = 0; t < bc.nodes.length; t++) {
-				if (bc.nodes[t] === pbc || bc.nodes[t].nodes.length === 0) {
+				if (bc.nodes[t] === pbc || bc.nodes[t].nodes.length <= 0) {
 					const item = bc.nodes.splice(t, 1)
 					Ven$Rtree_debugRemoveRectangleAuxiliary(item[0].id)
 					break
@@ -410,13 +423,19 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 					Ven$Rtree_Rectangle.expandRectangle(bc, retObj[ai])
 					Ven$Rtree_debugUpdateRectangleAuxiliary(bc.id, bc)
 				}
-				bc.nodes = bc.nodes.concat(retObj)
+				bc.nodes = [].concat(bc.nodes, retObj)
 			} else {
 				Ven$Rtree_Rectangle.expandRectangle(bc, retObj)
 				bc.nodes.push(retObj)
 				Ven$Rtree_debugUpdateRectangleAuxiliary(bc.id, bc)
 			}
 			if (bc.nodes.length <= maxWidth) {
+				// expandRect = {
+				// 	sx: bc.sx,
+				// 	sy: bc.sy,
+				// 	w: bc.w,
+				// 	h: bc.h,
+				// }
 				retObj = {
 					sx: bc.sx,
 					sy: bc.sy,
@@ -432,8 +451,9 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 				})
 				retObj = a
 				/**
-				 * 当当前分裂的节点为 root 节点的直接子节点集合时, treeStack 已经为空
-				 * 将分裂后的子树重新挂在到 root 节点
+				 * 当当前分裂的节点为 root 节点的直接子节点集合时
+				 * 		treeStack 已经为空
+				 * 		将分裂后的子树重新挂在到 root 节点
 				 */
 				if (treeStack.length <= 0) {
 					bc.nodes.push(a[0])
@@ -443,6 +463,12 @@ function Ven$Rtree_insertSubtree(itemData, root, maxWidth, minWidth) {
 			}
 		} else {
 			Ven$Rtree_Rectangle.expandRectangle(bc, retObj)
+			// expandRect = {
+			// 	sx: bc.sx,
+			// 	sy: bc.sy,
+			// 	w: bc.w,
+			// 	h: bc.h,
+			// }
 			retObj = {
 				sx: bc.sx,
 				sy: bc.sy,
