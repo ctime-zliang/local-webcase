@@ -402,7 +402,7 @@ function Ven$Rtree_insertSubtree(leafItem, root, maxWidth, minWidth) {
 		 *
 		 * 继续取 bc 的父节点, 记作 P
 		 * 		即 treeStack.pop()
-		 * 遍历 P 的直接子节点列表, 删除 p.nodes 中的直接子节点列表为空的项(包括 bc)
+		 * 遍历 P 的直接子节点列表, 删除 P.nodes 中的直接子节点列表为空的项(包括 bc)
 		 */
 		if (bc && bc.nodes && bc.nodes.length <= 0) {
 			pbc = bc
