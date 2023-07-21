@@ -391,6 +391,7 @@ function Ven$Rtree_insertSubtree(leafItem, root, maxWidth, minWidth) {
 	let bc
 	let pbc
 	let expandRect = null
+	let splitRes = []
 	while (treeStack.length > 0) {
 		/**
 		 * 对 bc.nodes.length === 0
@@ -398,10 +399,11 @@ function Ven$Rtree_insertSubtree(leafItem, root, maxWidth, minWidth) {
 		 * 当在某一轮循环中同时满足:
 		 * 		1. bc 为非 root 节点
 		 * 		2. bc 的直接子节点个数因超过最大限值而发生裂变
-		 * 则此时 bc 的子节点列表会在裂变后清空
+		 * 则此时 bc 的子节点将生成两个独立的树, 子节点列表(数组)引用将被清空
 		 *
 		 * 继续取 bc 的父节点, 记作 P
 		 * 		即 treeStack.pop()
+		 * 重新赋值给 bc
 		 * 遍历 P 的直接子节点列表, 删除 P.nodes 中的直接子节点列表为空的项(包括 bc)
 		 */
 		if (bc && bc.nodes && bc.nodes.length <= 0) {
@@ -417,26 +419,34 @@ function Ven$Rtree_insertSubtree(leafItem, root, maxWidth, minWidth) {
 		} else {
 			bc = treeStack.pop()
 		}
-		if (retObj.leaf || retObj.nodes || Array.isArray(retObj)) {
-			if (Array.isArray(retObj)) {
-				for (let ai = 0; ai < retObj.length; ai++) {
-					Ven$Rtree_Rectangle.expandRectangle(bc, retObj[ai])
+		if (expandRect) {
+			Ven$Rtree_Rectangle.expandRectangle(bc, expandRect)
+			Ven$Rtree_debugUpdateRectangleAuxiliary(bc.id, bc)
+			expandRect = {
+				sx: bc.sx,
+				sy: bc.sy,
+				w: bc.w,
+				h: bc.h,
+			}
+		} else {
+			if (splitRes.length) {
+				/**
+				 * 需要将裂变后的两棵子树追加挂载到 P 节点上
+				 * 扩展 P 节点矩形尺寸
+				 */
+				for (let i = 0; i < splitRes.length; i++) {
+					Ven$Rtree_Rectangle.expandRectangle(bc, splitRes[i])
 					Ven$Rtree_debugUpdateRectangleAuxiliary(bc.id, bc)
 				}
-				bc.nodes = [].concat(bc.nodes, retObj)
+				bc.nodes = [].concat(bc.nodes, splitRes)
+				splitRes.length = 0
 			} else {
 				Ven$Rtree_Rectangle.expandRectangle(bc, retObj)
 				bc.nodes.push(retObj)
 				Ven$Rtree_debugUpdateRectangleAuxiliary(bc.id, bc)
 			}
 			if (bc.nodes.length <= maxWidth) {
-				// expandRect = {
-				// 	sx: bc.sx,
-				// 	sy: bc.sy,
-				// 	w: bc.w,
-				// 	h: bc.h,
-				// }
-				retObj = {
+				expandRect = {
 					sx: bc.sx,
 					sy: bc.sy,
 					w: bc.w,
@@ -446,10 +456,9 @@ function Ven$Rtree_insertSubtree(leafItem, root, maxWidth, minWidth) {
 				let a = Ven$Rtree_linearSplit(bc.nodes, minWidth)
 				a[0].id = 'node-' + Ven$Rtree_getHashIden() + '-a'
 				a[1].id = 'node-' + Ven$Rtree_getHashIden() + '-b'
-				a.forEach(item => {
+				a.forEach((item, index) => {
 					Ven$Rtree_debugUpdateRectangleAuxiliary(item.id, item)
 				})
-				retObj = a
 				/**
 				 * 当当前分裂的节点为 root 节点的直接子节点集合时
 				 * 		treeStack 已经为空
@@ -459,23 +468,11 @@ function Ven$Rtree_insertSubtree(leafItem, root, maxWidth, minWidth) {
 					bc.nodes.push(a[0])
 					treeStack.push(bc)
 					retObj = a[1]
+				} else {
+					splitRes = a
 				}
+				expandRect = null
 			}
-		} else {
-			Ven$Rtree_Rectangle.expandRectangle(bc, retObj)
-			// expandRect = {
-			// 	sx: bc.sx,
-			// 	sy: bc.sy,
-			// 	w: bc.w,
-			// 	h: bc.h,
-			// }
-			retObj = {
-				sx: bc.sx,
-				sy: bc.sy,
-				w: bc.w,
-				h: bc.h,
-			}
-			Ven$Rtree_debugUpdateRectangleAuxiliary(bc.id, bc)
 		}
 	}
 }

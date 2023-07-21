@@ -36,6 +36,7 @@ function main() {
 		[{ sx: 50, sy: 550, w: 100, h: 100 }, { id: '012' }],
 		[{ sx: 800, sy: 650, w: 100, h: 100 }, { id: '013' }],
 		[{ sx: 500, sy: 700, w: 100, h: 100 }, { id: '014' }],
+		[{ sx: 900, sy: 500, w: 100, h: 100 }, { id: '015' }],
 	]
 	drawRect(TestGetData, document.getElementById('appContainer'))
 
