@@ -1,8 +1,3 @@
-/**
- * https://www.cnblogs.com/cmi-sh-love/p/kong-jian-shud-ju-suo-yinRTree-wan-quan-jie-xi-jiJa.html
- * https://www.cnblogs.com/chentianwei/p/11736243.html
- */
-
 class Ven$RTree {
 	constructor(width) {
 		this.root = null
@@ -24,9 +19,6 @@ class Ven$RTree {
 			minWidth = Math.floor(width / 2.0)
 			maxWidth = width
 		}
-		/**
-		 * 根节点不存储具体的内容数据
-		 */
 		const rootTree = {
 			sx: 0,
 			sy: 0,
@@ -49,11 +41,11 @@ class Ven$RTree {
 		return this.root
 	}
 
-	setTree(newTree, target) {
-		if (!target) {
-			target = this.root
+	setTree(newTree, targetRoot) {
+		if (!targetRoot) {
+			targetRoot = this.root
 		}
-		return Ven$Rtree_attachData(target, newTree)
+		return Ven$Rtree_attachData(newTree, targetRoot)
 	}
 
 	search(rect, isGetNodeDataOnly) {

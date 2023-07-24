@@ -52,6 +52,8 @@ function main() {
 	console.log(result1)
 	// const result2 = rtree.search(searchRect, false)
 	// console.log(result2)
+	const result3 = rtree.search({ sx: 150, sy: 150, w: 0, h: 0 }, true)
+	console.log(result3)
 
 	// GeoData[0].forEach((v) => {
 	// 	rtree.insert(v[0], v[1])

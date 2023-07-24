@@ -333,7 +333,7 @@ function Ven$Rtree_pickLinear(nodes) {
 	]
 }
 
-function Ven$Rtree_attachData(root, newTree) {
+function Ven$Rtree_attachData(newTree, root) {
 	root.nodes = newTree.nodes
 	root.sx = newTree.sx
 	root.sy = newTree.sy
@@ -343,12 +343,11 @@ function Ven$Rtree_attachData(root, newTree) {
 }
 
 function Ven$Rtree_searchSubtree(rect, root, isGetNodeDataOnly = true) {
-	const returnArray = []
-	const hitStack = []
+	const result = []
 	if (!Ven$Rtree_Rectangle.overlapRectangle(rect, root)) {
-		return returnArray
+		return result
 	}
-	hitStack.push(root.nodes)
+	const hitStack = [root.nodes]
 	while (hitStack.length > 0) {
 		const nodes = hitStack.pop()
 		for (let i = nodes.length - 1; i >= 0; i--) {
@@ -356,17 +355,19 @@ function Ven$Rtree_searchSubtree(rect, root, isGetNodeDataOnly = true) {
 			if (Ven$Rtree_Rectangle.overlapRectangle(rect, itemTree)) {
 				if (itemTree.nodes) {
 					hitStack.push(itemTree.nodes)
-				} else if (itemTree.leaf) {
+					continue
+				}
+				if (itemTree.leaf) {
 					if (isGetNodeDataOnly) {
-						returnArray.push(itemTree.leaf)
-					} else {
-						returnArray.push(itemTree)
+						result.push(itemTree.leaf)
+						continue
 					}
+					result.push(itemTree)
 				}
 			}
 		}
 	}
-	return returnArray
+	return result
 }
 
 function Ven$Rtree_insertSubtree(leafItem, root, maxWidth, minWidth) {
