@@ -1,11 +1,11 @@
 const GeoData = window.Ven$RTreeGeoData
 
 function drawRect(rectList, container) {
-	let htmlString = ``
+	let wrapper = document.createDocumentFragment()
 	rectList.forEach((item, index) => {
 		const pos = item[0]
 		const data = item[1]
-		htmlString += `
+		let htmlString = `
 			<div style="position: absolute; font-size: 12px; width: ${pos.w}px; height: ${pos.h}px; left: ${pos.sx}px; top: ${pos.sy}px; background-color: rgba(128, 128, 128, 0.5);">
 				<div>${index}. ${data.id}</div>
 				<div>sx = ${pos.sx}</div>
@@ -13,8 +13,10 @@ function drawRect(rectList, container) {
 				<div>w = ${pos.w}</div>
 				<div>h = ${pos.h}</div>
 			</div>`
+		let itemElement = document.createRange().createContextualFragment(htmlString)
+		wrapper.appendChild(itemElement)
 	})
-	container.innerHTML = htmlString
+	container.appendChild(wrapper)
 }
 
 function main() {
@@ -41,15 +43,15 @@ function main() {
 	drawRect(TestGetData, document.getElementById('appContainer'))
 
 	TestGetData.forEach((v, i) => {
-		rtree.insert(v[0], v[1])
+		rtree.insertItemData(v[0], v[1])
 	})
-	const result = rtree.search({
-		sx: 50,
-		sy: 50,
-		w: 500,
-		h: 500,
-	})
-	console.log(result)
+
+	const searchRect = { sx: 50, sy: 50, w: 500, h: 500 }
+	Ven$Rtree_debugUpdateRectangleAuxiliary('SEARCH', searchRect, 'blue')
+	const result1 = rtree.search(searchRect, true)
+	console.log(result1)
+	// const result2 = rtree.search(searchRect, false)
+	// console.log(result2)
 
 	// GeoData[0].forEach((v) => {
 	// 	rtree.insert(v[0], v[1])

@@ -27,7 +27,7 @@ class Ven$RTree {
 		/**
 		 * 根节点不存储具体的内容数据
 		 */
-		let rootTree = {
+		const rootTree = {
 			sx: 0,
 			sy: 0,
 			w: 0,
@@ -40,24 +40,24 @@ class Ven$RTree {
 		this.maxWidth = maxWidth
 	}
 
-	insertSubtree(node, root) {
-		Ven$Rtree_insertSubtree(node, root, this, this.maxWidth, this.minWidth)
+	insertSubtree(node, targetRoot) {
+		targetRoot = targetRoot || this.getTree()
+		Ven$Rtree_insertSubtree(node, targetRoot, this.maxWidth, this.minWidth)
 	}
 
 	getTree() {
 		return this.root
 	}
 
-	setTree(newTree, where) {
-		if (!where) {
-			where = rootTree
+	setTree(newTree, target) {
+		if (!target) {
+			target = this.root
 		}
-		return Ven$Rtree_attachData(where, newTree)
+		return Ven$Rtree_attachData(target, newTree)
 	}
 
-	search(rect, returnNode, returnArray) {
-		returnArray = returnArray || []
-		return Ven$Rtree_searchSubtree(rect, returnNode, returnArray, this.getTree())
+	search(rect, isGetNodeDataOnly) {
+		return Ven$Rtree_searchSubtree(rect, this.getTree(), isGetNodeDataOnly)
 	}
 
 	remove(rect, obj) {
@@ -68,8 +68,8 @@ class Ven$RTree {
 		}
 	}
 
-	insert(rect, data) {
-		let retArray = Ven$Rtree_insertSubtree(
+	insertItemData(rect, data) {
+		Ven$Rtree_insertSubtree(
 			{
 				sx: rect.sx,
 				sy: rect.sy,
@@ -81,6 +81,5 @@ class Ven$RTree {
 			this.maxWidth,
 			this.minWidth
 		)
-		return retArray
 	}
 }
