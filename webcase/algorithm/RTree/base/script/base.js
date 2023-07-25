@@ -46,14 +46,19 @@ function main() {
 		rtree.insertItemData(v[0], v[1])
 	})
 
-	const searchRect = { sx: 50, sy: 50, w: 500, h: 500 }
-	Ven$Rtree_debugUpdateRectangleAuxiliary('SEARCH', searchRect, 'blue')
-	const result1 = rtree.search(searchRect, true)
+	const targetRect1 = { sx: 50, sy: 50, w: 500, h: 500 }
+	Ven$Rtree_debugUpdateRectangleAuxiliary('SEARCH', targetRect1, 'blue')
+	const result1 = rtree.search(targetRect1, true)
 	console.log(result1)
-	// const result2 = rtree.search(searchRect, false)
+	// const result2 = rtree.search(targetRect1, false)
 	// console.log(result2)
 	const result3 = rtree.search({ sx: 150, sy: 150, w: 0, h: 0 }, true)
 	console.log(result3)
+
+	const targetRect2 = { sx: 50, sy: 50, w: 750, h: 750 }
+	Ven$Rtree_debugUpdateRectangleAuxiliary('DELETION', targetRect2, 'green')
+	const remoteResult = rtree.remove(targetRect2)
+	console.log(remoteResult)
 
 	// GeoData[0].forEach((v) => {
 	// 	rtree.insert(v[0], v[1])

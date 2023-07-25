@@ -51,14 +51,23 @@ class Ven$Rtree_Rectangle {
 		return expandRect
 	}
 
-	static makeMBR(nodes, expandRect) {
+	static makeMBR(expandRect, nodes) {
 		if (!nodes.length || !expandRect) {
-			return
+			return {
+				sx: 0,
+				sy: 0,
+				w: 0,
+				h: 0,
+			}
 		}
-		expandRect.reset(nodes[0].x, nodes[0].y, nodes[0].w, nodes[0].h)
+		expandRect.sx = nodes[0].sx
+		expandRect.sy = nodes[0].sy
+		expandRect.w = nodes[0].w
+		expandRect.h = nodes[0].h
 		for (let i = 1; i < nodes.length; i++) {
 			Ven$Rtree_Rectangle.expandRectangle(expandRect, nodes[i])
 		}
+		return expandRect
 	}
 
 	static squarifiedRatio(l, w, fill) {

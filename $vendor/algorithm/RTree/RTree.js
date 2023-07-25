@@ -55,9 +55,9 @@ class Ven$RTree {
 
 	remove(rect, obj) {
 		if (!obj || typeof obj === 'function') {
-			return Ven$Rtree_removeArea(rect, obj, this.minWidth)
+			return Ven$Rtree_removeArea(rect, this.getTree(), this.minWidth)
 		} else {
-			return Ven$Rtree_removeObj(rect, obj, this.minWidth)
+			return Ven$Rtree_removeObj(rect, obj, this.getTree(), this.minWidth)
 		}
 	}
 

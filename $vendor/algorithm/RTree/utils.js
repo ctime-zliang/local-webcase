@@ -389,16 +389,33 @@ function Ven$Rtree_flatten(tree) {
 	return result
 }
 
+function Ven$Rtree_removeArea(rect, rootTree, minWidth) {
+	let numberDeleted = 1
+	let result = []
+	let deleted
+	while (numberDeleted > 0) {
+		deleted = Ven$Rtree_removeSubtree(rect, false, rootTree, minWidth)
+		numberDeleted = deleted.length
+		result = [].concat(result, deleted)
+	}
+	return result
+}
+
+function Ven$Rtree_removeObj(rect, obj, rootTree, minWidth) {
+	const result = Ven$Rtree_removeSubtree(rect, obj, rootTree, minWidth)
+	return result
+}
+
 function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 	let hitStack = []
 	let countStack = []
-	let retArray = []
+	let result = []
 	let currentDepth = 1
 	let tree
 	let i
 	let ltree
 	if (!rect || !Ven$Rtree_Rectangle.overlapRectangle(rect, root)) {
-		return retArray
+		return result
 	}
 	let retObj = {
 		sx: rect.sx,
@@ -409,27 +426,26 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 	}
 	countStack.push(root.nodes.length)
 	hitStack.push(root)
-
 	while (hitStack.length > 0) {
 		tree = hitStack.pop()
 		i = countStack.pop() - 1
-		if (retObj.target) {
+		if (retObj.hasOwnProperty('target')) {
 			while (i >= 0) {
 				ltree = tree.nodes[i]
 				if (Ven$Rtree_Rectangle.overlapRectangle(retObj, ltree)) {
 					if (
 						(retObj.target && ltree.leaf === retObj.target) ||
-						(!retObj.target && (ltree.leaf || Ven$Rtree_Rectangle.containsRectangle(ltree, retObj)))
+						(!retObj.target && (ltree.hasOwnProperty('leaf') || Ven$Rtree_Rectangle.containsRectangle(ltree, retObj)))
 					) {
-						if (ltree.nodes) {
-							retArray = Ven$Rtree_flatten(tree.nodes.splice(i, 1))
+						if (ltree.hasOwnProperty('nodes')) {
+							result = Ven$Rtree_flatten(tree.nodes.splice(i, 1))
 						} else {
-							retArray = tree.nodes.splice(i, 1)
+							result = tree.nodes.splice(i, 1)
 						}
-						Ven$Rtree_Rectangle.makeMBR(tree.nodes, tree)
+						Ven$Rtree_Rectangle.makeMBR(tree, tree.nodes)
 						delete retObj.target
 						break
-					} else if (ltree.nodes) {
+					} else if (ltree.hasOwnProperty('nodes')) {
 						currentDepth++
 						countStack.push(i)
 						hitStack.push(tree)
@@ -439,10 +455,10 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 				}
 				i--
 			}
-		} else if (retObj.nodes) {
+		} else if (retObj.hasOwnProperty('nodes')) {
 			tree.nodes.splice(i + 1, 1)
 			if (tree.nodes.length > 0) {
-				Ven$Rtree_Rectangle.makeMBR(tree.nodes, tree)
+				Ven$Rtree_Rectangle.makeMBR(tree, tree.nodes)
 			}
 			for (var t = 0; t < retObj.nodes.length; t++) {
 				insertSubtree(retObj.nodes[t], tree)
@@ -460,28 +476,11 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 				delete retObj.nodes
 			}
 		} else {
-			Ven$Rtree_Rectangle.makeMBR(tree.nodes, tree)
+			Ven$Rtree_Rectangle.makeMBR(tree, tree.nodes)
 		}
 		currentDepth -= 1
 	}
-	return retArray
-}
-
-function Ven$Rtree_removeArea(rect, minWidth) {
-	let numberDeleted = 1
-	let retArray = []
-	let deleted
-	while (numberDeleted > 0) {
-		deleted = Ven$Rtree_removeSubtree(rect, false, rootTree, minWidth)
-		numberDeleted = deleted.length
-		retArray = retArray.concat(deleted)
-	}
-	return retArray
-}
-
-function Ven$Rtree_removeObj(rect, obj, minWidth) {
-	let retArray = Ven$Rtree_removeSubtree(rect, obj, rootTree, minWidth)
-	return retArray
+	return result
 }
 
 function Ven$Rtree_attachData(newTree, root) {
