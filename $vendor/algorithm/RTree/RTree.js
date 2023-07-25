@@ -2,12 +2,9 @@ class Ven$RTree {
 	constructor(width) {
 		this.root = null
 		/**
-		 * 任意节点可包含的最小子节点个数
+		 * 任意节点的字节点个数限值
 		 */
 		this.minWidth = 2
-		/**
-		 * 任意节点可包含的最大子节点个数
-		 */
 		this.maxWidth = 4
 		this.inital(width)
 	}
@@ -37,15 +34,19 @@ class Ven$RTree {
 		Ven$Rtree_insertSubtree(node, targetRoot, this.maxWidth, this.minWidth)
 	}
 
-	getTree() {
-		return this.root
-	}
-
-	setTree(newTree, targetRoot) {
-		if (!targetRoot) {
-			targetRoot = this.root
-		}
-		return Ven$Rtree_attachData(newTree, targetRoot)
+	insertItemData(rect, data) {
+		Ven$Rtree_insertSubtree(
+			{
+				sx: rect.sx,
+				sy: rect.sy,
+				w: rect.w,
+				h: rect.h,
+				leaf: data,
+			},
+			this.getTree(),
+			this.maxWidth,
+			this.minWidth
+		)
 	}
 
 	search(rect, isGetNodeDataOnly) {
@@ -60,18 +61,14 @@ class Ven$RTree {
 		}
 	}
 
-	insertItemData(rect, data) {
-		Ven$Rtree_insertSubtree(
-			{
-				sx: rect.sx,
-				sy: rect.sy,
-				w: rect.w,
-				h: rect.h,
-				leaf: data,
-			},
-			this.getTree(),
-			this.maxWidth,
-			this.minWidth
-		)
+	getTree() {
+		return this.root
+	}
+
+	setTree(newTree, targetRoot) {
+		if (!targetRoot) {
+			targetRoot = this.root
+		}
+		return Ven$Rtree_attachData(newTree, targetRoot)
 	}
 }
