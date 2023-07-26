@@ -1,3 +1,7 @@
+const Ven$Rtree_storageAuxiliary = {
+	ids: [],
+}
+
 function Ven$Rtree_getRandomInArea(min = 0, max = Number.MAX_SAFE_INTEGER) {
 	return Math.floor(Math.random() * (max - min + 1)) + min
 }
@@ -18,6 +22,9 @@ function Ven$Rtree_getHashIden(length = 18) {
 }
 
 function Ven$Rtree_debugUpdateRectangleAuxiliary(id, node, borderColor = 'red') {
+	if (Ven$Rtree_storageAuxiliary.ids.indexOf(id) <= -1) {
+		Ven$Rtree_storageAuxiliary.ids.push(id)
+	}
 	const mixinId = `auxiliary_${id}`
 	let targetElement = document.getElementById(mixinId)
 	if (!targetElement) {
@@ -37,6 +44,10 @@ function Ven$Rtree_debugUpdateRectangleAuxiliary(id, node, borderColor = 'red') 
 }
 
 function Ven$Rtree_debugRemoveRectangleAuxiliary(id) {
+	const idx = Ven$Rtree_storageAuxiliary.ids.indexOf(id)
+	if (idx >= 0) {
+		Ven$Rtree_storageAuxiliary.ids.splice(idx, 1)
+	}
 	const mixinId = `auxiliary_${id}`
 	let targetElement = document.getElementById(mixinId)
 	if (!targetElement) {

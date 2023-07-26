@@ -407,13 +407,7 @@ function Ven$Rtree_removeObj(rect, obj, rootTree, minWidth) {
 }
 
 function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
-	let hitStack = []
-	let countStack = []
 	let result = []
-	let currentDepth = 1
-	let tree
-	let i
-	let ltree
 	if (!rect || !Ven$Rtree_Rectangle.overlapRectangle(rect, root)) {
 		return result
 	}
@@ -424,43 +418,50 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 		h: rect.h,
 		target: obj,
 	}
-	countStack.push(root.nodes.length)
-	hitStack.push(root)
+	let hitStack = [root]
+	let countStack = [root.nodes.length]
+	let tree = null
+	let itemTree = null
+	let idx = -1
+	let currentDepth = 1
 	while (hitStack.length > 0) {
 		tree = hitStack.pop()
-		i = countStack.pop() - 1
+		idx = countStack.pop() - 1
 		if (retObj.hasOwnProperty('target')) {
-			while (i >= 0) {
-				ltree = tree.nodes[i]
-				if (Ven$Rtree_Rectangle.overlapRectangle(retObj, ltree)) {
+			while (idx >= 0) {
+				itemTree = tree.nodes[idx]
+				if (Ven$Rtree_Rectangle.overlapRectangle(retObj, itemTree)) {
 					if (
-						(retObj.target && ltree.leaf === retObj.target) ||
-						(!retObj.target && (ltree.hasOwnProperty('leaf') || Ven$Rtree_Rectangle.containsRectangle(ltree, retObj)))
+						(retObj.target && itemTree.leaf === retObj.target) ||
+						(!retObj.target && (itemTree.hasOwnProperty('leaf') || Ven$Rtree_Rectangle.containsRectangle(itemTree, retObj)))
 					) {
-						if (ltree.hasOwnProperty('nodes')) {
-							result = Ven$Rtree_flatten(tree.nodes.splice(i, 1))
+						if (itemTree.hasOwnProperty('nodes')) {
+							result = Ven$Rtree_flatten(tree.nodes.splice(idx, 1))
 						} else {
-							result = tree.nodes.splice(i, 1)
+							result = tree.nodes.splice(idx, 1)
 						}
 						Ven$Rtree_Rectangle.makeMBR(tree, tree.nodes)
 						delete retObj.target
 						break
-					} else if (ltree.hasOwnProperty('nodes')) {
+					}
+					if (itemTree.hasOwnProperty('nodes')) {
 						currentDepth++
-						countStack.push(i)
+						countStack.push(idx)
 						hitStack.push(tree)
-						tree = ltree
-						i = ltree.nodes.length
+						tree = itemTree
+						idx = itemTree.nodes.length
 					}
 				}
-				i--
+				idx--
 			}
-		} else if (retObj.hasOwnProperty('nodes')) {
+			continue
+		}
+		if (retObj.hasOwnProperty('nodes')) {
 			tree.nodes.splice(i + 1, 1)
 			if (tree.nodes.length > 0) {
 				Ven$Rtree_Rectangle.makeMBR(tree, tree.nodes)
 			}
-			for (var t = 0; t < retObj.nodes.length; t++) {
+			for (let t = 0; t < retObj.nodes.length; t++) {
 				insertSubtree(retObj.nodes[t], tree)
 			}
 			retObj.nodes = []
@@ -469,15 +470,17 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 				tree.nodes = []
 				hitStack.push(tree)
 				countStack.push(1)
-			} else if (hitStack.length > 0 && tree.nodes.length < minWidth) {
+				continue
+			}
+			if (hitStack.length > 0 && tree.nodes.length < minWidth) {
 				retObj.nodes = Ven$Rtree_searchSubtree(tree, true, retObj.nodes, tree)
 				tree.nodes = []
-			} else {
-				delete retObj.nodes
+				continue
 			}
-		} else {
-			Ven$Rtree_Rectangle.makeMBR(tree, tree.nodes)
+			delete retObj.nodes
+			continue
 		}
+		Ven$Rtree_Rectangle.makeMBR(tree, tree.nodes)
 		currentDepth -= 1
 	}
 	return result
