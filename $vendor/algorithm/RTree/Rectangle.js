@@ -8,6 +8,9 @@ class Ven$Rtree_Rectangle {
 		return rectA.sx < rectB.sx + rectB.w && rectA.sx + rectA.w > rectB.sx && rectA.sy < rectB.sy + rectB.h && rectA.sy + rectA.h > rectB.sy
 	}
 
+	/**
+	 * 判断 rectA 是否包含于 rectB 中
+	 */
 	static containsRectangle(rectA, rectB) {
 		return rectA.sx + rectA.w <= rectB.sx + rectB.w && rectA.sx >= rectB.sx && rectA.sy + rectA.h <= rectB.sy + rectB.h && rectA.sy >= rectB.sy
 	}
@@ -51,6 +54,10 @@ class Ven$Rtree_Rectangle {
 		return expandRect
 	}
 
+	/**
+	 * 读取 nodes 中各项的矩形尺寸, 重新修改 expandRect 的矩形尺寸
+	 * 以使得 expandRect 能够包含所有 nodes[i]
+	 */
 	static makeMBR(expandRect, nodes) {
 		if (!nodes.length || !expandRect) {
 			return {

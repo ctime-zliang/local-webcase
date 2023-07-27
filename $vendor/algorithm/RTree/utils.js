@@ -417,42 +417,49 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 		w: rect.w,
 		h: rect.h,
 		target: obj,
+		nodes: [],
 	}
 	let hitStack = [root]
 	let countStack = [root.nodes.length]
 	let tree = null
 	let itemTree = null
-	let idx = -1
+	let len = -1
 	let currentDepth = 1
 	while (hitStack.length > 0) {
 		tree = hitStack.pop()
-		idx = countStack.pop() - 1
+		len = countStack.pop() - 1
+		Ven$Rtree_debugUpdateRectangleAuxiliary(tree.id, tree)
 		if (retObj.hasOwnProperty('target')) {
-			while (idx >= 0) {
-				itemTree = tree.nodes[idx]
+			while (len >= 0) {
+				itemTree = tree.nodes[len]
+				if (itemTree.id) {
+					Ven$Rtree_debugUpdateRectangleAuxiliary(itemTree.id, itemTree)
+				}
 				if (Ven$Rtree_Rectangle.overlapRectangle(retObj, itemTree)) {
 					if (
 						(retObj.target && itemTree.leaf === retObj.target) ||
 						(!retObj.target && (itemTree.hasOwnProperty('leaf') || Ven$Rtree_Rectangle.containsRectangle(itemTree, retObj)))
 					) {
 						if (itemTree.hasOwnProperty('nodes')) {
-							result = Ven$Rtree_flatten(tree.nodes.splice(idx, 1))
+							result = Ven$Rtree_flatten(tree.nodes.splice(len, 1))
 						} else {
-							result = tree.nodes.splice(idx, 1)
+							result = tree.nodes.splice(len, 1)
 						}
 						Ven$Rtree_Rectangle.makeMBR(tree, tree.nodes)
+						Ven$Rtree_debugUpdateRectangleAuxiliary(tree.id, tree)
 						delete retObj.target
 						break
 					}
 					if (itemTree.hasOwnProperty('nodes')) {
 						currentDepth++
-						countStack.push(idx)
+						countStack.push(len)
 						hitStack.push(tree)
 						tree = itemTree
-						idx = itemTree.nodes.length
+						len = itemTree.nodes.length - 1
+						break
 					}
 				}
-				idx--
+				len--
 			}
 			continue
 		}
@@ -460,6 +467,7 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 			tree.nodes.splice(i + 1, 1)
 			if (tree.nodes.length > 0) {
 				Ven$Rtree_Rectangle.makeMBR(tree, tree.nodes)
+				Ven$Rtree_debugUpdateRectangleAuxiliary(tree.id, tree)
 			}
 			for (let t = 0; t < retObj.nodes.length; t++) {
 				insertSubtree(retObj.nodes[t], tree)
@@ -481,6 +489,7 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 			continue
 		}
 		Ven$Rtree_Rectangle.makeMBR(tree, tree.nodes)
+		Ven$Rtree_debugUpdateRectangleAuxiliary(tree.id, tree)
 		currentDepth -= 1
 	}
 	return result
