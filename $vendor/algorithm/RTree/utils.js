@@ -416,8 +416,7 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 		sy: rect.sy,
 		w: rect.w,
 		h: rect.h,
-		target: obj,
-		nodes: [],
+		target: obj
 	}
 	let hitStack = [root]
 	let countStack = [root.nodes.length]
