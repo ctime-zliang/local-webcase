@@ -29,9 +29,9 @@ class Ven$RTree {
 		this.maxWidth = maxWidth
 	}
 
-	insertSubtree(node, targetRoot) {
+	insertSubtree(handleNode, targetRoot) {
 		targetRoot = targetRoot || this.getTree()
-		Ven$Rtree_insertSubtree(node, targetRoot, this.maxWidth, this.minWidth)
+		Ven$Rtree_insertSubtree(handleNode, targetRoot, this.minWidth, this.maxWidth)
 	}
 
 	insertItemData(rect, data) {
@@ -44,8 +44,8 @@ class Ven$RTree {
 				leaf: data,
 			},
 			this.getTree(),
-			this.maxWidth,
-			this.minWidth
+			this.minWidth,
+			this.maxWidth
 		)
 	}
 
@@ -55,9 +55,9 @@ class Ven$RTree {
 
 	remove(rect, obj) {
 		if (!obj || typeof obj === 'function') {
-			return Ven$Rtree_removeArea(rect, this.getTree(), this.minWidth)
+			return Ven$Rtree_removeArea(rect, this.getTree(), this.minWidth, this.maxWidth)
 		} else {
-			return Ven$Rtree_removeObj(rect, obj, this.getTree(), this.minWidth)
+			return Ven$Rtree_removeObj(rect, obj, this.getTree(), this.minWidth, this.maxWidth)
 		}
 	}
 

@@ -1,4 +1,4 @@
-function Ven$Rtree_insertSubtree(leafItem, root, maxWidth, minWidth) {
+function Ven$Rtree_insertSubtree(leafItem, root, minWidth, maxWidth) {
 	/**
 	 * 当根节点不存在数据时, 即该树为空, 执行插入时首先填充根节点
 	 * 即该节点(root)的 MBR 即为当前被插入的节点的尺寸的数据值
@@ -381,32 +381,35 @@ function Ven$Rtree_flatten(tree) {
 	while (treeCopy.length) {
 		const current = treeCopy.pop()
 		if (current.nodes) {
-			treeCopy = treeCopy.concat(current.nodes)
-		} else if (current.leaf) {
+			treeCopy = [].concat(treeCopy, current.nodes)
+			continue
+		}
+		if (current.leaf) {
 			result.push(current)
+			continue
 		}
 	}
 	return result
 }
 
-function Ven$Rtree_removeArea(rect, rootTree, minWidth) {
+function Ven$Rtree_removeArea(rect, rootTree, minWidth, maxWidth) {
 	let numberDeleted = 1
 	let result = []
 	let deleted
 	while (numberDeleted > 0) {
-		deleted = Ven$Rtree_removeSubtree(rect, false, rootTree, minWidth)
+		deleted = Ven$Rtree_removeSubtree(rect, false, rootTree, minWidth, maxWidth)
 		numberDeleted = deleted.length
 		result = [].concat(result, deleted)
 	}
 	return result
 }
 
-function Ven$Rtree_removeObj(rect, obj, rootTree, minWidth) {
-	const result = Ven$Rtree_removeSubtree(rect, obj, rootTree, minWidth)
+function Ven$Rtree_removeObj(rect, targetLeaf, rootTree, minWidth, maxWidth) {
+	const result = Ven$Rtree_removeSubtree(rect, targetLeaf, rootTree, minWidth, maxWidth)
 	return result
 }
 
-function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
+function Ven$Rtree_removeSubtree(rect, targetLeaf, root, minWidth, maxWidth) {
 	let result = []
 	if (!rect || !Ven$Rtree_Rectangle.overlapRectangle(rect, root)) {
 		return result
@@ -416,7 +419,7 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 		sy: rect.sy,
 		w: rect.w,
 		h: rect.h,
-		target: obj,
+		target: targetLeaf,
 	}
 	let currentDepth = 1
 	let hitStack = [root]
@@ -429,11 +432,13 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 		Ven$Rtree_debugUpdateRectangleAuxiliary(tree.id, tree)
 		if (retObj.hasOwnProperty('target')) {
 			lastItemIndex = countStack.pop() - 1
+			/**
+			 * 逐级遍历子节点树
+			 * 		每次选择子节点列表的最后一个逐级往下遍历
+			 */
 			while (lastItemIndex >= 0) {
 				itemTree = tree.nodes[lastItemIndex]
-				if (itemTree.id) {
-					Ven$Rtree_debugUpdateRectangleAuxiliary(itemTree.id, itemTree)
-				}
+				Ven$Rtree_debugUpdateRectangleAuxiliary(itemTree.id || 'leaf', itemTree)
 				if (Ven$Rtree_Rectangle.overlapRectangle(retObj, itemTree)) {
 					if (
 						(retObj.target && itemTree.leaf === retObj.target) ||
@@ -448,10 +453,15 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 						Ven$Rtree_debugUpdateRectangleAuxiliary(tree.id, tree)
 						delete retObj.target
 						if (tree.nodes.length < minWidth) {
-							retObj.nodes = Ven$Rtree_searchSubtree({ sx: tree.sx, sy: tree.sy, w: tree.w, h: tree.h }, tree, true)
+							retObj.nodes = Ven$Rtree_searchSubtree({ sx: tree.sx, sy: tree.sy, w: tree.w, h: tree.h }, tree, false)
 						}
 						break
 					}
+					/**
+					 * 栈存当前遍历对象后继续遍历子节点
+					 * 		将每级选择的子节点的索引栈存
+					 * 		将当前的树节点栈存
+					 */
 					if (itemTree.hasOwnProperty('nodes')) {
 						currentDepth++
 						countStack.push(lastItemIndex)
@@ -466,17 +476,17 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 			continue
 		}
 		if (retObj.hasOwnProperty('nodes')) {
-			tree.nodes.splice(i + 1, 1)
+			tree.nodes.splice(lastItemIndex + 1, 1)
 			if (tree.nodes.length > 0) {
 				Ven$Rtree_Rectangle.makeMBR(tree, tree.nodes)
 				Ven$Rtree_debugUpdateRectangleAuxiliary(tree.id, tree)
 			}
-			for (let t = 0; t < retObj.nodes.length; t++) {
-				insertSubtree(retObj.nodes[t], tree)
+			for (let k = 0; k < retObj.nodes.length; k++) {
+				Ven$Rtree_insertSubtree(retObj.nodes[k], tree, minWidth, maxWidth)
 			}
 			retObj.nodes = []
 			if (hitStack.length === 0 && tree.nodes.length <= 1) {
-				const subtree = Ven$Rtree_searchSubtree({ sx: tree.sx, sy: tree.sy, w: tree.w, h: tree.h }, tree, true)
+				const subtree = Ven$Rtree_searchSubtree({ sx: tree.sx, sy: tree.sy, w: tree.w, h: tree.h }, tree, false)
 				retObj.nodes = [].concat(retObj.nodes, subtree)
 				tree.nodes = []
 				hitStack.push(tree)
@@ -485,7 +495,7 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 				continue
 			}
 			if (hitStack.length > 0 && tree.nodes.length < minWidth) {
-				const subtree = Ven$Rtree_searchSubtree({ sx: tree.sx, sy: tree.sy, w: tree.w, h: tree.h }, tree, true)
+				const subtree = Ven$Rtree_searchSubtree({ sx: tree.sx, sy: tree.sy, w: tree.w, h: tree.h }, tree, false)
 				retObj.nodes = [].concat(retObj.nodes, subtree)
 				tree.nodes = []
 				currentDepth -= 1
@@ -499,6 +509,7 @@ function Ven$Rtree_removeSubtree(rect, obj, root, minWidth) {
 		Ven$Rtree_debugUpdateRectangleAuxiliary(tree.id, tree)
 		currentDepth -= 1
 	}
+	Ven$Rtree_debugRemoveRectangleAuxiliary('leaf')
 	return result
 }
 
