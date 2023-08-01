@@ -50,8 +50,8 @@ function main() {
 	Ven$Rtree_debugUpdateRectangleAuxiliary('SEARCH', targetRect1, 'blue')
 	const result1 = rtree.search(targetRect1, true)
 	console.log(result1)
-	// const result2 = rtree.search(targetRect1, false)
-	// console.log(result2)
+	const result2 = rtree.search(targetRect1, false)
+	console.log(result2)
 	const result3 = rtree.search({ sx: 150, sy: 150, w: 0, h: 0 }, true)
 	console.log(result3)
 
