@@ -22,13 +22,19 @@ function drawRect(rectList, container) {
 function main() {
 	const rtree = new Ven$RTree()
 
+	const data00 = { id: '000' }
+	const data01 = { id: '001' }
+	const data02 = { id: '002' }
+	const data03 = { id: '003' }
+	const data04 = { id: '004' }
+	const data05 = { id: '005' }
 	const TestGetData = [
-		[{ sx: 100, sy: 100, w: 100, h: 100 }, { id: '000' }],
-		[{ sx: 250, sy: 250, w: 100, h: 100 }, { id: '001' }],
-		[{ sx: 150, sy: 400, w: 100, h: 100 }, { id: '002' }],
-		[{ sx: 300, sy: 50, w: 100, h: 100 }, { id: '003' }],
-		[{ sx: 400, sy: 350, w: 100, h: 100 }, { id: '004' }],
-		[{ sx: 450, sy: 150, w: 100, h: 100 }, { id: '005' }],
+		[{ sx: 100, sy: 100, w: 100, h: 100 }, data00],
+		[{ sx: 250, sy: 250, w: 100, h: 100 }, data01],
+		[{ sx: 150, sy: 400, w: 100, h: 100 }, data02],
+		[{ sx: 300, sy: 50, w: 100, h: 100 }, data03],
+		[{ sx: 400, sy: 350, w: 100, h: 100 }, data04],
+		[{ sx: 450, sy: 150, w: 100, h: 100 }, data05],
 		[{ sx: 650, sy: 200, w: 100, h: 100 }, { id: '006' }],
 		[{ sx: 800, sy: 100, w: 100, h: 100 }, { id: '007' }],
 		[{ sx: 850, sy: 300, w: 100, h: 100 }, { id: '008' }],
