@@ -484,7 +484,7 @@ function Ven$Rtree_removeSubtree(rect, targetLeaf, root, minWidth, maxWidth) {
 					 * 		将当前的树节点栈存
 					 */
 					if (itemTree.hasOwnProperty('nodes')) {
-						currentDepth++
+						currentDepth += 1
 						chooseStack.push(tree)
 						chooseChildIndexStack.push(lastItemIndex)
 						tree = itemTree
