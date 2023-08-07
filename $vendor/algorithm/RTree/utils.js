@@ -525,7 +525,7 @@ function Ven$Rtree_removeSubtree(rect, targetLeaf, root, minWidth, maxWidth) {
 			handleItem.nodes = []
 			if (chooseStack.length === 0 && tree.nodes.length <= 1) {
 				/**
-				 * 平衡子树调整策略
+				 * 平衡子树的调整策略
 				 *
 				 * 当回溯到 root 节点时, 如果其子节点个数小于等于 1
 				 * 需要获取 tree 下的所有叶子节点, 即 handleItem.nodes
@@ -541,7 +541,7 @@ function Ven$Rtree_removeSubtree(rect, targetLeaf, root, minWidth, maxWidth) {
 			}
 			if (chooseStack.length > 0 && tree.nodes.length < minWidth) {
 				/**
-				 * 平衡子树调整策略
+				 * 平衡子树的调整策略
 				 *
 				 * 在回溯过程中, 如果当前遍历的节点 tree 为非 root 节点, 且其子节点个数小于最小阈值
 				 * 需要获取 tree 下的所有叶子节点, 即 handleItem.nodes
