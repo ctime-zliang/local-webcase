@@ -53,12 +53,12 @@ class Ven$RTree {
 		return Ven$Rtree_searchSubtree(rect, this.getTree(), isGetNodeDataOnly)
 	}
 
-	remove(rect, obj) {
-		if (!obj || typeof obj === 'function') {
-			return Ven$Rtree_removeArea(rect, this.getTree(), this.minWidth, this.maxWidth)
-		} else {
-			return Ven$Rtree_removeObj(rect, obj, this.getTree(), this.minWidth, this.maxWidth)
-		}
+	removeArea(rect) {
+		return Ven$Rtree_removeArea(rect, this.getTree(), this.minWidth, this.maxWidth)
+	}
+
+	remobeTarget(rect, obj) {
+		return Ven$Rtree_removeObj(rect, obj, this.getTree(), this.minWidth, this.maxWidth)
 	}
 
 	getTree() {

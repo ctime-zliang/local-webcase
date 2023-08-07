@@ -45,6 +45,7 @@ function main() {
 		[{ sx: 800, sy: 650, w: 100, h: 100 }, { id: '013' }],
 		[{ sx: 500, sy: 700, w: 100, h: 100 }, { id: '014' }],
 		[{ sx: 900, sy: 500, w: 100, h: 100 }, { id: '015' }],
+		[{ sx: 100, sy: 100, w: 100, h: 100 }, { id: '016' }],
 	]
 	drawRect(TestGetData, document.getElementById('appContainer'))
 
@@ -62,27 +63,27 @@ function main() {
 	console.log(result3)
 
 	window.setTimeout(() => {
+		// const ids = [...Ven$Rtree_storageAuxiliary.ids]
+		// ids.forEach((id, idx) => {
+		// 	Ven$Rtree_debugRemoveRectangleAuxiliary(id)
+		// })
+		// const targetRect = { sx: 50, sy: 50, w: 750, h: 750 }
+		// Ven$Rtree_debugUpdateRectangleAuxiliary('DELETION1', targetRect, 'green')
+		// const remoteResult = rtree.removeArea(targetRect)
+		// console.log(remoteResult)
+	}, 1500)
+
+	window.setTimeout(() => {
 		const ids = [...Ven$Rtree_storageAuxiliary.ids]
 		ids.forEach((id, idx) => {
 			Ven$Rtree_debugRemoveRectangleAuxiliary(id)
 		})
 
-		const targetRect2 = { sx: 50, sy: 50, w: 750, h: 750 }
-		Ven$Rtree_debugUpdateRectangleAuxiliary('DELETION', targetRect2, 'green')
-		const remoteResult = rtree.remove(targetRect2)
-		console.log(remoteResult)
+		const targetRect = { sx: 100, sy: 100, w: 100, h: 100 }
+		Ven$Rtree_debugUpdateRectangleAuxiliary('DELETION2', targetRect, 'green')
+		// const remoteResult = rtree.remobeTarget(targetRect, data00)
+		// console.log(remoteResult)
 	}, 1500)
-
-	// GeoData[0].forEach((v) => {
-	// 	rtree.insert(v[0], v[1])
-	// })
-	// const result = rtree.search({
-	// 	sx: 2000,
-	// 	sy: 2000,
-	// 	w: 1000,
-	// 	h: 1000
-	// })
-	// console.log(result)
 
 	console.log(rtree)
 }
