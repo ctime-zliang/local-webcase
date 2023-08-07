@@ -558,7 +558,7 @@ function Ven$Rtree_removeSubtree(rect, targetLeaf, root, minWidth, maxWidth) {
 		}
 		/**
 		 * 不断往上遍历, 回溯至 root 节点
-		 * 		在每一轮回溯过程中, 依据当前 tree.nodes 修正 tree 的矩形尺寸数值
+		 * 在每一轮回溯过程中, 依据当前 tree.nodes 修正 tree 的矩形尺寸数值
 		 */
 		Ven$Rtree_Rectangle.makeMBR(tree, tree.nodes)
 		Ven$Rtree_debugUpdateRectangleAuxiliary(tree.id, tree)
