@@ -16,29 +16,29 @@ function Ven$Rtree_insertSubtree(leafItem, root, minWidth, maxWidth, debug = tru
 	 * 将目标节点插入到当前树中
 	 * 获取从根节点到最终插入位置的路径上的节点集合
 	 */
-	let treeStack = Ven$Rtree_chooseLeafSubtree(leafItem, root)
+	let nodePath = Ven$Rtree_chooseLeafSubtree(leafItem, root)
 	let handleItem = leafItem
-	let bc
-	let pbc
+	let bc = undefined
+	let pbc = undefined
 	let expandRect = null
 	let splitRes = []
-	while (treeStack.length > 0) {
+	while (nodePath.length > 0) {
 		/**
 		 * 对 bc.nodes.length === 0
 		 *
-		 * 当在某一轮循环中同时满足:
-		 * 		1. bc 为非 root 节点
-		 * 		2. bc 的直接子节点个数因超过最大限值而发生裂变
-		 * 则此时 bc 的子节点将生成两个独立的树, 子节点列表(数组)引用将被清空
+		 * 		当在某一轮循环中同时满足:
+		 * 			1. bc 为非 root 节点
+		 * 			2. bc 的直接子节点个数因超过最大限值而发生裂变
+		 * 		则此时 bc 的子节点将生成两个独立的树, 子节点列表(数组)引用将被清空
 		 *
-		 * 继续取 bc 的父节点, 记作 P
-		 * 		即 treeStack.pop()
-		 * 重新赋值给 bc
-		 * 遍历 P 的直接子节点列表, 删除 P.nodes 中的直接子节点列表为空的项(包括 bc)
+		 * 		继续取 bc 的父节点, 记作 p
+		 * 			即 nodePath.pop()
+		 * 		重新赋值给 bc
+		 * 		遍历 p 的直接子节点集合(p.nodes), 对任意的 p.nodes[n], 如果其直接子节点集合(p.nodes[n].nodes)为空, 则删除 p.nodes[n]
 		 */
 		if (bc && bc.nodes && bc.nodes.length <= 0) {
 			pbc = bc
-			bc = treeStack.pop()
+			bc = nodePath.pop()
 			for (let t = 0; t < bc.nodes.length; t++) {
 				if (bc.nodes[t] === pbc || bc.nodes[t].nodes.length <= 0) {
 					const item = bc.nodes.splice(t, 1)
@@ -47,7 +47,7 @@ function Ven$Rtree_insertSubtree(leafItem, root, minWidth, maxWidth, debug = tru
 				}
 			}
 		} else {
-			bc = treeStack.pop()
+			bc = nodePath.pop()
 		}
 		if (expandRect) {
 			Ven$Rtree_Rectangle.expandRectangle(bc, expandRect)
@@ -61,8 +61,8 @@ function Ven$Rtree_insertSubtree(leafItem, root, minWidth, maxWidth, debug = tru
 		} else {
 			if (splitRes.length) {
 				/**
-				 * 需要将裂变后的两棵子树追加挂载到 P 节点上
-				 * 扩展 P 节点矩形尺寸
+				 * 需要将裂变后的两棵子树追加挂载到 p 节点上
+				 * 更新 p 节点矩形尺寸
 				 */
 				for (let i = 0; i < splitRes.length; i++) {
 					Ven$Rtree_Rectangle.expandRectangle(bc, splitRes[i])
@@ -83,6 +83,10 @@ function Ven$Rtree_insertSubtree(leafItem, root, minWidth, maxWidth, debug = tru
 					h: bc.h,
 				}
 			} else {
+				/**
+				 * 对 bc.nodes 进行裂变, 裂变后 bc.nodes 长度为 0
+				 * 在后续的大循环中将把裂变结果逐一插入到当前树中
+				 */
 				let a = Ven$Rtree_linearSplit(bc.nodes, minWidth, debug)
 				a[0].id = 'node-' + Ven$Rtree_getHashIden() + '-a'
 				a[1].id = 'node-' + Ven$Rtree_getHashIden() + '-b'
@@ -92,13 +96,19 @@ function Ven$Rtree_insertSubtree(leafItem, root, minWidth, maxWidth, debug = tru
 					})
 				}
 				/**
-				 * 当 bc 为 root 节点时
-				 * 		treeStack 已经为空
-				 * 		将分裂后的子树重新挂在到 root 节点
+				 * nodePath 存储从 root 节点到被插入位置的路径上的所有节点
+				 *
+				 * 当 nodePath 为空, 即表示大循环遍历过程已退回到 root 节点, 且已弹出 root 节点并赋值给 bc
+				 * 需要将裂变结果中的节点之一挂载到 root 节点
+				 * 将 root 节点重新存入 nodePath 中以便重新开启新一轮大循环
+				 * 并在新一轮大循环中将裂变结果中的另一个根节点插入到 root 节点(树)中
+				 *
+				 * 如果 nodePath 不为空, 即大循环遍历过程正处于树的中间层节点, 当前节点即 bc 所指向的应用
+				 * 在下一轮大循环中, 将裂变结果插入到 bc.parent 中
 				 */
-				if (treeStack.length <= 0) {
+				if (nodePath.length <= 0) {
 					bc.nodes.push(a[0])
-					treeStack.push(bc)
+					nodePath.push(bc)
 					handleItem = a[1]
 				} else {
 					splitRes = a
@@ -113,7 +123,7 @@ function Ven$Rtree_chooseLeafSubtree(itemData, root, debug = true) {
 	const debugId0 = Ven$Rtree_getHashIden()
 	const debugId1 = Ven$Rtree_getHashIden()
 	/**
-	 * 假设某一层的所有节点 nodes 均为非叶子节点
+	 * 假设某一层的所有子节点 nodes 均为非叶子节点
 	 * 将被插入的节点(itemData) 逐一包含进 nodes[i] 中, 生成矩形 R(i)
 	 * 取该层 nodes 遍历过程中 R(i) 的面积最小时对应的节点项 nodes[i], 则判定其为最佳子节点, 并继续对该最佳子节点的子节点执行同样的操作
 	 *
@@ -171,7 +181,7 @@ function Ven$Rtree_chooseLeafSubtree(itemData, root, debug = true) {
 function Ven$Rtree_linearSplit(nodes, minWidth, debug = true) {
 	/**
 	 * 将 nodes 分割成两棵树
-	 * 首先通过构建矩形策略从 nodes 中选择两个节点生成两棵树的根节点
+	 * 先通过构建矩形策略从 nodes 中选择两个节点生成两棵树的根节点
 	 * 将剩下的节点分配到两棵树
 	 */
 	const n = Ven$Rtree_pickLinear(nodes, debug)
@@ -294,7 +304,7 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth, debug = true) {
 	 * 从 nodes 中删除 highAreaNodeIndex 位置处的元素, 并将该元素插入到 a 或 b 的子节点列表中
 	 */
 	let highAreaDelta = 0
-	let lowestGrowthGroup
+	let lowestGrowthGroup = null
 	let highAreaNodeIndex = -1
 	const debugIdA = Ven$Rtree_getHashIden()
 	const debugIdB = Ven$Rtree_getHashIden()
@@ -515,9 +525,11 @@ function Ven$Rtree_removeSubtree(rect, targetLeaf, root, minWidth, maxWidth) {
 			handleItem.nodes = []
 			if (chooseStack.length === 0 && tree.nodes.length <= 1) {
 				/**
+				 * 平衡子树调整策略
+				 *
 				 * 当回溯到 root 节点时, 如果其子节点个数小于等于 1
 				 * 需要获取 tree 下的所有叶子节点, 即 handleItem.nodes
-				 * 将当前 tree 节点重新存入 chooseStack 中, 以便继续开启一轮外循环,
+				 * 将当前 tree 节点重新存入 chooseStack 中, 以便继续开启新一轮外循环,
 				 * 继而使得 handleItem.nodes 将被重新插入到 tree.parent
 				 */
 				handleItem.nodes = Ven$Rtree_searchSubtree({ sx: tree.sx, sy: tree.sy, w: tree.w, h: tree.h }, tree, false)
@@ -529,6 +541,8 @@ function Ven$Rtree_removeSubtree(rect, targetLeaf, root, minWidth, maxWidth) {
 			}
 			if (chooseStack.length > 0 && tree.nodes.length < minWidth) {
 				/**
+				 * 平衡子树调整策略
+				 *
 				 * 在回溯过程中, 如果当前遍历的节点 tree 为非 root 节点, 且其子节点个数小于最小阈值
 				 * 需要获取 tree 下的所有叶子节点, 即 handleItem.nodes
 				 * 在随即的下一轮外循环中, handleItem.nodes 将被重新插入到 tree.parent
