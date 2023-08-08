@@ -405,14 +405,13 @@ function Ven$Rtree_getFlattenLeafs(trees) {
 }
 
 function Ven$Rtree_removeArea(rect, rootTree, minWidth, maxWidth) {
-	let numberDeleted = 1
+	let countDeleted = 0
 	let result = []
-	let deleted
-	while (numberDeleted > 0) {
-		deleted = Ven$Rtree_removeSubtree(rect, null, rootTree, minWidth, maxWidth)
-		numberDeleted = deleted.length
-		result = [].concat(result, deleted)
-	}
+	do {
+		countDeleted = result.length
+		const removeResult = Ven$Rtree_removeSubtree(rect, null, rootTree, minWidth, maxWidth)
+		result = [].concat(result, removeResult)
+	} while (countDeleted != result.length)
 	return result
 }
 
@@ -529,7 +528,7 @@ function Ven$Rtree_removeSubtree(rect, targetLeaf, root, minWidth, maxWidth) {
 				 *
 				 * 当回溯到 root 节点时, 如果其子节点个数小于等于 1
 				 * 需要获取 tree 下的所有叶子节点, 即 handleItem.nodes
-				 * 将当前 tree 节点重新存入 chooseStack 中, 以便继续开启新一轮外循环,
+				 * 将当前 tree 节点重新存入 chooseStack 中, 以便继续开启新一轮外循环
 				 * 继而使得 handleItem.nodes 将被重新插入到 tree.parent
 				 */
 				handleItem.nodes = Ven$Rtree_searchSubtree({ sx: tree.sx, sy: tree.sy, w: tree.w, h: tree.h }, tree, false)
