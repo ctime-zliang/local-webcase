@@ -31,6 +31,7 @@ function removeRectDraw(idList) {
 
 function main() {
 	const rtree = new Ven$RTree()
+	const rrtree = new RRTree()
 
 	const data00 = { id: '000' }
 	const data01 = { id: '001' }
@@ -61,6 +62,7 @@ function main() {
 
 	TestGetData.forEach((v, i) => {
 		rtree.insertItemData(v[0], v[1])
+		rrtree.insert({ x: v[0].sx, y: v[0].sy, w: v[0].w, h: v[0].h }, v[1])
 	})
 
 	const targetRect1 = { sx: 50, sy: 50, w: 500, h: 500 }
@@ -77,7 +79,7 @@ function main() {
 		// ids.forEach((id, idx) => {
 		// 	Ven$Rtree_debugRemoveRectangleAuxiliary(id)
 		// })
-		// const targetRect = { sx: 950, sy: 550, w: 500, h: 500 }
+		// const targetRect = { sx: 50, sy: 50, w: 750, h: 750 }
 		// Ven$Rtree_debugUpdateRectangleAuxiliary('DELETION1', targetRect, 'green')
 		// const remoteResult = rtree.removeArea(targetRect)
 		// removeRectDraw(remoteResult.map((item) => {
@@ -87,22 +89,25 @@ function main() {
 	}, 1500)
 
 	window.setTimeout(() => {
-		const ids = [...Ven$Rtree_storageAuxiliary.ids]
-		ids.forEach((id, idx) => {
-			Ven$Rtree_debugRemoveRectangleAuxiliary(id)
-		})
-		const targetRect = { sx: 100, sy: 100, w: 100, h: 100 }
-		Ven$Rtree_debugUpdateRectangleAuxiliary('DELETION2', targetRect, 'green')
-		const remoteResult = rtree.remobeTarget(targetRect, data00)
-		removeRectDraw(
-			remoteResult.map(item => {
-				return item.leaf.id
-			})
-		)
-		console.log(remoteResult)
+		// const ids = [...Ven$Rtree_storageAuxiliary.ids]
+		// ids.forEach((id, idx) => {
+		// 	Ven$Rtree_debugRemoveRectangleAuxiliary(id)
+		// })
+		// const targetRect = { sx: 100, sy: 100, w: 100, h: 100 }
+		// Ven$Rtree_debugUpdateRectangleAuxiliary('DELETION2', targetRect, 'green')
+		// const remoteResult = rtree.removeTarget(targetRect, data00)
+		// removeRectDraw(
+		// 	remoteResult.map(item => {
+		// 		return item.leaf.id
+		// 	})
+		// )
+		// console.log(remoteResult)
+		// const remoteResult2 = rrtree.remove({ x: 100, y: 100, w: 100, h: 100 }, data04)
+		// console.log(remoteResult2)
 	}, 1500)
 
 	console.log(rtree)
+	console.log(rrtree, rrtree.get_tree())
 }
 
 main()

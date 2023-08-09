@@ -409,7 +409,7 @@ function Ven$Rtree_removeArea(rect, rootTree, minWidth, maxWidth) {
 	let result = []
 	do {
 		countDeleted = result.length
-		const removeResult = Ven$Rtree_removeSubtree(rect, null, rootTree, minWidth, maxWidth)
+		const removeResult = Ven$Rtree_removeSubtree(rect, false, rootTree, minWidth, maxWidth)
 		result = [].concat(result, removeResult)
 	} while (countDeleted != result.length)
 	return result
@@ -448,9 +448,11 @@ function Ven$Rtree_removeSubtree(rect, targetLeaf, root, minWidth, maxWidth) {
 			 * 		每次选择子节点列表的最后一个逐级往下遍历
 			 * 		将当前遍历到的节点记作 itemTree
 			 * 		当遍历到满足以下任意条件:
-			 * 			=>. itemTree 为叶子节点且对应的数据对象为当前调用 removeSubtree 时传入的目标对象(意即从树中删除某个对象)
-			 * 			=>. itemTree 为叶子节点
-			 * 			=>. itemTree 节点构成的矩形包含于 handleItem 构成的矩形中
+			 * 			=>. 如果 handleItem.target 存在有效目标对象值(即从树中指定删除某个存储对象), 再满足以下任意条件:
+			 * 					=>. 需要 itemTree 为叶子节点且同时满足 itemTree.leaf 等于 handleItem.target
+			 * 			=>. 如果 handleItem.target 存在有效目标对象值(即范围删除), 再满足以下任意条件:
+			 * 					=>. 需要 itemTree 为叶子节点
+			 * 					=>. itemTree 的矩形尺寸范围包含于 handleItem 描述的矩形尺寸范围内
 			 *      即对 itemTree 做对应的处理:
 			 * 			如果 itemTree 为叶子节点
 			 * 				从其所在节点列表(集合)中移除之, 将被移除的节点集合作为返回值
@@ -464,10 +466,11 @@ function Ven$Rtree_removeSubtree(rect, targetLeaf, root, minWidth, maxWidth) {
 				Ven$Rtree_debugUpdateRectangleAuxiliary(itemTree.id || 'leaf', itemTree)
 				if (Ven$Rtree_Rectangle.overlapRectangle(handleItem, itemTree)) {
 					const isContains = Ven$Rtree_Rectangle.containsRectangle(itemTree, handleItem)
-					if (
-						(handleItem.target && itemTree.leaf === handleItem.target) ||
-						(!handleItem.target && (itemTree.hasOwnProperty('leaf') || Ven$Rtree_Rectangle.containsRectangle(itemTree, handleItem)))
-					) {
+					const isConfirm =
+						handleItem.target !== false
+							? itemTree.leaf === handleItem.target
+							: itemTree.hasOwnProperty('leaf') || Ven$Rtree_Rectangle.containsRectangle(itemTree, handleItem)
+					if (isConfirm) {
 						if (itemTree.hasOwnProperty('nodes')) {
 							result = Ven$Rtree_getFlattenLeafs([itemTree])
 							tree.nodes.splice(lastItemIndex, 1)
@@ -501,7 +504,16 @@ function Ven$Rtree_removeSubtree(rect, targetLeaf, root, minWidth, maxWidth) {
 						continue
 					}
 				}
+				/**
+				 * 如果当前检索的范围和当前节点 itemTree 的矩形尺寸范围没有交集, 则继续检查 itemTree 的前一个兄弟节点
+				 */
 				lastItemIndex--
+				if (lastItemIndex < 0 && itemTree.hasOwnProperty('leaf')) {
+					chooseStack.pop()
+					chooseChildIndexStack.pop()
+					chooseChildIndexStack[chooseChildIndexStack.length - 1]--
+					break
+				}
 			}
 			continue
 		}

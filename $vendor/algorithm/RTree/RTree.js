@@ -57,7 +57,10 @@ class Ven$RTree {
 		return Ven$Rtree_removeArea(rect, this.getTree(), this.minWidth, this.maxWidth)
 	}
 
-	remobeTarget(rect, obj) {
+	removeTarget(rect, obj) {
+		if (obj === false) {
+			return Ven$Rtree_removeArea(rect, this.getTree(), this.minWidth, this.maxWidth)
+		}
 		return Ven$Rtree_removeObj(rect, obj, this.getTree(), this.minWidth, this.maxWidth)
 	}
 

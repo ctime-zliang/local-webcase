@@ -23,32 +23,10 @@ class Ven$Rtree_Rectangle {
 	 * referenceRect - 被覆盖的矩形
 	 */
 	static expandRectangle(expandRect, referenceRect) {
-		let nx = 0
-		let ny = 0
-		let expandRectEX = expandRect.sx + expandRect.w
-		let expandRectEY = expandRect.sy + expandRect.h
-		let referenceRectEX = referenceRect.sx + referenceRect.w
-		let referenceRectEY = referenceRect.sy + referenceRect.h
-		if (expandRect.sx > referenceRect.sx) {
-			nx = referenceRect.sx
-		} else {
-			nx = expandRect.sx
-		}
-		if (expandRect.sy > referenceRect.sy) {
-			ny = referenceRect.sy
-		} else {
-			ny = expandRect.sy
-		}
-		if (expandRectEX > referenceRectEX) {
-			expandRect.w = expandRectEX - nx
-		} else {
-			expandRect.w = referenceRectEX - nx
-		}
-		if (expandRectEY > referenceRectEY) {
-			expandRect.h = expandRectEY - ny
-		} else {
-			expandRect.h = referenceRectEY - ny
-		}
+		let nx = Math.min(expandRect.sx, referenceRect.sx)
+		let ny = Math.min(expandRect.sy, referenceRect.sy)
+		expandRect.w = Math.max(expandRect.sx + expandRect.w, referenceRect.sx + referenceRect.w) - nx
+		expandRect.h = Math.max(expandRect.sy + expandRect.h, referenceRect.sy + referenceRect.h) - ny
 		expandRect.sx = nx
 		expandRect.sy = ny
 		return expandRect
