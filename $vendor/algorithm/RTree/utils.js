@@ -1,7 +1,7 @@
 function Ven$Rtree_insertSubtree(leafItem, root, minWidth, maxWidth, debug = true) {
 	/**
-	 * 当根节点不存在数据时, 即该树为空, 执行插入时首先填充根节点
-	 * 即该节点(root)的 MBR 即为当前被插入的节点的尺寸的数据值
+	 * 当 root 节点的子节点集合为空时, 执行插入时首先填充根节点
+	 * 则 root 节点的 MBR 即为当前被插入的节点的尺寸的数据值
 	 */
 	if (root.nodes.length === 0) {
 		root.sx = leafItem.sx
@@ -14,12 +14,11 @@ function Ven$Rtree_insertSubtree(leafItem, root, minWidth, maxWidth, debug = tru
 	}
 	/**
 	 * 将目标节点插入到当前树中
-	 * 获取从根节点到最终插入位置的路径上的节点集合
+	 * 获取从 root 节点到最终插入位置的路径上的节点集合
 	 */
 	let nodePath = Ven$Rtree_chooseLeafSubtree(leafItem, root)
 	let handleItem = leafItem
 	let bc = undefined
-	let pbc = undefined
 	let expandRect = null
 	let splitRes = []
 	while (nodePath.length > 0) {
@@ -31,16 +30,17 @@ function Ven$Rtree_insertSubtree(leafItem, root, minWidth, maxWidth, debug = tru
 		 * 			2. bc 的直接子节点个数因超过最大限值而发生裂变
 		 * 		则此时 bc 的子节点将生成两个独立的树, 子节点列表(数组)引用将被清空
 		 *
+		 * 		缓存 bc
 		 * 		继续取 bc 的父节点, 记作 p
-		 * 			即 nodePath.pop()
+		 * 			即 p = nodePath.pop()
 		 * 		重新赋值给 bc
 		 * 		遍历 p 的直接子节点集合(p.nodes), 对任意的 p.nodes[n], 如果其直接子节点集合(p.nodes[n].nodes)为空, 则删除 p.nodes[n]
 		 */
 		if (bc && bc.nodes && bc.nodes.length <= 0) {
-			pbc = bc
+			let cache = bc
 			bc = nodePath.pop()
 			for (let t = 0; t < bc.nodes.length; t++) {
-				if (bc.nodes[t] === pbc || bc.nodes[t].nodes.length <= 0) {
+				if (bc.nodes[t] === cache || bc.nodes[t].nodes.length <= 0) {
 					const item = bc.nodes.splice(t, 1)
 					debug && Ven$Rtree_debugRemoveRectangleAuxiliary(item[0].id)
 					break
@@ -334,10 +334,10 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth, debug = true) {
 		/**
 		 * old if: !highAreaNodeIndex || !highAreaDelta || Math.abs(changeTempAreaB - changeTempAreaA) < highAreaDelta
 		 */
-		if (i === nodes.length - 1 || Math.abs(changeTempAreaB - changeTempAreaA) <= highAreaDelta) {
+		if (highAreaNodeIndex === -1 || highAreaDelta <= 0 || Math.abs(changeTempAreaB - changeTempAreaA) <= highAreaDelta) {
 			highAreaNodeIndex = i
 			highAreaDelta = Math.abs(changeTempAreaB - changeTempAreaA)
-			lowestGrowthGroup = changeTempAreaA >= changeTempAreaB ? a : b
+			lowestGrowthGroup = changeTempAreaB < changeTempAreaA ? b : a
 		}
 	}
 	debug && Ven$Rtree_debugRemoveRectangleAuxiliary(debugIdA)
@@ -465,7 +465,6 @@ function Ven$Rtree_removeSubtree(rect, targetLeaf, root, minWidth, maxWidth) {
 				itemTree = tree.nodes[lastItemIndex]
 				Ven$Rtree_debugUpdateRectangleAuxiliary(itemTree.id || 'leaf', itemTree)
 				if (Ven$Rtree_Rectangle.overlapRectangle(handleItem, itemTree)) {
-					const isContains = Ven$Rtree_Rectangle.containsRectangle(itemTree, handleItem)
 					const isConfirm =
 						handleItem.target !== false
 							? itemTree.leaf === handleItem.target
@@ -508,11 +507,13 @@ function Ven$Rtree_removeSubtree(rect, targetLeaf, root, minWidth, maxWidth) {
 				 * 如果当前检索的范围和当前节点 itemTree 的矩形尺寸范围没有交集, 则继续检查 itemTree 的前一个兄弟节点
 				 */
 				lastItemIndex--
+				/**
+				 * 当 itemTree 已经是其所在节点集合中的第一个且其为叶子节点时
+				 * 即表示已经遍历到树的某一分支的最左底部
+				 * 即已经完成了对当前整棵树的搜索, 直接返回即可
+				 */
 				if (lastItemIndex < 0 && itemTree.hasOwnProperty('leaf')) {
-					chooseStack.pop()
-					chooseChildIndexStack.pop()
-					chooseChildIndexStack[chooseChildIndexStack.length - 1]--
-					break
+					return result
 				}
 			}
 			continue
