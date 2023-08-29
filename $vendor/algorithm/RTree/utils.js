@@ -39,9 +39,9 @@ function Ven$Rtree_insertSubtree(leafItem, root, minWidth, maxWidth, debug = tru
 		if (bc && bc.nodes && bc.nodes.length <= 0) {
 			let cache = bc
 			bc = nodePath.pop()
-			for (let t = 0; t < bc.nodes.length; t++) {
-				if (bc.nodes[t] === cache || bc.nodes[t].nodes.length <= 0) {
-					const item = bc.nodes.splice(t, 1)
+			for (let n = 0; n < bc.nodes.length; n++) {
+				if (bc.nodes[n] === cache || bc.nodes[n].nodes.length <= 0) {
+					const item = bc.nodes.splice(n, 1)
 					debug && Ven$Rtree_debugRemoveRectangleAuxiliary(item[0].id)
 					break
 				}
@@ -103,7 +103,7 @@ function Ven$Rtree_insertSubtree(leafItem, root, minWidth, maxWidth, debug = tru
 				 * 将 root 节点重新存入 nodePath 中以便重新开启新一轮大循环
 				 * 并在新一轮大循环中将裂变结果中的另一个根节点插入到 root 节点(树)中
 				 *
-				 * 如果 nodePath 不为空, 即大循环遍历过程正处于树的中间层节点, 当前节点即 bc 所指向的应用
+				 * 如果 nodePath 不为空, 即大循环遍历过程正处于树的中间某一层节点, 当前节点即 bc 所指向的引用
 				 * 在下一轮大循环中, 将裂变结果插入到 bc.parent 中
 				 */
 				if (nodePath.length <= 0) {

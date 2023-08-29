@@ -1,4 +1,5 @@
 const GeoData = window.Ven$RTreeGeoData
+const rtree = new Ven$RTree()
 
 function appendRectDraw(rectList, container) {
 	let wrapper = document.createDocumentFragment()
@@ -12,7 +13,8 @@ function appendRectDraw(rectList, container) {
 				<div>sy = ${pos.sy}</div>
 				<div>w = ${pos.w}</div>
 				<div>h = ${pos.h}</div>
-			</div>`
+			</div>
+		`
 		let itemElement = document.createRange().createContextualFragment(htmlString)
 		wrapper.appendChild(itemElement)
 	})
@@ -30,8 +32,6 @@ function removeRectDraw(idList) {
 }
 
 function main() {
-	const rtree = new Ven$RTree()
-
 	const data00 = { id: '000' }
 	const data01 = { id: '001' }
 	const data02 = { id: '002' }
@@ -84,7 +84,23 @@ function main() {
 		// removeRectDraw(remoteResult.map((item, index) => {
 		// 	return item.leaf.id
 		// }))
-		// console.log(remoteResult)
+		// console.log(`移除元素`, remoteResult)
+	}, 1500)
+
+	window.setTimeout(() => {
+		const ids = [...Ven$Rtree_storageAuxiliary.ids]
+		ids.forEach((id, idx) => {
+			Ven$Rtree_debugRemoveRectangleAuxiliary(id)
+		})
+		const targetRect = { sx: 100, sy: 100, w: 100, h: 100 }
+		Ven$Rtree_debugUpdateRectangleAuxiliary('DELETION2', targetRect, 'blue')
+		const remoteResult = rtree.removeTarget(targetRect, data16)
+		removeRectDraw(
+			remoteResult.map((item, index) => {
+				return item.leaf.id
+			})
+		)
+		console.log(`移除元素`, remoteResult)
 	}, 1500)
 
 	window.setTimeout(() => {
@@ -92,23 +108,7 @@ function main() {
 		// ids.forEach((id, idx) => {
 		// 	Ven$Rtree_debugRemoveRectangleAuxiliary(id)
 		// })
-		// const targetRect = { sx: 100, sy: 100, w: 100, h: 100 }
-		// Ven$Rtree_debugUpdateRectangleAuxiliary('DELETION2', targetRect, 'blue')
-		// const remoteResult = rtree.removeTarget(targetRect, data16)
-		// removeRectDraw(
-		// 	remoteResult.map((item, index) => {
-		// 		return item.leaf.id
-		// 	})
-		// )
-		// console.log(remoteResult)
-	}, 1500)
-
-	window.setTimeout(() => {
-		// const ids = [...Ven$Rtree_storageAuxiliary.ids]
-		// ids.forEach((id, idx) => {
-		// 	Ven$Rtree_debugRemoveRectangleAuxiliary(id)
-		// })
-		// const targetRect = { sx: 100, sy: 100, w: 100, h: 100 }
+		// const targetRect = { sx: 450, sy: 150, w: 0, h: 0 }
 		// Ven$Rtree_debugUpdateRectangleAuxiliary('DELETION3', targetRect, 'blue')
 		// const remoteResult = rtree.removeTarget(targetRect, data05)
 		// removeRectDraw(
@@ -116,7 +116,7 @@ function main() {
 		// 		return item.leaf.id
 		// 	})
 		// )
-		// console.log(remoteResult)
+		// console.log(`移除元素`, remoteResult)
 	}, 1500)
 
 	console.log(rtree)
