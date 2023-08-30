@@ -158,12 +158,12 @@ class Ven$Rtree_Rectangle {
 		} else {
 			ny = this.sy
 		}
-		if (ex > rect.ex) {
-			w = ex - nx
+		if (this.ex > rect.ex) {
+			w = this.ex - nx
 		} else {
-			w = rect.endX - nx
+			w = rect.ex - nx
 		}
-		if (ey > rect.ey) {
+		if (this.ey > rect.ey) {
 			h = this.ey - ny
 		} else {
 			h = rect.ey - ny
