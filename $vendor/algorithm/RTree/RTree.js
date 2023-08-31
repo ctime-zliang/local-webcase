@@ -1,7 +1,7 @@
 class Ven$RTree {
 	constructor(width) {
 		this._root = null
-		this._balanceChildOnDeleting = true
+		this._balanceChildrenOnDeleting = true
 		/**
 		 * 任意节点的字节点个数限值
 		 */
@@ -55,14 +55,14 @@ class Ven$RTree {
 	}
 
 	removeArea(rect) {
-		return Ven$Rtree_removeArea(rect, this._root, this._minWidth, this._maxWidth, this._balanceChildOnDeleting)
+		return Ven$Rtree_removeArea(rect, this._root, this._minWidth, this._maxWidth, this._balanceChildrenOnDeleting)
 	}
 
 	removeTarget(rect, targetOnLeaf) {
 		if (targetOnLeaf === false) {
-			return Ven$Rtree_removeArea(rect, this._root, this._minWidth, this._maxWidth, this._balanceChildOnDeleting)
+			return Ven$Rtree_removeArea(rect, this._root, this._minWidth, this._maxWidth, this._balanceChildrenOnDeleting)
 		}
-		return Ven$Rtree_removeObj(rect, targetOnLeaf, this._root, this._minWidth, this._maxWidth, this._balanceChildOnDeleting)
+		return Ven$Rtree_removeObj(rect, targetOnLeaf, this._root, this._minWidth, this._maxWidth, this._balanceChildrenOnDeleting)
 	}
 
 	getTree() {
