@@ -68,7 +68,7 @@ function Ven$Rtree_insertSubtree(leafItem, root, minWidth, maxWidth, debug = tru
 					Ven$Rtree_Rectangle.expandRectangle(bc, splitRes[i])
 					debug && Ven$Rtree_debugUpdateRectangleAuxiliary(bc.id, bc)
 				}
-				bc.nodes = [].concat(bc.nodes, splitRes)
+				bc.nodes = bc.nodes.concat(splitRes)
 				splitRes.length = 0
 			} else {
 				Ven$Rtree_Rectangle.expandRectangle(bc, handleItem)
@@ -405,7 +405,7 @@ function Ven$Rtree_getFlattenLeafs(trees) {
 	while (treesCopy.length) {
 		const current = treesCopy.pop()
 		if (current.nodes) {
-			treesCopy = [].concat(treesCopy, current.nodes)
+			treesCopy = treesCopy.concat(current.nodes)
 			continue
 		}
 		if (current.leaf) {
@@ -422,17 +422,17 @@ function Ven$Rtree_removeArea(rect, rootTree, minWidth, maxWidth) {
 	do {
 		countDeleted = result.length
 		const removeResult = Ven$Rtree_removeSubtree(rect, false, rootTree, minWidth, maxWidth)
-		result = [].concat(result, removeResult)
+		result = result.concat(removeResult)
 	} while (countDeleted != result.length)
 	return result
 }
 
-function Ven$Rtree_removeObj(rect, targetLeaf, rootTree, minWidth, maxWidth) {
-	const result = Ven$Rtree_removeSubtree(rect, targetLeaf, rootTree, minWidth, maxWidth)
+function Ven$Rtree_removeObj(rect, targetOnLeaf, rootTree, minWidth, maxWidth) {
+	const result = Ven$Rtree_removeSubtree(rect, targetOnLeaf, rootTree, minWidth, maxWidth)
 	return result
 }
 
-function Ven$Rtree_removeSubtree(rect, targetLeaf, root, minWidth, maxWidth) {
+function Ven$Rtree_removeSubtree(rect, targetOnLeaf, root, minWidth, maxWidth) {
 	let result = []
 	if (!rect || !Ven$Rtree_Rectangle.overlapRectangle(rect, root)) {
 		return result
@@ -442,7 +442,7 @@ function Ven$Rtree_removeSubtree(rect, targetLeaf, root, minWidth, maxWidth) {
 		sy: rect.sy,
 		w: rect.w,
 		h: rect.h,
-		target: targetLeaf,
+		target: targetOnLeaf,
 	}
 	let currentDepth = 1
 	let lastItemIndex = -1

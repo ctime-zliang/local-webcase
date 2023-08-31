@@ -1,17 +1,17 @@
 class Ven$RTree {
 	constructor(width) {
-		this.root = null
+		this._root = null
 		/**
 		 * 任意节点的字节点个数限值
 		 */
-		this.minWidth = 2
-		this.maxWidth = 4
+		this._minWidth = 2
+		this._maxWidth = 4
 		this.inital(width)
 	}
 
 	inital(width) {
-		let minWidth = this.minWidth
-		let maxWidth = this.maxWidth
+		let minWidth = this._minWidth
+		let maxWidth = this._maxWidth
 		if (!isNaN(width)) {
 			minWidth = Math.floor(width / 2.0)
 			maxWidth = width
@@ -24,14 +24,14 @@ class Ven$RTree {
 			id: 'root',
 			nodes: [],
 		}
-		this.root = rootTree
-		this.minWidth = minWidth
-		this.maxWidth = maxWidth
+		this._root = rootTree
+		this._minWidth = minWidth
+		this._maxWidth = maxWidth
 	}
 
 	insertSubtree(handleNode, targetRoot) {
 		targetRoot = targetRoot || this.getTree()
-		Ven$Rtree_insertSubtree(handleNode, targetRoot, this.minWidth, this.maxWidth)
+		Ven$Rtree_insertSubtree(handleNode, targetRoot, this._minWidth, this._maxWidth)
 	}
 
 	insertItemData(rect, data) {
@@ -44,8 +44,8 @@ class Ven$RTree {
 				leaf: data,
 			},
 			this.getTree(),
-			this.minWidth,
-			this.maxWidth
+			this._minWidth,
+			this._maxWidth
 		)
 	}
 
@@ -54,23 +54,23 @@ class Ven$RTree {
 	}
 
 	removeArea(rect) {
-		return Ven$Rtree_removeArea(rect, this.getTree(), this.minWidth, this.maxWidth)
+		return Ven$Rtree_removeArea(rect, this.getTree(), this._minWidth, this._maxWidth)
 	}
 
-	removeTarget(rect, obj) {
-		if (obj === false) {
-			return Ven$Rtree_removeArea(rect, this.getTree(), this.minWidth, this.maxWidth)
+	removeTarget(rect, targetOnLeaf) {
+		if (targetOnLeaf === false) {
+			return Ven$Rtree_removeArea(rect, this.getTree(), this._minWidth, this._maxWidth)
 		}
-		return Ven$Rtree_removeObj(rect, obj, this.getTree(), this.minWidth, this.maxWidth)
+		return Ven$Rtree_removeObj(rect, targetOnLeaf, this.getTree(), this._minWidth, this._maxWidth)
 	}
 
 	getTree() {
-		return this.root
+		return this._root
 	}
 
 	setTree(newTree, targetRoot) {
 		if (!targetRoot) {
-			targetRoot = this.root
+			targetRoot = this._root
 		}
 		return Ven$Rtree_attachData(newTree, targetRoot)
 	}
