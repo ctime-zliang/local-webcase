@@ -416,23 +416,23 @@ function Ven$Rtree_getFlattenLeafs(trees) {
 	return result
 }
 
-function Ven$Rtree_removeArea(rect, rootTree, minWidth, maxWidth) {
+function Ven$Rtree_removeArea(rect, rootTree, minWidth, maxWidth, balanceChildOnDeleting) {
 	let countDeleted = 0
 	let result = []
 	do {
 		countDeleted = result.length
-		const removeResult = Ven$Rtree_removeSubtree(rect, false, rootTree, minWidth, maxWidth)
+		const removeResult = Ven$Rtree_removeSubtree(rect, false, rootTree, minWidth, maxWidth, balanceChildOnDeleting)
 		result = result.concat(removeResult)
-	} while (countDeleted != result.length)
+	} while (countDeleted !== result.length)
 	return result
 }
 
-function Ven$Rtree_removeObj(rect, targetOnLeaf, rootTree, minWidth, maxWidth) {
-	const result = Ven$Rtree_removeSubtree(rect, targetOnLeaf, rootTree, minWidth, maxWidth)
+function Ven$Rtree_removeObj(rect, targetOnLeaf, rootTree, minWidth, maxWidth, balanceChildOnDeleting) {
+	const result = Ven$Rtree_removeSubtree(rect, targetOnLeaf, rootTree, minWidth, maxWidth, balanceChildOnDeleting)
 	return result
 }
 
-function Ven$Rtree_removeSubtree(rect, targetOnLeaf, root, minWidth, maxWidth) {
+function Ven$Rtree_removeSubtree(rect, targetOnLeaf, root, minWidth, maxWidth, balanceChildOnDeleting) {
 	let result = []
 	if (!rect || !Ven$Rtree_Rectangle.overlapRectangle(rect, root)) {
 		return result
@@ -491,7 +491,7 @@ function Ven$Rtree_removeSubtree(rect, targetOnLeaf, root, minWidth, maxWidth) {
 						Ven$Rtree_Rectangle.makeMBR(tree, tree.nodes)
 						Ven$Rtree_debugUpdateRectangleAuxiliary(tree.id, tree)
 						delete handleItem.target
-						if (tree.nodes.length < minWidth) {
+						if (balanceChildOnDeleting && tree.nodes.length < minWidth) {
 							/**
 							 * 搜索并返回当前 tree 节点所占矩形尺寸内从 tree 节点层开始的所有叶子节点
 							 * 将搜索结果暂存到 handler 中

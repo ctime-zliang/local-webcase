@@ -1,6 +1,7 @@
 class Ven$RTree {
 	constructor(width) {
 		this._root = null
+		this._balanceChildOnDeleting = true
 		/**
 		 * 任意节点的字节点个数限值
 		 */
@@ -30,7 +31,7 @@ class Ven$RTree {
 	}
 
 	insertSubtree(handleNode, targetRoot) {
-		targetRoot = targetRoot || this.getTree()
+		targetRoot = targetRoot || this._root
 		Ven$Rtree_insertSubtree(handleNode, targetRoot, this._minWidth, this._maxWidth)
 	}
 
@@ -43,25 +44,25 @@ class Ven$RTree {
 				h: rect.h,
 				leaf: data,
 			},
-			this.getTree(),
+			this._root,
 			this._minWidth,
 			this._maxWidth
 		)
 	}
 
 	search(rect, isGetNodeDataOnly) {
-		return Ven$Rtree_searchSubtree(rect, this.getTree(), isGetNodeDataOnly)
+		return Ven$Rtree_searchSubtree(rect, this._root, isGetNodeDataOnly)
 	}
 
 	removeArea(rect) {
-		return Ven$Rtree_removeArea(rect, this.getTree(), this._minWidth, this._maxWidth)
+		return Ven$Rtree_removeArea(rect, this._root, this._minWidth, this._maxWidth, this._balanceChildOnDeleting)
 	}
 
 	removeTarget(rect, targetOnLeaf) {
 		if (targetOnLeaf === false) {
-			return Ven$Rtree_removeArea(rect, this.getTree(), this._minWidth, this._maxWidth)
+			return Ven$Rtree_removeArea(rect, this._root, this._minWidth, this._maxWidth, this._balanceChildOnDeleting)
 		}
-		return Ven$Rtree_removeObj(rect, targetOnLeaf, this.getTree(), this._minWidth, this._maxWidth)
+		return Ven$Rtree_removeObj(rect, targetOnLeaf, this._root, this._minWidth, this._maxWidth, this._balanceChildOnDeleting)
 	}
 
 	getTree() {
