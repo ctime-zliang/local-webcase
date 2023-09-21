@@ -5,10 +5,10 @@
  * @param {number} size 每组尺寸长度
  * @return {array<any>}
  */
-function ven$arrayCopy(sourceArray, sourceIndex, result, resultIndex, copyLength) {
-	if (sourceArray.length >= sourceIndex + copyLength && result.length >= resultIndex + copyLength) {
+function ven$arrayCopy(sourceArray, sourceIndex, resultArray, resultIndex, copyLength) {
+	if (sourceArray.length >= sourceIndex + copyLength && resultArray.length >= resultIndex + copyLength) {
 		while (copyLength-- > 0) {
-			result[resultIndex++] = sourceArray[sourceIndex++]
+			resultArray[resultIndex++] = sourceArray[sourceIndex++]
 		}
 		return
 	}
