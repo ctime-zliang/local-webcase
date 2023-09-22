@@ -67,29 +67,32 @@ class Ven$Matrix {
 				expandMatrix[ven$matrixOn(expandColLen, ri, ci)] = 0
 			}
 		}
-	}
-
-	inverseMatrix(expandMatrix, rowLen, colLen) {
-		for (let ri = 0; ri < rowLen; ri++) {
-			let firstItem = expandMatrix[ven$matrixOn(colLen, ri, ri)]
-			for (let ci = 0; ci < colLen; ci++) {
-				expandMatrix[ven$matrixOn(colLen, ri, ci)] /= firstItem
-			}
-		}
 		return expandMatrix
 	}
 
+	inverseMatrix(expandMatrix, rowLen, colLen) {
+		const copyExpandMatrix = expandMatrix.slice(0)
+		for (let ri = 0; ri < rowLen; ri++) {
+			let firstItem = copyExpandMatrix[ven$matrixOn(colLen, ri, ri)]
+			for (let ci = 0; ci < colLen; ci++) {
+				copyExpandMatrix[ven$matrixOn(colLen, ri, ci)] /= firstItem
+			}
+		}
+		return copyExpandMatrix
+	}
+
 	getMatrixRank(matrix, rowLen, colLen) {
+		const copyMatrix = matrix.slice(0)
 		let rank = Math.min(rowLen, colLen)
 		for (let ri = 0; ri < rowLen; ri++) {
-			if (matrix[ven$matrixOn(colLen, ri, ri)] === 0) {
+			if (copyMatrix[ven$matrixOn(colLen, ri, ri)] === 0) {
 				let tmp = new Array(colLen)
 				let ci = 0
 				for (ci = ri; ci < rowLen; ci++) {
-					if (matrix[ven$matrixOn(colLen, ci, ri) !== 0]) {
-						ven$arrayCopy(matrix, ven$matrixOn(colLen, ci, 0), tmp, 0, colLen)
-						ven$arrayCopy(matrix, ven$matrixOn(colLen, ri, 0), matrix, ven$matrixOn(colLen, ci, 0), colLen)
-						ven$arrayCopy(tmp, 0, matrix, ven$matrixOn(colLen, ri, 0), colLen)
+					if (copyMatrix[ven$matrixOn(colLen, ci, ri) !== 0]) {
+						ven$arrayCopy(copyMatrix, ven$matrixOn(colLen, ci, 0), tmp, 0, colLen)
+						ven$arrayCopy(copyMatrix, ven$matrixOn(colLen, ri, 0), copyMatrix, ven$matrixOn(colLen, ci, 0), colLen)
+						ven$arrayCopy(tmp, 0, copyMatrix, ven$matrixOn(colLen, ri, 0), colLen)
 						break
 					}
 				}
@@ -104,12 +107,41 @@ class Ven$Matrix {
 				if (rii === ri) {
 					continue
 				}
-				let multiplier = matrix[ven$matrixOn(colLen, rii, ri)] / matrix[ven$matrixOn(colLen, ri, ri)]
+				let multiplier = copyMatrix[ven$matrixOn(colLen, rii, ri)] / copyMatrix[ven$matrixOn(colLen, ri, ri)]
 				for (let cii = 0; cii < colLen; cii++) {
-					matrix[ven$matrixOn(colLen, rii, cii)] -= matrix[ven$matrixOn(colLen, ri, cii) * multiplier]
+					copyMatrix[ven$matrixOn(colLen, rii, cii)] -= copyMatrix[ven$matrixOn(colLen, ri, cii) * multiplier]
 				}
 			}
 		}
 		return rank
+	}
+
+	getInverseMatrix() {
+		const matrix = this.data.slice(0)
+		if (this.m !== this.n) {
+			throw new Error(`this.m !== this.n`)
+		}
+		const expandColLen = this.n * 2
+		const newMatrix = new Array(this.m * this.n).fill(0)
+		let expandMatrix = this.initExpandMatrix(matrix)
+		const rank = this.getMatrixRank(expandMatrix, this.m, expandColLen)
+		if (rank !== this.m) {
+			throw new Error(`rank !== this.m`)
+		}
+		expandMatrix = this.inverseMatrix(expandMatrix, this.m, expandColLen)
+		for (let ri = 0; ri < this.m; ri++) {
+			for (let ci = this.n; ci < expandColLen; ci++) {
+				newMatrix[ven$matrixOn(this.n, ri, ci - this.n)] = expandMatrix[ven$matrixOn(expandColLen, ri, ci)]
+			}
+		}
+		return new Ven$Matrix(this.m, this.n, newMatrix.slice(0))
+	}
+
+	hashCode() {
+		let sum = 0
+		for (let num of this.data) {
+			sum += num
+		}
+		return sum
 	}
 }
