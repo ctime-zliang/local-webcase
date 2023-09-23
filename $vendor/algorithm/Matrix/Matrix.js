@@ -49,50 +49,50 @@ class Ven$Matrix {
 		throw new Error(`matrix mul error: m !== p`)
 	}
 
-	initExpandMatrix(matrix) {
+	initExpandMatrix(matrixArr) {
 		const rowLen = this.m
 		const colLen = this.n
 		const expandColLen = colLen * 2
-		const expandMatrix = new Array(rowLen * expandColLen)
+		const expandMatrixArr = new Array(rowLen * expandColLen)
 		for (let ri = 0; ri < rowLen; ri++) {
 			for (let ci = 0; ci < expandColLen; ci++) {
 				if (ci < colLen) {
-					expandMatrix[ven$matrixOn(expandColLen, ri, ci)] = matrix[ven$matrixOn(colLen, ri, ci)]
+					expandMatrixArr[ven$matrixOn(expandColLen, ri, ci)] = matrixArr[ven$matrixOn(colLen, ri, ci)]
 					continue
 				}
 				if (ci === rowLen + ri) {
-					expandMatrix[ven$matrixOn(expandColLen, ri, ci)] = 1
+					expandMatrixArr[ven$matrixOn(expandColLen, ri, ci)] = 1
 					continue
 				}
-				expandMatrix[ven$matrixOn(expandColLen, ri, ci)] = 0
+				expandMatrixArr[ven$matrixOn(expandColLen, ri, ci)] = 0
 			}
 		}
-		return expandMatrix
+		return expandMatrixArr
 	}
 
-	inverseMatrix(expandMatrix, rowLen, colLen) {
-		const copyExpandMatrix = expandMatrix.slice(0)
+	inverseMatrix(expandMatrixArr, rowLen, colLen) {
+		const copyExpandMatrixArr = expandMatrixArr.slice(0)
 		for (let ri = 0; ri < rowLen; ri++) {
-			let firstItem = copyExpandMatrix[ven$matrixOn(colLen, ri, ri)]
+			let firstItem = copyExpandMatrixArr[ven$matrixOn(colLen, ri, ri)]
 			for (let ci = 0; ci < colLen; ci++) {
-				copyExpandMatrix[ven$matrixOn(colLen, ri, ci)] /= firstItem
+				copyExpandMatrixArr[ven$matrixOn(colLen, ri, ci)] /= firstItem
 			}
 		}
-		return copyExpandMatrix
+		return copyExpandMatrixArr
 	}
 
-	getMatrixRank(matrix, rowLen, colLen) {
-		const copyMatrix = matrix.slice(0)
+	getMatrixRank(matrixArr, rowLen, colLen) {
+		const copyMatrixArr = matrixArr.slice(0)
 		let rank = Math.min(rowLen, colLen)
 		for (let ri = 0; ri < rowLen; ri++) {
-			if (copyMatrix[ven$matrixOn(colLen, ri, ri)] === 0) {
+			if (copyMatrixArr[ven$matrixOn(colLen, ri, ri)] === 0) {
 				let tmp = new Array(colLen)
 				let ci = 0
 				for (ci = ri; ci < rowLen; ci++) {
-					if (copyMatrix[ven$matrixOn(colLen, ci, ri) !== 0]) {
-						ven$arrayCopy(copyMatrix, ven$matrixOn(colLen, ci, 0), tmp, 0, colLen)
-						ven$arrayCopy(copyMatrix, ven$matrixOn(colLen, ri, 0), copyMatrix, ven$matrixOn(colLen, ci, 0), colLen)
-						ven$arrayCopy(tmp, 0, copyMatrix, ven$matrixOn(colLen, ri, 0), colLen)
+					if (copyMatrixArr[ven$matrixOn(colLen, ci, ri) !== 0]) {
+						ven$arrayCopy(copyMatrixArr, ven$matrixOn(colLen, ci, 0), tmp, 0, colLen)
+						ven$arrayCopy(copyMatrixArr, ven$matrixOn(colLen, ri, 0), copyMatrixArr, ven$matrixOn(colLen, ci, 0), colLen)
+						ven$arrayCopy(tmp, 0, copyMatrixArr, ven$matrixOn(colLen, ri, 0), colLen)
 						break
 					}
 				}
@@ -107,9 +107,9 @@ class Ven$Matrix {
 				if (rii === ri) {
 					continue
 				}
-				let multiplier = copyMatrix[ven$matrixOn(colLen, rii, ri)] / copyMatrix[ven$matrixOn(colLen, ri, ri)]
+				let multiplier = copyMatrixArr[ven$matrixOn(colLen, rii, ri)] / copyMatrixArr[ven$matrixOn(colLen, ri, ri)]
 				for (let cii = 0; cii < colLen; cii++) {
-					copyMatrix[ven$matrixOn(colLen, rii, cii)] -= copyMatrix[ven$matrixOn(colLen, ri, cii) * multiplier]
+					copyMatrixArr[ven$matrixOn(colLen, rii, cii)] -= copyMatrixArr[ven$matrixOn(colLen, ri, cii) * multiplier]
 				}
 			}
 		}
@@ -122,19 +122,19 @@ class Ven$Matrix {
 			throw new Error(`this.m !== this.n`)
 		}
 		const expandColLen = this.n * 2
-		const newMatrix = new Array(this.m * this.n).fill(0)
-		let expandMatrix = this.initExpandMatrix(matrix)
-		const rank = this.getMatrixRank(expandMatrix, this.m, expandColLen)
+		const newMatrixArr = new Array(this.m * this.n).fill(0)
+		let expandMatrixArr = this.initExpandMatrix(matrix)
+		const rank = this.getMatrixRank(expandMatrixArr, this.m, expandColLen)
 		if (rank !== this.m) {
 			throw new Error(`rank !== this.m`)
 		}
-		expandMatrix = this.inverseMatrix(expandMatrix, this.m, expandColLen)
+		expandMatrixArr = this.inverseMatrix(expandMatrixArr, this.m, expandColLen)
 		for (let ri = 0; ri < this.m; ri++) {
 			for (let ci = this.n; ci < expandColLen; ci++) {
-				newMatrix[ven$matrixOn(this.n, ri, ci - this.n)] = expandMatrix[ven$matrixOn(expandColLen, ri, ci)]
+				newMatrixArr[ven$matrixOn(this.n, ri, ci - this.n)] = expandMatrixArr[ven$matrixOn(expandColLen, ri, ci)]
 			}
 		}
-		return new Ven$Matrix(this.m, this.n, newMatrix.slice(0))
+		return new Ven$Matrix(this.m, this.n, newMatrixArr.slice(0))
 	}
 
 	hashCode() {
