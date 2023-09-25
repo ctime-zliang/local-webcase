@@ -68,9 +68,7 @@ class Ven$Matrix4 extends Ven$Matrix {
 	}
 
 	multiply4(matrix4) {
-		const a = new Array(4 * 4)
-		ven$matrixMul(4, 4, 4, this.data, matrix4.data, a)
-		return new Ven$Matrix4(a)
+		return new Ven$Matrix4(ven$matrixMul(4, 4, 4, this.data, matrix4.data))
 	}
 
 	translateByCoordinate(x, y, z) {

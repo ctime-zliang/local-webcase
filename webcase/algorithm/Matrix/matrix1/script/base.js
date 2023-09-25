@@ -3,7 +3,8 @@ function main() {
 	console.log(matrix)
 
 	showMatrix(document.getElementById('appContainer'), matrix.data, matrix.m, matrix.n)
-	console.log(matrix.getInverseMatrix())
+	console.log(matrix.toStringFormat())
+	console.log(matrix.toString())
 }
 
 main()

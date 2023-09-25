@@ -1,5 +1,5 @@
 function ven$matrixMul(m, n, p, A, B) {
-	const result = []
+	const result = new Array(m * n)
 	let ri = 0
 	let ai = 0
 	for (let am = 0; am < m; am++) {
@@ -47,6 +47,44 @@ class Ven$Matrix {
 			return new Ven$Matrix(this.m, B.n, result)
 		}
 		throw new Error(`matrix mul error: m !== p`)
+	}
+
+	toString() {
+		let b = []
+		b.push(`Matrix (`)
+		for (let i = 0; i < this.data.length; i++) {
+			b.push(String(this.data[i]))
+			if (i >= this.data.length - 1) {
+				continue
+			}
+			b.push(', ')
+		}
+		b.push(`)`)
+		return b.join('')
+	}
+
+	toStringFormat() {
+		let b = []
+		b.push(`Matrix (`)
+		b.push(String(this.m))
+		b.push(` x `)
+		b.push(String(this.n))
+		b.push(`)`)
+		let idx = 0
+		for (let i = 0; i < this.m; i++) {
+			for (let j = 0; j < this.n; j++) {
+				let d = String(this.data[idx++])
+				if (j === 0) {
+					b.push(`\n`)
+					b.push(`\t`)
+					b.push(d)
+					continue
+				}
+				b.push(', ')
+				b.push(d)
+			}
+		}
+		return b.join('')
 	}
 
 	initExpandMatrix(matrixArr) {
