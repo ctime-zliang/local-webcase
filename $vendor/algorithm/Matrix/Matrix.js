@@ -1,18 +1,53 @@
-function ven$matrixMul(m, n, p, A, B) {
-	const result = new Array(m * n)
+/**
+ * 矩阵乘法运算
+ * 		当矩阵 A 的列数 (colLen) 于矩阵 B 的行数 (rowLen) 时相同时, A 与 B 可以相乘
+ * 		矩阵 C 的行数等于矩阵 A 的行数, C 的列数等于 B 的列数
+ * 		A =
+ * 			1  2  3
+ *    		4  5  6
+ * 		B =
+ * 			8  5
+ * 			4  2
+ * 			2  6
+ * 		相乘得
+ * 		C = A*B =
+ * 			1 * 8 + 2 * 4 + 3 * 2 = 22    1 * 5 + 2 * 2 + 3 * 6 = 27
+ * 			3 * 8 + 5 * 4 + 6 * 2 = 64    4 * 5 + 5 * 2 + 6 * 6 = 66
+ */
+/**
+ * 计算矩阵 A 与矩阵 B 的乘积
+ * 		mA - 矩阵 A 的行数
+ * 		nA - 矩阵 A 的列数
+ * 		mB - 矩阵 B 的行数
+ * 		nB - 矩阵 B 的列数
+ */
+function ven$matrixMul(mA, nA, mB, nB, A, B) {
+	if (nA !== mB) {
+		throw new Error('does not satisfy the condition of matrix multiplication: nA === mB')
+	}
+	const result = new Array(mA * nB)
 	let ri = 0
 	let ai = 0
-	for (let am = 0; am < m; am++) {
-		for (let bp = 0; bp < p; bp++) {
-			let bi = bp
+	/**
+	 * 遍历矩阵 A 的行
+	 */
+	for (let riA = 0; riA < mA; riA++) {
+		/**
+		 * 遍历矩阵 B 的列
+		 */
+		for (let ciB = 0; ciB < nB; ciB++) {
+			let bi = ciB
 			let sum = 0
-			for (let k = 0; k < n; k++) {
-				sum += A[ai + k] * B[bi]
-				bi += p
+			/**
+			 * 遍历矩阵 A 的列
+			 */
+			for (let ciA = 0; ciA < nA; ciA++) {
+				sum += A[ai + ciA] * B[bi]
+				bi += nB
 			}
 			result[ri++] = sum
 		}
-		ai += n
+		ai += nA
 	}
 	return result
 }
@@ -23,7 +58,13 @@ function ven$matrixOn(n, row, column) {
 
 class Ven$Matrix {
 	constructor(m, n, data) {
+		/**
+		 * 矩阵行数数值
+		 */
 		this._m = m
+		/**
+		 * 矩阵列数数值
+		 */
 		this._n = n
 		const cnt = this._m * this._n
 		this._data = data
@@ -42,11 +83,11 @@ class Ven$Matrix {
 	}
 
 	mul(B) {
-		if (this.n === B.m) {
-			const result = ven$matrixMul(this.m, this.n, B.n, this.data, B.data)
+		if (this.m === B.n) {
+			const result = ven$matrixMul(this.m, this.n, B.m, B.n, this.data, B.data)
 			return new Ven$Matrix(this.m, B.n, result)
 		}
-		throw new Error(`matrix mul error: m !== p`)
+		throw new Error(`matrix mul error: this.m === B.n`)
 	}
 
 	getMatrixRank(matrixArr, rowLen, colLen) {
@@ -113,6 +154,9 @@ class Ven$Matrix {
 		return sum
 	}
 
+	/**
+	 * 以平铺模式生成矩阵字符串值
+	 */
 	toString() {
 		let b = []
 		b.push(`Matrix (`)
@@ -127,6 +171,9 @@ class Ven$Matrix {
 		return b.join('')
 	}
 
+	/**
+	 * 以格式化模式生成矩阵字符串值
+	 */
 	toStringFormat() {
 		let b = []
 		b.push(`Matrix (`)

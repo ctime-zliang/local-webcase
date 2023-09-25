@@ -68,7 +68,7 @@ class Ven$Matrix4 extends Ven$Matrix {
 	}
 
 	multiply4(matrix4) {
-		return new Ven$Matrix4(ven$matrixMul(4, 4, 4, this.data, matrix4.data))
+		return new Ven$Matrix4(ven$matrixMul(4, 4, 4, 4, this.data, matrix4.data))
 	}
 
 	translateByCoordinate(x, y, z) {
