@@ -52,7 +52,7 @@ class Ven$Matrix {
 	initExpandMatrix(matrixArr) {
 		const rowLen = this.m
 		const colLen = this.n
-		const expandColLen = colLen * 2
+		const expandColLen = this.n * 2
 		const expandMatrixArr = new Array(rowLen * expandColLen)
 		for (let ri = 0; ri < rowLen; ri++) {
 			for (let ci = 0; ci < expandColLen; ci++) {
@@ -89,7 +89,7 @@ class Ven$Matrix {
 				let tmp = new Array(colLen)
 				let ci = 0
 				for (ci = ri; ci < rowLen; ci++) {
-					if (copyMatrixArr[ven$matrixOn(colLen, ci, ri) !== 0]) {
+					if (copyMatrixArr[ven$matrixOn(colLen, ci, ri)] !== 0) {
 						ven$arrayCopy(copyMatrixArr, ven$matrixOn(colLen, ci, 0), tmp, 0, colLen)
 						ven$arrayCopy(copyMatrixArr, ven$matrixOn(colLen, ri, 0), copyMatrixArr, ven$matrixOn(colLen, ci, 0), colLen)
 						ven$arrayCopy(tmp, 0, copyMatrixArr, ven$matrixOn(colLen, ri, 0), colLen)
@@ -109,7 +109,7 @@ class Ven$Matrix {
 				}
 				let multiplier = copyMatrixArr[ven$matrixOn(colLen, rii, ri)] / copyMatrixArr[ven$matrixOn(colLen, ri, ri)]
 				for (let cii = 0; cii < colLen; cii++) {
-					copyMatrixArr[ven$matrixOn(colLen, rii, cii)] -= copyMatrixArr[ven$matrixOn(colLen, ri, cii) * multiplier]
+					copyMatrixArr[ven$matrixOn(colLen, rii, cii)] -= copyMatrixArr[ven$matrixOn(colLen, ri, cii)] * multiplier
 				}
 			}
 		}
