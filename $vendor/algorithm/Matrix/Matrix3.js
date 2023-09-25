@@ -55,9 +55,7 @@ class Ven$Matrix3 extends Ven$Matrix {
 	}
 
 	multiply3(matrix3) {
-		const a = new Array(3 * 3)
-		ven$matrixMul(3, 3, 3, this.data, matrix3.data, a)
-		return new Ven$Matrix3(a)
+		return new Ven$Matrix3(ven$matrixMul(3, 3, 3, this.data, matrix3.data))
 	}
 
 	translateByCoordinate(x, y) {

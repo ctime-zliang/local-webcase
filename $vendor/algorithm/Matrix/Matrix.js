@@ -1,5 +1,5 @@
 function ven$matrixMul(m, n, p, A, B) {
-	const result = []
+	const result = new Array(m * n)
 	let ri = 0
 	let ai = 0
 	for (let am = 0; am < m; am++) {
@@ -49,38 +49,6 @@ class Ven$Matrix {
 		throw new Error(`matrix mul error: m !== p`)
 	}
 
-	initExpandMatrix(matrixArr) {
-		const rowLen = this.m
-		const colLen = this.n
-		const expandColLen = colLen * 2
-		const expandMatrixArr = new Array(rowLen * expandColLen)
-		for (let ri = 0; ri < rowLen; ri++) {
-			for (let ci = 0; ci < expandColLen; ci++) {
-				if (ci < colLen) {
-					expandMatrixArr[ven$matrixOn(expandColLen, ri, ci)] = matrixArr[ven$matrixOn(colLen, ri, ci)]
-					continue
-				}
-				if (ci === rowLen + ri) {
-					expandMatrixArr[ven$matrixOn(expandColLen, ri, ci)] = 1
-					continue
-				}
-				expandMatrixArr[ven$matrixOn(expandColLen, ri, ci)] = 0
-			}
-		}
-		return expandMatrixArr
-	}
-
-	inverseMatrix(expandMatrixArr, rowLen, colLen) {
-		const copyExpandMatrixArr = expandMatrixArr.slice(0)
-		for (let ri = 0; ri < rowLen; ri++) {
-			let firstItem = copyExpandMatrixArr[ven$matrixOn(colLen, ri, ri)]
-			for (let ci = 0; ci < colLen; ci++) {
-				copyExpandMatrixArr[ven$matrixOn(colLen, ri, ci)] /= firstItem
-			}
-		}
-		return copyExpandMatrixArr
-	}
-
 	getMatrixRank(matrixArr, rowLen, colLen) {
 		const copyMatrixArr = matrixArr.slice(0)
 		let rank = Math.min(rowLen, colLen)
@@ -89,7 +57,7 @@ class Ven$Matrix {
 				let tmp = new Array(colLen)
 				let ci = 0
 				for (ci = ri; ci < rowLen; ci++) {
-					if (copyMatrixArr[ven$matrixOn(colLen, ci, ri) !== 0]) {
+					if (copyMatrixArr[ven$matrixOn(colLen, ci, ri)] !== 0) {
 						ven$arrayCopy(copyMatrixArr, ven$matrixOn(colLen, ci, 0), tmp, 0, colLen)
 						ven$arrayCopy(copyMatrixArr, ven$matrixOn(colLen, ri, 0), copyMatrixArr, ven$matrixOn(colLen, ci, 0), colLen)
 						ven$arrayCopy(tmp, 0, copyMatrixArr, ven$matrixOn(colLen, ri, 0), colLen)
@@ -109,7 +77,7 @@ class Ven$Matrix {
 				}
 				let multiplier = copyMatrixArr[ven$matrixOn(colLen, rii, ri)] / copyMatrixArr[ven$matrixOn(colLen, ri, ri)]
 				for (let cii = 0; cii < colLen; cii++) {
-					copyMatrixArr[ven$matrixOn(colLen, rii, cii)] -= copyMatrixArr[ven$matrixOn(colLen, ri, cii) * multiplier]
+					copyMatrixArr[ven$matrixOn(colLen, rii, cii)] -= copyMatrixArr[ven$matrixOn(colLen, ri, cii)] * multiplier
 				}
 			}
 		}
@@ -123,12 +91,12 @@ class Ven$Matrix {
 		}
 		const expandColLen = this.n * 2
 		const newMatrixArr = new Array(this.m * this.n).fill(0)
-		let expandMatrixArr = this.initExpandMatrix(matrix)
+		let expandMatrixArr = this._initExpandMatrix(matrix)
 		const rank = this.getMatrixRank(expandMatrixArr, this.m, expandColLen)
 		if (rank !== this.m) {
 			throw new Error(`rank !== this.m`)
 		}
-		expandMatrixArr = this.inverseMatrix(expandMatrixArr, this.m, expandColLen)
+		expandMatrixArr = this._inverseMatrix(expandMatrixArr, this.m, expandColLen)
 		for (let ri = 0; ri < this.m; ri++) {
 			for (let ci = this.n; ci < expandColLen; ci++) {
 				newMatrixArr[ven$matrixOn(this.n, ri, ci - this.n)] = expandMatrixArr[ven$matrixOn(expandColLen, ri, ci)]
@@ -143,5 +111,75 @@ class Ven$Matrix {
 			sum += num
 		}
 		return sum
+	}
+
+	toString() {
+		let b = []
+		b.push(`Matrix (`)
+		for (let i = 0; i < this.data.length; i++) {
+			b.push(String(this.data[i]))
+			if (i >= this.data.length - 1) {
+				continue
+			}
+			b.push(', ')
+		}
+		b.push(`)`)
+		return b.join('')
+	}
+
+	toStringFormat() {
+		let b = []
+		b.push(`Matrix (`)
+		b.push(String(this.m))
+		b.push(` x `)
+		b.push(String(this.n))
+		b.push(`)`)
+		let idx = 0
+		for (let i = 0; i < this.m; i++) {
+			for (let j = 0; j < this.n; j++) {
+				let d = String(this.data[idx++])
+				if (j === 0) {
+					b.push(`\n`)
+					b.push(`\t`)
+					b.push(d)
+					continue
+				}
+				b.push(', ')
+				b.push(d)
+			}
+		}
+		return b.join('')
+	}
+
+	_initExpandMatrix(matrixArr) {
+		const rowLen = this.m
+		const colLen = this.n
+		const expandColLen = this.n * 2
+		const expandMatrixArr = new Array(rowLen * expandColLen)
+		for (let ri = 0; ri < rowLen; ri++) {
+			for (let ci = 0; ci < expandColLen; ci++) {
+				if (ci < colLen) {
+					expandMatrixArr[ven$matrixOn(expandColLen, ri, ci)] = matrixArr[ven$matrixOn(colLen, ri, ci)]
+					continue
+				}
+				if (ci === rowLen + ri) {
+					expandMatrixArr[ven$matrixOn(expandColLen, ri, ci)] = 1
+					continue
+				}
+				expandMatrixArr[ven$matrixOn(expandColLen, ri, ci)] = 0
+			}
+		}
+		return expandMatrixArr
+	}
+
+	_inverseMatrix(expandMatrixArr, rowLen, colLen) {
+		const copyExpandMatrixArr = expandMatrixArr.slice(0)
+		for (let ri = 0; ri < rowLen; ri++) {
+			let firstItem = copyExpandMatrixArr[ven$matrixOn(colLen, ri, ri)]
+			for (let ci = 0; ci < colLen; ci++) {
+				copyExpandMatrixArr[ven$matrixOn(colLen, ri, ci)] /= firstItem
+			}
+		}
+		return copyExpandMatrixArr
 	}
 }
