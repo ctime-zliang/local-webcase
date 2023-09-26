@@ -72,7 +72,7 @@ class Ven$Matrix4 extends Ven$Matrix {
 	}
 
 	translateByCoordinate(x, y, z) {
-		return this.multiply3(ven$matrix4TranslateByCoordinate(x, y, z))
+		return this.multiply4(ven$matrix4TranslateByCoordinate(x, y, z))
 	}
 
 	translateByVector3(vector3) {
@@ -110,6 +110,10 @@ class Ven$Matrix4 extends Ven$Matrix {
 	invert() {
 		const superInverseMatrix = super.getInverseMatrix()
 		return new Ven$Matrix4(superInverseMatrix.data)
+	}
+
+	getInverseMatrix() {
+		return new Ven$Matrix4(super.getInverseMatrix().data)
 	}
 
 	toMatrix3() {
