@@ -52,18 +52,62 @@ function ven$matrixMul(mA, nA, mB, nB, A, B) {
 	return result
 }
 
-function ven$matrixOn(n, row, column) {
-	return n * row + column
+/**
+ * 依据某个数值在矩阵中的"坐标"参数, 获取其在数组中的真实索引
+ *      例如
+ *          A =
+ * 			    1  2  3
+ *    		    4  5  6
+ *      需要获取矩阵 A 中第 2 行第 2 列的项(item = 5)在数组中的索引
+ *      即 index = ven$matrixAt(3, 1, 1)
+ */
+function ven$matrixAt(colLen, rowIndex, columnIndex) {
+	return colLen * rowIndex + columnIndex
+}
+
+function ven$getMatrixRank(matrixArr, rowLen, colLen) {
+	const copyMatrixArr = matrixArr.slice(0)
+	let rank = Math.min(rowLen, colLen)
+	for (let ri = 0; ri < rowLen; ri++) {
+		if (copyMatrixArr[ven$matrixAt(colLen, ri, ri)] === 0) {
+			let tmp = new Array(colLen)
+			let ci = 0
+			for (ci = ri; ci < rowLen; ci++) {
+				if (copyMatrixArr[ven$matrixAt(colLen, ci, ri)] !== 0) {
+					ven$arrayCopy(copyMatrixArr, ven$matrixAt(colLen, ci, 0), tmp, 0, colLen)
+					ven$arrayCopy(copyMatrixArr, ven$matrixAt(colLen, ri, 0), copyMatrixArr, ven$matrixAt(colLen, ci, 0), colLen)
+					ven$arrayCopy(tmp, 0, copyMatrixArr, ven$matrixAt(colLen, ri, 0), colLen)
+					break
+				}
+			}
+			if (ci >= rowLen) {
+				rank -= 1
+			}
+		}
+		if (rank < rowLen) {
+			continue
+		}
+		for (let rii = 0; rii < rowLen; rii++) {
+			if (rii === ri) {
+				continue
+			}
+			let multiplier = copyMatrixArr[ven$matrixAt(colLen, rii, ri)] / copyMatrixArr[ven$matrixAt(colLen, ri, ri)]
+			for (let cii = 0; cii < colLen; cii++) {
+				copyMatrixArr[ven$matrixAt(colLen, rii, cii)] -= copyMatrixArr[ven$matrixAt(colLen, ri, cii)] * multiplier
+			}
+		}
+	}
+	return rank
 }
 
 class Ven$Matrix {
 	constructor(m, n, data) {
 		/**
-		 * 矩阵行数数值
+		 * 矩阵行数长度
 		 */
 		this._m = m
 		/**
-		 * 矩阵列数数值
+		 * 矩阵列数长度
 		 */
 		this._n = n
 		const cnt = this._m * this._n
@@ -82,65 +126,43 @@ class Ven$Matrix {
 		return this._data
 	}
 
-	mul(B) {
+	/**
+	 * 将当前矩阵与矩阵 B 相乘
+	 */
+	multiply(B) {
 		if (this.m === B.n) {
-			const result = ven$matrixMul(this.m, this.n, B.m, B.n, this.data, B.data)
-			return new Ven$Matrix(this.m, B.n, result)
+			const resultMatrixArr = ven$matrixMul(this.m, this.n, B.m, B.n, this.data, B.data)
+			return new Ven$Matrix(this.m, B.n, resultMatrixArr)
 		}
-		throw new Error(`matrix mul error: this.m === B.n`)
+		throw new Error(`multiply error: this.m === B.n`)
 	}
 
-	getMatrixRank(matrixArr, rowLen, colLen) {
-		const copyMatrixArr = matrixArr.slice(0)
-		let rank = Math.min(rowLen, colLen)
-		for (let ri = 0; ri < rowLen; ri++) {
-			if (copyMatrixArr[ven$matrixOn(colLen, ri, ri)] === 0) {
-				let tmp = new Array(colLen)
-				let ci = 0
-				for (ci = ri; ci < rowLen; ci++) {
-					if (copyMatrixArr[ven$matrixOn(colLen, ci, ri)] !== 0) {
-						ven$arrayCopy(copyMatrixArr, ven$matrixOn(colLen, ci, 0), tmp, 0, colLen)
-						ven$arrayCopy(copyMatrixArr, ven$matrixOn(colLen, ri, 0), copyMatrixArr, ven$matrixOn(colLen, ci, 0), colLen)
-						ven$arrayCopy(tmp, 0, copyMatrixArr, ven$matrixOn(colLen, ri, 0), colLen)
-						break
-					}
-				}
-				if (ci >= rowLen) {
-					rank -= 1
-				}
-			}
-			if (rank < rowLen) {
-				continue
-			}
-			for (let rii = 0; rii < rowLen; rii++) {
-				if (rii === ri) {
-					continue
-				}
-				let multiplier = copyMatrixArr[ven$matrixOn(colLen, rii, ri)] / copyMatrixArr[ven$matrixOn(colLen, ri, ri)]
-				for (let cii = 0; cii < colLen; cii++) {
-					copyMatrixArr[ven$matrixOn(colLen, rii, cii)] -= copyMatrixArr[ven$matrixOn(colLen, ri, cii)] * multiplier
-				}
-			}
-		}
-		return rank
+	/**
+	 * 计算当前矩阵的秩
+	 */
+	getMatrixRank() {
+		return ven$getMatrixRank(this.data, this.m, this.n)
 	}
 
+	/**
+	 * 计算当前矩阵(满足条件时)的逆矩阵
+	 */
 	getInverseMatrix() {
 		const matrix = this.data.slice(0)
 		if (this.m !== this.n) {
-			throw new Error(`this.m !== this.n`)
+			throw new Error(`getInverseMatrix error: this.m !== this.n`)
 		}
 		const expandColLen = this.n * 2
 		const newMatrixArr = new Array(this.m * this.n).fill(0)
 		let expandMatrixArr = this._initExpandMatrix(matrix)
-		const rank = this.getMatrixRank(expandMatrixArr, this.m, expandColLen)
+		const rank = ven$getMatrixRank(expandMatrixArr, this.m, expandColLen)
 		if (rank !== this.m) {
-			throw new Error(`rank !== this.m`)
+			throw new Error(`getInverseMatrix error: rank !== this.m`)
 		}
 		expandMatrixArr = this._inverseMatrix(expandMatrixArr, this.m, expandColLen)
 		for (let ri = 0; ri < this.m; ri++) {
 			for (let ci = this.n; ci < expandColLen; ci++) {
-				newMatrixArr[ven$matrixOn(this.n, ri, ci - this.n)] = expandMatrixArr[ven$matrixOn(expandColLen, ri, ci)]
+				newMatrixArr[ven$matrixAt(this.n, ri, ci - this.n)] = expandMatrixArr[ven$matrixAt(expandColLen, ri, ci)]
 			}
 		}
 		return new Ven$Matrix(this.m, this.n, newMatrixArr.slice(0))
@@ -206,14 +228,14 @@ class Ven$Matrix {
 		for (let ri = 0; ri < rowLen; ri++) {
 			for (let ci = 0; ci < expandColLen; ci++) {
 				if (ci < colLen) {
-					expandMatrixArr[ven$matrixOn(expandColLen, ri, ci)] = matrixArr[ven$matrixOn(colLen, ri, ci)]
+					expandMatrixArr[ven$matrixAt(expandColLen, ri, ci)] = matrixArr[ven$matrixAt(colLen, ri, ci)]
 					continue
 				}
 				if (ci === rowLen + ri) {
-					expandMatrixArr[ven$matrixOn(expandColLen, ri, ci)] = 1
+					expandMatrixArr[ven$matrixAt(expandColLen, ri, ci)] = 1
 					continue
 				}
-				expandMatrixArr[ven$matrixOn(expandColLen, ri, ci)] = 0
+				expandMatrixArr[ven$matrixAt(expandColLen, ri, ci)] = 0
 			}
 		}
 		return expandMatrixArr
@@ -222,9 +244,9 @@ class Ven$Matrix {
 	_inverseMatrix(expandMatrixArr, rowLen, colLen) {
 		const copyExpandMatrixArr = expandMatrixArr.slice(0)
 		for (let ri = 0; ri < rowLen; ri++) {
-			let firstItem = copyExpandMatrixArr[ven$matrixOn(colLen, ri, ri)]
+			let firstItem = copyExpandMatrixArr[ven$matrixAt(colLen, ri, ri)]
 			for (let ci = 0; ci < colLen; ci++) {
-				copyExpandMatrixArr[ven$matrixOn(colLen, ri, ci)] /= firstItem
+				copyExpandMatrixArr[ven$matrixAt(colLen, ri, ci)] /= firstItem
 			}
 		}
 		return copyExpandMatrixArr

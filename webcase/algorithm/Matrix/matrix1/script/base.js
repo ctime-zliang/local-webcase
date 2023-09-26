@@ -10,10 +10,14 @@ function main1() {
 function main2() {
 	const matrix_1 = new Ven$Matrix(2, 3, [1, 2, 3, 4, 5, 6])
 	const matrix_2 = new Ven$Matrix(3, 2, [8, 5, 4, 2, 2, 6])
+	const matrix_3 = matrix_1.multiply(matrix_2)
 	showMatrix(APP_CONTAINER, matrix_1.data, matrix_1.m, matrix_1.n)
 	showMatrix(APP_CONTAINER, matrix_2.data, matrix_2.m, matrix_2.n)
-	const matrix_3 = matrix_1.mul(matrix_2)
 	showMatrix(APP_CONTAINER, matrix_3.data, matrix_3.m, matrix_3.n)
+	console.log(`矩阵 \n${matrix_2.toStringFormat()} \n的秩: `, matrix_2.getMatrixRank())
+
+	const matrix_4 = new Ven$Matrix(2, 2, [8, 5, 4, 2])
+	console.log(`矩阵 \n${matrix_4.toStringFormat()} \n的逆矩阵: `, matrix_4.getInverseMatrix().toStringFormat())
 }
 
 // main1()
