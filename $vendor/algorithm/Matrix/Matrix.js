@@ -148,13 +148,13 @@ class Ven$Matrix {
 	 * 计算当前矩阵(满足条件时)的逆矩阵
 	 */
 	getInverseMatrix() {
-		const matrix = this.data.slice(0)
+		const matrixArr = this.data.slice(0)
 		if (this.m !== this.n) {
 			throw new Error(`getInverseMatrix error: this.m !== this.n`)
 		}
 		const expandColLen = this.n * 2
 		const newMatrixArr = new Array(this.m * this.n).fill(0)
-		let expandMatrixArr = this._initExpandMatrix(matrix)
+		let expandMatrixArr = this._initExpandMatrix(matrixArr)
 		const rank = ven$getMatrixRank(expandMatrixArr, this.m, expandColLen)
 		if (rank !== this.m) {
 			throw new Error(`getInverseMatrix error: rank !== this.m`)
