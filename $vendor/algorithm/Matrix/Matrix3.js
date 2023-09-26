@@ -15,7 +15,7 @@ function ven$matrix3RotateByRadian(radian) {
 }
 
 function ven$matrix3RotateByDegree(degree) {
-	const radian = (degree / 180) * Map.PI
+	const radian = (degree / 180) * Math.PI
 	const cos = Math.cos(radian)
 	const sin = Math.sin(radian)
 	return new Ven$Matrix3([cos, sin, 0, -sin, cos, 0, 0, 0, 1])

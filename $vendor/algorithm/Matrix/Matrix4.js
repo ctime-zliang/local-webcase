@@ -72,7 +72,7 @@ class Ven$Matrix4 extends Ven$Matrix {
 	}
 
 	translateByCoordinate(x, y, z) {
-		return this.multiply3(ven$matrix3TranslateByCoordinate(x, y, z))
+		return this.multiply3(ven$matrix4TranslateByCoordinate(x, y, z))
 	}
 
 	translateByVector3(vector3) {
