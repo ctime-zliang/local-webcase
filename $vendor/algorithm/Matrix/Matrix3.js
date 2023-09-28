@@ -1,36 +1,37 @@
 const VEN$MATRIX3_ORIGIN_DATA = [1, 0, 0, 0, 1, 0, 0, 0, 1]
 
-function ven$matrix3TranslateByCoordinate(x, y) {
+/**
+ * 生成变换矩阵(已转置)
+ */
+function ven$createTranslateMatrix3ByCoordinate(x, y) {
+	/**
+	 * 转置前
+	 * 		[1, 0, x, 0, 1, y, 0, 0, 1]
+	 */
 	return new Ven$Matrix3([1, 0, 0, 0, 1, 0, x, y, 1])
 }
-
-function ven$matrix3TranslateByVector2(vector2) {
-	return new Ven$Matrix3([1, 0, 0, 0, 1, 0, vector2.x, vector2.y, 1])
-}
-
-function ven$matrix3RotateByRadian(radian) {
+function ven$createRotateZMatrix3ByRadian(radian) {
 	const cos = Math.cos(radian)
 	const sin = Math.sin(radian)
+	/**
+	 * 转置前
+	 * 		[cos, -sin, 0, sin, cos, 0, 0, 0, 1]
+	 */
 	return new Ven$Matrix3([cos, sin, 0, -sin, cos, 0, 0, 0, 1])
 }
-
-function ven$matrix3RotateByDegree(degree) {
-	const radian = (degree / 180) * Math.PI
-	const cos = Math.cos(radian)
-	const sin = Math.sin(radian)
-	return new Ven$Matrix3([cos, sin, 0, -sin, cos, 0, 0, 0, 1])
-}
-
-function ven$matrix3ScaleByRatio(ratio) {
+function ven$createScaleMatrix3ByRatio(ratio) {
+	/**
+	 * 转置前
+	 * 		[ratio, 0, 0, 0, ratio, 0, 0, 0, 1]
+	 */
 	return new Ven$Matrix3([ratio, 0, 0, 0, ratio, 0, 0, 0, 1])
 }
-
-function ven$matrix3ScaleByCoordinate(x, y) {
+function ven$createScaleMatrix3ByCoordinate(x, y) {
+	/**
+	 * 转置前
+	 * 		[x, 0, 0, 0, y, 0, 0, 0, 1]
+	 */
 	return new Ven$Matrix3([x, 0, 0, 0, y, 0, 0, 0, 1])
-}
-
-function ven$matrix3ScaleByVecto2(vector2) {
-	return new Ven$Matrix3([vector2.x, 0, 0, 0, vector2.y, 0, 0, 0, 1])
 }
 
 class Ven$Matrix3 extends Ven$Matrix {
@@ -46,6 +47,10 @@ class Ven$Matrix3 extends Ven$Matrix {
 		this.jScale = Math.sqrt(b * b + e * e)
 	}
 
+	multiply3(matrix3) {
+		return new Ven$Matrix3(ven$matrixMul(3, 3, 3, 3, this.data, matrix3.data))
+	}
+
 	det() {
 		return this.data[0] * this.data[4] - this.data[3] * this.data[1]
 	}
@@ -54,52 +59,17 @@ class Ven$Matrix3 extends Ven$Matrix {
 		return this.det() < 0
 	}
 
-	multiply3(matrix3) {
-		return new Ven$Matrix3(ven$matrixMul(3, 3, 3, 3, this.data, matrix3.data))
+	/**
+	 * 矩阵转置
+	 */
+	transpose() {
+		return new Ven$Matrix3(super.transpose().data)
 	}
 
-	translateByCoordinate(x, y) {
-		return this.multiply3(ven$matrix3TranslateByCoordinate(x, y))
-	}
-
-	translateByVector2(vector2) {
-		return this.multiply3(ven$matrix3TranslateByVector2(vector2))
-	}
-
-	scaleByRatio(ratio) {
-		return this.multiply3(ven$matrix3ScaleByRatio(ratio))
-	}
-
-	scaleByCoordinate(x, y) {
-		return this.multiply3(ven$matrix3ScaleByCoordinate(x, y))
-	}
-
-	scaleByVector2(vector2) {
-		return this.multiply3(ven$matrix3ScaleByVecto2(vector2))
-	}
-
-	invert() {
-		const superInverseMatrix = super.getInverseMatrix()
-		return new Ven$Matrix3(superInverseMatrix.data)
-	}
-
+	/**
+	 * 计算当前矩阵(满足条件时)的逆矩阵
+	 */
 	getInverseMatrix() {
 		return new Ven$Matrix3(super.getInverseMatrix().data)
-	}
-
-	rorateByDegree(degree) {
-		return this.multiply3(ven$matrix3RotateByDegree(degree))
-	}
-
-	rorateByRadian(radian) {
-		return this.multiply3(ven$matrix3RotateByRadian(radian))
-	}
-
-	setOriginByCoordinate(x, y) {
-		return ven$matrix3TranslateByCoordinate(-x, -y).multiply3(this).translateByCoordinate(x, y)
-	}
-
-	setOriginByVector2(vector2) {
-		return this.setOriginByCoordinate(vector2.x, vector2.y)
 	}
 }

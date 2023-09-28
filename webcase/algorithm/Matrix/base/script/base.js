@@ -6,8 +6,7 @@ function main1() {
 
 	const matrix3_1 = new Ven$Matrix3([3, 5, 4, 2, 7, 6, 1, 9, 8])
 	showMatrix(APP_CONTAINER_1, matrix3_1.data, matrix3_1.m, matrix3_1.n, 'main1_matrix3_1')
-	console.log(`矩阵 matrix3_1 旋转 45 角度: `, matrix3_1.rorateByDegree(45).toStringFormat())
-	console.log(`矩阵 matrix3_1 旋转 π/4 角度: `, matrix3_1.rorateByRadian(Math.PI / 4).toStringFormat())
+	console.log(`矩阵 matrix3_1: `, matrix3_1.toStringFormat())
 
 	console.log(`\n\n`)
 }

@@ -1,6 +1,7 @@
 /**
  * 矩阵乘法运算
  * 		当矩阵 A 的列数 (colLen) 于矩阵 B 的行数 (rowLen) 时相同时, A 与 B 可以相乘
+ *          [A列等于B行可相乘]
  * 		矩阵 C 的行数等于矩阵 A 的行数, C 的列数等于 B 的列数
  * 		A =
  * 			1  2  3
@@ -12,7 +13,7 @@
  * 		相乘得
  * 		C = A*B =
  * 			1 * 8 + 2 * 4 + 3 * 2 = 22    1 * 5 + 2 * 2 + 3 * 6 = 27
- * 			3 * 8 + 5 * 4 + 6 * 2 = 64    4 * 5 + 5 * 2 + 6 * 6 = 66
+ * 			4 * 8 + 5 * 4 + 6 * 2 = 64    4 * 5 + 5 * 2 + 6 * 6 = 66
  */
 /**
  * 计算矩阵 A 与矩阵 B 的乘积
@@ -130,11 +131,8 @@ class Ven$Matrix {
 	 * 将当前矩阵与矩阵 B 相乘
 	 */
 	multiply(B) {
-		if (this.m === B.n) {
-			const resultMatrixArr = ven$matrixMul(this.m, this.n, B.m, B.n, this.data, B.data)
-			return new Ven$Matrix(this.m, B.n, resultMatrixArr)
-		}
-		throw new Error(`multiply error: this.m === B.n`)
+		const resultMatrixArr = ven$matrixMul(this.m, this.n, B.m, B.n, this.data, B.data)
+		return new Ven$Matrix(this.m, B.n, resultMatrixArr)
 	}
 
 	/**
@@ -218,6 +216,22 @@ class Ven$Matrix {
 			}
 		}
 		return b.join('')
+	}
+
+	/**
+	 * 矩阵转置
+	 */
+	transpose() {
+		const colLen = this.n
+		const rowLen = this.data.length / colLen
+		const transposeArr = []
+		for (let ci = 0; ci <= colLen - 1; ci++) {
+			for (let ri = 0; ri <= rowLen - 1; ri++) {
+				const index = ci + ri * colLen
+				transposeArr.push(this.data[index])
+			}
+		}
+		return new Ven$Matrix(this.n, this.m, transposeArr)
 	}
 
 	_initExpandMatrix(matrixArr) {
