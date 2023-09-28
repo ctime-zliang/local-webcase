@@ -223,7 +223,7 @@ class Ven$Matrix {
 	 */
 	transpose() {
 		const colLen = this.n
-		const rowLen = this.data.length / colLen
+		const rowLen = this.m
 		const transposeArr = []
 		for (let ci = 0; ci <= colLen - 1; ci++) {
 			for (let ri = 0; ri <= rowLen - 1; ri++) {
