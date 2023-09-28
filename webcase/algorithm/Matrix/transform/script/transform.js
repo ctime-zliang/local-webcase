@@ -18,7 +18,7 @@ function main2() {
 
 	const tranlateCoordinateMatrix = ven$createTranslateMatrix3ByCoordinate(5, 5)
 	console.log(`平移矩阵(转置) T: `, tranlateCoordinateMatrix.toStringFormat())
-	console.log(`平移坐标矩阵 T*B: `, pointsMatrix.multiply(tranlateCoordinateMatrix).toStringFormat())
+	console.log(`平移坐标矩阵 T*B: `, pointsMatrix.multiply3(tranlateCoordinateMatrix).toStringFormat())
 
 	console.log(`\n\n`)
 }
