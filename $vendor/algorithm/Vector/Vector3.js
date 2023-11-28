@@ -2,8 +2,11 @@ const VEN$VECTOR3_ORIGIN_DATA = [0, 0, 0]
 
 class Ven$Vector3 extends Ven$Vector {
 	static ORIGIN = new Ven$Vector3()
+	static X_INIT_UNIT_VERCTOR2 = new Ven$Vector2(1, 0, 0)
+	static Y_INIT_UNIT_VERCTOR2 = new Ven$Vector2(0, 1, 0)
+	static Z_INIT_UNIT_VERCTOR2 = new Ven$Vector2(0, 0, 1)
 
-	constructor(x = VEN$VECTOR3_ORIGIN_DATA[0], y = VEN$VECTOR3_ORIGIN_DATA[1], z = VEN$VECTOR3_ORIGIN_DATA[2]) {
+	constructor(x = VEN$VECTOR2_ORIGIN_DATA[0], y = VEN$VECTOR2_ORIGIN_DATA[1], z = VEN$VECTOR2_ORIGIN_DATA[2]) {
 		super()
 		this._x = x
 		this._y = y
@@ -39,50 +42,38 @@ class Ven$Vector3 extends Ven$Vector {
 	}
 
 	/**
-	 * 生层向量副本
+	 * 向量副本
 	 */
 	copy() {
 		return new Ven$Vector3(this.x, this.y, this.z)
 	}
 
 	/**
-	 * 向量相加
+	 * 向量与向量相加
 	 */
-	add(v3) {
-		this.x += v3.x
-		this.y += v3.y
-		this.z += v3.z
-		return this
+	add(vector3) {
+		return new Ven$Vector3(this.x + vector3.x, this.y + vector3.y, this.z + vector3.z)
 	}
 
 	/**
 	 * 向量与标量相加
 	 */
 	addScalar(x, y, z) {
-		this.x += x
-		this.y += y
-		this.z += z
-		return this
+		return new Ven$Vector3(this.x + x, this.y + y, this.z + z)
+	}
+
+	/**
+	 * 向量与向量相减
+	 */
+	sub(vector3) {
+		return new Ven$Vector3(this.x - vector3.x, this.y - vector3.y, this.z - vector3.z)
 	}
 
 	/**
 	 * 向量与标量相减
 	 */
 	subScalar(x, y, z) {
-		this.x -= x
-		this.y -= y
-		this.z -= z
-		return this
-	}
-
-	/**
-	 * 向量相减
-	 */
-	sub(v3) {
-		this.x -= v3.x
-		this.y -= v3.y
-		this.z -= v3.z
-		return this
+		return new Ven$Vector3(this.x - x, this.y - y, this.z - z)
 	}
 
 	/**
@@ -90,14 +81,59 @@ class Ven$Vector3 extends Ven$Vector {
 	 */
 	scale(x = 0, y = 0, z = 0) {
 		const _y = typeof y !== 'undefined' ? y : x
-		const _z = typeof z !== 'undefined' ? z : y
-		this.x *= x
-		this.y *= _y
-		this.z *= _z
-		return this
+		const _z = typeof z !== 'undefined' ? z : x
+		return new Ven$Vector3(this.x * x, this.y * _y, this.z * _z)
+	}
+
+	/**
+	 * 向量与标量的乘积
+	 */
+	mul(x = 0, y = 0, z = 0) {
+		return this.scale(x, y, z)
+	}
+
+	/**
+	 * 向量与向量叉乘
+	 */
+	cross(vector3) {
+		const x = this.y * vector3.z - this.z * vector3.y
+		const y = this.z * vector3.x - this.x * vector3.z
+		const z = this.x * vector3.y - this.y * vector3.x
+		return new Ven$Vector3(x, y, z)
+	}
+
+	/**
+	 * 向量与向量点乘
+	 */
+	dot(vector3) {
+		return this.x * vector3.x + this.y * vector3.y + this.z * vector3.z
+	}
+
+	/**
+	 * 应用 matrix4
+	 */
+	multiplyMatrix4(matrix4) {
+		const x = this.x * matrix4.data[0] + this.y * matrix4.data[4] + this.z * matrix4.data[8] + matrix4.data[12]
+		const y = this.x * matrix4.data[1] + this.y * matrix4.data[5] + this.z * matrix4.data[9] + matrix4.data[13]
+		const z = this.x * matrix4.data[2] + this.y * matrix4.data[6] + this.z * matrix4.data[10] + matrix4.data[14]
+		const w = this.x * matrix4.data[3] + this.y * matrix4.data[7] + this.z * matrix4.data[11] + matrix4.data[15]
+		return new Ven$Vector3(x / w, y / w, z / w)
 	}
 
 	toString() {
 		return `Vector3 (${this.x}, ${this.y}, ${this.z})`
+	}
+
+	/**
+	 * 向量的单位向量
+	 */
+	normalize() {
+		if (this.x === 0 && this.y === 0 && this.y === z) {
+			return new Ven$Vector3(0, 0, 0)
+		}
+		const sx = this.x / this.length
+		const sy = this.y / this.length
+		const sz = this.z / this.length
+		return new Ven$Vector3(sx, sy, sz)
 	}
 }

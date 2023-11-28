@@ -30,7 +30,7 @@ const proxyData = proxyStore.proxyObject
 
 console.log(proxyStore)
 
-const subscribeCancel = xProxy.subscribe(proxyData, (op) => {
+const subscribeCancel = xProxy.subscribe(proxyData, op => {
 	console.log(`subscribe.op = `, op)
 	const snapItem = xProxy.snapshot(proxyData)
 	console.log(`subscribe.snapshot = `, snapItem)

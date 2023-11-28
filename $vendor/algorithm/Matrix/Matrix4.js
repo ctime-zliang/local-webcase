@@ -3,6 +3,9 @@ const VEN$MATRIX4_ORIGIN_DATA = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
 /**
  * 生成变换矩阵(已转置)
  */
+/**
+ * 平移矩阵(坐标)
+ */
 function ven$createTranslateMatrix4ByCoordinate(x, y, z) {
 	/**
 	 * 转置前
@@ -10,6 +13,9 @@ function ven$createTranslateMatrix4ByCoordinate(x, y, z) {
 	 */
 	return new Ven$Matrix4([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1])
 }
+/**
+ * 旋转矩阵(弧度)
+ */
 function ven$createRotateXMatrix4ByRadian(radian) {
 	const cos = Math.cos(radian)
 	const sin = Math.sin(radian)
@@ -37,6 +43,9 @@ function ven$createRotateZMatrix4ByRadian(radian) {
 	 */
 	return new Ven$Matrix4([cos, sin, 0, 0, -sin, ocs, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
 }
+/**
+ * 缩放矩阵(坐标)
+ */
 function ven$createScaleMatrix4ByCoordinate(x, y, z) {
 	/**
 	 * 转置前
@@ -44,14 +53,17 @@ function ven$createScaleMatrix4ByCoordinate(x, y, z) {
 	 */
 	return new Ven$Matrix4([x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1])
 }
-function ven$createFlipXMatrix4ByCoordinate(x, y, z) {
+/**
+ * 翻转矩阵
+ */
+function ven$createFlipXMatrix4() {
 	/**
 	 * 转置前
 	 * 		[1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
 	 */
 	return new Ven$Matrix4([1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
 }
-function ven$createFlipYMatrix4ByCoordinate(x, y, z) {
+function ven$createFlipYMatrix4() {
 	/**
 	 * 转置前
 	 * 		[-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
@@ -84,6 +96,39 @@ class Ven$Matrix4 extends Ven$Matrix {
 
 	multiply4(matrix4) {
 		return new Ven$Matrix4(ven$matrixMul(4, 4, 4, 4, this.data, matrix4.data))
+	}
+
+	/**
+	 * 平移变换
+	 */
+	translateByVector3(vector3) {
+		return this.multiply4(ven$createTranslateMatrix4ByCoordinate(vector3.x, vector3.y, vector3.z))
+	}
+
+	/**
+	 * 绕轴旋转变换
+	 */
+	rotateXByRadian(radian) {
+		return this.multiply4(ven$createRotateXMatrix4ByRadian(radian))
+	}
+	rotateYByRadian(radian) {
+		return this.multiply4(ven$createRotateYMatrix4ByRadian(radian))
+	}
+	rotateZByRadian(radian) {
+		return this.multiply4(ven$createRotateZMatrix4ByRadian(radian))
+	}
+
+	/**
+	 * 缩放变换
+	 */
+	scaleByVector3(vector3) {
+		return this.multiply4(ven$createScaleMatrix4ByCoordinate(vector3.x, vector3.y, vector3.z))
+	}
+
+	setOrigin(vector3) {
+		return ven$createTranslateMatrix4ByCoordinate(vector3.x, vector3.y, vector3.z)
+			.multiply4(this)
+			.multiply4(ven$createTranslateMatrix4ByCoordinate(vector3.x, vector3.y, vector3.z))
 	}
 
 	toMatrix3() {

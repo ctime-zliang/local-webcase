@@ -104,11 +104,11 @@ function ven$getMatrixRank(matrixArr, rowLen, colLen) {
 class Ven$Matrix {
 	constructor(m, n, data) {
 		/**
-		 * 矩阵行数长度
+		 * 矩阵行数
 		 */
 		this._m = m
 		/**
-		 * 矩阵列数长度
+		 * 矩阵列数
 		 */
 		this._n = n
 		const cnt = this._m * this._n
