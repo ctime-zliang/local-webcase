@@ -147,7 +147,7 @@ class Ven$Vector2 extends Ven$Vector {
 	 * 该向量的终点的 bbox2
 	 */
 	getEndDotBbbox2() {
-		return Ven$BBox2(this.x, this.x, this.y, this.y)
+		return new Ven$BBox2(this.x, this.x, this.y, this.y)
 	}
 
 	/**

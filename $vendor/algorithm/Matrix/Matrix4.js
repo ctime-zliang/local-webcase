@@ -42,7 +42,7 @@ class Ven$Matrix4 extends Ven$Matrix {
 		 * 转置前
 		 * 		[cos, -sin, 0, 0, sin, cos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
 		 */
-		return new Ven$Matrix4([cos, sin, 0, 0, -sin, ocs, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
+		return new Ven$Matrix4([cos, sin, 0, 0, -sin, cos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
 	}
 
 	/**
@@ -134,7 +134,7 @@ class Ven$Matrix4 extends Ven$Matrix {
 	}
 
 	toMatrix3() {
-		return new Ven$Matrix3(this.data[0], this.data[1], 0, this.data[4], this.data[5], 0, this.data[12], this.data[13], 1)
+		return new Ven$Matrix3([this.data[0], this.data[1], 0, this.data[4], this.data[5], 0, this.data[12], this.data[13], 1])
 	}
 
 	/**

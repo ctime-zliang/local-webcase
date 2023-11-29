@@ -55,8 +55,16 @@ class Ven$Matrix3 extends Ven$Matrix {
 		const b = this.data[3]
 		const d = this.data[1]
 		const e = this.data[4]
-		this.iScale = Math.sqrt(a * a + d * d)
-		this.jScale = Math.sqrt(b * b + e * e)
+		this._iScale = Math.sqrt(a * a + d * d)
+		this._jScale = Math.sqrt(b * b + e * e)
+	}
+
+	get iScale() {
+		return this._iScale
+	}
+
+	get jScale() {
+		return this._jScale
 	}
 
 	multiply3(matrix3) {

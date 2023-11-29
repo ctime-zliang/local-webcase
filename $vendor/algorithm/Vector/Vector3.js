@@ -2,11 +2,11 @@ const VEN$VECTOR3_ORIGIN_DATA = [0, 0, 0]
 
 class Ven$Vector3 extends Ven$Vector {
 	static ORIGIN = new Ven$Vector3()
-	static X_INIT_UNIT_VERCTOR2 = new Ven$Vector2(1, 0, 0)
-	static Y_INIT_UNIT_VERCTOR2 = new Ven$Vector2(0, 1, 0)
-	static Z_INIT_UNIT_VERCTOR2 = new Ven$Vector2(0, 0, 1)
+	static X_INIT_UNIT_VERCTOR2 = new Ven$Vector3(1, 0, 0)
+	static Y_INIT_UNIT_VERCTOR2 = new Ven$Vector3(0, 1, 0)
+	static Z_INIT_UNIT_VERCTOR2 = new Ven$Vector3(0, 0, 1)
 
-	constructor(x = VEN$VECTOR2_ORIGIN_DATA[0], y = VEN$VECTOR2_ORIGIN_DATA[1], z = VEN$VECTOR2_ORIGIN_DATA[2]) {
+	constructor(x = VEN$VECTOR3_ORIGIN_DATA[0], y = VEN$VECTOR3_ORIGIN_DATA[1], z = VEN$VECTOR3_ORIGIN_DATA[2]) {
 		super()
 		this._x = x
 		this._y = y
@@ -128,7 +128,7 @@ class Ven$Vector3 extends Ven$Vector {
 	 * 向量的单位向量
 	 */
 	normalize() {
-		if (this.x === 0 && this.y === 0 && this.y === z) {
+		if (this.x === 0 && this.y === 0 && this.z === 0) {
 			return new Ven$Vector3(0, 0, 0)
 		}
 		const sx = this.x / this.length

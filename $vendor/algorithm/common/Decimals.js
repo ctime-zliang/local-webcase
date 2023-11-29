@@ -10,7 +10,7 @@ class Ven$Decimals {
 		if (delta < 1e-13) {
 			return true
 		}
-		let min = Math.min(this.getDecimalPlaces(num1, this.getDecimalPlaces(num2)))
+		let min = Math.min(Ven$Decimals.getDecimalPlaces(num1), Ven$Decimals.getDecimalPlaces(num2))
 		if (min < 10) {
 			min = 10
 		}
