@@ -4,6 +4,7 @@ export class Ven$BBox2 {
 	}
 
 	constructor(minX, minY, maxX, maxY) {
+		this.data = new Float64Array(4)
 		if (minX > maxX) {
 			minX = [maxX, (maxX = minX)][0]
 		}
@@ -72,32 +73,60 @@ export class Ven$BBox2 {
 		return new Vector2(this.maxX - (this.maxX - this.minX) / 2, this.maxY - (this.maxY - this.minY) / 2)
 	}
 
-	/**
-	 * 判断参数点 v2 是否处于当前 BBox2 实例中
-	 */
-	isContainsPoint(v2) {
-		return this.isContainsX(v2.x) && this.isContainsY(v2.y)
+	get data() {
+		this.data[0] = this.minX
+		this.data[1] = this.minY
+		this.data[2] = this.maxX
+		this.data[3] = this.maxY
+		return this.data
 	}
 
 	/**
-	 * 判断参数 bbox2 是否处于当前 BBox2 实例中
+	 * 判断当前 BBox2 实例是否包裹了传入的 vector2
+	 */
+	isContainsPoint(vector2) {
+		return this.isContainsX(vector2.x) && this.isContainsY(vector2.y)
+	}
+
+	/**
+	 * 判断当前 BBox2 实例是否包裹了传入的 bbox2
 	 */
 	isConatinsBBox2(bbox2) {
 		return this.maxX >= bbox2.maxX && this.minX <= bbox2.minX && this.maxY >= bbox2.maxY && this.minY <= bbox2.minY
 	}
 
 	/**
-	 * 判断参数 bbox2 是否包裹了当前 BBox2 实例
+	 * 判断传入的 bbox2 是否包裹了当前 BBox2 实例
 	 */
 	isBeWrappedByBBox2(bbox2) {
 		return this.minX >= bbox2.minX && this.maxX <= bbox2.maxX && this.minY >= bbox2.minY && this.maxY <= bbox2.maxY
 	}
 
+	/**
+	 * 判断当前 BBox2 实例与传入的 bbox2 边界范围是否相等
+	 */
 	equals(bbox2) {
 		if (this.minX === bbox2.minX && this.minY === bbox2.minY && this.maxX === bbox2.maxX && this.maxY === bbox2.maxY) {
 			return true
 		}
 		return false
+	}
+
+	/**
+	 * 判断当前 BBox2 实例与传入的 bbox2 边界范围是否交叉
+	 */
+	isIntersect(bbox2) {
+		const _minX = Math.max(this.minX, bbox2.minX)
+		const _maxX = Math.max(this.maxX, bbox2.maxX)
+		if (_minX > _maxX) {
+			return false
+		}
+		const _minY = Math.max(this.minY, bbox2.minY)
+		const _maxY = Math.max(this.maxY, bbox2.maxY)
+		if (_minY > _maxY) {
+			return false
+		}
+		return true
 	}
 
 	reset() {
@@ -111,11 +140,11 @@ export class Ven$BBox2 {
 		return `BBox2 (${this.minX}, ${this.maxX}, ${this.minY}, ${this.maxY})`
 	}
 
-	sContainsX(x) {
+	isContainsX(x) {
 		return x >= this.minX && x <= this.maxX
 	}
 
-	sContainsY(y) {
+	isContainsY(y) {
 		return y >= this.minY && y <= this.maxY
 	}
 }

@@ -1,28 +1,28 @@
 const VEN$VECTOR2_ORIGIN_DATA = [0, 0]
 
-/**
- * 计算某个初始弧度在经过特定矩阵变换后的弧度
- */
-function ven$caculateAngle(radian, matrix4) {
-	const cos = Math.cos(radian)
-	const sin = Math.sin(radian)
-	const x = cos * matrix4.data[0] + sin * matrix4.data[4]
-	const y = cos * matrix4.data[1] + sin * matrix4.data[5]
-	const vector2 = new Ven$Vector2(x, y).normalize()
-	return Math.atan2(vector2.x, vector2.y)
-}
-
-/**
- * 计算某个弧度的单位向量
- */
-function ven$getInitVector2ByRadian(radian) {
-	return new Ven$Vector2(Math.cos(radian), Math.sin(radian))
-}
-
 class Ven$Vector2 extends Ven$Vector {
 	static ORIGIN = new Ven$Vector2()
 	static X_INIT_UNIT_VERCTOR2 = new Ven$Vector2(1, 0)
 	static Y_INIT_UNIT_VERCTOR2 = new Ven$Vector2(0, 1)
+
+	/**
+	 * 计算某个初始弧度在经过特定矩阵变换后的弧度
+	 */
+	static caculateAngle(radian, matrix4) {
+		const cos = Math.cos(radian)
+		const sin = Math.sin(radian)
+		const x = cos * matrix4.data[0] + sin * matrix4.data[4]
+		const y = cos * matrix4.data[1] + sin * matrix4.data[5]
+		const vector2 = new Ven$Vector2(x, y).normalize()
+		return Math.atan2(vector2.x, vector2.y)
+	}
+
+	/**
+	 * 计算某个弧度的单位向量
+	 */
+	static getInitVector2ByRadian(radian) {
+		return new Ven$Vector2(Math.cos(radian), Math.sin(radian))
+	}
 
 	constructor(x = VEN$VECTOR2_ORIGIN_DATA[0], y = VEN$VECTOR2_ORIGIN_DATA[1]) {
 		super()
