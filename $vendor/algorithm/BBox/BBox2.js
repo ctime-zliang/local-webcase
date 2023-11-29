@@ -4,7 +4,7 @@ class Ven$BBox2 {
 	}
 
 	constructor(minX, minY, maxX, maxY) {
-		this.data = new Float64Array(4)
+		this._data = new Float64Array(4)
 		if (minX > maxX) {
 			minX = [maxX, (maxX = minX)][0]
 		}
@@ -74,11 +74,11 @@ class Ven$BBox2 {
 	}
 
 	get data() {
-		this.data[0] = this.minX
-		this.data[1] = this.minY
-		this.data[2] = this.maxX
-		this.data[3] = this.maxY
-		return this.data
+		this._data[0] = this.minX
+		this._data[1] = this.minY
+		this._data[2] = this.maxX
+		this._data[3] = this.maxY
+		return this._data
 	}
 
 	/**
