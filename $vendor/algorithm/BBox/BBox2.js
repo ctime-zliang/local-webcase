@@ -1,4 +1,4 @@
-export class Ven$BBox2 {
+class Ven$BBox2 {
 	static isValid(bbox2) {
 		return Number.isFinite(bbox2.minX) && Number.isFinite(bbox2.minY) && Number.isFinite(bbox2.maxX) && Number.isFinite(bbox2.maxY)
 	}
