@@ -7,6 +7,6 @@ class Ven$Angles {
 	}
 
 	static degreeToRadian(degree) {
-		return (degree / 180) * Map.PI
+		return (degree / 180) * Math.PI
 	}
 }
