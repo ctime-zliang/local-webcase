@@ -127,8 +127,8 @@ class Ven$Matrix4 extends Ven$Matrix {
 		return this.multiply4(Ven$Matrix4.createScaleMatrix4ByCoordinate(vector3.x, vector3.y, vector3.z))
 	}
 
-	setOrigin(vector3) {
-		return Ven$Matrix4.createTranslateMatrix4ByCoordinate(vector3.x, vector3.y, vector3.z)
+	setOriginByVector3(vector3) {
+		return Ven$Matrix4.createTranslateMatrix4ByCoordinate(-vector3.x, -vector3.y, -vector3.z)
 			.multiply4(this)
 			.multiply4(Ven$Matrix4.createTranslateMatrix4ByCoordinate(vector3.x, vector3.y, vector3.z))
 	}

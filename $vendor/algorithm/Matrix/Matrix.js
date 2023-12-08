@@ -99,7 +99,10 @@ class Ven$Matrix {
 				}
 			}
 		}
-		return rank
+		return {
+			rank,
+			updatedMatrixArr: copyMatrixArr,
+		}
 	}
 
 	constructor(m, n, data) {
@@ -139,7 +142,7 @@ class Ven$Matrix {
 	 * 计算当前矩阵的秩
 	 */
 	getMatrixRank() {
-		return Ven$Matrix.getMatrixRank(this.data, this.m, this.n)
+		return Ven$Matrix.getMatrixRank(this.data, this.m, this.n).rank
 	}
 
 	/**
