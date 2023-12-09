@@ -1,5 +1,6 @@
 class Ven$RTree {
 	constructor(width) {
+		this._getWidth = width
 		this._root = null
 		this._balanceChildrenOnDeleting = true
 		/**
@@ -7,15 +8,15 @@ class Ven$RTree {
 		 */
 		this._minWidth = 2
 		this._maxWidth = 4
-		this.inital(width)
+		this.refresh()
 	}
 
-	inital(width) {
+	refresh() {
 		let minWidth = this._minWidth
 		let maxWidth = this._maxWidth
-		if (!isNaN(width)) {
-			minWidth = Math.floor(width / 2.0)
-			maxWidth = width
+		if (!isNaN(this._getWidth)) {
+			minWidth = Math.floor(this._getWidth / 2.0)
+			maxWidth = this._getWidth
 		}
 		const rootTree = {
 			sx: 0,
@@ -74,5 +75,9 @@ class Ven$RTree {
 			targetRoot = this._root
 		}
 		return Ven$Rtree_attachData(newTree, targetRoot)
+	}
+
+	clear() {
+		this.refresh()
 	}
 }

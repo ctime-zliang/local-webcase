@@ -26,13 +26,13 @@ function main2() {
 		/**
 		 * 点 A
 		 */
-		1, 1, 1, /**
+		1, 1, 1
+		/**
 		 * 点 B
-		 */
-		3, 1, 1, /**
+		 */, 3, 1, 1
+		/**
 		 * 点 C
-		 */
-		1, 3, 1,
+		 */, 1, 3, 1,
 	])
 	console.log(`初始坐标 B: `, pointsMatrix.toStringFormat())
 
@@ -52,10 +52,10 @@ function main3() {
 			/**
 			 * 点 A
 			 */
-			15, 10, 5, 1, /**
+			15, 10, 5, 1
+			/**
 			 * 点 B
-			 */
-			30, 60, 20, 1,
+			 */, 30, 60, 20, 1,
 		]
 	)
 	console.log(`初始坐标 C: `, pointsMatrix.toStringFormat())
