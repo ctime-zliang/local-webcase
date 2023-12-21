@@ -303,7 +303,7 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth, debug = true) {
 	 *
 	 * 从 nodes 中删除 highAreaNodeIndex 位置处的元素, 并将该元素插入到 a 或 b 的子节点列表中
 	 */
-	let highAreaDelta = 0
+	let highAreaDelta = undefined
 	let lowestGrowthGroup = null
 	let highAreaNodeIndex = -1
 	const debugIdA = Ven$Rtree_getHashIden()
@@ -334,7 +334,7 @@ function Ven$Rtree_pickNext(nodes, a, b, minWidth, debug = true) {
 		/**
 		 * old if: !highAreaNodeIndex || !highAreaDelta || Math.abs(changeTempAreaB - changeTempAreaA) < highAreaDelta
 		 */
-		if (highAreaNodeIndex === -1 || highAreaDelta <= 0 || Math.abs(changeTempAreaB - changeTempAreaA) <= highAreaDelta) {
+		if (highAreaNodeIndex === -1 || typeof highAreaDelta === 'undefined' || Math.abs(changeTempAreaB - changeTempAreaA) <= highAreaDelta) {
 			highAreaNodeIndex = i
 			highAreaDelta = Math.abs(changeTempAreaB - changeTempAreaA)
 			lowestGrowthGroup = changeTempAreaB < changeTempAreaA ? b : a
