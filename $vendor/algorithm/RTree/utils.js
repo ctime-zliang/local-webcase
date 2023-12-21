@@ -505,8 +505,10 @@ function Ven$Rtree_removeSubtree(rect, targetOnLeaf, root, minWidth, maxWidth, b
 					 * 栈存当前遍历对象后继续遍历子节点
 					 * 		将每级选择的子节点的索引栈存
 					 * 		将当前的树节点栈存
+					 *
+					 * 		仅当其子节点列表不为空时执行
 					 */
-					if (itemTree.hasOwnProperty('nodes')) {
+					if (itemTree.hasOwnProperty('nodes') && itemTree.nodes.length) {
 						currentDepth += 1
 						chooseStack.push(tree)
 						chooseChildIndexStack.push(lastItemIndex)
@@ -522,10 +524,11 @@ function Ven$Rtree_removeSubtree(rect, targetOnLeaf, root, minWidth, maxWidth, b
 				/**
 				 * 当 itemTree 已经是其所在节点集合中的第一个且其为叶子节点时
 				 * 即表示已经遍历到树的某一分支的最左底部
-				 * 即已经完成了对当前整棵树的搜索, 直接返回即可
+				 *
+				 * 如果此时 chooseChildIndexStack 不为空, 则网上回溯到最近的分叉节点, 选择前一个子节点树并继续往下遍历
 				 */
-				if (lastItemIndex < 0 && itemTree.hasOwnProperty('leaf')) {
-					return result
+				if (lastItemIndex < 0 && chooseChildIndexStack.length) {
+					chooseChildIndexStack.push(chooseChildIndexStack.pop() - 1)
 				}
 			}
 			continue

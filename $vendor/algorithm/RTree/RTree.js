@@ -23,8 +23,8 @@ class Ven$RTree {
 			sy: 0,
 			w: 0,
 			h: 0,
-			id: 'root',
 			nodes: [],
+			id: `root`,
 		}
 		this._root = rootTree
 		this._minWidth = minWidth
