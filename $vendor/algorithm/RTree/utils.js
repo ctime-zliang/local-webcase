@@ -528,7 +528,7 @@ function Ven$Rtree_removeSubtree(rect, targetOnLeaf, root, minWidth, maxWidth, b
 				 * 如果此时 chooseChildIndexStack 不为空, 则网上回溯到最近的分叉节点, 选择前一个子节点树并继续往下遍历
 				 */
 				if (lastItemIndex < 0 && chooseChildIndexStack.length) {
-					chooseChildIndexStack.push(chooseChildIndexStack.pop() - 1)
+					--chooseChildIndexStack[chooseChildIndexStack.length - 1]
 				}
 			}
 			continue
