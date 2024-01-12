@@ -245,6 +245,13 @@ class Ven$Vector2 extends Ven$Vector {
 		return `Vector2 (${this.x}, ${this.y})`
 	}
 
+	toJSON() {
+		return {
+			x: this._x,
+			y: this._y,
+		}
+	}
+
 	/**
 	 * 向量的单位向量
 	 */
