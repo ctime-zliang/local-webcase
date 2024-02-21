@@ -329,3 +329,33 @@ function ven$createSelectOptionsHtmlString(dataList, option = {}, selectedValue 
 	}
 	return optionsHtml
 }
+
+/**
+ * @description 精确执行 setTimeout (https://mp.weixin.qq.com/s/v7YJAmMhzSAFzlJXY4mXTg)
+ * @function ven$accurateSetTimeout
+ * @param {function} callback 回调函数
+ * @param {object} options 传递给回调函数的参数
+ * @param {number} interval 回调函数的执行间隔
+ * @return {void}
+ */
+function ven$accurateSetTimeout(callback, options = null, interval = (1 / 60) * 1000) {
+	let loopCount = 0
+	let startTimeStamp = performance.now()
+
+	function instance() {
+		const idealTimeStamp = loopCount++ * interval
+		const realTimeStamp = performance.now() - startTimeStamp
+		const timeStampDifference = realTimeStamp - idealTimeStamp
+
+		const result = callback(options, { idealTimeStamp, realTimeStamp, timeStampDifference })
+		if (result === false) {
+			return
+		}
+
+		window.setTimeout(() => {
+			instance()
+		}, interval - timeStampDifference)
+	}
+
+	instance()
+}
