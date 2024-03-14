@@ -22,7 +22,8 @@ const FS = `
 const points = []
 
 function main() {
-	const canvasElement = document.getElementById('webglCanvas')
+	const appContainer1Element = document.getElementById('appContainer1')
+	const canvasElement = appContainer1Element.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
 
 	const vertexShader = createShader(gl, gl.VERTEX_SHADER, VS)
@@ -44,8 +45,9 @@ function main() {
 	gl.vertexAttrib2f(a_CanvasSize, canvasElement.width, canvasElement.height)
 
 	canvasElement.addEventListener('click', function (e) {
+		const canvasRect = canvasElement.getBoundingClientRect().toJSON()
 		const setColor = randomColor()
-		points.push({ x: e.clientX, y: e.clientY, color: setColor })
+		points.push({ x: e.clientX - canvasRect.left, y: e.clientY - canvasRect.top, color: setColor })
 		gl.clearColor(0, 0, 0, 1.0)
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		for (let i = 0; i < points.length; i++) {

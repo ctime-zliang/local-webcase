@@ -61,7 +61,7 @@ function createProgram(gl, vertexShader, fragmentShader) {
 	return null
 }
 
-function createBuffer(gl, bufferTypedArray) {
+function createBuffer(gl, bufferTypedArray = undefined) {
 	/**
 	 * 创建缓冲池
 	 */
@@ -70,10 +70,12 @@ function createBuffer(gl, bufferTypedArray) {
 	 * 绑定缓冲池
 	 */
 	gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
-	/**
-	 * 对缓冲池填充数据
-	 */
-	gl.bufferData(gl.ARRAY_BUFFER, bufferTypedArray, gl.STATIC_DRAW)
+	if (bufferTypedArray) {
+		/**
+		 * 对缓冲池填充数据
+		 */
+		gl.bufferData(gl.ARRAY_BUFFER, bufferTypedArray, gl.STATIC_DRAW)
+	}
 	return buffer
 }
 
