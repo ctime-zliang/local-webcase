@@ -104,8 +104,7 @@ class Ven$Vector2 extends Ven$Vector {
 	 * 向量缩放
 	 */
 	scale(x = 0, y = 0) {
-		const _y = typeof y !== 'undefined' ? y : x
-		return new Ven$Vector2(this.x * x, this.y * _y)
+		return new Ven$Vector2(this.x * x, this.y * y)
 	}
 
 	/**

@@ -80,9 +80,7 @@ class Ven$Vector3 extends Ven$Vector {
 	 * 向量缩放
 	 */
 	scale(x = 0, y = 0, z = 0) {
-		const _y = typeof y !== 'undefined' ? y : x
-		const _z = typeof z !== 'undefined' ? z : x
-		return new Ven$Vector3(this.x * x, this.y * _y, this.z * _z)
+		return new Ven$Vector3(this.x * x, this.y * y, this.z * z)
 	}
 
 	/**
