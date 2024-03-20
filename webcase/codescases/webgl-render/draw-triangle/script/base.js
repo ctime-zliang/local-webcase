@@ -97,7 +97,7 @@ function drawCanvas2(containerElement) {
 	canvasElement.addEventListener('click', function (e) {
 		const canvasRect = canvasElement.getBoundingClientRect().toJSON()
 		positions.push(e.clientX - canvasRect.left, e.clientY - canvasRect.top)
-		if (positions.length % 6 == 0) {
+		if (positions.length % 6 === 0) {
 			console.time(`draw-webgl`)
 			const color = randomColor()
 			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.DYNAMIC_DRAW)

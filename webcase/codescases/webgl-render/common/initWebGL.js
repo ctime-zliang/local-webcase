@@ -79,6 +79,21 @@ function createBuffer(gl, bufferTypedArray = undefined) {
 	return buffer
 }
 
+function createBuffer2(gl, attribute, options) {
+	const { size, type, normalize, stride, offset } = options
+	/**
+	 * 启用该 attribute 属性
+	 */
+	gl.enableVertexAttribArray(attribute)
+	const buffer = gl.createBuffer()
+	gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+	/**
+	 * 将 attribute 属性关联到指定缓冲区
+	 */
+	gl.vertexAttribPointer(attribute, size, type || gl.FLOAT, normalize || false, stride || 0, offset || 0)
+	return buffer
+}
+
 function initWebGL(gl, vertexShaderSouce, fragmentShaderSouce) {
 	/**
 	 * 创建并初始化着色器
