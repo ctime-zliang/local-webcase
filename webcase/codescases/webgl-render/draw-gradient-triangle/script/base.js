@@ -110,11 +110,11 @@ function drawCanvas2(containerElement) {
 	 */
 	gl.vertexAttrib2f(a_CanvasSize, canvasElement.width, canvasElement.height)
 
-	const buffer = createBuffer(gl)
+	const datasBuffer = createBuffer(gl)
 	gl.enableVertexAttribArray(a_Position)
-	gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
-	gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 24, 0)
 	gl.enableVertexAttribArray(a_Color)
+	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
+	gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 24, 0)
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 24, 8)
 
 	canvasElement.addEventListener('click', function (e) {
@@ -124,7 +124,7 @@ function drawCanvas2(containerElement) {
 		datas.push(color.r, color.g, color.b, color.a)
 		if (datas.length % 18 === 0) {
 			console.time(`draw-webgl`)
-			gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+			gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
 			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.DYNAMIC_DRAW)
 			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.DYNAMIC_DRAW)
 			/* ... */
