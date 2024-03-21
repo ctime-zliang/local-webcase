@@ -36,7 +36,6 @@ function drawCanvas2(containerElement, vs, fs) {
 	console.time(`draw-webgl`)
 	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.DYNAMIC_DRAW)
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.DYNAMIC_DRAW)
 	/* ... */
 	gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0)
 	console.timeEnd(`draw-webgl`)

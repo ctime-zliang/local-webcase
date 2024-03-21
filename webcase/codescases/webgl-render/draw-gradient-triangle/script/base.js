@@ -7,7 +7,7 @@ const VS = `
 	attribute vec2 a_CanvasSize;
 	// 接收顶点颜色
 	attribute vec4 a_Color;
-	// 传递给片元着色器的颜色
+	// 传递给片元着色器的颜色值
 	varying vec4 v_Color;
 	void main() {
 		vec2 position = (a_Position / a_CanvasSize) * 2.0 - 1.0; 
@@ -125,7 +125,6 @@ function drawCanvas2(containerElement) {
 		if (datas.length % 18 === 0) {
 			console.time(`draw-webgl`)
 			gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.DYNAMIC_DRAW)
 			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.DYNAMIC_DRAW)
 			/* ... */
 			gl.clearColor(0.0, 0.0, 0.0, 1.0)

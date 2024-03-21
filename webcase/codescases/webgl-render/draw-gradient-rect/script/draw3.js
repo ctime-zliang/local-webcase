@@ -44,7 +44,6 @@ function drawCanvas3(containerElement, vs, fs) {
 	console.time(`draw-webgl`)
 	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.DYNAMIC_DRAW)
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.DYNAMIC_DRAW)
 	/* ... */
 	gl.drawArrays(gl.TRIANGLE_STRIP, 0, datas.length / 6)
 	console.timeEnd(`draw-webgl`)
