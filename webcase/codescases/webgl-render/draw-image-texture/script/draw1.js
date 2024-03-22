@@ -27,7 +27,7 @@ function drawCanvas1(containerElement) {
 		// 接收纹理数据
 		uniform sampler2D u_Texture;
 		void main() {
-			gl_FragColor = texture2D(u_Texture, vec2(v_Uv.x, v_Uv.y));
+			gl_FragColor = texture2D(u_Texture, v_Uv);
 		}
 	`
 	const datas = [30, 30, 0, 0, 30, 300, 0, 1, 300, 300, 1, 1, 30, 30, 0, 0, 300, 300, 1, 1, 300, 30, 1, 0]
@@ -62,9 +62,12 @@ function drawCanvas1(containerElement) {
 	gl.vertexAttribPointer(a_Uv, 2, gl.FLOAT, false, 16, 8)
 
 	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.DYNAMIC_DRAW)
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.STATIC_DRAW)
 
-	loadTexture(gl, '../common/images/demo1.jpg', u_Texture, () => {
+	/**
+	 * 图片尺寸必须满足 2^n
+	 */
+	loadTexture(gl, '../common/images/demo-1024x1024.jpg', u_Texture, () => {
 		gl.drawArrays(gl.TRIANGLES, 0, datas.length / 4)
 	})
 }
