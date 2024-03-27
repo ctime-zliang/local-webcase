@@ -55,7 +55,10 @@ function drawCanvas1(containerElement) {
 	gl.enable(gl.CULL_FACE)
 
 	const aspect = canvasElement.width / canvasElement.height
-	const projectionMatrix4 = ven$matrix4Ortho(-aspect * 4, aspect * 4, -4, 4, 100, -100)
+	const padding = 5
+	const near = 100
+	const far = -100
+	const projectionMatrix4 = ven$matrix4Ortho(-aspect * padding, aspect * padding, -padding, padding, near, far)
 
 	let xAngle = 1
 	let yAngle = 1
