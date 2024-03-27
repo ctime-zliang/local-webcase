@@ -2,13 +2,17 @@ function drawCanvas2(containerElement, vs, fs) {
 	const datas = [
 		/**
 		 * V0
+		 * 		RED
 		 */
 		30, 30, 255, 0, 0, 1, /**
 		 * V1
+		 * 		GREEN
 		 */ 30, 300, 0, 255, 0, 1, /**
 		 * V2
+		 * 		GREEN
 		 */ 300, 300, 0, 255, 0, 1, /**
 		 * V3
+		 * 		BLUE
 		 */ 300, 30, 0, 0, 255, 1,
 	]
 	const indices = [0, 1, 2, 0, 2, 3]

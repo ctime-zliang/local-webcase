@@ -24,7 +24,7 @@ class Ven$Matrix4 extends Ven$Matrix {
 		 * 转置前
 		 * 		[1, 0, 0, 0, 0, cos, -sin, 0, 0, sin, cos, 0, 0, 0, 0, 1]
 		 */
-		return new Ven$Matrix4([1, 0, 0, 0, 0, cos, sin, 0, 0, -sin, cos, 0, 0, 0, 1])
+		return new Ven$Matrix4([1, 0, 0, 0, 0, cos, sin, 0, 0, -sin, cos, 0, 0, 0, 0, 1])
 	}
 	static createRotateYMatrix4ByRadian(radian) {
 		const cos = Math.cos(radian)
@@ -92,7 +92,7 @@ class Ven$Matrix4 extends Ven$Matrix {
 		return new Ven$Matrix4(data)
 	}
 
-	constructor(data = VEN$MATRIX4_ORIGIN_DATA) {
+	constructor(data = [...VEN$MATRIX4_ORIGIN_DATA]) {
 		super(4, 4, data)
 	}
 

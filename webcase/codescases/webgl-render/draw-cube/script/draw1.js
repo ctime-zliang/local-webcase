@@ -55,27 +55,31 @@ function drawCanvas1(containerElement) {
 	gl.enable(gl.CULL_FACE)
 
 	const aspect = canvasElement.width / canvasElement.height
-	const projectionMatrix = matrix.ortho(-aspect * 4, aspect * 4, -4, 4, 100, -100)
-	const dstMatrix = matrix.identity()
-	const tmpMatrix = matrix.identity()
+	const projectionMatrix4 = ven$matrix4Ortho(-aspect * 4, aspect * 4, -4, 4, 100, -100)
 
-	let xAngle = 0
-	let yAngle = 0
+	let xAngle = 1
+	let yAngle = 1
 
 	const render = () => {
+		const yRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
+		const xRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
+		const effectMatrix4 = xRotationMatrix4.multiply4(yRotationMatrix4)
+		const resultMatrix4 = effectMatrix4.multiply4(projectionMatrix4)
+		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
+		gl.clear(gl.COLOR_BUFFER_BIT)
+		gl.drawElements(gl.TRIANGLES, cubeDatasResult.indices.length, gl.UNSIGNED_SHORT, 0)
+	}
+
+	const exec = () => {
 		xAngle += 1
 		yAngle += 1
 		if (xAngle >= 30 || yAngle >= 30) {
+			render()
 			return
 		}
-		matrix.rotationY(degreeToRadian(yAngle), dstMatrix)
-		matrix.multiply(dstMatrix, matrix.rotationX(degreeToRadian(xAngle), tmpMatrix), dstMatrix)
-		matrix.multiply(projectionMatrix, dstMatrix, dstMatrix)
-		gl.uniformMatrix4fv(u_Matrix, false, dstMatrix)
-		gl.clear(gl.COLOR_BUFFER_BIT)
-		gl.drawElements(gl.TRIANGLES, cubeDatasResult.indices.length, gl.UNSIGNED_SHORT, 0)
-		requestAnimationFrame(render)
+		render()
+		requestAnimationFrame(exec)
 	}
 
-	render()
+	exec()
 }

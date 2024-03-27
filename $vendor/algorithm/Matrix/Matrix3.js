@@ -49,7 +49,7 @@ class Ven$Matrix3 extends Ven$Matrix {
 		return new Ven$Matrix3([x, 0, 0, 0, y, 0, 0, 0, 1])
 	}
 
-	constructor(data = VEN$MATRIX3_ORIGIN_DATA) {
+	constructor(data = [...VEN$MATRIX3_ORIGIN_DATA]) {
 		super(3, 3, data)
 		const a = this.data[0]
 		const b = this.data[3]
