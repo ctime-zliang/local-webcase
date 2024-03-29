@@ -2,9 +2,9 @@ function drawCanvas1(containerElement, vs, fs) {
 	const p00 = [30, 30, 255, 0, 0, 1]
 	const p01 = [30, 300, 255, 0, 0, 1]
 	const p02 = [300, 300, 255, 0, 0, 1]
-	const p03 = [30, 30, 0, 255, 0, 1]
-	const p04 = [300, 300, 0, 255, 0, 1]
-	const p05 = [300, 30, 0, 255, 0, 1]
+	const p03 = [30, 30, 0, 255, 255, 1]
+	const p04 = [300, 300, 0, 255, 255, 1]
+	const p05 = [300, 30, 0, 255, 255, 1]
 	const datas = [...p00, ...p01, ...p02, ...p03, ...p04, ...p05]
 
 	const canvasElement = containerElement.querySelector('canvas')
