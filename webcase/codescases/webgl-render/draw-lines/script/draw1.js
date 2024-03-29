@@ -26,7 +26,6 @@ function drawCanvas1(containerElement, type) {
 	const vertexShader = createShader(gl, gl.VERTEX_SHADER, VS)
 	const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, FS)
 	const program = createProgram(gl, vertexShader, fragmentShader)
-	const buffer = createBuffer(gl)
 
 	gl.useProgram(program)
 
@@ -36,12 +35,14 @@ function drawCanvas1(containerElement, type) {
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 	const a_CanvasSize = gl.getAttribLocation(program, 'a_CanvasSize')
 
+	gl.enableVertexAttribArray(a_Position)
+
 	/**
 	 * 向顶点着色器变量 attribute vec2 a_CanvasSize 传递匹配数据
 	 */
 	gl.vertexAttrib2f(a_CanvasSize, canvasElement.width, canvasElement.height)
 
-	gl.enableVertexAttribArray(a_Position)
+	const buffer = createBuffer(gl)
 	gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0)
 
 	canvasElement.addEventListener('click', function (e) {

@@ -49,14 +49,15 @@ function drawCanvas1(containerElement) {
 	const a_Uv = gl.getAttribLocation(program, 'a_Uv')
 	const u_Texture = gl.getUniformLocation(program, 'u_Texture')
 
+	gl.enableVertexAttribArray(a_Position)
+	gl.enableVertexAttribArray(a_Uv)
+
 	/**
 	 * 向顶点着色器变量 attribute vec2 a_CanvasSize 传递匹配数据
 	 */
 	gl.vertexAttrib2f(a_CanvasSize, canvasElement.width, canvasElement.height)
 
 	const datasBuffer = createBuffer(gl)
-	gl.enableVertexAttribArray(a_Position)
-	gl.enableVertexAttribArray(a_Uv)
 	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
 	gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 16, 0)
 	gl.vertexAttribPointer(a_Uv, 2, gl.FLOAT, false, 16, 8)

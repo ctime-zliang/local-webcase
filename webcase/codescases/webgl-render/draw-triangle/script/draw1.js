@@ -26,9 +26,6 @@ function drawCanvas1(containerElement) {
 	const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, FS)
 	const program = createProgram(gl, vertexShader, fragmentShader)
 
-	const typeArray = new Float32Array(positions)
-	const buffer = createBuffer(gl, typeArray)
-
 	gl.useProgram(program)
 
 	gl.clearColor(0.0, 0.0, 0.0, 1.0)
@@ -37,6 +34,10 @@ function drawCanvas1(containerElement) {
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 
 	gl.enableVertexAttribArray(a_Position)
+
+	const typeArray = new Float32Array(positions)
+	const buffer = createBuffer(gl)
+	gl.bufferData(gl.ARRAY_BUFFER, typeArray, gl.STATIC_DRAW)
 	gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0)
 
 	gl.drawArrays(gl.TRIANGLES, 0, 3)
