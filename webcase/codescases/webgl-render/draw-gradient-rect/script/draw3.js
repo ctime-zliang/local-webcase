@@ -4,7 +4,6 @@ function drawCanvas3(containerElement, vs, fs) {
 	const p02 = [30, 30, 0, 255, 0, 1]
 	const p03 = [300, 30, 0, 0, 255, 1]
 	const datas = [...p00, ...p01, ...p02, ...p03]
-	const indices = [0, 1, 2, 0, 2, 3]
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)

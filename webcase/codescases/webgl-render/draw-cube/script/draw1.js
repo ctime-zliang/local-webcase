@@ -60,8 +60,8 @@ function drawCanvas1(containerElement) {
 	const far = -100
 	const projectionMatrix4 = ven$matrix4Ortho(-aspect * padding, aspect * padding, -padding, padding, near, far)
 
-	let xAngle = 1
-	let yAngle = 1
+	let xAngle = 30
+	let yAngle = 30
 
 	const render = () => {
 		const yRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
