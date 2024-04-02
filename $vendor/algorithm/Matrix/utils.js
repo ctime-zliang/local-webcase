@@ -19,6 +19,5 @@ function ven$matrix4Ortho(left, right, bottom, top, near, far) {
 	matrix4.data[13] = (bottom + top) / (bottom - top)
 	matrix4.data[14] = (near + far) / (near - far)
 	matrix4.data[15] = 1
-
 	return matrix4
 }
