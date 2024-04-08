@@ -67,7 +67,7 @@ class Ven$Matrix {
 		return colLen * rowIndex + columnIndex
 	}
 
-	static getMatrixRank(matrixArr, rowLen, colLen) {
+	static getMatrixRankResult(matrixArr, rowLen, colLen) {
 		const copyMatrixArr = matrixArr.slice(0)
 		let rank = Math.min(rowLen, colLen)
 		for (let ri = 0; ri < rowLen; ri++) {
@@ -141,8 +141,8 @@ class Ven$Matrix {
 	/**
 	 * 计算当前矩阵的秩
 	 */
-	getMatrixRank() {
-		return Ven$Matrix.getMatrixRank(this.data, this.m, this.n).rank
+	getMatrixRankResult() {
+		return Ven$Matrix.getMatrixRankResult(this.data, this.m, this.n).rank
 	}
 
 	/**
@@ -156,7 +156,8 @@ class Ven$Matrix {
 		const expandColLen = this.n * 2
 		const newMatrixArr = new Array(this.m * this.n).fill(0)
 		let expandMatrixArr = this._initExpandMatrix(matrixArr)
-		const rank = Ven$Matrix.getMatrixRank(expandMatrixArr, this.m, expandColLen)
+		const { rank, updatedMatrixArr } = Ven$Matrix.getMatrixRankResult(expandMatrixArr, this.m, expandColLen)
+		expandMatrixArr = updatedMatrixArr
 		if (rank !== this.m) {
 			throw new Error(`getInverseMatrix error: rank !== this.m`)
 		}

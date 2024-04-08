@@ -34,6 +34,7 @@ function drawCanvas1(containerElement) {
 
 	gl.clearColor(0.0, 0.0, 0.0, 1.0)
 	gl.clear(gl.COLOR_BUFFER_BIT)
+	gl.enable(gl.CULL_FACE)
 
 	const u_Matrix = gl.getUniformLocation(program, 'u_Matrix')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
@@ -52,20 +53,24 @@ function drawCanvas1(containerElement) {
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesBuffer)
 	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeDatasResult.indices), gl.STATIC_DRAW)
 
-	gl.enable(gl.CULL_FACE)
-
-	const aspect = canvasElement.width / canvasElement.height
-	const padding = 5
-	const near = 100
-	const far = -100
-	const projectionMatrix4 = ven$matrix4Ortho(-aspect * padding, aspect * padding, -padding, padding, near, far)
+	/**
+	 * 创建透视矩阵
+	 */
+	const projectionMatrix4 = createProjectionMatrix4(canvasElement.width, canvasElement.height)
 
 	let xAngle = 30
 	let yAngle = 30
 
 	const render = () => {
+		/**
+		 * 创建任意 xAngle/yAngle 角度对应的旋转矩阵
+		 */
+		const xRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(xAngle))
 		const yRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
-		const xRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
+		/**
+		 * 生成变换矩阵
+		 * 		将旋转矩阵应用到透视矩阵
+		 */
 		const effectMatrix4 = xRotationMatrix4.multiply4(yRotationMatrix4)
 		const resultMatrix4 = effectMatrix4.multiply4(projectionMatrix4)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
@@ -74,12 +79,12 @@ function drawCanvas1(containerElement) {
 	}
 
 	const exec = () => {
-		xAngle += 1
-		yAngle += 1
-		if (xAngle >= 30 || yAngle >= 30) {
-			render()
-			return
-		}
+		xAngle += 0.5
+		yAngle += 0.5
+		// if (xAngle >= 30 || yAngle >= 30) {
+		// 	render()
+		// 	return
+		// }
 		render()
 		requestAnimationFrame(exec)
 	}
