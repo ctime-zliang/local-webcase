@@ -20,7 +20,7 @@ function drawCanvas2(containerElement) {
 		}
 	`
 
-	const shereDatasResult = createShereDatas(5, 12, 12)
+	const shereDatasResult = createShereDatas(5, 30, 30)
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
@@ -64,6 +64,10 @@ function drawCanvas2(containerElement) {
 	gl.bufferData(gl.ARRAY_BUFFER, shereDatasResult.colors, gl.STATIC_DRAW)
 	gl.vertexAttribPointer(a_Color, 4, gl.UNSIGNED_BYTE, true, 0, 0)
 
+	// const indicesBuffer = gl.createBuffer()
+	// gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesBuffer)
+	// gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(shereDatasResult.indices), gl.STATIC_DRAW)
+
 	let yAngle = 0
 	let xAngle = 0
 	let timer = null
@@ -74,6 +78,7 @@ function drawCanvas2(containerElement) {
 			return
 		}
 		gl.drawArrays(gl.TRIANGLES, 0, shereDatasResult.positions.length / 3)
+		// gl.drawElements(gl.TRIANGLES, shereDatasResult.indices.length, gl.UNSIGNED_SHORT, 0)
 	}
 
 	const intervalExec = e => {
@@ -88,9 +93,6 @@ function drawCanvas2(containerElement) {
 			const yRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
 			const xRotateMatrix4 = ven$matrix4RotateX(yRotationMatrix4, Ven$Angles.degreeToRadian(xAngle))
 			gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(xRotateMatrix4.multiply4(viewProjectionMatrix).data))
-			// matrixY = matrix.rotationY((Math.PI / 180) * yAngle, matrixY)
-			// matrixX = matrix.rotateX(matrixY, (Math.PI / 180) * xAngle, matrixX)
-			// gl.uniformMatrix4fv(u_Matrix, false, matrix.multiply(viewProjectionMatrix, matrixX))
 			render(gl)
 		}, 50)
 	}

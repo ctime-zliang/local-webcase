@@ -20,7 +20,7 @@ function drawCanvas1(containerElement) {
 		}
 	`
 
-	const cubeDatasResult = createCubeDatas(3, 3, 3)
+	const cubeDatasResult = createCubeDatas(3, 3, 3, 0, 0, 0)
 	console.log(cubeDatasResult)
 
 	const canvasElement = containerElement.querySelector('canvas')
@@ -47,19 +47,12 @@ function drawCanvas1(containerElement) {
 	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
 	gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cubeDatasResult.positions), gl.STATIC_DRAW)
-
-	const indicesBuffer = gl.createBuffer()
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesBuffer)
-	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeDatasResult.indices), gl.STATIC_DRAW)
+	gl.bufferData(gl.ARRAY_BUFFER, cubeDatasResult.positions, gl.STATIC_DRAW)
 
 	/**
 	 * 创建透视矩阵
 	 */
 	const projectionMatrix4 = createProjectionMatrix4(canvasElement.width, canvasElement.height)
-
-	let xAngle = 30
-	let yAngle = 30
 
 	const render = () => {
 		/**
@@ -75,12 +68,15 @@ function drawCanvas1(containerElement) {
 		const resultMatrix4 = effectMatrix4.multiply4(projectionMatrix4)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
-		gl.drawElements(gl.TRIANGLES, cubeDatasResult.indices.length, gl.UNSIGNED_SHORT, 0)
+		gl.drawArrays(gl.TRIANGLES, 0, cubeDatasResult.positions.length / 7)
 	}
+
+	let xAngle = 0
+	let yAngle = 0
 
 	const exec = () => {
 		xAngle += 0.5
-		yAngle += 0.5
+		// yAngle += 0.5
 		// if (xAngle >= 30 || yAngle >= 30) {
 		// 	render()
 		// 	return

@@ -1,4 +1,12 @@
-function createShereDatas(radius, divideByYAxis, divideByCircle) {
+/**
+ * @description 生成球体顶点数据
+ * @function createShereDatas
+ * @param {number} radius 球体半径
+ * @param {number} divideCountsMeridian 球体经线半圆分割份数
+ * @param {number} divideCountsLatitude 球体纬线圆分割份数
+ * @return {object}
+ */
+function createShereDatas(radius, divideCountsMeridian, divideCountsLatitude) {
 	const transformIndicesToUnIndices = vertexDatas => {
 		const indices = vertexDatas.indices
 		const destVertex = {}
@@ -34,10 +42,11 @@ function createShereDatas(radius, divideByYAxis, divideByCircle) {
 			}
 			return type
 		}
-
-		Object.keys(vertexDatas).forEach(attribute => {
+		const vertexKeys = Object.keys(vertexDatas)
+		for (let i = 0; i < vertexKeys.length; i++) {
+			const attribute = vertexKeys[i]
 			if (attribute == 'indices') {
-				return
+				continue
 			}
 			const src = vertexDatas[attribute]
 			const elementsPerVertex = getElementsCountPerVertex(attribute)
@@ -49,38 +58,55 @@ function createShereDatas(radius, divideByYAxis, divideByCircle) {
 					index++
 				}
 			}
-			let type = getArrayTypeByAttribName(attribute)
+			const type = getArrayTypeByAttribName(attribute)
 			destVertex[attribute] = new type(dest)
-		})
+		}
 		return destVertex
 	}
-	const yUnitAngle = Math.PI / divideByYAxis
-	const circleUnitAngle = (Math.PI * 2) / divideByCircle
+	/**
+	 * 将经线半圆分割后, 每份对应的弧度
+	 */
+	const radianEachDivideCountMeridian = Math.PI / divideCountsMeridian
+	/**
+	 * 将纬线圆分割后, 每份对应的弧度
+	 */
+	const radianEachDivideCountLatitude = (Math.PI * 2) / divideCountsLatitude
 	const positions = []
 	const normals = []
-	const colors = []
-	for (let i = 0; i <= divideByYAxis; i++) {
-		const unitY = Math.cos(yUnitAngle * i)
-		const yValue = radius * unitY
-		for (let j = 0; j <= divideByCircle; j++) {
-			const unitX = Math.sin(yUnitAngle * i) * Math.cos(circleUnitAngle * j)
-			const unitZ = Math.sin(yUnitAngle * i) * Math.sin(circleUnitAngle * j)
-			const xValue = radius * unitX
-			const zValue = radius * unitZ
-			positions.push(xValue, yValue, zValue)
-			normals.push(unitX, unitY, unitZ)
+	/**
+	 * 计算用于分割经纬线的所有分割点的 X/Y/Z 坐标
+	 */
+	for (let i = 0; i <= divideCountsMeridian; i++) {
+		/**
+		 * 计算经线半圆的每个分割点在 Y 轴上的坐标
+		 */
+		const tmpY = Math.cos(radianEachDivideCountMeridian * i)
+		const coordinateY = radius * tmpY
+		for (let j = 0; j <= divideCountsLatitude; j++) {
+			/**
+			 * 计算纬线圆的每个分割点在 X 轴和 Z 轴上的坐标
+			 */
+			const tmpX = Math.sin(radianEachDivideCountMeridian * i) * Math.cos(radianEachDivideCountLatitude * j)
+			const tmpZ = Math.sin(radianEachDivideCountMeridian * i) * Math.sin(radianEachDivideCountLatitude * j)
+			const coordinateX = radius * tmpX
+			const coordinateZ = radius * tmpZ
+			positions.push(coordinateX, coordinateY, coordinateZ)
+			normals.push(tmpX, tmpY, tmpZ)
 		}
 	}
+	/**
+	 * 记录用于分割经纬线的所有分割点的索引
+	 */
 	const indices = []
-	const circleCount = divideByCircle + 1
-	for (let j = 0; j < divideByCircle; j++) {
-		for (let i = 0; i < divideByYAxis; i++) {
-			indices.push(i * circleCount + j)
-			indices.push(i * circleCount + j + 1)
-			indices.push((i + 1) * circleCount + j)
-			indices.push((i + 1) * circleCount + j)
-			indices.push(i * circleCount + j + 1)
-			indices.push((i + 1) * circleCount + j + 1)
+	const divideCountsLatitude2 = divideCountsLatitude + 1
+	for (let j = 0; j < divideCountsLatitude; j++) {
+		for (let i = 0; i < divideCountsMeridian; i++) {
+			indices.push(i * divideCountsLatitude2 + j)
+			indices.push(i * divideCountsLatitude2 + j + 1)
+			indices.push((i + 1) * divideCountsLatitude2 + j)
+			indices.push((i + 1) * divideCountsLatitude2 + j)
+			indices.push(i * divideCountsLatitude2 + j + 1)
+			indices.push((i + 1) * divideCountsLatitude2 + j + 1)
 		}
 	}
 	const result = transformIndicesToUnIndices({
@@ -88,12 +114,19 @@ function createShereDatas(radius, divideByYAxis, divideByCircle) {
 		indices: new Uint16Array(indices),
 		normals: new Float32Array(normals),
 	})
+	const result0 = {
+		positions: new Float32Array(positions),
+		indices: new Uint16Array(indices),
+		normals: new Float32Array(normals),
+	}
+	const colors = []
 	for (let i = 0; i < result.positions.length; i++) {
 		const color = randomColor()
 		colors.push(color.r, color.g, color.b, 255)
 	}
 	return {
 		...result,
+		// indices: new Uint16Array(indices),
 		colors: new Uint8Array(colors),
 	}
 }
