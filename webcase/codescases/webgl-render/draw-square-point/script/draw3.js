@@ -1,4 +1,4 @@
-function drawCanvas1(containerElement) {
+function drawCanvas3(containerElement) {
 	const VS = `
 		precision mediump float;
 		attribute vec3 a_Position;
@@ -8,7 +8,7 @@ function drawCanvas1(containerElement) {
 		void main() {
 			gl_Position = u_Matrix * vec4(a_Position, 1);
 			v_Color = a_Color;
-			gl_PointSize = 5.0;
+			gl_PointSize = 15.0;
 		}
 	`
 
@@ -20,8 +20,28 @@ function drawCanvas1(containerElement) {
 		}
 	`
 
-	const cubeDatasResult = createCubeDatas(3, 3, 3, 0, 0, 0)
-	console.log(cubeDatasResult)
+	const z1 = -0.5
+	const z2 = 0.5
+
+	const points = [
+		/* ... */
+		0.5,
+		0.5,
+		z1,
+		1,
+		0,
+		0,
+		1, // 红色
+		/* ... */
+		0.5,
+		0.5,
+		z2,
+		0,
+		1,
+		0,
+		1, // 绿色
+		/* ... */
+	]
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
@@ -35,6 +55,7 @@ function drawCanvas1(containerElement) {
 	gl.clearColor(0.0, 0.0, 0.0, 1.0)
 	gl.clear(gl.COLOR_BUFFER_BIT)
 	gl.enable(gl.CULL_FACE)
+	gl.enable(gl.DEPTH_TEST)
 
 	const u_Matrix = gl.getUniformLocation(program, 'u_Matrix')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
@@ -47,7 +68,7 @@ function drawCanvas1(containerElement) {
 	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
 	gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
-	gl.bufferData(gl.ARRAY_BUFFER, cubeDatasResult.positions, gl.STATIC_DRAW)
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(points), gl.STATIC_DRAW)
 
 	/**
 	 * 创建透视矩阵
@@ -67,8 +88,9 @@ function drawCanvas1(containerElement) {
 		const effectMatrix4 = xRotationMatrix4.multiply4(yRotationMatrix4)
 		const resultMatrix4 = effectMatrix4.multiply4(projectionMatrix4)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
+		// gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(new Ven$Matrix4().data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
-		gl.drawArrays(gl.TRIANGLES, 0, cubeDatasResult.positions.length / 7)
+		gl.drawArrays(gl.POINTS, 0, points.length / 7)
 	}
 
 	let xAngle = 0

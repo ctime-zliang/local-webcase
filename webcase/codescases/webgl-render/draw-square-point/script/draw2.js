@@ -1,4 +1,4 @@
-function drawCanvas1(containerElement) {
+function drawCanvas2(containerElement) {
 	const VS = `
 		precision mediump float;
 		attribute vec2 a_Position;
@@ -20,7 +20,7 @@ function drawCanvas1(containerElement) {
 		}
 	`
 
-	const points = [{ x: 100, y: 100 }]
+	const points = []
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
@@ -42,19 +42,24 @@ function drawCanvas1(containerElement) {
 	 * 向顶点着色器变量 attribute vec2 a_CanvasSize 传递匹配数据
 	 */
 	gl.vertexAttrib2f(a_CanvasSize, canvasElement.width, canvasElement.height)
-	const setColor = randomColor()
-	/**
-	 * 向片元着色器变量 uniform vec4 u_Color 传递匹配数据
-	 */
-	gl.uniform4f(u_Color, setColor.r, setColor.g, setColor.b, setColor.a)
-	/**
-	 * 向顶点着色器变量 attribute vec2 a_Position 传递匹配数据
-	 */
-	for (let i = 0; i < points.length; i++) {
-		gl.vertexAttrib2f(a_Position, points[i].x, points[i].y)
-	}
 
-	if (points.length) {
-		gl.drawArrays(gl.POINTS, 0, 1)
-	}
+	canvasElement.addEventListener('click', function (e) {
+		const canvasRect = canvasElement.getBoundingClientRect().toJSON()
+		const setColor = randomColor()
+		points.push({ x: e.clientX - canvasRect.left, y: e.clientY - canvasRect.top, color: setColor })
+		gl.clearColor(0, 0, 0, 1.0)
+		gl.clear(gl.COLOR_BUFFER_BIT)
+		for (let i = 0; i < points.length; i++) {
+			const colorItem = points[i].color
+			/**
+			 * 向片元着色器变量 uniform vec4 u_Color 传递匹配数据
+			 */
+			gl.uniform4f(u_Color, colorItem.r, colorItem.g, colorItem.b, colorItem.a)
+			/**
+			 * 向顶点着色器变量 attribute vec2 a_Position 传递匹配数据
+			 */
+			gl.vertexAttrib2f(a_Position, points[i].x, points[i].y)
+			gl.drawArrays(gl.POINTS, 0, 1)
+		}
+	})
 }

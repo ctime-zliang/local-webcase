@@ -39,12 +39,12 @@
  */
 function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ = 0) {
 	const CUBE_FACE_COLOR = [
-		[255, 0, 0, 1],
-		[0, 255, 0, 1],
-		[0, 0, 255, 1],
-		[255, 255, 0, 1],
-		[0, 255, 255, 1],
-		[255, 0, 255, 1],
+		[255, 0, 0, 1], // 红色
+		[0, 255, 0, 1], // 绿色
+		[0, 0, 255, 1], // 蓝色
+		[255, 255, 0, 1], // 黄色
+		[0, 255, 255, 1], // 青色
+		[255, 0, 255, 1], // 粉色
 	]
 	/**
 	 * 定义构成每个方体面的两个三角形的 2 * 3 = 6 份顶点坐标在原始顶点坐标数据 originalPositions 中的索引
@@ -68,7 +68,7 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 		const coordinateY = (i <= 0 ? -halfY : halfY) + centerY
 		for (let j = 0; j < 4; j++) {
 			const coordinateX = (j === 0 || j === 3 ? -halfX : halfX) + centerX
-			const coordinateZ = (j <= 1 ? -halfZ : halfZ) + centerZ
+			const coordinateZ = (j >= 2 ? -halfZ : halfZ) + centerZ
 			originalPositions.push(coordinateX, coordinateY, coordinateZ)
 		}
 	}
@@ -88,7 +88,7 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 			 * 单个顶点的完整描述数据
 			 */
 			vertexPositions.push(originalPositions[pointIndex * 3], originalPositions[pointIndex * 3 + 1], originalPositions[pointIndex * 3 + 2])
-			vertexPositions.push(color.r / 255, color.g / 255, color.b / 255, 1)
+			vertexPositions.push(color.r / 255, color.g / 255, color.b / 255, color.a)
 			/* ... */
 			/**
 			 * key 规则:
