@@ -1,4 +1,4 @@
-function drawCanvas3(containerElement) {
+function drawCanvas4(containerElement) {
 	const VS = `
 		precision mediump float;
 		attribute vec3 a_Position;
@@ -8,7 +8,7 @@ function drawCanvas3(containerElement) {
 		void main() {
 			gl_Position = u_Matrix * vec4(a_Position, 1);
 			v_Color = a_Color;
-			gl_PointSize = 15.0;
+			gl_PointSize = 5.0;
 		}
 	`
 
@@ -24,13 +24,30 @@ function drawCanvas3(containerElement) {
 	 * 开启深度测试
 	 * 		WebGL Z 轴正方向是由屏幕外向屏幕里
 	 * 		即 pointZ 越小, 越靠前显示
+	 *
+	 * 由于启用了背面裁剪(gl.CULL_FACE), 因此反面三角将不再显示
 	 */
 	const z1 = -0.5
 	const z2 = 0.5
+	const z3 = -0.8
 	const points = [
 		/* ... */
 		0.5,
 		0.5,
+		z1,
+		1,
+		0,
+		0,
+		1, // 红色
+		-0.5,
+		0.5,
+		z1,
+		1,
+		0,
+		0,
+		1, // 红色
+		-0.5,
+		-0.5,
 		z1,
 		1,
 		0,
@@ -44,7 +61,42 @@ function drawCanvas3(containerElement) {
 		1,
 		0,
 		1, // 绿色
+		-0.5,
+		0.5,
+		z2,
+		0,
+		1,
+		0,
+		1, // 绿色
+		-0.5,
+		-0.5,
+		z2,
+		0,
+		1,
+		0,
+		1, // 绿色
 		/* ... */
+		0.5,
+		0.5,
+		z3,
+		0,
+		0,
+		1,
+		1, // 蓝色
+		-0.5,
+		-0.5,
+		z3,
+		0,
+		0,
+		1,
+		1, // 蓝色
+		-0.5,
+		0.5,
+		z3,
+		0,
+		0,
+		1,
+		1, // 蓝色
 	]
 
 	const canvasElement = containerElement.querySelector('canvas')
@@ -94,14 +146,14 @@ function drawCanvas3(containerElement) {
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
 		// gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(new Ven$Matrix4().data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
-		gl.drawArrays(gl.POINTS, 0, points.length / 7)
+		gl.drawArrays(gl.TRIANGLES, 0, points.length / 7)
 	}
 
 	let xAngle = 0
 	let yAngle = 0
 
 	const exec = () => {
-		// xAngle += 0.5
+		xAngle += 0.5
 		// yAngle += 0.5
 		// if (xAngle >= 30 || yAngle >= 30) {
 		// 	render()

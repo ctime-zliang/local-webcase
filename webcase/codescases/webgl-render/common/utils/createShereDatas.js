@@ -121,7 +121,7 @@ function createShereDatas(radius, divideCountsMeridian, divideCountsLatitude) {
 	}
 	const colors = []
 	for (let i = 0; i < result.positions.length; i++) {
-		const color = randomColor()
+		const color = ven$randomColor()
 		colors.push(color.r, color.g, color.b, 255)
 	}
 	return {

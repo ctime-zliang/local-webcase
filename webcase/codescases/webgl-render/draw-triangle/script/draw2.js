@@ -53,7 +53,7 @@ function drawCanvas2(containerElement) {
 		positions.push(e.clientX - canvasRect.left, e.clientY - canvasRect.top)
 		if (positions.length % 6 === 0) {
 			console.time(`draw-webgl`)
-			const color = randomColor()
+			const color = ven$randomColor()
 			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.DYNAMIC_DRAW)
 			gl.clearColor(0, 0, 0, 1.0)
 			gl.clear(gl.COLOR_BUFFER_BIT)

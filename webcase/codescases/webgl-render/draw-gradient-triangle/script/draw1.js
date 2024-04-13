@@ -60,7 +60,7 @@ function drawCanvas1(containerElement) {
 	canvasElement.addEventListener('click', function (e) {
 		const canvasRect = canvasElement.getBoundingClientRect().toJSON()
 		positions.push(e.clientX - canvasRect.left, e.clientY - canvasRect.top)
-		const color = randomColor()
+		const color = ven$randomColor()
 		colors.push(color.r, color.g, color.b, color.a)
 		if (positions.length % 6 === 0) {
 			console.time(`draw-webgl`)

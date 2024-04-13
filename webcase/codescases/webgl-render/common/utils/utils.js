@@ -1,20 +1,3 @@
-function rad2deg(radians) {
-	return radians * (180 / Math.PI)
-}
-
-function deg2rad(degrees) {
-	return degrees * (Math.PI / 180)
-}
-
-function randomColor() {
-	return {
-		r: Math.random() * 255,
-		g: Math.random() * 255,
-		b: Math.random() * 255,
-		a: Math.random() * 1,
-	}
-}
-
 function loadTexture(gl, src, attribute, callback) {
 	const img = new Image()
 	img.crossOrigin = 'anonymous'
@@ -38,6 +21,15 @@ function createProjectionMatrix4(viewCanvasWidth, viewCanvasHeight) {
 	const far = -100
 	const projectionMatrix4 = ven$matrix4Ortho(-aspect * padding, aspect * padding, -padding, padding, near, far)
 	return projectionMatrix4
+}
+
+function createMatrix4Perspective(viewRadians, aspect, near, far) {
+	const matrix4 = new Ven$Matrix4()
+	const top = near * Math.tan(Math.PI / 180) * 0.5 * viewRadians
+	const height = 2 * top
+	const width = aspect * height
+	const left = -0.5 * width
+	return ven$matrix4Perspective(left, left + width, top, top - height, near, far, matrix4)
 }
 
 function createViewAtMatrix4(cameraPositionVector3, lookTargetVector3, upDirectionVector3) {

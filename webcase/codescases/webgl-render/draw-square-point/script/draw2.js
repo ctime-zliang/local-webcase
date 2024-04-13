@@ -45,7 +45,7 @@ function drawCanvas2(containerElement) {
 
 	canvasElement.addEventListener('click', function (e) {
 		const canvasRect = canvasElement.getBoundingClientRect().toJSON()
-		const setColor = randomColor()
+		const setColor = ven$randomColor()
 		points.push({ x: e.clientX - canvasRect.left, y: e.clientY - canvasRect.top, color: setColor })
 		gl.clearColor(0, 0, 0, 1.0)
 		gl.clear(gl.COLOR_BUFFER_BIT)

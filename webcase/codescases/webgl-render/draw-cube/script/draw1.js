@@ -35,6 +35,7 @@ function drawCanvas1(containerElement) {
 	gl.clearColor(0.0, 0.0, 0.0, 1.0)
 	gl.clear(gl.COLOR_BUFFER_BIT)
 	gl.enable(gl.CULL_FACE)
+	gl.enable(gl.DEPTH_TEST)
 
 	const u_Matrix = gl.getUniformLocation(program, 'u_Matrix')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
@@ -75,8 +76,8 @@ function drawCanvas1(containerElement) {
 	let yAngle = 0
 
 	const exec = () => {
-		// xAngle += 0.5
-		// yAngle += 0.5
+		xAngle += 0.5
+		yAngle += 0.5
 		// if (xAngle >= 30 || yAngle >= 30) {
 		// 	render()
 		// 	return

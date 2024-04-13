@@ -16,9 +16,9 @@
  * 		- 记顶面左外顶点为 4, 顶面右外顶点为 5, 顶面右内顶点为 6, 顶面左内顶点为 7
  * - 定义方体六面的三角形顶点索引 CUBE_FACE_INDICES
  * 		- 由于采用 gl.drawArrays: gl.TRIANGLES 方式绘制, 需要将方体每个面拆分成三角形
- * 		- 以面 A0(底面) 为例, 可将其拆分成 [0, 1, 2] 和 [0, 2, 3] 两组顶点索引
- * 		- 求外面的顶点索引组成
- * 				- 将 A0(底面) 围绕 X 轴旋转到该面所在的方位, 按照 A0(底面) 的构建规则构建定点索引 [4, 5, 1] 和 [4, 1, 0]
+ * 		- 以面 A0(底面) 为例, 按照正面三角形顶点顺序, 可将其拆分成 [0, 3, 2] 和 [0, 2, 1] 两组顶点索引
+ * 		- 求前面(0-1-5-4)的顶点索引组成
+ * 				- 将 A0(底面) 围绕 X 轴旋转到该面所在的方位, 按照 A0(底面) 的构建规则构建定点索引 [[4, 0, 1] 和 [4, 1, 5]
  * 		- 依次构建其他面的三角形顶点索引
  * 		- 即生成: 定义构成每个方体面的两个三角形的 2 * 3 = 6 份顶点坐标在原始顶点坐标数据 originalPositions 中的索引 CUBE_FACE_INDICES
  * 		- 此时, 每个方体面将包含 2 * 3 = 6 份顶点数据, 方体总体将由 6 * 6 = 36 份顶点坐标
@@ -50,15 +50,14 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 	 * 定义构成每个方体面的两个三角形的 2 * 3 = 6 份顶点坐标在原始顶点坐标数据 originalPositions 中的索引
 	 */
 	const CUBE_FACE_INDICES = [
-		[0, 1, 2, 0, 2, 3], // 底面
-		[7, 6, 5, 7, 5, 4], // 顶面
-		// [5, 4, 7, 5, 7, 6],  // 顶面
+		[0, 3, 2, 0, 2, 1], // 底面
+		[7, 4, 5, 7, 5, 6], // 顶面
 		/* ... */
-		[4, 5, 1, 4, 1, 0], // 前面
-		[3, 2, 6, 3, 6, 7], // 后面
+		[4, 0, 1, 4, 1, 5], // 前面
+		[3, 7, 6, 3, 6, 2], // 后面
 		/* ... */
-		[1, 5, 6, 1, 6, 2], // 右面
-		[4, 0, 3, 4, 3, 7], // 左面
+		[1, 2, 6, 1, 6, 5], // 右面
+		[4, 7, 3, 4, 3, 0], // 左面
 	]
 	const halfX = width / 2
 	const halfY = height / 2
@@ -68,7 +67,7 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 		const coordinateY = (i <= 0 ? -halfY : halfY) + centerY
 		for (let j = 0; j < 4; j++) {
 			const coordinateX = (j === 0 || j === 3 ? -halfX : halfX) + centerX
-			const coordinateZ = (j >= 2 ? -halfZ : halfZ) + centerZ
+			const coordinateZ = (j <= 1 ? -halfZ : halfZ) + centerZ
 			originalPositions.push(coordinateX, coordinateY, coordinateZ)
 		}
 	}
@@ -80,7 +79,7 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 	const vertexPositions = []
 	for (let i = 0; i < CUBE_FACE_INDICES.length; i++) {
 		const faceIndices = CUBE_FACE_INDICES[i]
-		// const color = randomColor()
+		// const color = ven$randomColor()
 		const color = { r: CUBE_FACE_COLOR[i][0], g: CUBE_FACE_COLOR[i][1], b: CUBE_FACE_COLOR[i][2], a: CUBE_FACE_COLOR[i][3] }
 		for (let j = 0; j < faceIndices.length; j++) {
 			const pointIndex = faceIndices[j]
@@ -101,7 +100,7 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 				r: color.r / 255,
 				g: color.g / 255,
 				b: color.b / 255,
-				a: 1,
+				a: color.a,
 			}
 		}
 	}
@@ -113,7 +112,6 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 			z: centerZ,
 		},
 		positionsSequence,
-		positionsSequenceKeys: Object.keys(positionsSequence),
 		originalPositions,
 	}
 }

@@ -1,3 +1,14 @@
+/**
+ * @description 创建相机透视矩阵
+ * @function ven$matrix4Ortho
+ * @param {number} left 左侧边界
+ * @param {number} right 右侧边界
+ * @param {number} bottom 底部边界
+ * @param {number} top 顶部边界
+ * @param {number} near 近值
+ * @param {number} far 远值
+ * @return {Ven$Matrix4}
+ */
 function ven$matrix4Ortho(left, right, bottom, top, near, far) {
 	const matrix4 = new Ven$Matrix4()
 	matrix4.data[0] = 2 / (right - left)
@@ -22,16 +33,18 @@ function ven$matrix4Ortho(left, right, bottom, top, near, far) {
 	return matrix4
 }
 
-function ven$matrix4Perspective(viewRadians, aspect, near, far) {
-	const matrix4 = new Ven$Matrix4()
-	const top = near * Math.tan(Math.PI / 180) * 0.5 * viewRadians
-	const height = 2 * top
-	const width = aspect * height
-	const left = -0.5 * width
-	return ven$matrix4PerspectiveOfRect(left, left + width, top, top - height, near, far, matrix4)
-}
-
-function ven$matrix4PerspectiveOfRect(left, right, top, bottom, near, far) {
+/**
+ * @description 创建相机透视矩阵
+ * @function ven$matrix4Ortho
+ * @param {number} left 左侧边界
+ * @param {number} right 右侧边界
+ * @param {number} bottom 底部边界
+ * @param {number} top 顶部边界
+ * @param {number} near 近值
+ * @param {number} far 远值
+ * @return {Ven$Matrix4}
+ */
+function ven$matrix4Perspective(left, right, top, bottom, near, far) {
 	const matrix4 = new Ven$Matrix4()
 	matrix4.data[0] = (2 * near) / (right - left)
 	matrix4.data[1] = 0
@@ -55,6 +68,13 @@ function ven$matrix4PerspectiveOfRect(left, right, top, bottom, near, far) {
 	return matrix4
 }
 
+/**
+ * @description 创建绕轴旋转矩阵
+ * @function ven$matrix4Rotate(*)
+ * @param {Ven$Matrix4} ref 参考矩阵
+ * @param {number} angle 旋转角度
+ * @return {Ven$Matrix4}
+ */
 function ven$matrix4RotateX(ref, angle) {
 	const matrix4 = new Ven$Matrix4()
 	const m10 = ref.data[4]
@@ -87,7 +107,13 @@ function ven$matrix4RotateX(ref, angle) {
 	matrix4.data[15] = ref.data[15]
 	return matrix4
 }
-
+/**
+ * @description 创建绕轴旋转矩阵
+ * @function ven$matrix4Rotate(*)
+ * @param {Ven$Matrix4} ref 参考矩阵
+ * @param {number} angle 旋转角度
+ * @return {Ven$Matrix4}
+ */
 function ven$matrix4RotateY(ref, angle) {
 	const matrix4 = new Ven$Matrix4()
 	const m00 = ref.data[0]
@@ -120,7 +146,13 @@ function ven$matrix4RotateY(ref, angle) {
 	matrix4.data[15] = ref.data[15]
 	return matrix4
 }
-
+/**
+ * @description 创建绕轴旋转矩阵
+ * @function ven$matrix4Rotate(*)
+ * @param {Ven$Matrix4} ref 参考矩阵
+ * @param {number} angle 旋转角度
+ * @return {Ven$Matrix4}
+ */
 function ven$matrix4RotateZ(ref, angle) {
 	const matrix4 = new Ven$Matrix4()
 	const m00 = ref.data[0]

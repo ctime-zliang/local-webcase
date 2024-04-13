@@ -34,6 +34,7 @@ function drawCanvas2(containerElement) {
 	gl.clearColor(0.0, 0.0, 0.0, 1.0)
 	gl.clear(gl.COLOR_BUFFER_BIT)
 	gl.enable(gl.CULL_FACE)
+	gl.enable(gl.DEPTH_TEST)
 
 	const u_Matrix = gl.getUniformLocation(program, 'u_Matrix')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
@@ -44,7 +45,7 @@ function drawCanvas2(containerElement) {
 
 	const aspect = canvasElement.clientWidth / canvasElement.clientHeight
 	const fieldOfViewRadians = 60
-	const projectionMatrix = ven$matrix4Perspective(fieldOfViewRadians, aspect, 1, 2000)
+	const projectionMatrix = createMatrix4Perspective(fieldOfViewRadians, aspect, 1, 2000)
 	const cameraPositionVector = new Ven$Vector3(0, 0, 20)
 	const targetVector = new Ven$Vector3(0, 0, 0)
 	const upVector = new Ven$Vector3(0, 1, 0)
@@ -64,10 +65,6 @@ function drawCanvas2(containerElement) {
 	gl.bufferData(gl.ARRAY_BUFFER, shereDatasResult.colors, gl.STATIC_DRAW)
 	gl.vertexAttribPointer(a_Color, 4, gl.UNSIGNED_BYTE, true, 0, 0)
 
-	// const indicesBuffer = gl.createBuffer()
-	// gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesBuffer)
-	// gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(shereDatasResult.indices), gl.STATIC_DRAW)
-
 	let yAngle = 0
 	let xAngle = 0
 	let timer = null
@@ -78,7 +75,6 @@ function drawCanvas2(containerElement) {
 			return
 		}
 		gl.drawArrays(gl.TRIANGLES, 0, shereDatasResult.positions.length / 3)
-		// gl.drawElements(gl.TRIANGLES, shereDatasResult.indices.length, gl.UNSIGNED_SHORT, 0)
 	}
 
 	const intervalExec = e => {

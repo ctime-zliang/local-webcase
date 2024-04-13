@@ -42,7 +42,7 @@ function drawCanvas1(containerElement) {
 	 * 向顶点着色器变量 attribute vec2 a_CanvasSize 传递匹配数据
 	 */
 	gl.vertexAttrib2f(a_CanvasSize, canvasElement.width, canvasElement.height)
-	const setColor = randomColor()
+	const setColor = ven$randomColor()
 	/**
 	 * 向片元着色器变量 uniform vec4 u_Color 传递匹配数据
 	 */
