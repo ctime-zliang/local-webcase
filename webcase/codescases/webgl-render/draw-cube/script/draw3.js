@@ -1,4 +1,4 @@
-function drawCanvas2(containerElement) {
+function drawCanvas3(containerElement) {
 	const VS = `
 		precision mediump float;
 		attribute vec3 a_Position;
@@ -20,8 +20,7 @@ function drawCanvas2(containerElement) {
 		}
 	`
 
-	const shereDatasResult = createShereDatas(5, 2, 2)
-	console.log(shereDatasResult)
+	const shereDatasResult = createShereDatas2(5, 2, 2)
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
@@ -56,45 +55,45 @@ function drawCanvas2(containerElement) {
 
 	gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(viewProjectionMatrix.data))
 
-	// const positionBuffer = gl.createBuffer()
-	// gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
-	// gl.bufferData(gl.ARRAY_BUFFER, shereDatasResult.positions, gl.STATIC_DRAW)
-	// gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0)
+	const positionBuffer = gl.createBuffer()
+	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
+	gl.bufferData(gl.ARRAY_BUFFER, shereDatasResult.positions, gl.STATIC_DRAW)
+	gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0)
 
-	// const colorBuffer = gl.createBuffer()
-	// gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer)
-	// gl.bufferData(gl.ARRAY_BUFFER, shereDatasResult.colors, gl.STATIC_DRAW)
-	// gl.vertexAttribPointer(a_Color, 4, gl.UNSIGNED_BYTE, true, 0, 0)
+	const colorBuffer = gl.createBuffer()
+	gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer)
+	gl.bufferData(gl.ARRAY_BUFFER, shereDatasResult.colors, gl.STATIC_DRAW)
+	gl.vertexAttribPointer(a_Color, 4, gl.UNSIGNED_BYTE, true, 0, 0)
 
-	// let yAngle = 0
-	// let xAngle = 0
-	// let timer = null
+	let yAngle = 0
+	let xAngle = 0
+	let timer = null
 
-	// const render = () => {
-	// 	gl.clear(gl.COLOR_BUFFER_BIT)
-	// 	if (shereDatasResult.positions.length <= 0) {
-	// 		return
-	// 	}
-	// 	gl.drawArrays(gl.TRIANGLES, 0, shereDatasResult.positions.length / 3)
-	// }
+	const render = () => {
+		gl.clear(gl.COLOR_BUFFER_BIT)
+		if (shereDatasResult.positions.length <= 0) {
+			return
+		}
+		gl.drawArrays(gl.TRIANGLES, 0, shereDatasResult.positions.length / 3)
+	}
 
-	// const intervalExec = e => {
-	// 	if (timer) {
-	// 		window.clearInterval(timer)
-	// 		timer = null
-	// 		return
-	// 	}
-	// 	timer = window.setInterval(() => {
-	// 		yAngle += 1
-	// 		xAngle += 1
-	// 		const yRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
-	// 		const xRotateMatrix4 = ven$matrix4RotateX(yRotationMatrix4, Ven$Angles.degreeToRadian(xAngle))
-	// 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(xRotateMatrix4.multiply4(viewProjectionMatrix).data))
-	// 		render(gl)
-	// 	}, 50)
-	// }
+	const intervalExec = e => {
+		if (timer) {
+			window.clearInterval(timer)
+			timer = null
+			return
+		}
+		timer = window.setInterval(() => {
+			yAngle += 1
+			xAngle += 1
+			const yRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
+			const xRotateMatrix4 = ven$matrix4RotateX(yRotationMatrix4, Ven$Angles.degreeToRadian(xAngle))
+			gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(xRotateMatrix4.multiply4(viewProjectionMatrix).data))
+			render(gl)
+		}, 50)
+	}
 
-	// render(gl)
+	render(gl)
 
-	// canvasElement.addEventListener('click', intervalExec)
+	canvasElement.addEventListener('click', intervalExec)
 }

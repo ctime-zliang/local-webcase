@@ -38,6 +38,38 @@
  * @return {object}
  */
 function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ = 0) {
+	/**
+	 * divideLinesMeridian
+	 * 		球体经线半圆个数
+	 * 		将纬线圈分割成 divideLinesMeridian 份
+	 * divideLinesLatitude
+	 * 		球体纬线圈个数
+	 * 		将经线半圆分割成 divideLinesLatitude + 1 份
+	 */
+	const divideLinesMeridian = 4
+	const divideLinesLatitude = 2
+	/**
+	 * 生成方体原始顶点坐标数据 originalPositions
+	 * 		遍历纬线圈个数: 遍历经线半圆个数
+	 */
+	const halfX = width / 2
+	const halfY = height / 2
+	const halfZ = depth / 2
+	const originalPositions = []
+	for (let i = 0; i < divideLinesLatitude; i++) {
+		/**
+		 * 计算经线半圆的每个分割点在 Y 轴上的坐标
+		 */
+		const coordinateY = (i <= 0 ? -halfY : halfY) + centerY
+		for (let j = 0; j < divideLinesMeridian; j++) {
+			/**
+			 * 计算纬线圆的每个分割点在 X 轴和 Z 轴上的坐标
+			 */
+			const coordinateX = (j === 0 || j === 3 ? -halfX : halfX) + centerX
+			const coordinateZ = (j <= 1 ? -halfZ : halfZ) + centerZ
+			originalPositions.push(coordinateX, coordinateY, coordinateZ)
+		}
+	}
 	const CUBE_FACE_COLOR = [
 		[255, 0, 0, 1], // 红色
 		[0, 255, 0, 1], // 绿色
@@ -59,18 +91,6 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 		[1, 2, 6, 1, 6, 5], // 右面
 		[4, 7, 3, 4, 3, 0], // 左面
 	]
-	const halfX = width / 2
-	const halfY = height / 2
-	const halfZ = depth / 2
-	const originalPositions = []
-	for (let i = 0; i < 2; i++) {
-		const coordinateY = (i <= 0 ? -halfY : halfY) + centerY
-		for (let j = 0; j < 4; j++) {
-			const coordinateX = (j === 0 || j === 3 ? -halfX : halfX) + centerX
-			const coordinateZ = (j <= 1 ? -halfZ : halfZ) + centerZ
-			originalPositions.push(coordinateX, coordinateY, coordinateZ)
-		}
-	}
 	/**
 	 * 遍历 6 个面: 遍历构成每个面的 2 * 3 = 6 份顶点索引
 	 * 逐一生成 6 * 6 = 36 份顶点数据, 写入 vertexPositions
