@@ -20,7 +20,7 @@ function drawCanvas2(containerElement) {
 		}
 	`
 
-	const shereDatasResult = createShereDatas(5, 2, 2)
+	const shereDatasResult = createShereDatas(5, 4, 4)
 	console.log(shereDatasResult)
 
 	const canvasElement = containerElement.querySelector('canvas')

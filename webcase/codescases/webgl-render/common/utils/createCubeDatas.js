@@ -39,16 +39,6 @@
  */
 function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ = 0) {
 	/**
-	 * divideLinesMeridian
-	 * 		球体经线半圆个数
-	 * 		将纬线圈分割成 divideLinesMeridian 份
-	 * divideLinesLatitude
-	 * 		球体纬线圈个数
-	 * 		将经线半圆分割成 divideLinesLatitude + 1 份
-	 */
-	const divideLinesMeridian = 4
-	const divideLinesLatitude = 2
-	/**
 	 * 生成方体原始顶点坐标数据 originalPositions
 	 * 		遍历纬线圈个数: 遍历经线半圆个数
 	 */
@@ -56,12 +46,12 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 	const halfY = height / 2
 	const halfZ = depth / 2
 	const originalPositions = []
-	for (let i = 0; i < divideLinesLatitude; i++) {
+	for (let i = 0; i < 2; i++) {
 		/**
 		 * 计算经线半圆的每个分割点在 Y 轴上的坐标
 		 */
 		const coordinateY = (i <= 0 ? -halfY : halfY) + centerY
-		for (let j = 0; j < divideLinesMeridian; j++) {
+		for (let j = 0; j < 4; j++) {
 			/**
 			 * 计算纬线圆的每个分割点在 X 轴和 Z 轴上的坐标
 			 */
