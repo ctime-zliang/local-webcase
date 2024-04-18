@@ -28,15 +28,12 @@ function createShereDatas(radius, divideLinesMeridian = 4, divideLinesLatitude =
 	 * 将经线半圆分割后, 每份对应的弧度
 	 */
 	const radianEachDivideCountMeridian = Math.PI / divideCountsMeridian
-	const a = Ven$Angles.radianToDegree(radianEachDivideCountMeridian)
 	/**
 	 * 将纬线圈分割后, 每份对应的弧度
 	 */
 	const radianEachDivideCountLatitude = (Math.PI * 2) / divideCountsLatitude
-	const b = Ven$Angles.radianToDegree(radianEachDivideCountLatitude)
 	const originalPositionsSequence = {}
 	const originalPositions = []
-	const normals = []
 	for (let i = 0; i < setDivideLinesLatitude; i++) {
 		/**
 		 * 计算经线半圆的每个分割点在 Y 轴上的坐标
@@ -52,7 +49,6 @@ function createShereDatas(radius, divideLinesMeridian = 4, divideLinesLatitude =
 			const coordinateX = ven$calcAbsoluteValue(radius * tmpX)
 			const coordinateZ = ven$calcAbsoluteValue(-1 * radius * tmpZ)
 			originalPositions.push(coordinateX, coordinateY, coordinateZ)
-			normals.push(tmpX, tmpY, tmpZ)
 			originalPositionsSequence[`${i}-${j}`] = {
 				x: coordinateX,
 				y: coordinateY,
