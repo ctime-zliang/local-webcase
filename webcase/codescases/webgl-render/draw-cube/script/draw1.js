@@ -20,8 +20,10 @@ function drawCanvas1(containerElement) {
 		}
 	`
 
+	console.time(`CreateCubeDatas`)
 	const cubeDatasResult = createCubeDatas(3, 3, 3, 0, 0, 0)
 	console.log(cubeDatasResult)
+	console.timeEnd(`CreateCubeDatas`)
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
@@ -44,11 +46,11 @@ function drawCanvas1(containerElement) {
 	gl.enableVertexAttribArray(a_Position)
 	gl.enableVertexAttribArray(a_Color)
 
-	const positionBuffer = gl.createBuffer()
-	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
+	const vertextBuffer = gl.createBuffer()
+	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
 	gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
-	gl.bufferData(gl.ARRAY_BUFFER, cubeDatasResult.positions, gl.STATIC_DRAW)
+	gl.bufferData(gl.ARRAY_BUFFER, cubeDatasResult.vertexPositions, gl.STATIC_DRAW)
 
 	/**
 	 * 创建透视矩阵
@@ -69,7 +71,7 @@ function drawCanvas1(containerElement) {
 		const resultMatrix4 = effectMatrix4.multiply4(projectionMatrix4)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
-		gl.drawArrays(gl.TRIANGLES, 0, cubeDatasResult.positions.length / 7)
+		gl.drawArrays(gl.TRIANGLES, 0, cubeDatasResult.vertexPositions.length / 7)
 	}
 
 	let xAngle = 0

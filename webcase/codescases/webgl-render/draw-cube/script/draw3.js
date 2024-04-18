@@ -20,7 +20,10 @@ function drawCanvas3(containerElement) {
 		}
 	`
 
-	const shereDatasResult = createShereDatas2(5, 2, 2)
+	console.time(`CreateShereDatas`)
+	const shereDatasResult = createShereDatas2(5, 30, 30)
+	console.log(shereDatasResult)
+	console.timeEnd(`CreateShereDatas`)
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)

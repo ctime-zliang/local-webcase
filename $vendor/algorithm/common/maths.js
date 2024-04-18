@@ -31,3 +31,26 @@ function ven$toFixed(number, digit = 2, fixedDecimal = true) {
 	}
 	return String(Math.round(number * p + 1e-10) / p)
 }
+
+/**
+ * @description 求绝对的值
+ * 		0 => 0
+ * 		-0 => 0
+ * 		3.1817257161747205e-16 => 0
+ * @function ven$calcAbsoluteValue
+ * @param {number} value 需要转换计算的值
+ * @return {number}
+ */
+function ven$calcAbsoluteValue(value) {
+	const MIN = 1e-10
+	if (value === -0) {
+		return 0
+	}
+	if (value > 0 && value <= MIN) {
+		return 0
+	}
+	if (value < 0 && value >= -MIN) {
+		return 0
+	}
+	return value
+}

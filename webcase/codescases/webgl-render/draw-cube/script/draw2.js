@@ -20,8 +20,10 @@ function drawCanvas2(containerElement) {
 		}
 	`
 
-	const shereDatasResult = createShereDatas(5, 4, 4)
+	console.time(`CreateShereDatas`)
+	const shereDatasResult = createShereDatas(3, 30, 30)
 	console.log(shereDatasResult)
+	console.timeEnd(`CreateShereDatas`)
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
@@ -56,45 +58,47 @@ function drawCanvas2(containerElement) {
 
 	gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(viewProjectionMatrix.data))
 
-	// const positionBuffer = gl.createBuffer()
-	// gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
-	// gl.bufferData(gl.ARRAY_BUFFER, shereDatasResult.positions, gl.STATIC_DRAW)
-	// gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0)
+	const vertextBuffer = gl.createBuffer()
+	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
+	gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
+	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
+	gl.bufferData(gl.ARRAY_BUFFER, shereDatasResult.vertexPositions, gl.STATIC_DRAW)
 
-	// const colorBuffer = gl.createBuffer()
-	// gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer)
-	// gl.bufferData(gl.ARRAY_BUFFER, shereDatasResult.colors, gl.STATIC_DRAW)
-	// gl.vertexAttribPointer(a_Color, 4, gl.UNSIGNED_BYTE, true, 0, 0)
+	/**
+	 * 创建透视矩阵
+	 */
+	const projectionMatrix4 = createProjectionMatrix4(canvasElement.width, canvasElement.height)
 
-	// let yAngle = 0
-	// let xAngle = 0
-	// let timer = null
+	const render = () => {
+		/**
+		 * 创建任意 xAngle/yAngle 角度对应的旋转矩阵
+		 */
+		const xRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(xAngle))
+		const yRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
+		/**
+		 * 生成变换矩阵
+		 * 		将旋转矩阵应用到透视矩阵
+		 */
+		const effectMatrix4 = xRotationMatrix4.multiply4(yRotationMatrix4)
+		const resultMatrix4 = effectMatrix4.multiply4(projectionMatrix4)
+		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
+		gl.clear(gl.COLOR_BUFFER_BIT)
+		gl.drawArrays(gl.TRIANGLES, 0, shereDatasResult.vertexPositions.length / 7)
+	}
 
-	// const render = () => {
-	// 	gl.clear(gl.COLOR_BUFFER_BIT)
-	// 	if (shereDatasResult.positions.length <= 0) {
-	// 		return
-	// 	}
-	// 	gl.drawArrays(gl.TRIANGLES, 0, shereDatasResult.positions.length / 3)
-	// }
+	let xAngle = 0
+	let yAngle = 0
 
-	// const intervalExec = e => {
-	// 	if (timer) {
-	// 		window.clearInterval(timer)
-	// 		timer = null
-	// 		return
-	// 	}
-	// 	timer = window.setInterval(() => {
-	// 		yAngle += 1
-	// 		xAngle += 1
-	// 		const yRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
-	// 		const xRotateMatrix4 = ven$matrix4RotateX(yRotationMatrix4, Ven$Angles.degreeToRadian(xAngle))
-	// 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(xRotateMatrix4.multiply4(viewProjectionMatrix).data))
-	// 		render(gl)
-	// 	}, 50)
-	// }
+	const exec = () => {
+		xAngle += 0.5
+		yAngle += 0.5
+		// if (xAngle >= 30 || yAngle >= 30) {
+		// 	render()
+		// 	return
+		// }
+		render()
+		requestAnimationFrame(exec)
+	}
 
-	// render(gl)
-
-	// canvasElement.addEventListener('click', intervalExec)
+	exec()
 }

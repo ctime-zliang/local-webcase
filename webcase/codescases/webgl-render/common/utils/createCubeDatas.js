@@ -45,6 +45,7 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 	const halfX = width / 2
 	const halfY = height / 2
 	const halfZ = depth / 2
+	const originalPositionsSequence = {}
 	const originalPositions = []
 	for (let i = 0; i < 2; i++) {
 		/**
@@ -58,6 +59,12 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 			const coordinateX = (j === 0 || j === 3 ? -halfX : halfX) + centerX
 			const coordinateZ = (j <= 1 ? -halfZ : halfZ) + centerZ
 			originalPositions.push(coordinateX, coordinateY, coordinateZ)
+			originalPositionsSequence[`${i}-${j}`] = {
+				x: coordinateX,
+				y: coordinateY,
+				z: coordinateZ,
+				_arrIndexStart: originalPositions.length - 3,
+			}
 		}
 	}
 	const CUBE_FACE_COLOR = [
@@ -85,7 +92,7 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 	 * 遍历 6 个面: 遍历构成每个面的 2 * 3 = 6 份顶点索引
 	 * 逐一生成 6 * 6 = 36 份顶点数据, 写入 vertexPositions
 	 */
-	const positionsSequence = {}
+	const vertexPositionsSequence = {}
 	const vertexPositions = []
 	for (let i = 0; i < CUBE_FACE_INDICES.length; i++) {
 		const faceIndices = CUBE_FACE_INDICES[i]
@@ -103,7 +110,7 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 			 * key 规则:
 			 * 		面序号 - 三角形序号 - 三角形顶点序号
 			 */
-			positionsSequence[`${i}-${parseInt((j + 0) / 3)}-${parseInt((j + 0) % 3)}`] = {
+			vertexPositionsSequence[`${i}-${parseInt((j + 0) / 3)}-${parseInt((j + 0) % 3)}`] = {
 				x: originalPositions[pointIndex * 3],
 				y: originalPositions[pointIndex * 3 + 1],
 				z: originalPositions[pointIndex * 3 + 2],
@@ -111,17 +118,19 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 				g: color.g / 255,
 				b: color.b / 255,
 				a: color.a,
+				_arrIndexStart: vertexPositions.length - 3,
 			}
 		}
 	}
 	return {
-		positions: new Float32Array(vertexPositions),
+		vertexPositions: new Float32Array(vertexPositions),
+		vertexPositionsSequence,
 		origin: {
 			x: centerX,
 			y: centerY,
 			z: centerZ,
 		},
-		positionsSequence,
 		originalPositions,
+		originalPositionsSequence,
 	}
 }
