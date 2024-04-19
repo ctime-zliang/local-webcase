@@ -129,7 +129,11 @@ function drawCanvas4(containerElement) {
 	/**
 	 * 创建透视矩阵
 	 */
-	const projectionMatrix4 = createProjectionMatrix4(canvasElement.width, canvasElement.height)
+	const aspect = canvasElement.width / canvasElement.height
+	const padding = 5
+	const near = 100
+	const far = -100
+	const projectionMatrix4 = ven$matrix4Ortho(-aspect * padding, aspect * padding, -padding, padding, near, far)
 
 	const render = () => {
 		/**

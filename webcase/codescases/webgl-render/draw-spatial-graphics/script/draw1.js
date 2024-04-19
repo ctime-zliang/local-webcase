@@ -21,7 +21,7 @@ function drawCanvas1(containerElement) {
 	`
 
 	console.time(`CreateCubeDatas`)
-	const cubeDatasResult = createCubeDatas(3, 3, 3, 0, 0, 0)
+	const cubeDatasResult = createCubeDatas(0.8, 0.8, 0.8, 0, 0, 0)
 	console.log(cubeDatasResult)
 	console.timeEnd(`CreateCubeDatas`)
 
@@ -55,7 +55,11 @@ function drawCanvas1(containerElement) {
 	/**
 	 * 创建透视矩阵
 	 */
-	const projectionMatrix4 = createProjectionMatrix4(canvasElement.width, canvasElement.height)
+	const aspect = canvasElement.width / canvasElement.height
+	const padding = 1
+	const near = 100
+	const far = -100
+	const projectionMatrix4 = ven$matrix4Ortho(-aspect * padding, aspect * padding, -padding, padding, near, far)
 
 	const render = () => {
 		/**
@@ -70,6 +74,7 @@ function drawCanvas1(containerElement) {
 		const effectMatrix4 = xRotationMatrix4.multiply4(yRotationMatrix4)
 		const resultMatrix4 = effectMatrix4.multiply4(projectionMatrix4)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
+		// gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(new Ven$Matrix4().data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, cubeDatasResult.vertexPositions.length / 7)
 	}

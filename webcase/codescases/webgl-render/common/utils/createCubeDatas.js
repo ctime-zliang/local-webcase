@@ -1,10 +1,14 @@
 /**
- * - 生成方体原始顶点坐标数据 originalPositions
+ * 通过经纬线方式生成方体原始顶点坐标数据 ORIGIN_POSITIONS
+ * 读取预先定义的方体各顶点的实际编号, 从原始顶点坐标数据 ORIGIN_POSITIONS 中匹配实际的空间顶点坐标
+ * 生成适用于 WebGL 渲染的顶点坐标数据 VERTEXT_POSITIONS
+ *
+ * - 生成方体原始顶点坐标数据 ORIGIN_POSITIONS
  * 		- 类比球体, 将方体水平方向的棱看做球体纬线圈, 将方体垂直方向的棱看做经线半圆
- * 		- 建立第 1 层循环, 遍历纬线圈个数, 计算顶点原始坐标 Y 轴分量的值 coordinateY
- * 		- 建立第 2 层循环, 遍历经线半圆个数, 计算顶点原始坐标 X 轴分量的值 coordinateX 和 Z 轴分量的值 coordinateZ
- * 		- 生成原始顶点坐标数据 originalPositions
- * 		- 此时, originalPositions 将包含 8 份顶点坐标数据
+ * 		- 建立第 1 层循环, 遍历纬线圈个数, 计算顶点原始坐标 Y 轴分量的值 COORDINATE_Y
+ * 		- 建立第 2 层循环, 遍历经线半圆个数, 计算顶点原始坐标 X 轴分量的值 COORDINATE_X 和 Z 轴分量的值 COORDINATE_Z
+ * 		- 生成原始顶点坐标数据 ORIGIN_POSITIONS
+ * 		- 此时, ORIGIN_POSITIONS 将包含 8 份顶点坐标数据
  * - 对方体顶点进行编号
  * 		- 将方体水平放置于某个水平平面 Z, 贴近平面 Z 的方体面记作 A0(底面)
  * 			4 --------- 5
@@ -20,12 +24,12 @@
  * 		- 求前面(0-1-5-4)的顶点索引组成
  * 				- 将 A0(底面) 围绕 X 轴旋转到该面所在的方位, 按照 A0(底面) 的构建规则构建定点索引 [[4, 0, 1] 和 [4, 1, 5]
  * 		- 依次构建其他面的三角形顶点索引
- * 		- 即生成: 定义构成每个方体面的两个三角形的 2 * 3 = 6 份顶点坐标在原始顶点坐标数据 originalPositions 中的索引 CUBE_FACE_INDICES
+ * 		- 即生成: 定义构成每个方体面的两个三角形的 2 * 3 = 6 份顶点坐标在原始顶点坐标数据 ORIGIN_POSITIONS 中的索引 CUBE_FACE_INDICES
  * 		- 此时, 每个方体面将包含 2 * 3 = 6 份顶点数据, 方体总体将由 6 * 6 = 36 份顶点坐标
- * - 建立绘制三角形顶点坐标数据 vertexPositions
- * 		- 遍历方体六面的三角形顶点索引 CUBE_FACE_INDICES, 依据顶点索引, 读取 originalPositions
+ * - 生成绘制三角形顶点坐标数据 VERTEXT_POSITIONS
+ * 		- 遍历方体六面的三角形顶点索引 CUBE_FACE_INDICES, 依据顶点索引, 读取 ORIGIN_POSITIONS
  * 		- 为顶点填充颜色数据
- * 		- 生成顶点坐标数据 vertexPositions
+ * 		- 生成顶点坐标数据 VERTEXT_POSITIONS
  *
  * @description 生成方体顶点数据
  * @function createCubeDatas

@@ -14,24 +14,6 @@ function loadTexture(gl, src, attribute, callback) {
 	img.src = src
 }
 
-function createProjectionMatrix4(viewCanvasWidth, viewCanvasHeight) {
-	const aspect = viewCanvasWidth / viewCanvasHeight
-	const padding = 5
-	const near = 100
-	const far = -100
-	const projectionMatrix4 = ven$matrix4Ortho(-aspect * padding, aspect * padding, -padding, padding, near, far)
-	return projectionMatrix4
-}
-
-function createMatrix4Perspective(viewRadians, aspect, near, far) {
-	const matrix4 = new Ven$Matrix4()
-	const top = near * Math.tan(Math.PI / 180) * 0.5 * viewRadians
-	const height = 2 * top
-	const width = aspect * height
-	const left = -0.5 * width
-	return ven$matrix4Perspective(left, left + width, top, top - height, near, far, matrix4)
-}
-
 function createViewAtMatrix4(cameraPositionVector3, lookTargetVector3, upDirectionVector3) {
 	let a = cameraPositionVector3.sub(lookTargetVector3)
 	let b = a.normalize()

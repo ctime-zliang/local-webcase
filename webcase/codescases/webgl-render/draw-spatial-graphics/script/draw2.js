@@ -21,7 +21,7 @@ function drawCanvas2(containerElement) {
 	`
 
 	console.time(`CreateShereDatas`)
-	const shereDatasResult = createShereDatas(3, 30, 30)
+	const shereDatasResult = createShereDatas(0.5, 30, 30)
 	console.log(shereDatasResult)
 	console.timeEnd(`CreateShereDatas`)
 
@@ -46,18 +46,6 @@ function drawCanvas2(containerElement) {
 	gl.enableVertexAttribArray(a_Position)
 	gl.enableVertexAttribArray(a_Color)
 
-	const aspect = canvasElement.clientWidth / canvasElement.clientHeight
-	const fieldOfViewRadians = 60
-	const projectionMatrix = createMatrix4Perspective(fieldOfViewRadians, aspect, 1, 2000)
-	const cameraPositionVector = new Ven$Vector3(0, 0, 20)
-	const targetVector = new Ven$Vector3(0, 0, 0)
-	const upVector = new Ven$Vector3(0, 1, 0)
-	const cameraPositionMatrix = createViewAtMatrix4(cameraPositionVector, targetVector, upVector)
-	const viewPositionMatrix = cameraPositionMatrix.getInverseMatrix()
-	const viewProjectionMatrix = viewPositionMatrix.multiply4(projectionMatrix)
-
-	gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(viewProjectionMatrix.data))
-
 	const vertextBuffer = gl.createBuffer()
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
 	gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
@@ -67,7 +55,11 @@ function drawCanvas2(containerElement) {
 	/**
 	 * 创建透视矩阵
 	 */
-	const projectionMatrix4 = createProjectionMatrix4(canvasElement.width, canvasElement.height)
+	const aspect = canvasElement.width / canvasElement.height
+	const padding = 1
+	const near = 100
+	const far = -100
+	const projectionMatrix4 = ven$matrix4Ortho(-aspect * padding, aspect * padding, -padding, padding, near, far)
 
 	const render = () => {
 		/**
@@ -82,6 +74,7 @@ function drawCanvas2(containerElement) {
 		const effectMatrix4 = xRotationMatrix4.multiply4(yRotationMatrix4)
 		const resultMatrix4 = effectMatrix4.multiply4(projectionMatrix4)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
+		// gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(new Ven$Matrix4().data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, shereDatasResult.vertexPositions.length / 7)
 	}

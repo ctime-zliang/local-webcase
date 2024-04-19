@@ -37,6 +37,7 @@ function ven$toFixed(number, digit = 2, fixedDecimal = true) {
  * 		0 => 0
  * 		-0 => 0
  * 		3.1817257161747205e-16 => 0
+ * 		-3.1817257161747205e-16 => 0
  * @function ven$calcAbsoluteValue
  * @param {number} value 需要转换计算的值
  * @return {number}

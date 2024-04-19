@@ -5,8 +5,8 @@
  * @param {number} right 右侧边界
  * @param {number} bottom 底部边界
  * @param {number} top 顶部边界
- * @param {number} near 近值
- * @param {number} far 远值
+ * @param {number} near 可视范围纵深范围近端位置
+ * @param {number} far 可视范围纵深范围远端位置
  * @return {Ven$Matrix4}
  */
 function ven$matrix4Ortho(left, right, bottom, top, near, far) {
@@ -40,8 +40,8 @@ function ven$matrix4Ortho(left, right, bottom, top, near, far) {
  * @param {number} right 右侧边界
  * @param {number} bottom 底部边界
  * @param {number} top 顶部边界
- * @param {number} near 近值
- * @param {number} far 远值
+ * @param {number} near 可视范围纵深范围近端位置
+ * @param {number} far 可视范围纵深范围远端位置
  * @return {Ven$Matrix4}
  */
 function ven$matrix4Perspective(left, right, top, bottom, near, far) {
