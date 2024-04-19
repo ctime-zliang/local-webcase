@@ -21,7 +21,7 @@ function drawCanvas1(containerElement) {
 	`
 
 	console.time(`CreateCubeDatas`)
-	const cubeDatasResult = createCubeDatas(0.8, 0.8, 0.8, 0, 0, 0)
+	const cubeDatasResult = createCubeDatas(0.6, 0.6, 0.6, 0, 0, 0)
 	console.log(cubeDatasResult)
 	console.timeEnd(`CreateCubeDatas`)
 
