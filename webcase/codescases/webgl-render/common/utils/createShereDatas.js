@@ -94,7 +94,7 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, centerX 
 		const coordinateY = ven$calcAbsoluteValue(radius * tmpY)
 		for (let j = 0; j < meridianCountNum; j++) {
 			/**
-			 * 计算纬线圈的每个分割点在 X 轴上的坐标
+			 * 计算纬线圈的每个分割点在 Z 轴上的坐标
 			 *      记 L(ij) 在 YOZ 平面上的投影线段为 L(ij-XOZ)
 			 *      由于 L(ij) 的长度为球体半径 RADIUS, L(ij) 与 Y 轴正向的夹角即为 RADIAN_EACH_DIVIDE_COUNT_MERIDIAN * i
 			 *      即可求 L(ij-XOZ) 的长度为 LENG{L(ij-XOZ)} = RADIUS * Math.sin(RADIAN_EACH_DIVIDE_COUNT_MERIDIAN * i)
@@ -104,7 +104,7 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, centerX 
 			 *      由于上述中的 L(ij-XOZ-Z) 此时在 Z 轴负向上, 需要对 COORDINATE_Z 取反
 			 */
 			/**
-			 * 计算纬线圈的每个分割点在 Z 轴上的坐标
+			 * 计算纬线圈的每个分割点在 X 轴上的坐标
 			 *      类似同上
 			 */
 			const tmpX = Math.sin(radianEachDivideCountMeridian * i) * Math.sin(radianEachDivideCountLatitude * j)
