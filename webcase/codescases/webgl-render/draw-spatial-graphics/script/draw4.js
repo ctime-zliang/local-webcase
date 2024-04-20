@@ -34,6 +34,14 @@ class Program4 {
 			y: 0,
 			z: 0,
 		},
+		/**
+		 * 模型偏移坐标
+		 */
+		modelOffset: {
+			x: 0,
+			y: 0,
+			z: 0,
+		},
 	}
 
 	static init(containerElement) {
@@ -49,6 +57,9 @@ class Program4 {
 		const modelXRotationRangeElement = this.containerElement.querySelector(`[name="modelXRotationRange"]`)
 		const modelYRotationRangeElement = this.containerElement.querySelector(`[name="modelYRotationRange"]`)
 		const modelZRotationRangeElement = this.containerElement.querySelector(`[name="modelZRotationRange"]`)
+		const modelXOffsetRangeElement = this.containerElement.querySelector(`[name="modelXOffsetRange"]`)
+		const modelYOffsetRangeElement = this.containerElement.querySelector(`[name="modelYOffsetRange"]`)
+		const modelZOffsetRangeElement = this.containerElement.querySelector(`[name="modelZOffsetRange"]`)
 		const lightXPositionRangeElement = this.containerElement.querySelector(`[name="lightXPositionRange"]`)
 		const lightYPositionRangeElement = this.containerElement.querySelector(`[name="lightYPositionRange"]`)
 		const lightZPositionRangeElement = this.containerElement.querySelector(`[name="lightZPositionRange"]`)
@@ -58,6 +69,9 @@ class Program4 {
 		modelXRotationRangeElement.value = self.profile.modelRatation.x
 		modelYRotationRangeElement.value = self.profile.modelRatation.y
 		modelZRotationRangeElement.value = self.profile.modelRatation.z
+		modelXOffsetRangeElement.value = self.profile.modelOffset.x
+		modelYOffsetRangeElement.value = self.profile.modelOffset.y
+		modelZOffsetRangeElement.value = self.profile.modelOffset.z
 		lightXPositionRangeElement.value = self.profile.lightPosition.x
 		lightYPositionRangeElement.value = self.profile.lightPosition.y
 		lightZPositionRangeElement.value = self.profile.lightPosition.z
@@ -70,6 +84,9 @@ class Program4 {
 		const modelXRotationRangeElement = this.containerElement.querySelector(`[name="modelXRotationRange"]`)
 		const modelYRotationRangeElement = this.containerElement.querySelector(`[name="modelYRotationRange"]`)
 		const modelZRotationRangeElement = this.containerElement.querySelector(`[name="modelZRotationRange"]`)
+		const modelXOffsetRangeElement = this.containerElement.querySelector(`[name="modelXOffsetRange"]`)
+		const modelYOffsetRangeElement = this.containerElement.querySelector(`[name="modelYOffsetRange"]`)
+		const modelZOffsetRangeElement = this.containerElement.querySelector(`[name="modelZOffsetRange"]`)
 		const lightXPositionRangeElement = this.containerElement.querySelector(`[name="lightXPositionRange"]`)
 		const lightYPositionRangeElement = this.containerElement.querySelector(`[name="lightYPositionRange"]`)
 		const lightZPositionRangeElement = this.containerElement.querySelector(`[name="lightZPositionRange"]`)
@@ -91,6 +108,15 @@ class Program4 {
 		})
 		modelZRotationRangeElement.addEventListener('input', function (e) {
 			self.profile.modelRatation.z = +this.value
+		})
+		modelXOffsetRangeElement.addEventListener('input', function (e) {
+			self.profile.modelOffset.x = +this.value
+		})
+		modelYOffsetRangeElement.addEventListener('input', function (e) {
+			self.profile.modelOffset.y = +this.value
+		})
+		modelZOffsetRangeElement.addEventListener('input', function (e) {
+			self.profile.modelOffset.z = +this.value
 		})
 		lightXPositionRangeElement.addEventListener('input', function (e) {
 			self.profile.lightPosition.x = +this.value
@@ -215,17 +241,19 @@ function drawCanvas4(containerElement) {
 	const projectionMatrix4 = ven$matrix4Ortho(-aspect * padding, aspect * padding, -padding, padding, near, far)
 
 	const render = () => {
-		/**
-		 * 创建任意 xAngle/yAngle 角度对应的旋转矩阵
-		 */
-		const xRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(Program4.profile.modelRatation.x))
-		const yRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(Program4.profile.modelRatation.y))
-		const zRotationMatrix4 = Ven$Matrix4.createRotateZMatrix4ByRadian(Ven$Angles.degreeToRadian(Program4.profile.modelRatation.z))
+		const modelXRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(Program4.profile.modelRatation.x))
+		const modelYRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(Program4.profile.modelRatation.y))
+		const modelZRotationMatrix4 = Ven$Matrix4.createRotateZMatrix4ByRadian(Ven$Angles.degreeToRadian(Program4.profile.modelRatation.z))
+		const modelOffsetMatrix4 = Ven$Matrix4.createTranslateMatrix4ByCoordinate(
+			Program4.profile.modelOffset.x,
+			Program4.profile.modelOffset.y,
+			Program4.profile.modelOffset.z
+		)
 		/**
 		 * 生成变换矩阵
 		 * 		将旋转矩阵应用到透视矩阵
 		 */
-		const effectMatrix4 = xRotationMatrix4.multiply4(yRotationMatrix4).multiply4(zRotationMatrix4)
+		const effectMatrix4 = modelXRotationMatrix4.multiply4(modelYRotationMatrix4).multiply4(modelZRotationMatrix4).multiply4(modelOffsetMatrix4)
 		const resultMatrix4 = effectMatrix4.multiply4(projectionMatrix4)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
 		gl.uniformMatrix4fv(u_NormalMatrix, false, new Float32Array(resultMatrix4.data))
