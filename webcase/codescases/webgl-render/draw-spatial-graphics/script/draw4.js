@@ -20,7 +20,7 @@ class Program4 {
 		lightPosition: {
 			x: 0,
 			y: 0,
-			z: 0,
+			z: 20,
 		},
 		/**
 		 * 环境光强度
@@ -157,11 +157,10 @@ function drawCanvas4(containerElement) {
 		varying vec3 v_Normal;
 		// 对象变换据矩阵
 		uniform mat4 u_NormalMatrix;
-		uniform mat4 u_ModelMatrix;
 		void main() {
 			gl_Position = u_Matrix * vec4(a_Position, 1);
 			v_Color = a_Color;
-			v_Position = vec3(u_ModelMatrix * vec4(a_Position, 1));
+			v_Position = vec3(vec4(a_Position, 1));
 			v_Normal = mat3(u_NormalMatrix) * a_Normal;
 		}
 	`
@@ -223,7 +222,6 @@ function drawCanvas4(containerElement) {
 	const u_LightColor = gl.getUniformLocation(program, 'u_LightColor')
 	const u_LightPosition = gl.getUniformLocation(program, 'u_LightPosition')
 	const u_NormalMatrix = gl.getUniformLocation(program, 'u_NormalMatrix')
-	const u_ModelMatrix = gl.getUniformLocation(program, 'u_ModelMatrix')
 
 	gl.enableVertexAttribArray(a_Position)
 	gl.enableVertexAttribArray(a_Color)
@@ -275,7 +273,6 @@ function drawCanvas4(containerElement) {
 		)
 		const lightResultMatrix4 = lightPositionMatrix4.multiply4(projectionMatrix4)
 		gl.uniformMatrix4fv(u_NormalMatrix, false, new Float32Array(lightResultMatrix4.data))
-		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(lightResultMatrix4.data))
 		/* ... */
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, shereDatasResult.vertexPositions.length / 7)

@@ -74,8 +74,8 @@ function drawCanvas1(containerElement) {
 		 * 		将旋转矩阵应用到透视矩阵
 		 */
 		const modelEffectMatrix4 = modelXRotationMatrix4.multiply4(modelYRotationMatrix4)
-		const modelResultMatrix4 = modelEffectMatrix4.multiply4(projectionMatrix4)
-		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelResultMatrix4.data))
+		const resultMatrix4 = modelEffectMatrix4.multiply4(projectionMatrix4)
+		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
 		// gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(new Ven$Matrix4().data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, cubeDatasResult.vertexPositions.length / 7)

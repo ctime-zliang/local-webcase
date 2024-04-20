@@ -19,6 +19,22 @@ class Program3 {
 		 * 环境光强度
 		 */
 		ambientFactor: 1,
+		/**
+		 * 模型旋转角度
+		 */
+		modelRatation: {
+			x: 0,
+			y: 0,
+			z: 0,
+		},
+		/**
+		 * 模型偏移坐标
+		 */
+		modelOffset: {
+			x: 0,
+			y: 0,
+			z: 0,
+		},
 	}
 
 	static init(containerElement) {
@@ -31,15 +47,24 @@ class Program3 {
 		const self = this
 		const ambientRangeElement = this.containerElement.querySelector(`[name="ambientRange"]`)
 		const lightColorElement = this.containerElement.querySelector(`[name="lightColor"]`)
+		const modelXOffsetRangeElement = this.containerElement.querySelector(`[name="modelXOffsetRange"]`)
+		const modelYOffsetRangeElement = this.containerElement.querySelector(`[name="modelYOffsetRange"]`)
+		const modelZOffsetRangeElement = this.containerElement.querySelector(`[name="modelZOffsetRange"]`)
 
 		ambientRangeElement.value = self.profile.ambientFactor
 		lightColorElement.value = ven$rgba2Hex(self.profile.lightColor)
+		modelXOffsetRangeElement.value = self.profile.modelOffset.x
+		modelYOffsetRangeElement.value = self.profile.modelOffset.y
+		modelZOffsetRangeElement.value = self.profile.modelOffset.z
 	}
 
 	static eventHandle() {
 		const self = this
 		const ambientRangeElement = this.containerElement.querySelector(`[name="ambientRange"]`)
 		const lightColorElement = this.containerElement.querySelector(`[name="lightColor"]`)
+		const modelXOffsetRangeElement = this.containerElement.querySelector(`[name="modelXOffsetRange"]`)
+		const modelYOffsetRangeElement = this.containerElement.querySelector(`[name="modelYOffsetRange"]`)
+		const modelZOffsetRangeElement = this.containerElement.querySelector(`[name="modelZOffsetRange"]`)
 
 		ambientRangeElement.addEventListener('input', function (e) {
 			self.profile.ambientFactor = +this.value
@@ -49,6 +74,18 @@ class Program3 {
 			self.profile.lightColor.r = rgb.r
 			self.profile.lightColor.g = rgb.g
 			self.profile.lightColor.b = rgb.b
+		})
+		modelXOffsetRangeElement.addEventListener('input', function (e) {
+			self.profile.modelOffset.x = +this.value
+			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
+		})
+		modelYOffsetRangeElement.addEventListener('input', function (e) {
+			self.profile.modelOffset.y = +this.value
+			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
+		})
+		modelZOffsetRangeElement.addEventListener('input', function (e) {
+			self.profile.modelOffset.z = +this.value
+			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
 		})
 	}
 }
@@ -126,24 +163,32 @@ function drawCanvas3(containerElement) {
 	const projectionMatrix4 = ven$matrix4Ortho(-aspect * padding, aspect * padding, -padding, padding, near, far)
 
 	const render = () => {
-		const modelXRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(xAngle))
-		const modelYRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
-		const modelEffectMatrix4 = modelXRotationMatrix4.multiply4(modelYRotationMatrix4)
+		const modelXRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(Program3.profile.modelRatation.x))
+		const modelYRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(Program3.profile.modelRatation.y))
+		const modelZRotationMatrix4 = Ven$Matrix4.createRotateZMatrix4ByRadian(Ven$Angles.degreeToRadian(Program3.profile.modelRatation.z))
+		const modelOffsetMatrix4 = Ven$Matrix4.createTranslateMatrix4ByCoordinate(
+			Program3.profile.modelOffset.x,
+			Program3.profile.modelOffset.y,
+			Program3.profile.modelOffset.z
+		)
+		const modelEffectMatrix4 = modelXRotationMatrix4
+			.multiply4(modelYRotationMatrix4)
+			.multiply4(modelZRotationMatrix4)
+			.multiply4(modelOffsetMatrix4)
 		const modelResultMatrix4 = modelEffectMatrix4.multiply4(projectionMatrix4)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelResultMatrix4.data))
+		/* ... */
 		gl.uniform3f(u_LightColor, Program3.profile.lightColor.r / 255, Program3.profile.lightColor.g / 255, Program3.profile.lightColor.b / 255)
 		gl.uniform1f(u_AmbientFactor, Program3.profile.ambientFactor)
+		/* ... */
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, cubeDatasResult.vertexPositions.length / 7)
 	}
 
-	let xAngle = 0
-	let yAngle = 0
-
 	const exec = () => {
-		xAngle += 0.5
-		yAngle += 0.5
-		// if (xAngle >= 30 || yAngle >= 30) {
+		Program3.profile.modelRatation.x += 0.5
+		Program3.profile.modelRatation.y += 0.5
+		// if (Program3.profile.modelRatation.x >= 30 || Program3.profile.modelRatation.y >= 30) {
 		// 	render()
 		// 	return
 		// }
