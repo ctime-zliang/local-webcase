@@ -1,3 +1,8 @@
+/**
+ * 绘制矩形
+ * 		由两个三角形构成
+ * 		三角形为实心渐变色填充
+ */
 function drawCanvas2(containerElement) {
 	const VS = `
 		// 设置浮点数精度为中等精度
@@ -31,8 +36,8 @@ function drawCanvas2(containerElement) {
 
 	const p00 = [30, 30, 255, 0, 0, 1]
 	const p01 = [30, 300, 0, 255, 0, 1]
-	const p02 = [300, 300, 0, 255, 0, 1]
-	const p03 = [300, 30, 0, 0, 255, 1]
+	const p02 = [300, 300, 0, 0, 255, 1]
+	const p03 = [300, 30, 255, 255, 0, 1]
 	const datas = [...p00, ...p01, ...p02, ...p03]
 	const indices = [0, 1, 2, 0, 2, 3]
 

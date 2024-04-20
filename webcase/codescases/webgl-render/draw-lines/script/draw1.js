@@ -1,3 +1,6 @@
+/**
+ * 按照 type: LINES | LINE_STRIP | LINE_LOOP 方式绘制直线线段
+ */
 function drawCanvas1(containerElement, type) {
 	const VS = `
 		precision mediump float;

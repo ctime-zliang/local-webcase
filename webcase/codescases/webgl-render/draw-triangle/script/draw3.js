@@ -1,3 +1,7 @@
+/**
+ * 绘制渐变色填充三角形
+ * 		按鼠标点击位置绘制
+ */
 function drawCanvas3(containerElement) {
 	const VS = `
         // 设置浮点数精度为中等精度

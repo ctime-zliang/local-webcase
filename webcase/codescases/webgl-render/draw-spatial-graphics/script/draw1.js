@@ -1,3 +1,7 @@
+/**
+ * 绘制方体
+ * 		各面纯色填充矩形
+ */
 function drawCanvas1(containerElement) {
 	const VS = `
 		precision mediump float;

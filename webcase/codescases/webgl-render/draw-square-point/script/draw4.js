@@ -1,3 +1,8 @@
+/**
+ * 绘制单个点
+ * 		正面三角形/反面三角形
+ * 		纵深测试
+ */
 function drawCanvas4(containerElement) {
 	const VS = `
 		precision mediump float;

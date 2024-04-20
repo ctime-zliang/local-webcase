@@ -1,3 +1,6 @@
+/**
+ * 绘制实心纯色填充圆
+ */
 function drawCanvas1(containerElement) {
 	const VS = `
 		// 设置浮点数精度为中等精度

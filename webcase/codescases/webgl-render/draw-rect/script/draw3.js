@@ -1,3 +1,8 @@
+/**
+ * 绘制矩形
+ * 		由两个三角形构成
+ * 		三角形为实心渐变色填充
+ */
 function drawCanvas3(containerElement) {
 	const VS = `
 		// 设置浮点数精度为中等精度
@@ -29,11 +34,11 @@ function drawCanvas3(containerElement) {
 		}
 	`
 
-	const p00 = [30, 300, 255, 255, 0, 1]
-	const p01 = [300, 300, 255, 0, 0, 1]
-	const p02 = [30, 30, 0, 255, 0, 1]
-	const p03 = [300, 30, 0, 0, 255, 1]
-	const datas = [...p00, ...p01, ...p02, ...p03]
+	const p00 = [30, 30, 255, 0, 0, 1]
+	const p01 = [30, 300, 0, 255, 0, 1]
+	const p02 = [300, 300, 0, 0, 255, 1]
+	const p03 = [300, 30, 255, 0, 255, 1]
+	const datas = [...p00, ...p01, ...p02, ...p00, ...p02, ...p03]
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
@@ -65,9 +70,8 @@ function drawCanvas3(containerElement) {
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 24, 8)
 
 	console.time(`draw-webgl`)
-	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.DYNAMIC_DRAW)
 	/* ... */
-	gl.drawArrays(gl.TRIANGLE_STRIP, 0, datas.length / 6)
+	gl.drawArrays(gl.TRIANGLES, 0, datas.length / 6)
 	console.timeEnd(`draw-webgl`)
 }

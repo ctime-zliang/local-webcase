@@ -1,5 +1,6 @@
 /**
- * 点击绘制纯色填充三角形
+ * 绘制纯色填充三角形
+ * 		按鼠标点击位置绘制
  */
 function drawCanvas2(containerElement) {
 	const VS = `

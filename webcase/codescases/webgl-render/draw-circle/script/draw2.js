@@ -1,3 +1,6 @@
+/**
+ * 绘制纯色填充圆环
+ */
 function drawCanvas2(containerElement) {
 	const VS = `
 		// 设置浮点数精度为中等精度

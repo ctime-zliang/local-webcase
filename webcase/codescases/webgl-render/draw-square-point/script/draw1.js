@@ -1,3 +1,6 @@
+/**
+ * 绘制单个点
+ */
 function drawCanvas1(containerElement) {
 	const VS = `
 		precision mediump float;

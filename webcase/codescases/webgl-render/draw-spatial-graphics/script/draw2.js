@@ -1,3 +1,7 @@
+/**
+ * 绘制球体
+ * 		按经纬线分割
+ */
 function drawCanvas2(containerElement) {
 	const VS = `
 		precision mediump float;

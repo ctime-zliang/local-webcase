@@ -1,3 +1,6 @@
+/**
+ * 绘制图片纹理填充
+ */
 function drawCanvas1(containerElement) {
 	const VS = `
 		// 设置浮点数精度为中等精度
