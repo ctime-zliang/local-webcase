@@ -102,30 +102,39 @@ class Program4 {
 		})
 		modelXRotationRangeElement.addEventListener('input', function (e) {
 			self.profile.modelRatation.x = +this.value
+			console.log('modelRatation:', JSON.stringify(self.profile.modelRatation))
 		})
 		modelYRotationRangeElement.addEventListener('input', function (e) {
 			self.profile.modelRatation.y = +this.value
+			console.log('modelRatation:', JSON.stringify(self.profile.modelRatation))
 		})
 		modelZRotationRangeElement.addEventListener('input', function (e) {
 			self.profile.modelRatation.z = +this.value
+			console.log('modelRatation:', JSON.stringify(self.profile.modelRatation))
 		})
 		modelXOffsetRangeElement.addEventListener('input', function (e) {
 			self.profile.modelOffset.x = +this.value
+			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
 		})
 		modelYOffsetRangeElement.addEventListener('input', function (e) {
 			self.profile.modelOffset.y = +this.value
+			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
 		})
 		modelZOffsetRangeElement.addEventListener('input', function (e) {
 			self.profile.modelOffset.z = +this.value
+			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
 		})
 		lightXPositionRangeElement.addEventListener('input', function (e) {
 			self.profile.lightPosition.x = +this.value
+			console.log('lightPosition:', JSON.stringify(self.profile.lightPosition))
 		})
 		lightYPositionRangeElement.addEventListener('input', function (e) {
 			self.profile.lightPosition.y = +this.value
+			console.log('lightPosition:', JSON.stringify(self.profile.lightPosition))
 		})
 		lightZPositionRangeElement.addEventListener('input', function (e) {
 			self.profile.lightPosition.z = +this.value
+			console.log('lightPosition:', JSON.stringify(self.profile.lightPosition))
 		})
 	}
 }
@@ -152,7 +161,7 @@ function drawCanvas4(containerElement) {
 		void main() {
 			gl_Position = u_Matrix * vec4(a_Position, 1);
 			v_Color = a_Color;
-			v_Position = vec3(u_ModelMatrix * vec4(a_Position,1));
+			v_Position = vec3(u_ModelMatrix * vec4(a_Position, 1));
 			v_Normal = mat3(u_NormalMatrix) * a_Normal;
 		}
 	`
@@ -178,7 +187,7 @@ function drawCanvas4(containerElement) {
 			diffuseFactor = max(diffuseFactor, 0.0);
 			// 漫反射分量
 			vec3 diffuseLightColor = u_LightColor * diffuseFactor;
-			gl_FragColor = v_Color * vec4(ambient, 1);
+			gl_FragColor = v_Color * vec4((ambient + diffuseLightColor), 1);
 		}
 	`
 
@@ -249,18 +258,25 @@ function drawCanvas4(containerElement) {
 			Program4.profile.modelOffset.y,
 			Program4.profile.modelOffset.z
 		)
-		/**
-		 * 生成变换矩阵
-		 * 		将旋转矩阵应用到透视矩阵
-		 */
-		const effectMatrix4 = modelXRotationMatrix4.multiply4(modelYRotationMatrix4).multiply4(modelZRotationMatrix4).multiply4(modelOffsetMatrix4)
-		const resultMatrix4 = effectMatrix4.multiply4(projectionMatrix4)
-		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
-		gl.uniformMatrix4fv(u_NormalMatrix, false, new Float32Array(resultMatrix4.data))
-		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(resultMatrix4.data))
+		const modelEffectMatrix4 = modelXRotationMatrix4
+			.multiply4(modelYRotationMatrix4)
+			.multiply4(modelZRotationMatrix4)
+			.multiply4(modelOffsetMatrix4)
+		const modelResultMatrix4 = modelEffectMatrix4.multiply4(projectionMatrix4)
+		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelResultMatrix4.data))
+		/* ... */
 		gl.uniform3f(u_LightColor, Program4.profile.lightColor.r / 255, Program4.profile.lightColor.g / 255, Program4.profile.lightColor.b / 255)
 		gl.uniform3f(u_LightPosition, Program4.profile.lightPosition.x, Program4.profile.lightPosition.y, Program4.profile.lightPosition.z)
 		gl.uniform1f(u_AmbientFactor, Program4.profile.ambientFactor)
+		const lightPositionMatrix4 = Ven$Matrix4.createTranslateMatrix4ByCoordinate(
+			Program4.profile.lightPosition.x,
+			Program4.profile.lightPosition.y,
+			Program4.profile.lightPosition.z
+		)
+		const lightResultMatrix4 = lightPositionMatrix4.multiply4(projectionMatrix4)
+		gl.uniformMatrix4fv(u_NormalMatrix, false, new Float32Array(lightResultMatrix4.data))
+		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(lightResultMatrix4.data))
+		/* ... */
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, shereDatasResult.vertexPositions.length / 7)
 	}

@@ -126,18 +126,11 @@ function drawCanvas3(containerElement) {
 	const projectionMatrix4 = ven$matrix4Ortho(-aspect * padding, aspect * padding, -padding, padding, near, far)
 
 	const render = () => {
-		/**
-		 * 创建任意 xAngle/yAngle 角度对应的旋转矩阵
-		 */
-		const xRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(xAngle))
-		const yRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
-		/**
-		 * 生成变换矩阵
-		 * 		将旋转矩阵应用到透视矩阵
-		 */
-		const effectMatrix4 = xRotationMatrix4.multiply4(yRotationMatrix4)
-		const resultMatrix4 = effectMatrix4.multiply4(projectionMatrix4)
-		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
+		const modelXRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(xAngle))
+		const modelYRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
+		const modelEffectMatrix4 = modelXRotationMatrix4.multiply4(modelYRotationMatrix4)
+		const modelResultMatrix4 = modelEffectMatrix4.multiply4(projectionMatrix4)
+		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelResultMatrix4.data))
 		gl.uniform3f(u_LightColor, Program3.profile.lightColor.r / 255, Program3.profile.lightColor.g / 255, Program3.profile.lightColor.b / 255)
 		gl.uniform1f(u_AmbientFactor, Program3.profile.ambientFactor)
 		gl.clear(gl.COLOR_BUFFER_BIT)

@@ -72,15 +72,15 @@ function drawCanvas2(containerElement) {
 		/**
 		 * 创建任意 xAngle/yAngle 角度对应的旋转矩阵
 		 */
-		const xRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(xAngle))
-		const yRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
+		const modelXRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(xAngle))
+		const modelYRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
 		/**
 		 * 生成变换矩阵
 		 * 		将旋转矩阵应用到透视矩阵
 		 */
-		const effectMatrix4 = xRotationMatrix4.multiply4(yRotationMatrix4)
-		const resultMatrix4 = effectMatrix4.multiply4(projectionMatrix4)
-		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
+		const modelEffectMatrix4 = modelXRotationMatrix4.multiply4(modelYRotationMatrix4)
+		const modelResultMatrix4 = modelEffectMatrix4.multiply4(projectionMatrix4)
+		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelResultMatrix4.data))
 		// gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(new Ven$Matrix4().data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, shereDatasResult.vertexPositions.length / 7)
