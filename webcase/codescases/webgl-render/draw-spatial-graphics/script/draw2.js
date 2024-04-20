@@ -24,7 +24,12 @@ function drawCanvas2(containerElement) {
 	`
 
 	console.time(`CreateShereDatas`)
-	const shereDatasResult = createShereDatas(0.5, 30, 30)
+	const shereDatasResult = createShereDatas(0.5, 30, 30, 0, 0, 0, {
+		redRange: [50, 200],
+		greenRange: [50, 200],
+		blueRange: [50, 200],
+		alphaRange: [1, 1],
+	})
 	console.log(shereDatasResult)
 	console.timeEnd(`CreateShereDatas`)
 

@@ -50,14 +50,17 @@
  * @param {number} latitudeCount 球体纬线圆个数(包含两个极点)
  * @return {object}
  */
-function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, centerX = 0, centerY = 0, centerZ = 0) {
+function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, centerX = 0, centerY = 0, centerZ = 0, optional = {}) {
+	const iOptional = {
+		redRange: [80, 200],
+		greenRange: [80, 200],
+		blueRange: [80, 200],
+		alphaRange: [1, 1],
+		...optional,
+	}
 	const calcStartIndex = (i, j, jLen) => {
 		return i * jLen * 3 + j * 3
 	}
-	const COLOR_RED_RANGE = [80, 200]
-	const COLOR_GREEN_RANGE = [80, 200]
-	const COLOR_BLUE_RANGE = [80, 200]
-	const COLOR_ALPHA_RANGE = [1, 1]
 	const meridianCountNum = Math.max(2, meridianCount)
 	const latitudeCountNum = Math.max(3, latitudeCount)
 	/**
@@ -129,7 +132,12 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, centerX 
 	for (let i = 0; i < latitudeCountNum; i++) {
 		for (let j = 0; j < meridianCountNum; j++) {
 			if (i === 0) {
-				const color = ven$randomRangeColor([...COLOR_RED_RANGE], [...COLOR_GREEN_RANGE], [...COLOR_BLUE_RANGE], [...COLOR_ALPHA_RANGE])
+				const color = ven$randomRangeColor(
+					[...iOptional.redRange],
+					[...iOptional.greenRange],
+					[...iOptional.blueRange],
+					[...iOptional.alphaRange]
+				)
 				const xi = i
 				const xj = j
 				const yi = i + 1
@@ -148,7 +156,12 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, centerX 
 				continue
 			}
 			if (i === latitudeCountNum - 1) {
-				const color = ven$randomRangeColor([...COLOR_RED_RANGE], [...COLOR_GREEN_RANGE], [...COLOR_BLUE_RANGE], [...COLOR_ALPHA_RANGE])
+				const color = ven$randomRangeColor(
+					[...iOptional.redRange],
+					[...iOptional.greenRange],
+					[...iOptional.blueRange],
+					[...iOptional.alphaRange]
+				)
 				const xi = i - 1
 				const xj = j
 				const yi = i
@@ -166,7 +179,12 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, centerX 
 				vertexPositions.push(color.r / 255, color.g / 255, color.b / 255, color.a)
 				continue
 			}
-			const colorA = ven$randomRangeColor([...COLOR_RED_RANGE], [...COLOR_GREEN_RANGE], [...COLOR_BLUE_RANGE], [...COLOR_ALPHA_RANGE])
+			const colorA = ven$randomRangeColor(
+				[...iOptional.redRange],
+				[...iOptional.greenRange],
+				[...iOptional.blueRange],
+				[...iOptional.alphaRange]
+			)
 			const axi = i
 			const axj = j
 			const ayi = i + 1
@@ -182,7 +200,12 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, centerX 
 			const aStartZ = calcStartIndex(azi, azj, meridianCountNum)
 			vertexPositions.push(originalPositions[aStartZ], originalPositions[aStartZ + 1], originalPositions[aStartZ + 2])
 			vertexPositions.push(colorA.r / 255, colorA.g / 255, colorA.b / 255, colorA.a)
-			const colorB = ven$randomRangeColor([...COLOR_RED_RANGE], [...COLOR_GREEN_RANGE], [...COLOR_BLUE_RANGE], [...COLOR_ALPHA_RANGE])
+			const colorB = ven$randomRangeColor(
+				[...iOptional.redRange],
+				[...iOptional.greenRange],
+				[...iOptional.blueRange],
+				[...iOptional.alphaRange]
+			)
 			const bxi = i
 			const bxj = j
 			const byi = i + 1

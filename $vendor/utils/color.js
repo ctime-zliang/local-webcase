@@ -17,7 +17,7 @@ function ven$randomColor() {
  * @function ven$randomRangeColor
  * @return {object}
  */
-function ven$randomRangeColor(r = [0, 255], g = [0, 255], b = [0, 255], a = [0, 1]) {
+function ven$randomRangeColor(r = [0, 255], g = [0, 255], b = [0, 255], a = [1, 1]) {
 	r[0] = Math.max(0, r[0])
 	r[1] = Math.min(255, r[1])
 	g[0] = Math.max(0, g[0])

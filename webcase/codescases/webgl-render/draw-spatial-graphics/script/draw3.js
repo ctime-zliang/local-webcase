@@ -1,7 +1,8 @@
 /**
  * 绘制纯色方体
+ * 		环境光效果
  */
-function drawCanvas1(containerElement) {
+function drawCanvas3(containerElement) {
 	const VS = `
 		precision mediump float;
 		attribute vec3 a_Position;
@@ -17,8 +18,14 @@ function drawCanvas1(containerElement) {
 	const FS = `
 		precision mediump float;
 		varying vec4 v_Color;
+		// 环境光颜色
+		uniform vec3 u_LightColor;
+		// 环境光强度
+		uniform float u_AmbientFactor;
 		void main() {
-			gl_FragColor = v_Color;
+			// 生成环境光参数因子向量
+			vec3 ambient = u_AmbientFactor * u_LightColor;
+			gl_FragColor = v_Color * vec4(ambient, 1);
 		}
 	`
 
@@ -42,6 +49,8 @@ function drawCanvas1(containerElement) {
 	gl.enable(gl.DEPTH_TEST)
 
 	const u_Matrix = gl.getUniformLocation(program, 'u_Matrix')
+	const u_LightColor = gl.getUniformLocation(program, 'u_LightColor')
+	const u_AmbientFactor = gl.getUniformLocation(program, 'u_AmbientFactor')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 	const a_Color = gl.getAttribLocation(program, 'a_Color')
 
@@ -77,6 +86,9 @@ function drawCanvas1(containerElement) {
 		const resultMatrix4 = effectMatrix4.multiply4(projectionMatrix4)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
 		// gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(new Ven$Matrix4().data))
+		const color = ven$randomRangeColor([50, 200], [50, 200], [50, 200], [1, 1])
+		gl.uniform3f(u_LightColor, color.r / 255, color.g / 255, color.b / 255)
+		gl.uniform1f(u_AmbientFactor, Math.random())
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, cubeDatasResult.vertexPositions.length / 7)
 	}
