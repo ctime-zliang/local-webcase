@@ -25,6 +25,155 @@
 			<canvas width="512" height="512" style="background-color: transparent; border: 1px dashed #888888"></canvas>
 			<div style="position: absolute; left: 0; top: 256px; width: 512px; height: 0; border-top: 1px dashed #aaaaaa"></div>
 			<div style="position: absolute; left: 256px; top: 0; width: 0; height: 512px; border-left: 1px dashed #aaaaaa"></div>
+			<div style="position: absolute; left: 0; top: 0; padding: 10px 10px">
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">Ambient Range: </label>
+					<input type="range" value="0" name="ambientRange" min="0" max="1" step="0.05" style="width: 300px; cursor: pointer" />
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">Light Color: </label>
+					<input type="color" value="#ffffff" name="lightColor" style="width: 100px; cursor: pointer" />
+				</div>
+			</div>
+		</div>
+		<div id="appContainer4" class="app-container" style="position: relative">
+			<canvas width="512" height="512" style="background-color: transparent; border: 1px dashed #888888"></canvas>
+			<div style="position: absolute; left: 0; top: 256px; width: 512px; height: 0; border-top: 1px dashed #aaaaaa"></div>
+			<div style="position: absolute; left: 256px; top: 0; width: 0; height: 512px; border-left: 1px dashed #aaaaaa"></div>
+			<div style="position: absolute; left: 0; top: 0; padding: 10px 10px">
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">Ambient Range: </label>
+					<input type="range" value="0" name="ambientRange" min="0" max="1" step="0.05" style="width: 300px; cursor: pointer" />
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">Light Color: </label>
+					<input type="color" value="#ffffff" name="lightColor" style="width: 100px; cursor: pointer" />
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">Model X Rotation: </label>
+					<input type="range" value="0" name="modelXRotationRange" min="0" max="360" step="1" style="width: 300px; cursor: pointer" />
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">Model Y Rotation: </label>
+					<input type="range" value="0" name="modelYRotationRange" min="0" max="360" step="1" style="width: 300px; cursor: pointer" />
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">Model Z Rotation: </label>
+					<input type="range" value="0" name="modelZRotationRange" min="0" max="360" step="1" style="width: 300px; cursor: pointer" />
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">Light X Position: </label>
+					<input type="range" value="0" name="lightXPositionRange" min="-50" max="50" step="1" style="width: 300px; cursor: pointer" />
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">Light Y Position: </label>
+					<input type="range" value="0" name="lightYPositionRange" min="-50" max="50" step="1" style="width: 300px; cursor: pointer" />
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">Light Z Position: </label>
+					<input type="range" value="0" name="lightZPositionRange" min="-50" max="50" step="1" style="width: 300px; cursor: pointer" />
+				</div>
+			</div>
 		</div>
 	</body>
 	<script type="text/javascript" src="../../../../$vendor/utils/color.js"></script>
@@ -50,5 +199,6 @@
 	<script type="text/javascript" src="./script/draw1.js"></script>
 	<script type="text/javascript" src="./script/draw2.js"></script>
 	<script type="text/javascript" src="./script/draw3.js"></script>
+	<script type="text/javascript" src="./script/draw4.js"></script>
 	<script type="text/javascript" src="./script/base.js"></script>
 </html>

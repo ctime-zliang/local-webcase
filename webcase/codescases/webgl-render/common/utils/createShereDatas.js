@@ -85,6 +85,7 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, centerX 
 	const radianEachDivideCountLatitude = (Math.PI * 2) / divideCountsLatitude
 	const originalPositionsSequence = {}
 	const originalPositions = []
+	const originalNormals = []
 	/**
 	 * 记球心为 O, 并以 O 为原点, Z 轴向后, Y 轴向上, X 轴向右, 建立 OXYZ 三位坐标轴
 	 * 记经纬线任意交叉点为 P(ij), 记球体南北极连线 L(NS)
@@ -119,6 +120,7 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, centerX 
 			const coordinateX = ven$calcAbsoluteValue(radius * tmpX)
 			const coordinateZ = ven$calcAbsoluteValue(-1 * radius * tmpZ)
 			originalPositions.push(coordinateX, coordinateY, coordinateZ)
+			originalNormals.push(tmpX, tmpY, tmpZ)
 			originalPositionsSequence[`${i}-${j}`] = {
 				x: coordinateX,
 				y: coordinateY,
@@ -233,5 +235,6 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, centerX 
 		},
 		originalPositions,
 		originalPositionsSequence,
+		originalNormals: new Float32Array(originalNormals),
 	}
 }

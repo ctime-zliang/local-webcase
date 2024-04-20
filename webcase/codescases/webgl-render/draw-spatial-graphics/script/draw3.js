@@ -2,7 +2,60 @@
  * 绘制纯色方体
  * 		环境光效果
  */
+
+class Program3 {
+	static containerElement
+	static profile = {
+		/**
+		 * 环境光颜色
+		 */
+		lightColor: {
+			r: 255,
+			g: 255,
+			b: 255,
+			a: 1,
+		},
+		/**
+		 * 环境光强度
+		 */
+		ambientFactor: 1,
+	}
+
+	static init(containerElement) {
+		this.containerElement = containerElement
+		this.initFormView()
+		this.eventHandle()
+	}
+
+	static initFormView() {
+		const self = this
+		const ambientRangeElement = this.containerElement.querySelector(`[name="ambientRange"]`)
+		const lightColorElement = this.containerElement.querySelector(`[name="lightColor"]`)
+
+		ambientRangeElement.value = self.profile.ambientFactor
+		lightColorElement.value = ven$rgba2Hex(self.profile.lightColor)
+	}
+
+	static eventHandle() {
+		const self = this
+		const ambientRangeElement = this.containerElement.querySelector(`[name="ambientRange"]`)
+		const lightColorElement = this.containerElement.querySelector(`[name="lightColor"]`)
+
+		ambientRangeElement.addEventListener('input', function (e) {
+			self.profile.ambientFactor = +this.value
+		})
+		lightColorElement.addEventListener('input', function (e) {
+			const rgb = ven$hex2Rgba(this.value)
+			self.profile.lightColor.r = rgb.r
+			self.profile.lightColor.g = rgb.g
+			self.profile.lightColor.b = rgb.b
+		})
+	}
+}
+
 function drawCanvas3(containerElement) {
+	Program3.init(containerElement)
+
 	const VS = `
 		precision mediump float;
 		attribute vec3 a_Position;
@@ -85,10 +138,8 @@ function drawCanvas3(containerElement) {
 		const effectMatrix4 = xRotationMatrix4.multiply4(yRotationMatrix4)
 		const resultMatrix4 = effectMatrix4.multiply4(projectionMatrix4)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
-		// gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(new Ven$Matrix4().data))
-		const color = ven$randomRangeColor([50, 200], [50, 200], [50, 200], [1, 1])
-		gl.uniform3f(u_LightColor, color.r / 255, color.g / 255, color.b / 255)
-		gl.uniform1f(u_AmbientFactor, Math.random())
+		gl.uniform3f(u_LightColor, Program3.profile.lightColor.r / 255, Program3.profile.lightColor.g / 255, Program3.profile.lightColor.b / 255)
+		gl.uniform1f(u_AmbientFactor, Program3.profile.ambientFactor)
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, cubeDatasResult.vertexPositions.length / 7)
 	}
