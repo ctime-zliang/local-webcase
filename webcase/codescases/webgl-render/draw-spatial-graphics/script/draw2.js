@@ -11,7 +11,6 @@ function drawCanvas2(containerElement) {
 			gl_PointSize = 5.0;
 		}
 	`
-
 	const FS = `
 		precision mediump float;
 		varying vec4 v_Color;

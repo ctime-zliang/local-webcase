@@ -10,7 +10,6 @@ function drawCanvas2(containerElement) {
 			gl_PointSize = 10.0;
 		}
 	`
-
 	const FS = `
 		precision mediump float;
 		uniform vec4 u_Color;

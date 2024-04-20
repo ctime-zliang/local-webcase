@@ -1,4 +1,4 @@
-function drawCanvas2(containerElement) {
+function drawCanvas4(containerElement) {
 	const VS = `
         // 设置浮点数精度为中等精度
         precision mediump float;
@@ -18,7 +18,6 @@ function drawCanvas2(containerElement) {
             v_Color = a_Color;
         }
     `
-
 	const FS = `
         // 设置浮点数精度为中等精度
         precision mediump float;
@@ -30,7 +29,8 @@ function drawCanvas2(containerElement) {
         }
     `
 
-	const datas = []
+	const positions = []
+	const colors = []
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
@@ -48,32 +48,30 @@ function drawCanvas2(containerElement) {
 	const a_CanvasSize = gl.getAttribLocation(program, 'a_CanvasSize')
 	const a_Color = gl.getAttribLocation(program, 'a_Color')
 
-	gl.enableVertexAttribArray(a_Position)
-	gl.enableVertexAttribArray(a_Color)
-
 	/**
 	 * 向顶点着色器变量 attribute vec2 a_CanvasSize 传递匹配数据
 	 */
 	gl.vertexAttrib2f(a_CanvasSize, canvasElement.width, canvasElement.height)
 
-	const datasBuffer = createBuffer(gl)
-	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
-	gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 24, 0)
-	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 24, 8)
+	const positionBuffer = createBuffer2(gl, a_Position, { size: 2 })
+	const colorBuffer = createBuffer2(gl, a_Color, { size: 4 })
 
 	canvasElement.addEventListener('click', function (e) {
 		const canvasRect = canvasElement.getBoundingClientRect().toJSON()
-		datas.push(e.clientX - canvasRect.left, e.clientY - canvasRect.top)
+		positions.push(e.clientX - canvasRect.left, e.clientY - canvasRect.top)
 		const color = ven$randomColor()
-		datas.push(color.r, color.g, color.b, color.a)
-		if (datas.length % 18 === 0) {
+		colors.push(color.r, color.g, color.b, color.a)
+		if (positions.length % 6 === 0) {
 			console.time(`draw-webgl`)
-			gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.DYNAMIC_DRAW)
+			gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
+			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.DYNAMIC_DRAW)
+			gl.drawArrays(gl.POINTS, 0, positions.length / 2)
+			gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer)
+			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.DYNAMIC_DRAW)
 			/* ... */
 			gl.clearColor(0.0, 0.0, 0.0, 1.0)
 			gl.clear(gl.COLOR_BUFFER_BIT)
-			gl.drawArrays(gl.TRIANGLES, 0, datas.length / 2)
+			gl.drawArrays(gl.TRIANGLES, 0, positions.length / 2)
 			console.timeEnd(`draw-webgl`)
 		}
 	})

@@ -1,4 +1,4 @@
-function drawCanvas1(containerElement) {
+function drawCanvas2(containerElement) {
 	const VS = `
 		// 设置浮点数精度为中等精度
 		precision mediump float;
@@ -6,31 +6,30 @@ function drawCanvas1(containerElement) {
 		attribute vec2 a_Position;
 		// 接收画布尺寸 (width, height)
 		attribute vec2 a_CanvasSize;
-		// 接收纹理坐标
-		attribute vec2 a_Uv;
-		// 传递给片元着色器的纹理坐标
-		varying vec2 v_Uv;
+		// 接收顶点颜色
+		attribute vec4 a_Color;
+		// 传递给片元着色器的颜色值
+		varying vec4 v_Color;
 		void main() {
 			vec2 position = (a_Position / a_CanvasSize) * 2.0 - 1.0; 
 			position = position * vec2(1.0, -1.0);
 			gl_Position = vec4(position, 0, 1);
 			gl_PointSize = 5.0;
-			v_Uv = a_Uv;
+			v_Color = a_Color;
 		}
 	`
 	const FS = `
 		// 设置浮点数精度为中等精度
 		precision mediump float;
-		// 接收顶点着色器传递的纹理坐标
-		varying vec2 v_Uv;
-		// 接收纹理数据
-		uniform sampler2D u_Texture;
+		// 接收顶点着色器传递的颜色值
+		varying vec4 v_Color;
 		void main() {
-			gl_FragColor = texture2D(u_Texture, v_Uv);
+			vec4 color = v_Color / vec4(255, 255, 255, 1.0);
+			gl_FragColor = color;
 		}
 	`
 
-	const datas = [30, 30, 0, 0, 30, 300, 0, 1, 300, 300, 1, 1, 30, 30, 0, 0, 300, 300, 1, 1, 300, 30, 1, 0]
+	const { positions: datas, indices: indices } = createRingVertexDatas(200, 200, 40, 80, 50)
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
@@ -46,11 +45,10 @@ function drawCanvas1(containerElement) {
 
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 	const a_CanvasSize = gl.getAttribLocation(program, 'a_CanvasSize')
-	const a_Uv = gl.getAttribLocation(program, 'a_Uv')
-	const u_Texture = gl.getUniformLocation(program, 'u_Texture')
+	const a_Color = gl.getAttribLocation(program, 'a_Color')
 
 	gl.enableVertexAttribArray(a_Position)
-	gl.enableVertexAttribArray(a_Uv)
+	gl.enableVertexAttribArray(a_Color)
 
 	/**
 	 * 向顶点着色器变量 attribute vec2 a_CanvasSize 传递匹配数据
@@ -59,16 +57,17 @@ function drawCanvas1(containerElement) {
 
 	const datasBuffer = createBuffer(gl)
 	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
-	gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 16, 0)
-	gl.vertexAttribPointer(a_Uv, 2, gl.FLOAT, false, 16, 8)
+	gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 24, 0)
+	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 24, 8)
 
+	const indicesBuffer = gl.createBuffer()
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesBuffer)
+	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW)
+
+	console.time(`draw-webgl`)
 	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.STATIC_DRAW)
-
-	/**
-	 * 图片尺寸必须满足 2^n
-	 */
-	loadTexture(gl, '../common/images/demo-1024x1024.jpg', u_Texture, () => {
-		gl.drawArrays(gl.TRIANGLES, 0, datas.length / 4)
-	})
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.DYNAMIC_DRAW)
+	/* ... */
+	gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0)
+	console.timeEnd(`draw-webgl`)
 }

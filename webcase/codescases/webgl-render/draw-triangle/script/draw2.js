@@ -1,3 +1,6 @@
+/**
+ * 点击绘制纯色填充三角形
+ */
 function drawCanvas2(containerElement) {
 	const VS = `
 		precision mediump float;
@@ -10,7 +13,6 @@ function drawCanvas2(containerElement) {
 			gl_PointSize = 10.0;
 		}
 	`
-
 	const FS = `
 		precision mediump float;
 		uniform vec4 u_Color;

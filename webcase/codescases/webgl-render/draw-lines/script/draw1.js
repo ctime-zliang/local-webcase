@@ -10,7 +10,6 @@ function drawCanvas1(containerElement, type) {
 			gl_PointSize = 5.0;
 		}
 	`
-
 	const FS = `
 		precision mediump float;
 		void main() {
