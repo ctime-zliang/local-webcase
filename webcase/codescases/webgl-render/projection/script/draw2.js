@@ -1,29 +1,31 @@
 /**
- * 绘制纯色填充三角形
- * 		按鼠标点击位置绘制
+ * 透视投影
  */
 function drawCanvas2(containerElement) {
 	const VS = `
 		precision mediump float;
-		attribute vec2 a_Position;
-		attribute vec2 a_CanvasSize;
+		attribute vec3 a_Position;
+		attribute vec4 a_Color;
+		varying vec4 v_Color;
+		uniform mat4 u_Matrix;
 		void main() {
-			vec2 position = (a_Position / a_CanvasSize) * 2.0 - 1.0; 
-			position = position * vec2(1.0, -1.0);
-			gl_Position = vec4(position, 0, 1);
-			gl_PointSize = 10.0;
+			gl_Position = u_Matrix * vec4(a_Position, 1);
+			v_Color = a_Color;
+			gl_PointSize = 5.0;
 		}
 	`
 	const FS = `
 		precision mediump float;
-		uniform vec4 u_Color;
+		varying vec4 v_Color;
 		void main() {
-			vec4 color = u_Color / vec4(255, 255, 255, 1.0);
-			gl_FragColor = color;
+			gl_FragColor = v_Color;
 		}
 	`
 
-	const positions = []
+	const datasResult = {
+		vertexPositions: new Float32Array([0, 0.5, 0, 1, 0, 0, 1, -0.5, -0.5, 0, 1, 0, 0, 1, 0.5, -0.5, 0, 1, 0, 0, 1]),
+	}
+	console.log(datasResult)
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
@@ -36,34 +38,38 @@ function drawCanvas2(containerElement) {
 
 	gl.clearColor(0.0, 0.0, 0.0, 1.0)
 	gl.clear(gl.COLOR_BUFFER_BIT)
+	gl.enable(gl.CULL_FACE)
+	gl.enable(gl.DEPTH_TEST)
 
+	const u_Matrix = gl.getUniformLocation(program, 'u_Matrix')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
-	const a_CanvasSize = gl.getAttribLocation(program, 'a_CanvasSize')
-	const u_Color = gl.getUniformLocation(program, 'u_Color')
+	const a_Color = gl.getAttribLocation(program, 'a_Color')
 
 	gl.enableVertexAttribArray(a_Position)
+	gl.enableVertexAttribArray(a_Color)
 
-	/**
-	 * 向顶点着色器变量 attribute vec2 a_CanvasSize 传递匹配数据
-	 */
-	gl.vertexAttrib2f(a_CanvasSize, canvasElement.width, canvasElement.height)
+	const vertextBuffer = gl.createBuffer()
+	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
+	gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
+	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
+	gl.bufferData(gl.ARRAY_BUFFER, datasResult.vertexPositions, gl.STATIC_DRAW)
 
-	const datasBuffer = gl.createBuffer()
-	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
-	gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0)
+	const persProjectionMatrix4 = ven$createPerspectiveProjectionMatrix4OfRectView(60, canvasElement.width / canvasElement.height, -100, 100)
 
-	canvasElement.addEventListener('click', function (e) {
-		const canvasRect = canvasElement.getBoundingClientRect().toJSON()
-		positions.push(e.clientX - canvasRect.left, e.clientY - canvasRect.top)
-		if (positions.length % 6 === 0) {
-			console.time(`draw-webgl`)
-			const color = ven$randomColor()
-			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.DYNAMIC_DRAW)
-			gl.clearColor(0, 0, 0, 1.0)
-			gl.clear(gl.COLOR_BUFFER_BIT)
-			gl.uniform4f(u_Color, color.r, color.g, color.b, color.a)
-			gl.drawArrays(gl.TRIANGLES, 0, positions.length / 2)
-			console.timeEnd(`draw-webgl`)
-		}
-	})
+	const render = () => {
+		const modelXRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(0))
+		const modelYRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(0))
+		const modelEffectMatrix4 = modelXRotationMatrix4.multiply4(modelYRotationMatrix4)
+		const resultMatrix4 = modelEffectMatrix4.multiply4(persProjectionMatrix4)
+		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
+		gl.clear(gl.COLOR_BUFFER_BIT)
+		gl.drawArrays(gl.TRIANGLES, 0, datasResult.vertexPositions.length / 7)
+	}
+
+	const exec = () => {
+		render()
+		requestAnimationFrame(exec)
+	}
+
+	exec()
 }

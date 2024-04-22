@@ -1,5 +1,5 @@
 /**
- * 绘制纯色方体
+ * 正交投影
  */
 function drawCanvas1(containerElement) {
 	const VS = `
@@ -22,10 +22,10 @@ function drawCanvas1(containerElement) {
 		}
 	`
 
-	console.time(`CreateCubeDatas`)
-	const cubeDatasResult = createCubeDatas(0.6, 0.6, 0.6, 0, 0, 0)
-	console.log(cubeDatasResult)
-	console.timeEnd(`CreateCubeDatas`)
+	const datasResult = {
+		vertexPositions: new Float32Array([0, 0.5, 0, 1, 0, 0, 1, -0.5, -0.5, 0, 1, 0, 0, 1, 0.5, -0.5, 0, 1, 0, 0, 1]),
+	}
+	console.log(datasResult)
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
@@ -52,30 +52,21 @@ function drawCanvas1(containerElement) {
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
 	gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
-	gl.bufferData(gl.ARRAY_BUFFER, cubeDatasResult.vertexPositions, gl.STATIC_DRAW)
+	gl.bufferData(gl.ARRAY_BUFFER, datasResult.vertexPositions, gl.STATIC_DRAW)
 
-	const orthoProjectionMatrix4 = ven$createOrthoProjectionMatrix4OfRectView(canvasElement.width / canvasElement.height)
+	const orthoProjectionMatrix4 = ven$createOrthoProjectionMatrix4OfRectView(canvasElement.width / canvasElement.height, -25, 25, 1)
 
 	const render = () => {
-		const modelXRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(xAngle))
-		const modelYRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
+		const modelXRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(0))
+		const modelYRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(0))
 		const modelEffectMatrix4 = modelXRotationMatrix4.multiply4(modelYRotationMatrix4)
 		const resultMatrix4 = modelEffectMatrix4.multiply4(orthoProjectionMatrix4)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
-		gl.drawArrays(gl.TRIANGLES, 0, cubeDatasResult.vertexPositions.length / 7)
+		gl.drawArrays(gl.TRIANGLES, 0, datasResult.vertexPositions.length / 7)
 	}
 
-	let xAngle = 0
-	let yAngle = 0
-
 	const exec = () => {
-		xAngle += 0.5
-		yAngle += 0.5
-		// if (xAngle >= 30 || yAngle >= 30) {
-		// 	render()
-		// 	return
-		// }
 		render()
 		requestAnimationFrame(exec)
 	}

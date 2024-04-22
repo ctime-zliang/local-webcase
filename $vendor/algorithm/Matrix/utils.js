@@ -32,8 +32,7 @@ function ven$createOrthoProjectionMatrix4(left, right, bottom, top, near, far) {
 	matrix4.data[15] = 1
 	return matrix4
 }
-function ven$createOrthoProjectionMatrix4OfRectView(viewRadius, near = 100, far = -100, padding = 1) {
-	const aspect = viewRadius
+function ven$createOrthoProjectionMatrix4OfRectView(aspect, near = 100, far = -100, padding = 1) {
 	return ven$createOrthoProjectionMatrix4(-aspect * padding, aspect * padding, -padding, padding, near, far)
 }
 
@@ -71,12 +70,12 @@ function ven$createPerspectiveProjectionMatrix4(left, right, top, bottom, near, 
 	matrix4.data[15] = 0
 	return matrix4
 }
-function ven$createPerspectiveProjectionMatrix4(viewRadians, near = 100, far = -100) {
+function ven$createPerspectiveProjectionMatrix4OfRectView(viewRadians, aspect, near = 100, far = -100) {
 	const top = near * Math.tan(Math.PI / 180) * 0.5 * viewRadians
 	const height = 2 * top
 	const width = aspect * height
 	const left = -0.5 * width
-	return createPerspectiveProjectionMatrix4(left, left + width, top, top - height, near, far)
+	return ven$createPerspectiveProjectionMatrix4(left, left + width, top, top - height, near, far)
 }
 
 /**
