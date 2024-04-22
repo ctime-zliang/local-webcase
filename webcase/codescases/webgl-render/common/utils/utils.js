@@ -15,40 +15,40 @@ function loadTexture(gl, src, attribute, callback) {
 }
 
 function createViewAtMatrix4(cameraPositionVector3, lookTargetVector3, upDirectionVector3) {
-	let a = cameraPositionVector3.sub(lookTargetVector3)
-	let b = a.normalize()
-	if (b.length * b.length === 0) {
-		b.z = 1
+	const c_s_l = cameraPositionVector3.sub(lookTargetVector3)
+	let zAxis = c_s_l.normalize()
+	if (zAxis.x * zAxis.x + zAxis.y * y + zAxis.z * zAxis.z === 0) {
+		zAxis.z = 1
 	}
-	let c = upDirectionVector3.cross(b)
-	let d = c.normalize()
-	if (d.length === 0) {
-		if (Math.abs(upDirectionVector3.z == 1)) {
-			b.x += 0.0001
+	let u_c_zA = upDirectionVector3.cross(zAxis)
+	let xAxis = u_c_zA.normalize()
+	if (xAxis.length === 0) {
+		if (Math.abs(upDirectionVector3.z) === 1) {
+			zAxis.x += 0.0001
 		} else {
-			b.z += 0.0001
+			zAxis.z += 0.0001
 		}
-		b = b.normalize()
-		c = Vector3.cross(upDirectionVector3, zAxis)
-		c = c.normalize()
+		zAxis = zAxis.normalize()
+		xAxis = upDirectionVector3.cross(zAxis)
+		xAxis = xAxis.normalize()
 	}
-	let e = b.cross(c)
-	let f = e.normalize()
+	let zA_c_xA = zAxis.cross(xAxis)
+	let yAxis = zA_c_xA.normalize()
 
 	const matrix4 = new Ven$Matrix4()
-	matrix4.data[0] = c.x
-	matrix4.data[1] = c.y
-	matrix4.data[2] = c.z
+	matrix4.data[0] = xAxis.x
+	matrix4.data[1] = xAxis.y
+	matrix4.data[2] = xAxis.z
 	matrix4.data[3] = 0
 
-	matrix4.data[4] = f.x
-	matrix4.data[5] = f.y
-	matrix4.data[6] = f.z
+	matrix4.data[4] = yAxis.x
+	matrix4.data[5] = yAxis.y
+	matrix4.data[6] = yAxis.z
 	matrix4.data[7] = 0
 
-	matrix4.data[8] = b.x
-	matrix4.data[9] = b.y
-	matrix4.data[10] = b.z
+	matrix4.data[8] = zAxis.x
+	matrix4.data[9] = zAxis.y
+	matrix4.data[10] = zAxis.z
 	matrix4.data[11] = 0
 
 	matrix4.data[12] = cameraPositionVector3.x

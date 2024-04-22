@@ -108,9 +108,7 @@ function drawCanvas1(containerElement) {
 	const datasResult = {
 		vertexPositions: new Float32Array([
 			/* ... */
-			0, 0.45, 0, 1, 0, 0, 1, /* ... */
-			-0.25, -0.25, 0, 1, 0, 0, 1, /* ... */
-			0.25, -0.25, 0, 1, 0, 0, 1,
+			0, 0.45, 0, 1, 0, 0, 1 /* ... */, -0.25, -0.25, 0, 1, 0, 0, 1 /* ... */, 0.25, -0.25, 0, 1, 0, 0, 1,
 		]),
 	}
 	console.log(datasResult)
