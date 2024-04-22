@@ -1,7 +1,90 @@
 /**
  * 正交投影
  */
+
+class Program1 {
+	static containerElement
+	static profile = {
+		/**
+		 * 模型旋转角度
+		 */
+		modelRatation: {
+			x: 0,
+			y: 0,
+			z: 0,
+		},
+		/**
+		 * 模型偏移坐标
+		 */
+		modelOffset: {
+			x: 0,
+			y: 0,
+			z: 0,
+		},
+	}
+
+	static init(containerElement) {
+		this.containerElement = containerElement
+		this.initFormView()
+		this.eventHandle()
+	}
+
+	static initFormView() {
+		const self = this
+		const modelXRotationRangeElement = this.containerElement.querySelector(`[name="modelXRotationRange"]`)
+		const modelYRotationRangeElement = this.containerElement.querySelector(`[name="modelYRotationRange"]`)
+		const modelZRotationRangeElement = this.containerElement.querySelector(`[name="modelZRotationRange"]`)
+		const modelXOffsetRangeElement = this.containerElement.querySelector(`[name="modelXOffsetRange"]`)
+		const modelYOffsetRangeElement = this.containerElement.querySelector(`[name="modelYOffsetRange"]`)
+		const modelZOffsetRangeElement = this.containerElement.querySelector(`[name="modelZOffsetRange"]`)
+
+		modelXRotationRangeElement.value = self.profile.modelRatation.x
+		modelYRotationRangeElement.value = self.profile.modelRatation.y
+		modelZRotationRangeElement.value = self.profile.modelRatation.z
+		modelXOffsetRangeElement.value = self.profile.modelOffset.x
+		modelYOffsetRangeElement.value = self.profile.modelOffset.y
+		modelZOffsetRangeElement.value = self.profile.modelOffset.z
+	}
+
+	static eventHandle() {
+		const self = this
+		const modelXRotationRangeElement = this.containerElement.querySelector(`[name="modelXRotationRange"]`)
+		const modelYRotationRangeElement = this.containerElement.querySelector(`[name="modelYRotationRange"]`)
+		const modelZRotationRangeElement = this.containerElement.querySelector(`[name="modelZRotationRange"]`)
+		const modelXOffsetRangeElement = this.containerElement.querySelector(`[name="modelXOffsetRange"]`)
+		const modelYOffsetRangeElement = this.containerElement.querySelector(`[name="modelYOffsetRange"]`)
+		const modelZOffsetRangeElement = this.containerElement.querySelector(`[name="modelZOffsetRange"]`)
+
+		modelXRotationRangeElement.addEventListener('input', function (e) {
+			self.profile.modelRatation.x = +this.value
+			console.log('modelRatation:', JSON.stringify(self.profile.modelRatation))
+		})
+		modelYRotationRangeElement.addEventListener('input', function (e) {
+			self.profile.modelRatation.y = +this.value
+			console.log('modelRatation:', JSON.stringify(self.profile.modelRatation))
+		})
+		modelZRotationRangeElement.addEventListener('input', function (e) {
+			self.profile.modelRatation.z = +this.value
+			console.log('modelRatation:', JSON.stringify(self.profile.modelRatation))
+		})
+		modelXOffsetRangeElement.addEventListener('input', function (e) {
+			self.profile.modelOffset.x = +this.value
+			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
+		})
+		modelYOffsetRangeElement.addEventListener('input', function (e) {
+			self.profile.modelOffset.y = +this.value
+			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
+		})
+		modelZOffsetRangeElement.addEventListener('input', function (e) {
+			self.profile.modelOffset.z = +this.value
+			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
+		})
+	}
+}
+
 function drawCanvas1(containerElement) {
+	Program1.init(containerElement)
+
 	const VS = `
 		precision mediump float;
 		attribute vec3 a_Position;
@@ -23,7 +106,12 @@ function drawCanvas1(containerElement) {
 	`
 
 	const datasResult = {
-		vertexPositions: new Float32Array([0, 0.5, 0, 1, 0, 0, 1, -0.5, -0.5, 0, 1, 0, 0, 1, 0.5, -0.5, 0, 1, 0, 0, 1]),
+		vertexPositions: new Float32Array([
+			/* ... */
+			0, 0.45, 0, 1, 0, 0, 1, /* ... */
+			-0.25, -0.25, 0, 1, 0, 0, 1, /* ... */
+			0.25, -0.25, 0, 1, 0, 0, 1,
+		]),
 	}
 	console.log(datasResult)
 
@@ -57,11 +145,20 @@ function drawCanvas1(containerElement) {
 	const orthoProjectionMatrix4 = ven$createOrthoProjectionMatrix4OfRectView(canvasElement.width / canvasElement.height, -25, 25, 1)
 
 	const render = () => {
-		const modelXRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(0))
-		const modelYRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(0))
-		const modelEffectMatrix4 = modelXRotationMatrix4.multiply4(modelYRotationMatrix4)
-		const resultMatrix4 = modelEffectMatrix4.multiply4(orthoProjectionMatrix4)
-		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(resultMatrix4.data))
+		const modelXRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(Program1.profile.modelRatation.x))
+		const modelYRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(Program1.profile.modelRatation.y))
+		const modelZRotationMatrix4 = Ven$Matrix4.createRotateZMatrix4ByRadian(Ven$Angles.degreeToRadian(Program1.profile.modelRatation.z))
+		const modelOffsetMatrix4 = Ven$Matrix4.createTranslateMatrix4ByCoordinate(
+			Program1.profile.modelOffset.x,
+			Program1.profile.modelOffset.y,
+			Program1.profile.modelOffset.z
+		)
+		const modelEffectMatrix4 = modelXRotationMatrix4
+			.multiply4(modelYRotationMatrix4)
+			.multiply4(modelZRotationMatrix4)
+			.multiply4(modelOffsetMatrix4)
+		const modelResultMatrix4 = modelEffectMatrix4.multiply4(orthoProjectionMatrix4)
+		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelResultMatrix4.data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, datasResult.vertexPositions.length / 7)
 	}
