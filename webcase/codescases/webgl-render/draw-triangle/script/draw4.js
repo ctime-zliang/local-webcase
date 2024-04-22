@@ -1,6 +1,7 @@
 /**
  * 绘制渐变色填充三角形
  * 		按鼠标点击位置绘制
+ * 		顶点坐标与顶点颜色分用 Buffer
  */
 function drawCanvas4(containerElement) {
 	const VS = `
@@ -57,8 +58,8 @@ function drawCanvas4(containerElement) {
 	 */
 	gl.vertexAttrib2f(a_CanvasSize, canvasElement.width, canvasElement.height)
 
-	const positionBuffer = createBuffer2(gl, a_Position, { size: 2 })
-	const colorBuffer = createBuffer2(gl, a_Color, { size: 4 })
+	const positionBuffer = createBuffer(gl, a_Position, { size: 2 })
+	const colorBuffer = createBuffer(gl, a_Color, { size: 4 })
 
 	canvasElement.addEventListener('click', function (e) {
 		const canvasRect = canvasElement.getBoundingClientRect().toJSON()

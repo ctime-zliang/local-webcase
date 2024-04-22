@@ -44,7 +44,8 @@ function drawCanvas1(containerElement, type) {
 	 */
 	gl.vertexAttrib2f(a_CanvasSize, canvasElement.width, canvasElement.height)
 
-	const buffer = createBuffer(gl)
+	const datasBuffer = gl.createBuffer()
+	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
 	gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0)
 
 	canvasElement.addEventListener('click', function (e) {

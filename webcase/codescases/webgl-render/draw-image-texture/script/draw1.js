@@ -60,7 +60,7 @@ function drawCanvas1(containerElement) {
 	 */
 	gl.vertexAttrib2f(a_CanvasSize, canvasElement.width, canvasElement.height)
 
-	const datasBuffer = createBuffer(gl)
+	const datasBuffer = gl.createBuffer()
 	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
 	gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 16, 0)
 	gl.vertexAttribPointer(a_Uv, 2, gl.FLOAT, false, 16, 8)

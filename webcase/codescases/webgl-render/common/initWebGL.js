@@ -61,25 +61,7 @@ function createProgram(gl, vertexShader, fragmentShader) {
 	return null
 }
 
-function createBuffer(gl, bufferTypedArray = undefined) {
-	/**
-	 * 创建缓冲池
-	 */
-	const buffer = gl.createBuffer()
-	/**
-	 * 绑定缓冲池
-	 */
-	gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
-	if (bufferTypedArray) {
-		/**
-		 * 对缓冲池填充数据
-		 */
-		gl.bufferData(gl.ARRAY_BUFFER, bufferTypedArray, gl.STATIC_DRAW)
-	}
-	return buffer
-}
-
-function createBuffer2(gl, attribute, options) {
+function createBuffer(gl, attribute, options) {
 	const { size, type, normalize, stride, offset } = options
 	/**
 	 * 启用该 attribute 属性
