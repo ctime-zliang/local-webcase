@@ -1,15 +1,15 @@
 /**
- * @description 创建相机透视矩阵
- * @function ven$matrix4Ortho
- * @param {number} left 左侧边界
- * @param {number} right 右侧边界
- * @param {number} bottom 底部边界
- * @param {number} top 顶部边界
- * @param {number} near 可视范围纵深范围近端位置
- * @param {number} far 可视范围纵深范围远端位置
+ * @description 创建正交投影矩阵
+ * @function ven$createOrthoProjectionMatrix4
+ * @param {number} left 可视范围左侧裁剪位置(左侧边界)
+ * @param {number} right 可视范围右侧裁剪位置(右侧边界)
+ * @param {number} bottom 可视范围底部裁剪位置(底部边界)
+ * @param {number} top 可视范围顶部裁剪位置(顶部边界)
+ * @param {number} near 可视范围纵深方向近端裁剪位置(近端边界)
+ * @param {number} far 可视范围纵深方向远端裁剪位置(远端边界)
  * @return {Ven$Matrix4}
  */
-function ven$matrix4Ortho(left, right, bottom, top, near, far) {
+function ven$createOrthoProjectionMatrix4(left, right, bottom, top, near, far) {
 	const matrix4 = new Ven$Matrix4()
 	matrix4.data[0] = 2 / (right - left)
 	matrix4.data[1] = 0
@@ -32,19 +32,23 @@ function ven$matrix4Ortho(left, right, bottom, top, near, far) {
 	matrix4.data[15] = 1
 	return matrix4
 }
+function ven$createOrthoProjectionMatrix4OfRectView(viewRadius, near = 100, far = -100, padding = 1) {
+	const aspect = viewRadius
+	return ven$createOrthoProjectionMatrix4(-aspect * padding, aspect * padding, -padding, padding, near, far)
+}
 
 /**
- * @description 创建相机透视矩阵
- * @function ven$matrix4Ortho
- * @param {number} left 左侧边界
- * @param {number} right 右侧边界
- * @param {number} bottom 底部边界
- * @param {number} top 顶部边界
- * @param {number} near 可视范围纵深范围近端位置
- * @param {number} far 可视范围纵深范围远端位置
+ * @description 创建透视投影矩阵
+ * @function ven$createPerspectiveProjectionMatrix4
+ * @param {number} left 可视范围左侧裁剪位置(左侧边界)
+ * @param {number} right 可视范围右侧裁剪位置(右侧边界)
+ * @param {number} bottom 可视范围底部裁剪位置(底部边界)
+ * @param {number} top 可视范围顶部裁剪位置(顶部边界)
+ * @param {number} near 可视范围纵深方向近端裁剪位置(近端边界)
+ * @param {number} far 可视范围纵深方向远端裁剪位置(远端边界)
  * @return {Ven$Matrix4}
  */
-function ven$matrix4Perspective(left, right, top, bottom, near, far) {
+function ven$createPerspectiveProjectionMatrix4(left, right, top, bottom, near, far) {
 	const matrix4 = new Ven$Matrix4()
 	matrix4.data[0] = (2 * near) / (right - left)
 	matrix4.data[1] = 0
@@ -67,10 +71,17 @@ function ven$matrix4Perspective(left, right, top, bottom, near, far) {
 	matrix4.data[15] = 0
 	return matrix4
 }
+function ven$createPerspectiveProjectionMatrix4(viewRadians, near = 100, far = -100) {
+	const top = near * Math.tan(Math.PI / 180) * 0.5 * viewRadians
+	const height = 2 * top
+	const width = aspect * height
+	const left = -0.5 * width
+	return createPerspectiveProjectionMatrix4(left, left + width, top, top - height, near, far)
+}
 
 /**
  * @description 创建绕轴旋转矩阵
- * @function ven$matrix4Rotate(*)
+ * @function ven$matrix4RotateX
  * @param {Ven$Matrix4} ref 参考矩阵
  * @param {number} angle 旋转角度
  * @return {Ven$Matrix4}
@@ -109,7 +120,7 @@ function ven$matrix4RotateX(ref, angle) {
 }
 /**
  * @description 创建绕轴旋转矩阵
- * @function ven$matrix4Rotate(*)
+ * @function ven$matrix4RotateY
  * @param {Ven$Matrix4} ref 参考矩阵
  * @param {number} angle 旋转角度
  * @return {Ven$Matrix4}
@@ -148,7 +159,7 @@ function ven$matrix4RotateY(ref, angle) {
 }
 /**
  * @description 创建绕轴旋转矩阵
- * @function ven$matrix4Rotate(*)
+ * @function ven$matrix4RotateZ
  * @param {Ven$Matrix4} ref 参考矩阵
  * @param {number} angle 旋转角度
  * @return {Ven$Matrix4}

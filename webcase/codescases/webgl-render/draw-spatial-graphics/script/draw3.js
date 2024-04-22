@@ -153,14 +153,7 @@ function drawCanvas3(containerElement) {
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
 	gl.bufferData(gl.ARRAY_BUFFER, cubeDatasResult.vertexPositions, gl.STATIC_DRAW)
 
-	/**
-	 * 创建透视矩阵
-	 */
-	const aspect = canvasElement.width / canvasElement.height
-	const padding = 1
-	const near = 100
-	const far = -100
-	const projectionMatrix4 = ven$matrix4Ortho(-aspect * padding, aspect * padding, -padding, padding, near, far)
+	const orthoProjectionMatrix4 = ven$createOrthoProjectionMatrix4OfRectView(canvasElement.width / canvasElement.height)
 
 	const render = () => {
 		const modelXRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(Program3.profile.modelRatation.x))
@@ -175,7 +168,7 @@ function drawCanvas3(containerElement) {
 			.multiply4(modelYRotationMatrix4)
 			.multiply4(modelZRotationMatrix4)
 			.multiply4(modelOffsetMatrix4)
-		const modelResultMatrix4 = modelEffectMatrix4.multiply4(projectionMatrix4)
+		const modelResultMatrix4 = modelEffectMatrix4.multiply4(orthoProjectionMatrix4)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelResultMatrix4.data))
 		/* ... */
 		gl.uniform3f(u_LightColor, Program3.profile.lightColor.r / 255, Program3.profile.lightColor.g / 255, Program3.profile.lightColor.b / 255)

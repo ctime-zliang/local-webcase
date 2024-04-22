@@ -59,27 +59,13 @@ function drawCanvas2(containerElement) {
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
 	gl.bufferData(gl.ARRAY_BUFFER, shereDatasResult.vertexPositions, gl.STATIC_DRAW)
 
-	/**
-	 * 创建透视矩阵
-	 */
-	const aspect = canvasElement.width / canvasElement.height
-	const padding = 1
-	const near = 100
-	const far = -100
-	const projectionMatrix4 = ven$matrix4Ortho(-aspect * padding, aspect * padding, -padding, padding, near, far)
+	const orthoProjectionMatrix4 = ven$createOrthoProjectionMatrix4OfRectView(canvasElement.width / canvasElement.height)
 
 	const render = () => {
-		/**
-		 * 创建任意 xAngle/yAngle 角度对应的旋转矩阵
-		 */
 		const modelXRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(xAngle))
 		const modelYRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
-		/**
-		 * 生成变换矩阵
-		 * 		将旋转矩阵应用到透视矩阵
-		 */
 		const modelEffectMatrix4 = modelXRotationMatrix4.multiply4(modelYRotationMatrix4)
-		const modelResultMatrix4 = modelEffectMatrix4.multiply4(projectionMatrix4)
+		const modelResultMatrix4 = modelEffectMatrix4.multiply4(orthoProjectionMatrix4)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelResultMatrix4.data))
 		// gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(new Ven$Matrix4().data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
