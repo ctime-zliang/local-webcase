@@ -1,4 +1,56 @@
 /**
+ * @description 创建(相机)视图矩阵
+ * @function ven$createViewAtMatrix4
+ * @param {Ven$Vector3} cameraPosition 相机坐标
+ * @param {Ven$Vector3} lookTargetPosition 观察点坐标
+ * @param {Ven$Vector3} upDirection 初始 Y 轴基向量
+ * @return {Ven$Matrix4}
+ */
+function ven$createViewAtMatrix4(cameraPosition, lookTargetPosition, upDirection = new Ven$Vector3(0, 1, 0)) {
+	const c_s_l = cameraPosition.sub(lookTargetPosition)
+	let zAxis = c_s_l.normalize()
+	if (zAxis.x * zAxis.x + zAxis.y * zAxis.y + zAxis.z * zAxis.z === 0) {
+		zAxis.z = 1
+	}
+	let u_c_zA = upDirection.cross(zAxis)
+	let xAxis = u_c_zA.normalize()
+	if (xAxis.length === 0) {
+		if (Math.abs(upDirection.z) === 1) {
+			zAxis.x += 0.0001
+		} else {
+			zAxis.z += 0.0001
+		}
+		zAxis = zAxis.normalize()
+		xAxis = upDirection.cross(zAxis)
+		xAxis = xAxis.normalize()
+	}
+	let zA_c_xA = zAxis.cross(xAxis)
+	let yAxis = zA_c_xA.normalize()
+
+	const matrix4 = new Ven$Matrix4()
+	matrix4.data[0] = xAxis.x
+	matrix4.data[1] = xAxis.y
+	matrix4.data[2] = xAxis.z
+	matrix4.data[3] = 0
+
+	matrix4.data[4] = yAxis.x
+	matrix4.data[5] = yAxis.y
+	matrix4.data[6] = yAxis.z
+	matrix4.data[7] = 0
+
+	matrix4.data[8] = zAxis.x
+	matrix4.data[9] = zAxis.y
+	matrix4.data[10] = zAxis.z
+	matrix4.data[11] = 0
+
+	matrix4.data[12] = cameraPosition.x
+	matrix4.data[13] = cameraPosition.y
+	matrix4.data[14] = cameraPosition.z
+	matrix4.data[15] = 1
+	return matrix4
+}
+
+/**
  * @description 创建正交投影矩阵
  * @function ven$createOrthoProjectionMatrix4
  * @param {number} left 可视范围左侧裁剪位置(左侧边界)

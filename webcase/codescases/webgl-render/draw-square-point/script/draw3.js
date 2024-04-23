@@ -28,21 +28,19 @@ function drawCanvas3(containerElement) {
 	 * 		WebGL Z 轴正方向是由屏幕外向屏幕里
 	 * 		即 pointZ 越小, 越靠前显示
 	 */
-	const z1 = -0.5
-	const z2 = 0.5
 	const points = [
 		/* ... */
 		0.5,
 		0.5,
-		z1,
+		-0.5,
 		1,
 		0,
 		0,
 		1, // 红色
 		/* ... */
+		0.51,
+		0.51,
 		0.5,
-		0.5,
-		z2,
 		0,
 		1,
 		0,
