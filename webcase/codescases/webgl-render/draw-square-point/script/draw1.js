@@ -6,11 +6,12 @@ function drawCanvas1(containerElement) {
 		precision mediump float;
 		attribute vec2 a_Position;
 		attribute vec2 a_CanvasSize;
+		attribute float a_PointSize;
 		void main() {
 			vec2 position = (a_Position / a_CanvasSize) * 2.0 - 1.0; 
 			position = position * vec2(1.0, -1.0);
 			gl_Position = vec4(position, 0, 1);
-			gl_PointSize = 10.0;
+			gl_PointSize = a_PointSize;
 		}
 	`
 	const FS = `
@@ -22,7 +23,7 @@ function drawCanvas1(containerElement) {
 		}
 	`
 
-	const points = [{ x: 100, y: 100 }]
+	const points = [100, 100]
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
@@ -37,26 +38,27 @@ function drawCanvas1(containerElement) {
 	gl.clear(gl.COLOR_BUFFER_BIT)
 
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
+	const a_PointSize = gl.getAttribLocation(program, 'a_PointSize')
 	const a_CanvasSize = gl.getAttribLocation(program, 'a_CanvasSize')
 	const u_Color = gl.getUniformLocation(program, 'u_Color')
 
-	/**
-	 * 向顶点着色器变量 attribute vec2 a_CanvasSize 传递匹配数据
-	 */
 	gl.vertexAttrib2f(a_CanvasSize, canvasElement.width, canvasElement.height)
-	const setColor = ven$randomColor()
-	/**
-	 * 向片元着色器变量 uniform vec4 u_Color 传递匹配数据
-	 */
-	gl.uniform4f(u_Color, setColor.r, setColor.g, setColor.b, setColor.a)
-	/**
-	 * 向顶点着色器变量 attribute vec2 a_Position 传递匹配数据
-	 */
-	for (let i = 0; i < points.length; i++) {
-		gl.vertexAttrib2f(a_Position, points[i].x, points[i].y)
-	}
 
-	if (points.length) {
-		gl.drawArrays(gl.POINTS, 0, 1)
+	const setColor = ven$randomColor()
+	gl.uniform4f(u_Color, setColor.r, setColor.g, setColor.b, setColor.a)
+
+	const pointSize = ven$getRandomInArea(20, 30)
+	gl.vertexAttrib1f(a_PointSize, pointSize)
+
+	for (let i = 0; i < points.length; i += 1) {
+		/**
+		 * 以分量形式传递数据
+		 */
+		// gl.vertexAttrib2f(a_Position, points[i], points[i + 1])
+		/**
+		 * 以矢量方式传递数据
+		 */
+		gl.vertexAttrib2fv(a_Position, new Float32Array(points))
 	}
+	gl.drawArrays(gl.POINTS, 0, 1)
 }

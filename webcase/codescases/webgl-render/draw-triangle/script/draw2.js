@@ -41,16 +41,12 @@ function drawCanvas2(containerElement) {
 	const a_CanvasSize = gl.getAttribLocation(program, 'a_CanvasSize')
 	const u_Color = gl.getUniformLocation(program, 'u_Color')
 
-	gl.enableVertexAttribArray(a_Position)
-
-	/**
-	 * 向顶点着色器变量 attribute vec2 a_CanvasSize 传递匹配数据
-	 */
 	gl.vertexAttrib2f(a_CanvasSize, canvasElement.width, canvasElement.height)
 
 	const vertextBuffer = gl.createBuffer()
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
 	gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0)
+	gl.enableVertexAttribArray(a_Position)
 
 	canvasElement.addEventListener('click', function (e) {
 		const canvasRect = canvasElement.getBoundingClientRect().toJSON()
@@ -58,10 +54,10 @@ function drawCanvas2(containerElement) {
 		if (positions.length % 6 === 0) {
 			console.time(`draw-webgl`)
 			const color = ven$randomColor()
-			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.DYNAMIC_DRAW)
 			gl.clearColor(0, 0, 0, 1.0)
 			gl.clear(gl.COLOR_BUFFER_BIT)
 			gl.uniform4f(u_Color, color.r, color.g, color.b, color.a)
+			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.DYNAMIC_DRAW)
 			gl.drawArrays(gl.TRIANGLES, 0, positions.length / 2)
 			console.timeEnd(`draw-webgl`)
 		}

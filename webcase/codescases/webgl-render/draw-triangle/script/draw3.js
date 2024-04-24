@@ -52,18 +52,14 @@ function drawCanvas3(containerElement) {
 	const a_CanvasSize = gl.getAttribLocation(program, 'a_CanvasSize')
 	const a_Color = gl.getAttribLocation(program, 'a_Color')
 
-	gl.enableVertexAttribArray(a_Position)
-	gl.enableVertexAttribArray(a_Color)
-
-	/**
-	 * 向顶点着色器变量 attribute vec2 a_CanvasSize 传递匹配数据
-	 */
 	gl.vertexAttrib2f(a_CanvasSize, canvasElement.width, canvasElement.height)
 
 	const datasBuffer = gl.createBuffer()
 	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
 	gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 24, 0)
+	gl.enableVertexAttribArray(a_Position)
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 24, 8)
+	gl.enableVertexAttribArray(a_Color)
 
 	canvasElement.addEventListener('click', function (e) {
 		const canvasRect = canvasElement.getBoundingClientRect().toJSON()

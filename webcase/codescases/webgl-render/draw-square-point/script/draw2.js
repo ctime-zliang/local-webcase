@@ -41,27 +41,20 @@ function drawCanvas2(containerElement) {
 	const a_CanvasSize = gl.getAttribLocation(program, 'a_CanvasSize')
 	const u_Color = gl.getUniformLocation(program, 'u_Color')
 
-	/**
-	 * 向顶点着色器变量 attribute vec2 a_CanvasSize 传递匹配数据
-	 */
 	gl.vertexAttrib2f(a_CanvasSize, canvasElement.width, canvasElement.height)
 
 	canvasElement.addEventListener('click', function (e) {
 		const canvasRect = canvasElement.getBoundingClientRect().toJSON()
 		const setColor = ven$randomColor()
-		points.push({ x: e.clientX - canvasRect.left, y: e.clientY - canvasRect.top, color: setColor })
+		/**
+		 * 以"平铺"的方式写入数组
+		 */
+		points.push(e.clientX - canvasRect.left, e.clientY - canvasRect.top, setColor.r, setColor.g, setColor.b, setColor.a)
 		gl.clearColor(0, 0, 0, 1.0)
 		gl.clear(gl.COLOR_BUFFER_BIT)
-		for (let i = 0; i < points.length; i++) {
-			const colorItem = points[i].color
-			/**
-			 * 向片元着色器变量 uniform vec4 u_Color 传递匹配数据
-			 */
-			gl.uniform4f(u_Color, colorItem.r, colorItem.g, colorItem.b, colorItem.a)
-			/**
-			 * 向顶点着色器变量 attribute vec2 a_Position 传递匹配数据
-			 */
-			gl.vertexAttrib2f(a_Position, points[i].x, points[i].y)
+		for (let i = 0; i < points.length; i += 6) {
+			gl.vertexAttrib2f(a_Position, points[i], points[i + 1])
+			gl.uniform4f(u_Color, points[i + 2], points[i + 3], points[i + 4], points[i + 5])
 			gl.drawArrays(gl.POINTS, 0, 1)
 		}
 	})

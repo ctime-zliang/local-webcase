@@ -1,6 +1,7 @@
 /**
  * 绘制单个点
  * 		纵深测试
+ * 		NDC 坐标
  */
 function drawCanvas3(containerElement) {
 	const VS = `
@@ -66,13 +67,13 @@ function drawCanvas3(containerElement) {
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 	const a_Color = gl.getAttribLocation(program, 'a_Color')
 
-	gl.enableVertexAttribArray(a_Position)
-	gl.enableVertexAttribArray(a_Color)
-
 	const positionBuffer = gl.createBuffer()
 	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
 	gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
+	gl.enableVertexAttribArray(a_Position)
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
+	gl.enableVertexAttribArray(a_Color)
+
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(points), gl.STATIC_DRAW)
 
 	const orthoProjectionMatrix4 = ven$createOrthoProjectionMatrix4OfRectView(canvasElement.width / canvasElement.height)
@@ -85,7 +86,7 @@ function drawCanvas3(containerElement) {
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelResultMatrix4.data))
 		// gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(new Ven$Matrix4().data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
-		gl.drawArrays(gl.POINTS, 0, points.length / 7)
+		gl.drawArrays(gl.POINTS, 0, 2)
 	}
 
 	let xAngle = 0
