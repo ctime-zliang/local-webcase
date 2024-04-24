@@ -14,7 +14,7 @@ function drawCanvas1(containerElement) {
 		precision mediump float;
 		uniform vec4 u_Color;
 		void main() {
-			vec4 color = u_Color / vec4(255, 255, 255, 1.0);
+			vec4 color = u_Color / vec4(255, 0.0, 0.0, 1.0);
 			gl_FragColor = color;
 		}
 	`
@@ -34,6 +34,9 @@ function drawCanvas1(containerElement) {
 	gl.clear(gl.COLOR_BUFFER_BIT)
 
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
+	const u_Color = gl.getUniformLocation(program, 'u_Color')
+
+	gl.uniform4f(u_Color, 255, 0, 0, 1)
 
 	const vertextBuffer = gl.createBuffer()
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
