@@ -35,13 +35,11 @@ function drawCanvas1(containerElement) {
 
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 
-	gl.enableVertexAttribArray(a_Position)
-
 	const vertextBuffer = gl.createBuffer()
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
 	gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0)
+	gl.enableVertexAttribArray(a_Position)
 
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW)
-
 	gl.drawArrays(gl.TRIANGLES, 0, 3)
 }
