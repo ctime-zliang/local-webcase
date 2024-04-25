@@ -130,6 +130,119 @@ function ven$createPerspectiveProjectionMatrix4OfRectView(viewRadians, aspect, n
 	return ven$createPerspectiveProjectionMatrix4(left, left + width, top, top - height, near, far)
 }
 
+function ven$setRotateMatrxi4(radian, axisVector3) {
+	const { x, y, z } = axisVector3
+	const matrix4 = new Ven$Matrix4()
+	let s = Math.sin(radian)
+	let c = Math.cos(radian)
+
+	if (0 !== x && 0 === y && 0 === z) {
+		// Rotation around X axis
+		if (x < 0) {
+			s = -s
+		}
+		matrix4.data[0] = 1
+		matrix4.data[4] = 0
+		matrix4.data[8] = 0
+		matrix4.data[12] = 0
+		matrix4.data[1] = 0
+		matrix4.data[5] = c
+		matrix4.data[9] = -s
+		matrix4.data[13] = 0
+		matrix4.data[2] = 0
+		matrix4.data[6] = s
+		matrix4.data[10] = c
+		matrix4.data[14] = 0
+		matrix4.data[3] = 0
+		matrix4.data[7] = 0
+		matrix4.data[11] = 0
+		matrix4.data[15] = 1
+	} else if (0 === x && 0 !== y && 0 === z) {
+		// Rotation around Y axis
+		if (y < 0) {
+			s = -s
+		}
+		matrix4.data[0] = c
+		matrix4.data[4] = 0
+		matrix4.data[8] = s
+		matrix4.data[12] = 0
+		matrix4.data[1] = 0
+		matrix4.data[5] = 1
+		matrix4.data[9] = 0
+		matrix4.data[13] = 0
+		matrix4.data[2] = -s
+		matrix4.data[6] = 0
+		matrix4.data[10] = c
+		matrix4.data[14] = 0
+		matrix4.data[3] = 0
+		matrix4.data[7] = 0
+		matrix4.data[11] = 0
+		matrix4.data[15] = 1
+	} else if (0 === x && 0 === y && 0 !== z) {
+		// Rotation around Z axis
+		if (z < 0) {
+			s = -s
+		}
+		matrix4.data[0] = c
+		matrix4.data[4] = -s
+		matrix4.data[8] = 0
+		matrix4.data[12] = 0
+		matrix4.data[1] = s
+		matrix4.data[5] = c
+		matrix4.data[9] = 0
+		matrix4.data[13] = 0
+		matrix4.data[2] = 0
+		matrix4.data[6] = 0
+		matrix4.data[10] = 1
+		matrix4.data[14] = 0
+		matrix4.data[3] = 0
+		matrix4.data[7] = 0
+		matrix4.data[11] = 0
+		matrix4.data[15] = 1
+	} else {
+		// Rotation around another axis
+		const len = Math.sqrt(x * x + y * y + z * z)
+		if (len !== 1) {
+			const rlen = 1 / len
+			x *= rlen
+			y *= rlen
+			z *= rlen
+		}
+		let nc = 1 - c
+		let xy = x * y
+		let yz = y * z
+		let zx = z * x
+		let xs = x * s
+		let ys = y * s
+		let zs = z * s
+
+		matrix4.data[0] = x * x * nc + c
+		matrix4.data[1] = xy * nc + zs
+		matrix4.data[2] = zx * nc - ys
+		matrix4.data[3] = 0
+		matrix4.data[4] = xy * nc - zs
+		matrix4.data[5] = y * y * nc + c
+		matrix4.data[6] = yz * nc + xs
+		matrix4.data[7] = 0
+		matrix4.data[8] = zx * nc + ys
+		matrix4.data[9] = yz * nc - xs
+		matrix4.data[10] = z * z * nc + c
+		matrix4.data[11] = 0
+		matrix4.data[12] = 0
+		matrix4.data[13] = 0
+		matrix4.data[14] = 0
+		matrix4.data[15] = 1
+	}
+
+	return matrix4
+}
+
+/********************************************************************************/
+/********************************************************************************/
+/********************************************************************************/
+/********************************************************************************/
+/********************************************************************************/
+
 /**
  * @description 创建绕轴旋转矩阵
  * @function ven$matrix4RotateX
