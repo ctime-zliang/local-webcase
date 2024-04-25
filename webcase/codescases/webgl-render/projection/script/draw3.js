@@ -87,7 +87,7 @@ function drawCanvas3(containerElement) {
 	const targetPositionVector3 = new Ven$Vector3(0, 0, -1)
 
 	const render = () => {
-		const cameraMatrix4 = ven$createViewAtMatrix4(cameraPositionVector3, targetPositionVector3)
+		const cameraMatrix4 = Ven$CanvasMatrix4.createViewAtMatrix4(cameraPositionVector3, targetPositionVector3)
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(cameraMatrix4.data))
 		// gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(new Ven$Matrix4().data))
 		gl.clear(gl.COLOR_BUFFER_BIT)

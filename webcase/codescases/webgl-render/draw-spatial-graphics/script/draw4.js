@@ -238,7 +238,7 @@ function drawCanvas4(containerElement) {
 	gl.bufferData(gl.ARRAY_BUFFER, shereDatasResult.originalNormals, gl.STATIC_DRAW)
 	gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0)
 
-	const orthoProjectionMatrix4 = ven$createOrthoProjectionMatrix4OfRectView(canvasElement.width / canvasElement.height)
+	const orthoProjectionMatrix4 = Ven$CanvasMatrix4.createOrthoProjectionMatrix4OfRectView(canvasElement.width / canvasElement.height)
 
 	const render = () => {
 		const modelXRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(Program4.profile.modelRatation.x))
