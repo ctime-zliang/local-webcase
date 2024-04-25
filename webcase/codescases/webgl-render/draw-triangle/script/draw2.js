@@ -21,7 +21,7 @@ function drawCanvas2(containerElement) {
 		}
 	`
 
-	const positions = [0.5, -0.5, 0, 0, 0.75, 0, -0.5, -0.5, 0]
+	const positions = [0.4, -0.4, 0, 0, 0.6, 0, -0.4, -0.4, 0]
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
@@ -48,23 +48,34 @@ function drawCanvas2(containerElement) {
 
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW)
 
-	const render = () => {
+	const render = angle => {
 		gl.clearColor(0.0, 0.0, 0.0, 1.0)
 		gl.clear(gl.COLOR_BUFFER_BIT)
-		const transformMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(zAngle), new Ven$Vector3(0, 0, 1))
+		const transformMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(angle), new Ven$Vector3(0, 0, 1))
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(transformMatrix4.data))
 		gl.drawArrays(gl.TRIANGLES, 0, 3)
 	}
 
-	let zAngle = 0
+	let angle = 0
+
+	const ANGLE_STEP = 45.0
+	let lastTimeStamp = performance.now()
+	const getNextAngle = (angle = 0) => {
+		const now = performance.now()
+		const elapsed = now - lastTimeStamp
+		lastTimeStamp = now
+		const newAngle = angle + (ANGLE_STEP * elapsed) / 1000.0
+		return newAngle % 360
+	}
 
 	const exec = () => {
-		zAngle += 0.5
-		if (zAngle >= 90) {
-			render()
+		render(angle)
+		angle = getNextAngle(angle)
+		if (angle >= 90) {
+			angle = 90
+			render(angle)
 			return
 		}
-		render()
 		requestAnimationFrame(exec)
 	}
 
