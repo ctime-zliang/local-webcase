@@ -258,9 +258,22 @@ class Ven$CanvasMatrix4 {
 	static setTranslate() {
 		const { x, y, z } = directionVector3
 		const matrix4 = new Ven$Matrix4()
+		matrix4.data[0] = 1
+		matrix4.data[4] = 0
+		matrix4.data[8] = 0
 		matrix4.data[12] = x
+		matrix4.data[1] = 0
+		matrix4.data[5] = 1
+		matrix4.data[9] = 0
 		matrix4.data[13] = y
+		matrix4.data[2] = 0
+		matrix4.data[6] = 0
+		matrix4.data[10] = 1
 		matrix4.data[14] = z
+		matrix4.datae[3] = 0
+		matrix4.data[7] = 0
+		matrix4.data[11] = 0
+		matrix4.data[15] = 1
 		return matrix4
 	}
 
@@ -274,8 +287,21 @@ class Ven$CanvasMatrix4 {
 		const { x, y, z } = directionVector3
 		const matrix4 = new Ven$Matrix4()
 		matrix4.data[0] = x
+		matrix4.data[4] = 0
+		matrix4.data[8] = 0
+		matrix4.data[12] = 0
+		matrix4.data[1] = 0
 		matrix4.data[5] = y
+		matrix4.data[9] = 0
+		matrix4.data[13] = 0
+		matrix4.data[2] = 0
+		matrix4.data[6] = 0
 		matrix4.data[10] = z
+		matrix4.data[14] = 0
+		matrix4.data[3] = 0
+		matrix4.data[7] = 0
+		matrix4.data[11] = 0
+		matrix4.data[15] = 1
 		return matrix4
 	}
 }
