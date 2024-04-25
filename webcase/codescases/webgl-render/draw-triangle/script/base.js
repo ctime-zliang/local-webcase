@@ -10,6 +10,9 @@ function main() {
 
 	const appContainer4Element = document.getElementById('appContainer4')
 	drawCanvas4(appContainer4Element)
+
+	const appContainer5Element = document.getElementById('appContainer5')
+	drawCanvas5(appContainer5Element)
 }
 
 window.document.addEventListener('DOMContentLoaded', main)

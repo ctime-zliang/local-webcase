@@ -136,7 +136,7 @@ class Ven$CanvasMatrix4 {
 	/********************************************************************************/
 
 	/**
-	 * @description 创建旋转矩阵
+	 * @description 创建变换矩阵: 旋转矩阵
 	 * @function setRotateMatrxi4
 	 * @param {number} radian 旋转弧度
 	 * @param {Ven$Vector3} axisVector3 旋转轴(向量)
@@ -250,12 +250,12 @@ class Ven$CanvasMatrix4 {
 	}
 
 	/**
-	 * @description 创建平移矩阵
+	 * @description 创建变换矩阵: 平移矩阵
 	 * @function setTranslate
 	 * @param {Ven$Vector3} directionVector3 位移(向量)
 	 * @return {Ven$Matrix4}
 	 */
-	static setTranslate() {
+	static setTranslate(directionVector3) {
 		const { x, y, z } = directionVector3
 		const matrix4 = new Ven$Matrix4()
 		matrix4.data[0] = 1
@@ -270,7 +270,7 @@ class Ven$CanvasMatrix4 {
 		matrix4.data[6] = 0
 		matrix4.data[10] = 1
 		matrix4.data[14] = z
-		matrix4.datae[3] = 0
+		matrix4.data[3] = 0
 		matrix4.data[7] = 0
 		matrix4.data[11] = 0
 		matrix4.data[15] = 1
@@ -278,12 +278,12 @@ class Ven$CanvasMatrix4 {
 	}
 
 	/**
-	 * @description 创建缩放矩阵
+	 * @description 创建变换矩阵: 缩放矩阵
 	 * @function setScale
 	 * @param {Ven$Vector3} directionVector3 位移(向量)
 	 * @return {Ven$Matrix4}
 	 */
-	static setScale() {
+	static setScale(directionVector3) {
 		const { x, y, z } = directionVector3
 		const matrix4 = new Ven$Matrix4()
 		matrix4.data[0] = x

@@ -51,9 +51,8 @@ function drawCanvas2(containerElement) {
 	const render = () => {
 		gl.clearColor(0.0, 0.0, 0.0, 1.0)
 		gl.clear(gl.COLOR_BUFFER_BIT)
-		// const rotationMatrix4 = Ven$Matrix4.createRotateZMatrix4ByRadian(Ven$Angles.degreeToRadian(zAngle))
-		const rotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(zAngle), new Ven$Vector3(0, 0, 1))
-		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(rotationMatrix4.data))
+		const transformMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(zAngle), new Ven$Vector3(0, 0, 1))
+		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(transformMatrix4.data))
 		gl.drawArrays(gl.TRIANGLES, 0, 3)
 	}
 
