@@ -69,12 +69,11 @@ function drawCanvas4(containerElement) {
 		const canvasRect = canvasElement.getBoundingClientRect().toJSON()
 		positions.push(e.clientX - canvasRect.left, e.clientY - canvasRect.top)
 		const color = ven$randomColor()
-		colors.push(color.r, color.g, color.b, color.a)
+		colors.push(color.r, color.g, color.b, 1)
 		if (positions.length % 6 === 0) {
 			console.time(`draw-webgl`)
 			gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
 			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.DYNAMIC_DRAW)
-			gl.drawArrays(gl.POINTS, 0, positions.length / 2)
 			gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer)
 			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.DYNAMIC_DRAW)
 			/* ... */

@@ -65,7 +65,7 @@ function drawCanvas3(containerElement) {
 		const canvasRect = canvasElement.getBoundingClientRect().toJSON()
 		datas.push(e.clientX - canvasRect.left, e.clientY - canvasRect.top)
 		const color = ven$randomColor()
-		datas.push(color.r, color.g, color.b, color.a)
+		datas.push(color.r, color.g, color.b, 1)
 		if (datas.length % 18 === 0) {
 			console.time(`draw-webgl`)
 			gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
@@ -73,7 +73,7 @@ function drawCanvas3(containerElement) {
 			/* ... */
 			gl.clearColor(0.0, 0.0, 0.0, 1.0)
 			gl.clear(gl.COLOR_BUFFER_BIT)
-			gl.drawArrays(gl.TRIANGLES, 0, datas.length / 2)
+			gl.drawArrays(gl.TRIANGLES, 0, datas.length / 6)
 			console.timeEnd(`draw-webgl`)
 		}
 	})
