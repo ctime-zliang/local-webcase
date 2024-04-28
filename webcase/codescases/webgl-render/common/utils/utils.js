@@ -1,5 +1,6 @@
 function loadTexture(gl, src, uniform, callback) {
 	const initTexture = (gl, imageInstance) => {
+		// gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1)
 		/**
 		 * 激活纹理单元
 		 * 		0 号纹理单元
@@ -14,11 +15,11 @@ function loadTexture(gl, src, uniform, callback) {
 		 * 纹理参数设置
 		 */
 		gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
-		gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
 		/**
-		 * 使用 Image 对象填充纹理内容
+		 * 使用 Image 对象实例填充纹理内容
 		 */
-		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imageInstance)
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, imageInstance)
 	}
 	const img = new Image()
 	img.crossOrigin = 'anonymous'

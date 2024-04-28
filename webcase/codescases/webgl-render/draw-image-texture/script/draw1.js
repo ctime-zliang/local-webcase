@@ -20,9 +20,11 @@ function drawCanvas1(containerElement) {
 		}
 	`
 	const FS = `
+		#ifdef GL_ES
 		// 设置浮点数精度为中等精度
 		precision mediump float;
-		// 接收纹理坐标
+		#endif
+		// 接收纹理采样坐标
 		varying vec2 v_Uv;
 		// 接收纹理数据(内容)
 		uniform sampler2D u_Sampler;
@@ -31,10 +33,21 @@ function drawCanvas1(containerElement) {
 		}
 	`
 
+	/**
+	 * 顶点定义格式
+	 * 		绘制区域的顶点坐标: (30, 30), (30, 300), (300, 300), ...
+	 * 			即需要绘制的像素空间
+	 * 		纹理采样坐标: (0, 0), (0, 1), (1, 1), ...
+	 */
+	// prettier-ignore
 	const datas = [
-		/* ... */
-		30, 30, 0, 0 /* ... */, 30, 300, 0, 1 /* ... */, 300, 300, 1, 1 /* ... */, 30, 30, 0, 0 /* ... */, 300, 300, 1, 1 /* ... */, 300, 30, 1, 0,
-		/* ... */
+		30, 30, 0, 0,
+		30, 300, 0, 1,
+		300, 300, 1, 1 
+		/* ... */, 
+		30, 30, 0, 0,
+		300, 300, 1, 1,
+		300, 30, 1, 0,
 	]
 
 	const canvasElement = containerElement.querySelector('canvas')
@@ -70,7 +83,7 @@ function drawCanvas1(containerElement) {
 	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.STATIC_DRAW)
 
-	loadTexture(gl, '../common/images/demo-1024x1024.jpg', u_Sampler, () => {
+	loadTexture(gl, '../common/images/demo-64x64.jpg', u_Sampler, () => {
 		gl.drawArrays(gl.TRIANGLES, 0, datas.length / 4)
 	})
 }
