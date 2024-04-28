@@ -21,7 +21,12 @@ function drawCanvas2(containerElement) {
 		}
 	`
 
-	const positions = [0.4, -0.4, 0, 0, 0.6, 0, -0.4, -0.4, 0]
+	// prettier-ignore
+	const positions = [
+		0.4, -0.4, 0, 
+		0, 0.6, 0, 
+		-0.4, -0.4, 0
+	]
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
