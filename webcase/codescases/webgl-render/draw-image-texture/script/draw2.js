@@ -102,7 +102,7 @@ function drawCanvas2(containerElement) {
 	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.STATIC_DRAW)
 
-	Program2.loadAllTexture(gl, [`../common/images/circle.gif`, `../common/images/demo-64x64.jpg`], [u_Sampler0, u_Sampler1]).then(() => {
+	Program2.loadAllTexture(gl, [`../common/images/circle.gif`, `../common/images/demo-1024x1024.jpg`], [u_Sampler0, u_Sampler1]).then(() => {
 		gl.drawArrays(gl.TRIANGLES, 0, datas.length / 4)
 	})
 }

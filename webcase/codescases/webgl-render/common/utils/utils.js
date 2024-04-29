@@ -25,6 +25,9 @@ function loadTexture(gl, src, u_Sampler, textureUnitIndex, callback) {
 	img.crossOrigin = 'anonymous'
 	img.onload = function (e) {
 		initTexture(gl, this)
+		/**
+		 * 通过唯一的 gl.uniform1i 采样器编号赋值方法给着色器采样器赋值纹理编号
+		 */
 		gl.uniform1i(u_Sampler, textureUnitIndex)
 		callback && callback(textureUnitIndex)
 	}
