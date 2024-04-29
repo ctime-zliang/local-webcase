@@ -1,11 +1,11 @@
-function loadTexture(gl, src, uniform, callback) {
+function loadTexture(gl, src, u_Sampler, textureUnitIndex, callback) {
 	const initTexture = (gl, imageInstance) => {
 		// gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1)
 		/**
 		 * 激活纹理单元
-		 * 		0 号纹理单元
 		 */
-		gl.activeTexture(gl.TEXTURE0)
+		const s = `TEXTURE${textureUnitIndex}`
+		gl.activeTexture(gl[s])
 		/**
 		 * 创建并绑定纹理对象
 		 */
@@ -25,11 +25,8 @@ function loadTexture(gl, src, uniform, callback) {
 	img.crossOrigin = 'anonymous'
 	img.onload = function (e) {
 		initTexture(gl, this)
-		/**
-		 * 由于被激活且已绑定了纹理对象的纹理单元为 0 号纹理单元, 因此此处将对应纹理单元的编号(即 0)传递给着色器中的采样器变量
-		 */
-		gl.uniform1i(uniform, 0)
-		callback && callback()
+		gl.uniform1i(u_Sampler, textureUnitIndex)
+		callback && callback(textureUnitIndex)
 	}
 	img.src = src
 }

@@ -1,7 +1,25 @@
 /**
  * 绘制图片纹理填充
  */
-function drawCanvas1(containerElement) {
+
+class Program2 {
+	static async loadAllTexture(gl, srcs, u_Samplers) {
+		let hasDones = []
+		return new Promise((_, reject) => {
+			const len = srcs.length
+			for (let i = 0; i < len; i++) {
+				loadTexture(gl, srcs[i], u_Samplers[i], i, textureUnitIndex => {
+					hasDones.push(textureUnitIndex)
+					if (hasDones.length >= len) {
+						_()
+					}
+				})
+			}
+		})
+	}
+}
+
+function drawCanvas2(containerElement) {
 	const VS = `
 		// 设置浮点数精度为中等精度
 		precision mediump float;
@@ -27,9 +45,12 @@ function drawCanvas1(containerElement) {
 		// 接收纹理采样坐标
 		varying vec2 v_Uv;
 		// 接收纹理数据(内容)
-		uniform sampler2D u_Sampler;
+		uniform sampler2D u_Sampler0;
+		uniform sampler2D u_Sampler1;
 		void main() {
-			gl_FragColor = texture2D(u_Sampler, v_Uv);
+			vec4 color0 = texture2D(u_Sampler0, v_Uv);
+			vec4 color1 = texture2D(u_Sampler1, v_Uv);
+			gl_FragColor = color0 * color1;
 		}
 	`
 
@@ -65,7 +86,8 @@ function drawCanvas1(containerElement) {
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 	const a_CanvasSize = gl.getAttribLocation(program, 'a_CanvasSize')
 	const a_Uv = gl.getAttribLocation(program, 'a_Uv')
-	const u_Sampler = gl.getUniformLocation(program, 'u_Sampler')
+	const u_Sampler0 = gl.getUniformLocation(program, 'u_Sampler0')
+	const u_Sampler1 = gl.getUniformLocation(program, 'u_Sampler1')
 
 	gl.enableVertexAttribArray(a_Position)
 	gl.enableVertexAttribArray(a_Uv)
@@ -80,7 +102,7 @@ function drawCanvas1(containerElement) {
 	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.STATIC_DRAW)
 
-	loadTexture(gl, '../common/images/demo-64x64.jpg', u_Sampler, 0, textureUnitIndex => {
+	Program2.loadAllTexture(gl, [`../common/images/circle.gif`, `../common/images/demo-64x64.jpg`], [u_Sampler0, u_Sampler1]).then(() => {
 		gl.drawArrays(gl.TRIANGLES, 0, datas.length / 4)
 	})
 }
