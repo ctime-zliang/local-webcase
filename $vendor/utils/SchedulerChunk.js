@@ -1,11 +1,14 @@
 class Ven$SchedulerChunk {
 	static broswerSchedulerChunk(taskSize, taskHandler) {
 		const scheduler = task => {
-			window.requestIdleCallback(idle => {
-				task(() => {
-					return idle.timeRemaining()
-				})
-			})
+			window.requestIdleCallback(
+				idle => {
+					task(() => {
+						return idle.timeRemaining()
+					})
+				},
+				{ timeout: 500 }
+			)
 		}
 		return new Ven$SchedulerChunk(taskSize, taskHandler, scheduler)
 	}
@@ -14,9 +17,11 @@ class Ven$SchedulerChunk {
 		this._taskSize = taskSize
 		this._taskHandler = taskHandler
 		this._scheduler = scheduler
-		this._chunkStart = null
-		this._chunkEnd = null
-		this._finish = null
+		this._chunkStartCallback = null
+		this._chunkEndCallback = null
+		this._finishCallback = null
+		/* ... */
+		this._chunkCount = 0
 	}
 
 	start() {
@@ -24,12 +29,12 @@ class Ven$SchedulerChunk {
 			return
 		}
 		let i = 0
-		let chunkCount = 0
 		const run = () => {
-			this._chunkStart && this._chunkStart(chunkCount)
-			++chunkCount
+			this._chunkStartCallback && this._chunkStartCallback(this._chunkCount)
+			++this._chunkCount
 			if (i >= this._taskSize) {
-				this._finish && this._finish()
+				this._chunkEndCallback && this._chunkEndCallback(this._taskSize - 1)
+				this._finishCallback && this._finishCallback()
 				return
 			}
 			this._scheduler(goOn => {
@@ -37,7 +42,7 @@ class Ven$SchedulerChunk {
 					this._taskHandler(i)
 					i++
 				}
-				this._chunkEnd && this._chunkEnd(chunkCount - 1)
+				this._chunkEndCallback && this._chunkEndCallback(this._chunkCount - 1)
 				run()
 			})
 		}
@@ -45,14 +50,76 @@ class Ven$SchedulerChunk {
 	}
 
 	setChunkStartHandler(callback) {
-		this._chunkStart = callback
+		this._chunkStartCallback = callback
 	}
 
 	setChunkEndHandler(callback) {
-		this._chunkEnd = callback
+		this._chunkEndCallback = callback
 	}
 
 	setChunkFinishHandler(callback) {
-		this._finish = callback
+		this._finishCallback = callback
+	}
+}
+
+/****************************************************************************************************/
+/****************************************************************************************************/
+/****************************************************************************************************/
+/****************************************************************************************************/
+
+class Ven$SchedulerSlice {
+	constructor(taskSize, taskHandler) {
+		this._chunkTimeSize = 10
+		/* ... */
+		this._taskSize = taskSize
+		this._taskHandler = taskHandler
+		this._chunkStartCallback = null
+		this._chunkEndCallback = null
+		this._finishCallback = null
+	}
+
+	createChunkHandler() {
+		const gen = function* (taskSize, taskHandler) {
+			let count = 0
+			while (count < taskSize) {
+				yield taskHandler(count)
+				count++
+			}
+		}
+		const { _chunkTimeSize, _taskSize, _taskHandler, _chunkStartCallback, _chunkEndCallback, _finishCallback } = this
+		const refConfig = { chunkCount: 0 }
+		const generator = gen(_taskSize, _taskHandler)
+		if (!generator || typeof generator.next !== 'function') {
+			return
+		}
+		return function next() {
+			_chunkStartCallback && _chunkStartCallback(refConfig.chunkCount)
+			refConfig.chunkCount++
+			const start = performance.now()
+			let generatorResult = null
+			do {
+				generatorResult = generator.next()
+				refConfig.count = generatorResult.value
+			} while (generatorResult.done !== true && performance.now() - start < _chunkTimeSize)
+			if (generatorResult.done) {
+				_chunkEndCallback && _chunkEndCallback(refConfig.chunkCount - 1)
+				_finishCallback && _finishCallback()
+				return
+			}
+			_chunkEndCallback && _chunkEndCallback(refConfig.chunkCount - 1)
+			window.requestIdleCallback(next, { timeout: 500 })
+		}
+	}
+
+	setChunkStartHandler(callback) {
+		this._chunkStartCallback = callback
+	}
+
+	setChunkEndHandler(callback) {
+		this._chunkEndCallback = callback
+	}
+
+	setChunkFinishHandler(callback) {
+		this._finishCallback = callback
 	}
 }
