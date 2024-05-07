@@ -4,6 +4,7 @@ class Ven$SchedulerChunk {
 			window.requestIdleCallback(
 				idle => {
 					task(() => {
+						// return idle.timeRemaining() || idle.didTimeout
 						return idle.timeRemaining()
 					})
 				},
