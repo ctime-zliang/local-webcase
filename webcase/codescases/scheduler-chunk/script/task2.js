@@ -1,6 +1,7 @@
 const RUNTIME_PROFILE2 = {
 	taskSize: 25000,
 	datas: [],
+	sortDatas: [],
 	taskContainerElement: document.getElementById('raskTest2'),
 	/* ... */
 	initData() {
@@ -8,12 +9,19 @@ const RUNTIME_PROFILE2 = {
 			const rdm = Math.random()
 			RUNTIME_PROFILE2.datas.push(rdm)
 		}
+		const min = 0
+		const max = 100000
+		const MAX_LENGTH = 5000
+		for (let i = MAX_LENGTH - 1; i >= 0; i--) {
+			RUNTIME_PROFILE2.sortDatas.push(ven$getRandomInArea(min, max))
+		}
 	},
 	appendChild(idx) {
 		const divElement = document.createElement('div')
 		const appendTargetContainerElement = RUNTIME_PROFILE2.taskContainerElement.querySelector(`.append-target-container`)
 		divElement.innerText = idx
 		appendTargetContainerElement.appendChild(divElement)
+		// const array = window.ArraySort.ven$bubbleSortOptimi([...RUNTIME_PROFILE2.sortDatas])
 	},
 }
 
