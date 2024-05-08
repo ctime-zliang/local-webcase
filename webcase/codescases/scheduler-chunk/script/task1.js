@@ -1,5 +1,5 @@
 const RUNTIME_PROFILE1 = {
-	taskSize: 15000,
+	taskSize: 20000,
 	datas: [],
 	sortDatas: [],
 	taskContainerElement: document.getElementById('raskTest1'),
@@ -29,19 +29,19 @@ function task1() {
 	RUNTIME_PROFILE1.initData()
 	/* ... */
 	const profile = {}
-	const chunkHandler = Ven$SchedulerChunk.broswerSchedulerChunk3(RUNTIME_PROFILE1.taskSize, RUNTIME_PROFILE1.appendChild)
-	chunkHandler.setChunkStartHandler((chunkCount, taskIndex) => {
+	const schedulerHandler = Ven$SchedulerChunk.broswerSchedulerChunk(RUNTIME_PROFILE1.taskSize, RUNTIME_PROFILE1.appendChild)
+	schedulerHandler.setChunkStartHandler((chunkCount, taskIndex) => {
 		profile.eStartTime = performance.now()
 		console.log(`Chunk Item Count: ${chunkCount} Start, Task Index: ${taskIndex}.`)
 	})
-	chunkHandler.setChunkEndHandler((chunkCount, taskIndex) => {
+	schedulerHandler.setChunkEndHandler((chunkCount, taskIndex) => {
 		profile.eEndTime = performance.now()
 		console.log(`Chunk Item Count: ${chunkCount} End, Task Index: ${taskIndex}, time: ${profile.eEndTime - profile.eStartTime}.`)
 		const spanElement = RUNTIME_PROFILE1.taskContainerElement.querySelector(`.append-target-container-childcount`)
 		const childContainerElement = RUNTIME_PROFILE1.taskContainerElement.querySelector('.append-target-container')
 		spanElement.innerText = childContainerElement.childElementCount
 	})
-	chunkHandler.setChunkFinishHandler(() => {
+	schedulerHandler.setChunkFinishHandler(() => {
 		profile.aEndTime = performance.now()
 		console.log(`Chunk Item Finished, time: ${profile.aEndTime - profile.aStartTime}.`)
 	})
@@ -49,6 +49,6 @@ function task1() {
 	const appendDOMTaskBtnElement = RUNTIME_PROFILE1.taskContainerElement.querySelector(`.append-dom-task-btn`)
 	appendDOMTaskBtnElement.addEventListener('click', function (e) {
 		profile.aStartTime = performance.now()
-		chunkHandler.start()
+		schedulerHandler.start()
 	})
 }
