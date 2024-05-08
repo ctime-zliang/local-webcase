@@ -17,7 +17,6 @@ const RUNTIME_PROFILE2 = {
 		}
 	},
 	appendChild(idx) {
-		console.log(`Task running.`)
 		const divElement = document.createElement('div')
 		const appendTargetContainerElement = RUNTIME_PROFILE2.taskContainerElement.querySelector(`.append-target-container`)
 		divElement.innerText = idx
