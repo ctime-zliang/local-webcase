@@ -21,23 +21,23 @@
 	/****************************************************************************************************/
 	/****************************************************************************************************/
 
-	function schedulerSegment(task) {
+	function requestAnimationTask(task) {
 		return new Promise(resolve => {
 			runTask(task, resolve)
 		})
 	}
 
-	schedulerSegment.version = '1.0.1'
+	requestAnimationTask.version = '1.0.1'
 
 	if (typeof module !== 'undefined' && module.exports) {
-		module.exports = schedulerSegment
+		module.exports = requestAnimationTask
 	} else if (typeof define === 'function' && define.amd) {
 		define(function () {
-			return schedulerSegment
+			return requestAnimationTask
 		})
 	} else {
 		;(function () {
 			return this || (0, eval)('this')
-		})().schedulerSegment = schedulerSegment
+		})().requestAnimationTask = requestAnimationTask
 	}
 })()

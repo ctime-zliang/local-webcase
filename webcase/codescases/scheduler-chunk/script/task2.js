@@ -1,5 +1,5 @@
 const RUNTIME_PROFILE2 = {
-	taskSize: 25000,
+	taskSize: 15000,
 	datas: [],
 	sortDatas: [],
 	taskContainerElement: document.getElementById('raskTest2'),
@@ -17,11 +17,12 @@ const RUNTIME_PROFILE2 = {
 		}
 	},
 	appendChild(idx) {
+		console.log(`Task running.`)
 		const divElement = document.createElement('div')
 		const appendTargetContainerElement = RUNTIME_PROFILE2.taskContainerElement.querySelector(`.append-target-container`)
 		divElement.innerText = idx
 		appendTargetContainerElement.appendChild(divElement)
-		// const array = window.ArraySort.ven$bubbleSortOptimi([...RUNTIME_PROFILE2.sortDatas])
+		const array = window.ArraySort.ven$bubbleSortOptimi([...RUNTIME_PROFILE2.sortDatas])
 	},
 }
 
@@ -29,14 +30,14 @@ function task2() {
 	RUNTIME_PROFILE2.initData()
 	/* ... */
 	const profile = {}
-	const sliceHandler = new Ven$SchedulerSlice(RUNTIME_PROFILE2.taskSize, RUNTIME_PROFILE2.appendChild)
-	sliceHandler.setChunkStartHandler(idx => {
+	const sliceHandler = Ven$SchedulerSlice.broswerSchedulerSlice(RUNTIME_PROFILE2.taskSize, RUNTIME_PROFILE2.appendChild)
+	sliceHandler.setChunkStartHandler((chunkCount, taskIndex) => {
 		profile.eStartTime = performance.now()
-		console.log(`Chunk Item Idx: ${idx} Start.`)
+		console.log(`Chunk Item Count: ${chunkCount} Start, Task Index: ${taskIndex}.`)
 	})
-	sliceHandler.setChunkEndHandler(idx => {
+	sliceHandler.setChunkEndHandler((chunkCount, taskIndex) => {
 		profile.eEndTime = performance.now()
-		console.log(`Chunk Item Idx: ${idx} End, time: ${profile.eEndTime - profile.eStartTime}.`)
+		console.log(`Chunk Item Count: ${chunkCount} End, Task Index: ${taskIndex}, time: ${profile.eEndTime - profile.eStartTime}.`)
 		const spanElement = RUNTIME_PROFILE2.taskContainerElement.querySelector(`.append-target-container-childcount`)
 		const childContainerElement = RUNTIME_PROFILE2.taskContainerElement.querySelector('.append-target-container')
 		spanElement.innerText = childContainerElement.childElementCount

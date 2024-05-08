@@ -1,5 +1,5 @@
 const RUNTIME_PROFILE3 = {
-	taskSize: 25000,
+	taskSize: 15000,
 	datas: [],
 	sortDatas: [],
 	taskContainerElement: document.getElementById('raskTest3'),
@@ -17,11 +17,12 @@ const RUNTIME_PROFILE3 = {
 		}
 	},
 	appendChild(idx) {
+		console.log(`Task running.`)
 		const divElement = document.createElement('div')
 		const appendTargetContainerElement = RUNTIME_PROFILE3.taskContainerElement.querySelector(`.append-target-container`)
 		divElement.innerText = idx
 		appendTargetContainerElement.appendChild(divElement)
-		// const array = window.ArraySort.ven$bubbleSortOptimi([...RUNTIME_PROFILE3.sortDatas])
+		const array = window.ArraySort.ven$bubbleSortOptimi([...RUNTIME_PROFILE3.sortDatas])
 	},
 }
 
@@ -35,7 +36,7 @@ function task3() {
 		profile.aStartTime = performance.now()
 		for (let i = 0; i < RUNTIME_PROFILE3.taskSize; i++) {
 			// RUNTIME_PROFILE3.appendChild(i)
-			await schedulerSegment(() => {
+			await requestAnimationTask(() => {
 				RUNTIME_PROFILE3.appendChild(i)
 			})
 		}
