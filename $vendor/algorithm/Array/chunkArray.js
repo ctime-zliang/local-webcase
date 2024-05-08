@@ -8,8 +8,8 @@
  */
 function ven$chunkArray(array, size) {
 	const res = []
-	Array.from({ length: Math.ceil(array.length / size) }, (value, index) => {
-		res.push(array.slice(+value * size, (index + 1) * size))
-	})
+	for (let i = 0, len = array.length; i < len; i += size) {
+		res.push(array.slice(i, i + size))
+	}
 	return res
 }

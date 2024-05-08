@@ -28,11 +28,8 @@ const RUNTIME_PROFILE3 = {
 function task3() {
 	RUNTIME_PROFILE3.initData()
 	/* ... */
-	const profile = {}
-	/* ... */
 	const appendDOMTaskBtnElement = RUNTIME_PROFILE3.taskContainerElement.querySelector(`.append-dom-task-btn`)
 	appendDOMTaskBtnElement.addEventListener('click', async function (e) {
-		profile.aStartTime = performance.now()
 		const scheduler = window.setTimeout.bind(window)
 		console.time(`Task`)
 		for (let i = 0; i < RUNTIME_PROFILE3.taskSize; i++) {
