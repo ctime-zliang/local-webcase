@@ -22,7 +22,7 @@ const RUNTIME_PROFILE2 = {
 		const appendTargetContainerElement = RUNTIME_PROFILE2.taskContainerElement.querySelector(`.append-target-container`)
 		divElement.innerText = idx
 		appendTargetContainerElement.appendChild(divElement)
-		const array = window.ArraySort.ven$bubbleSortOptimi([...RUNTIME_PROFILE2.sortDatas])
+		// const array = window.ArraySort.ven$bubbleSortOptimi([...RUNTIME_PROFILE2.sortDatas])
 	},
 }
 
