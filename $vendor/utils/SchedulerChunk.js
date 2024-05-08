@@ -4,7 +4,7 @@ class Ven$SchedulerChunk {
 			const start = performance.now()
 			window.setTimeout(() => {
 				task(() => {
-					return performance.now() - start < 20
+					return performance.now() - start < 1000 / 60
 				})
 			})
 		}
@@ -16,7 +16,7 @@ class Ven$SchedulerChunk {
 			const start = performance.now()
 			window.requestAnimationFrame(() => {
 				task(() => {
-					return performance.now() - start < 20
+					return performance.now() - start < 1000 / 60
 				})
 			})
 		}
@@ -70,14 +70,15 @@ class Ven$SchedulerChunk {
 				this._isRuning = false
 				return
 			}
-			this._scheduler(goOn => {
+			const task = goOn => {
 				while (goOn() && i < this._taskSize) {
 					this._taskHandler(i)
 					i++
 				}
 				this._chunkEndCallback && this._chunkEndCallback(this._chunkCount - 1, i)
 				run()
-			})
+			}
+			this._scheduler(task)
 		}
 		run()
 	}

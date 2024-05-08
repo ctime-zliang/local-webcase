@@ -1,17 +1,17 @@
 ;(function () {
 	'use strict'
 
-	const TIME_SEG_SIZE = (1 / 60) * 1000
+	const TIME_SEG_SIZE = 1000 / 60
 
-	function runTask(task, resolve) {
+	function runTask(task, resolve, scheduler) {
 		const start = performance.now()
-		window.requestAnimationFrame(() => {
+		scheduler(() => {
 			if (performance.now() - start < TIME_SEG_SIZE) {
 				task()
 				resolve()
 				return
 			}
-			runTask(task, resolve)
+			runTask(task, resolve, scheduler)
 		})
 	}
 
@@ -21,23 +21,23 @@
 	/****************************************************************************************************/
 	/****************************************************************************************************/
 
-	function requestAnimationTask(task) {
+	function schedulerTask(task, scheduler = window.setTimeout.bind(window)) {
 		return new Promise(resolve => {
-			runTask(task, resolve)
+			runTask(task, resolve, scheduler)
 		})
 	}
 
-	requestAnimationTask.version = '1.0.1'
+	schedulerTask.version = '1.0.1'
 
 	if (typeof module !== 'undefined' && module.exports) {
-		module.exports = requestAnimationTask
+		module.exports = schedulerTask
 	} else if (typeof define === 'function' && define.amd) {
 		define(function () {
-			return requestAnimationTask
+			return schedulerTask
 		})
 	} else {
 		;(function () {
 			return this || (0, eval)('this')
-		})().requestAnimationTask = requestAnimationTask
+		})().schedulerTask = schedulerTask
 	}
 })()
