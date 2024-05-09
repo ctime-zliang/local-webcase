@@ -1,5 +1,5 @@
 const RUNTIME_PROFILE3 = {
-	taskSize: 100,
+	taskSize: 10000,
 	datas: [],
 	sortDatas: [],
 	taskContainerElement: document.getElementById('raskTest3'),
@@ -21,7 +21,7 @@ const RUNTIME_PROFILE3 = {
 		const appendTargetContainerElement = RUNTIME_PROFILE3.taskContainerElement.querySelector(`.append-target-container`)
 		divElement.innerText = idx
 		appendTargetContainerElement.appendChild(divElement)
-		const array = window.ArraySort.ven$bubbleSortOptimi([...RUNTIME_PROFILE3.sortDatas])
+		// const array = window.ArraySort.ven$bubbleSortOptimi([...RUNTIME_PROFILE3.sortDatas])
 	},
 }
 

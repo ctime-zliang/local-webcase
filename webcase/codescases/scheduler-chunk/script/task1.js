@@ -1,5 +1,5 @@
 const RUNTIME_PROFILE1 = {
-	taskSize: 30000,
+	taskSize: 50000,
 	datas: [],
 	sortDatas: [],
 	taskContainerElement: document.getElementById('raskTest1'),
@@ -25,7 +25,26 @@ const RUNTIME_PROFILE1 = {
 	},
 }
 
-function testItem1() {
+function runtimeProfile1TestItem0() {
+	const profile = {}
+	/* ... */
+	const appendDOMTaskBtnElement = RUNTIME_PROFILE1.taskContainerElement.querySelector(`.append-dom-task-btn0`)
+	appendDOMTaskBtnElement.addEventListener('click', function (e) {
+		profile.aStartTime = performance.now()
+		for (let i = 0; i < RUNTIME_PROFILE1.taskSize; i++) {
+			RUNTIME_PROFILE1.appendChild(i)
+		}
+		window.requestAnimationFrame(() => {
+			const spanElement = RUNTIME_PROFILE1.taskContainerElement.querySelector(`.append-target-container-childcount`)
+			const childContainerElement = RUNTIME_PROFILE1.taskContainerElement.querySelector('.append-target-container')
+			spanElement.innerText = childContainerElement.childElementCount
+			profile.aEndTime = performance.now()
+			console.log(`Task Finished, time: ${profile.aEndTime - profile.aStartTime}.`)
+		})
+	})
+}
+
+function runtimeProfile1TestItem1() {
 	const profile = {}
 	/* ... */
 	const schedulerHandler = Ven$SchedulerChunk.broswerSchedulerChunk(RUNTIME_PROFILE1.taskSize, RUNTIME_PROFILE1.appendChild)
@@ -47,13 +66,12 @@ function testItem1() {
 	/* ... */
 	const appendDOMTaskBtnElement = RUNTIME_PROFILE1.taskContainerElement.querySelector(`.append-dom-task-btn1`)
 	appendDOMTaskBtnElement.addEventListener('click', function (e) {
-		console.warn(`window.setTimeout`)
 		profile.aStartTime = performance.now()
 		schedulerHandler.start()
 	})
 }
 
-function testItem2() {
+function runtimeProfile1TestItem2() {
 	const profile = {}
 	/* ... */
 	const schedulerHandler = Ven$SchedulerChunk.broswerSchedulerChunk2(RUNTIME_PROFILE1.taskSize, RUNTIME_PROFILE1.appendChild)
@@ -75,13 +93,12 @@ function testItem2() {
 	/* ... */
 	const appendDOMTaskBtnElement = RUNTIME_PROFILE1.taskContainerElement.querySelector(`.append-dom-task-btn2`)
 	appendDOMTaskBtnElement.addEventListener('click', function (e) {
-		console.warn(`window.requestAnimationFrame`)
 		profile.aStartTime = performance.now()
 		schedulerHandler.start()
 	})
 }
 
-function testItem3() {
+function runtimeProfile1TestItem3() {
 	const profile = {}
 	/* ... */
 	const schedulerHandler = Ven$SchedulerChunk.broswerSchedulerChunk3(RUNTIME_PROFILE1.taskSize, RUNTIME_PROFILE1.appendChild)
@@ -103,7 +120,6 @@ function testItem3() {
 	/* ... */
 	const appendDOMTaskBtnElement = RUNTIME_PROFILE1.taskContainerElement.querySelector(`.append-dom-task-btn3`)
 	appendDOMTaskBtnElement.addEventListener('click', function (e) {
-		console.warn(`window.requestIdleCallback`)
 		profile.aStartTime = performance.now()
 		schedulerHandler.start()
 	})
@@ -112,7 +128,8 @@ function testItem3() {
 function task1() {
 	RUNTIME_PROFILE1.initData()
 	/* ... */
-	testItem1()
-	testItem2()
-	testItem3()
+	runtimeProfile1TestItem0()
+	runtimeProfile1TestItem1()
+	runtimeProfile1TestItem2()
+	runtimeProfile1TestItem3()
 }

@@ -2,11 +2,12 @@
 	'use strict'
 
 	const TIME_SEG_SIZE = 1000 / 60
+	const TIME_SEG_SIZE2 = 1000 / 30
 
 	function runTask(task, resolve, scheduler) {
 		const start = performance.now()
 		scheduler(() => {
-			if (performance.now() - start < TIME_SEG_SIZE) {
+			if (performance.now() - start < TIME_SEG_SIZE2) {
 				task()
 				resolve()
 				return

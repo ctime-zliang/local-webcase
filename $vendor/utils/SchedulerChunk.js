@@ -6,7 +6,7 @@ class Ven$SchedulerChunk {
 				task(() => {
 					return performance.now() - start < 1000 / 60
 				})
-			})
+			}, 1)
 		}
 		return new Ven$SchedulerChunk(taskSize, taskHandler, scheduler)
 	}
@@ -14,7 +14,7 @@ class Ven$SchedulerChunk {
 	static broswerSchedulerChunk2(taskSize, taskHandler) {
 		const scheduler = task => {
 			const start = performance.now()
-			window.requestAnimationFrame(() => {
+			window.requestAnimationFrame(timeStamp => {
 				task(() => {
 					return performance.now() - start < 1000 / 60
 				})
@@ -104,6 +104,24 @@ class Ven$SchedulerChunk {
 
 class Ven$SchedulerSlice {
 	static broswerSchedulerSlice(taskSize, taskHandler) {
+		const scheduler = task => {
+			window.setTimeout(() => {
+				task()
+			}, 1)
+		}
+		return new Ven$SchedulerSlice(taskSize, taskHandler, scheduler)
+	}
+
+	static broswerSchedulerSlice2(taskSize, taskHandler) {
+		const scheduler = task => {
+			window.requestAnimationFrame(timeStamp => {
+				task()
+			})
+		}
+		return new Ven$SchedulerSlice(taskSize, taskHandler, scheduler)
+	}
+
+	static broswerSchedulerSlice3(taskSize, taskHandler) {
 		const scheduler = task => {
 			window.requestIdleCallback(
 				idle => {
