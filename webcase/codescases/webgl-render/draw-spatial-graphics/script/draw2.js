@@ -59,15 +59,23 @@ function drawCanvas2(containerElement) {
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
 	gl.bufferData(gl.ARRAY_BUFFER, shereDatasResult.vertexPositions, gl.STATIC_DRAW)
 
-	const orthoProjectionMatrix4 = Ven$CanvasMatrix4.createOrthoProjectionMatrix4OfRectView(canvasElement.width / canvasElement.height)
+	/**
+	 * 创建矩形视口正交投影矩阵
+	 */
+	const orthoProjectionMatrix4 = Ven$CanvasMatrix4.setOrthoRectView(canvasElement.width / canvasElement.height, -25, 25, 1)
 
-	const render = () => {
-		const modelXRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(xAngle))
-		const modelYRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
+	const render = (xAngle, yAngle) => {
+		/**
+		 * 创建旋转矩阵
+		 */
+		const modelXRotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(xAngle), new Ven$Vector3(1, 0, 0))
+		const modelYRotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(yAngle), new Ven$Vector3(0, 1, 0))
+		/**
+		 * 生成复合变换矩阵
+		 */
 		const modelEffectMatrix4 = modelXRotationMatrix4.multiply4(modelYRotationMatrix4)
 		const modelResultMatrix4 = modelEffectMatrix4.multiply4(orthoProjectionMatrix4)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelResultMatrix4.data))
-		// gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(new Ven$Matrix4().data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, shereDatasResult.vertexPositions.length / 7)
 	}
@@ -78,11 +86,7 @@ function drawCanvas2(containerElement) {
 	const exec = () => {
 		xAngle += 0.5
 		yAngle += 0.5
-		// if (xAngle >= 30 || yAngle >= 30) {
-		// 	render()
-		// 	return
-		// }
-		render()
+		render(xAngle, yAngle)
 		requestAnimationFrame(exec)
 	}
 

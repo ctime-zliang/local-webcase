@@ -238,17 +238,36 @@ function drawCanvas4(containerElement) {
 	gl.bufferData(gl.ARRAY_BUFFER, shereDatasResult.originalNormals, gl.STATIC_DRAW)
 	gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0)
 
-	const orthoProjectionMatrix4 = Ven$CanvasMatrix4.createOrthoProjectionMatrix4OfRectView(canvasElement.width / canvasElement.height)
+	/**
+	 * 创建矩形视口正交投影矩阵
+	 */
+	const orthoProjectionMatrix4 = Ven$CanvasMatrix4.setOrthoRectView(canvasElement.width / canvasElement.height, -25, 25, 1)
 
 	const render = () => {
-		const modelXRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(Program4.profile.modelRatation.x))
-		const modelYRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(Program4.profile.modelRatation.y))
-		const modelZRotationMatrix4 = Ven$Matrix4.createRotateZMatrix4ByRadian(Ven$Angles.degreeToRadian(Program4.profile.modelRatation.z))
-		const modelOffsetMatrix4 = Ven$Matrix4.createTranslateMatrix4ByCoordinate(
-			Program4.profile.modelOffset.x,
-			Program4.profile.modelOffset.y,
-			Program4.profile.modelOffset.z
+		/**
+		 * 创建旋转矩阵
+		 */
+		const modelXRotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
+			Ven$Angles.degreeToRadian(Program4.profile.modelRatation.x),
+			new Ven$Vector3(1, 0, 0)
 		)
+		const modelYRotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
+			Ven$Angles.degreeToRadian(Program4.profile.modelRatation.y),
+			new Ven$Vector3(0, 1, 0)
+		)
+		const modelZRotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
+			Ven$Angles.degreeToRadian(Program4.profile.modelRatation.z),
+			new Ven$Vector3(0, 0, 1)
+		)
+		/**
+		 * 创建平移矩阵
+		 */
+		const modelOffsetMatrix4 = Ven$CanvasMatrix4.setTranslate(
+			new Ven$Vector3(Program4.profile.modelOffset.x, Program4.profile.modelOffset.y, Program4.profile.modelOffset.z)
+		)
+		/**
+		 * 生成复合变换矩阵
+		 */
 		const modelEffectMatrix4 = modelXRotationMatrix4
 			.multiply4(modelYRotationMatrix4)
 			.multiply4(modelZRotationMatrix4)

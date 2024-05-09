@@ -344,6 +344,9 @@ class Ven$CanvasMatrix4 {
 		matrix4.data[15] = 1
 		return matrix4
 	}
+	static setOrthoRectView(aspect, near = 100, far = -100, padding = 1) {
+		return this.setOrtho(-aspect * padding, aspect * padding, -padding, padding, near, far)
+	}
 }
 
 /****************************************************************************************************/

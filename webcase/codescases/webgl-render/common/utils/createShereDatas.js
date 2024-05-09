@@ -99,7 +99,7 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, centerX 
 		 *      即可求 L(ij-Y) 的长度为 LENG{L(ij-Y)} = Math.cos(RADIAN_EACH_DIVIDE_COUNT_MERIDIAN * i), 也即 COORDINATE_Y 的值
 		 */
 		const tmpY = Math.cos(radianEachDivideCountMeridian * i)
-		const coordinateY = ven$calcAbsoluteValue(radius * tmpY)
+		const coordinateY = Ven$Math.calcAbsoluteValue(radius * tmpY)
 		for (let j = 0; j < meridianCountNum; j++) {
 			/**
 			 * 计算纬线圈的每个分割点在 Z 轴上的坐标
@@ -117,8 +117,8 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, centerX 
 			 */
 			const tmpX = Math.sin(radianEachDivideCountMeridian * i) * Math.sin(radianEachDivideCountLatitude * j)
 			const tmpZ = Math.sin(radianEachDivideCountMeridian * i) * Math.cos(radianEachDivideCountLatitude * j)
-			const coordinateX = ven$calcAbsoluteValue(radius * tmpX)
-			const coordinateZ = ven$calcAbsoluteValue(-1 * radius * tmpZ)
+			const coordinateX = Ven$Math.calcAbsoluteValue(radius * tmpX)
+			const coordinateZ = Ven$Math.calcAbsoluteValue(-1 * radius * tmpZ)
 			originalPositions.push(coordinateX, coordinateY, coordinateZ)
 			originalNormals.push(tmpX, tmpY, tmpZ)
 			originalPositionsSequence[`${i}-${j}`] = {
