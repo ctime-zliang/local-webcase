@@ -131,9 +131,11 @@ class Ven$CanvasMatrix4 {
 		return this.createPerspectiveProjectionMatrix4(left, left + width, top, top - height, near, far)
 	}
 
-	/********************************************************************************/
-	/********************************************************************************/
-	/********************************************************************************/
+	/****************************************************************************************************/
+	/****************************************************************************************************/
+	/****************************************************************************************************/
+	/****************************************************************************************************/
+	/****************************************************************************************************/
 
 	/**
 	 * @description 创建变换矩阵: 旋转矩阵
@@ -143,11 +145,10 @@ class Ven$CanvasMatrix4 {
 	 * @return {Ven$Matrix4}
 	 */
 	static setRotateMatrxi4(radian, axisVector3) {
-		const { x, y, z } = axisVector3
 		const matrix4 = new Ven$Matrix4()
+		const { x, y, z } = axisVector3
 		let s = Math.sin(radian)
 		let c = Math.cos(radian)
-
 		if (0 !== x && 0 === y && 0 === z) {
 			// Rotation around X axis
 			if (x < 0) {
@@ -227,7 +228,6 @@ class Ven$CanvasMatrix4 {
 			let xs = x * s
 			let ys = y * s
 			let zs = z * s
-
 			matrix4.data[0] = x * x * nc + c
 			matrix4.data[1] = xy * nc + zs
 			matrix4.data[2] = zx * nc - ys
@@ -245,7 +245,6 @@ class Ven$CanvasMatrix4 {
 			matrix4.data[14] = 0
 			matrix4.data[15] = 1
 		}
-
 		return matrix4
 	}
 
@@ -256,8 +255,8 @@ class Ven$CanvasMatrix4 {
 	 * @return {Ven$Matrix4}
 	 */
 	static setTranslate(directionVector3) {
-		const { x, y, z } = directionVector3
 		const matrix4 = new Ven$Matrix4()
+		const { x, y, z } = directionVector3
 		matrix4.data[0] = 1
 		matrix4.data[4] = 0
 		matrix4.data[8] = 0
@@ -284,8 +283,8 @@ class Ven$CanvasMatrix4 {
 	 * @return {Ven$Matrix4}
 	 */
 	static setScale(directionVector3) {
-		const { x, y, z } = directionVector3
 		const matrix4 = new Ven$Matrix4()
+		const { x, y, z } = directionVector3
 		matrix4.data[0] = x
 		matrix4.data[4] = 0
 		matrix4.data[8] = 0
@@ -304,13 +303,54 @@ class Ven$CanvasMatrix4 {
 		matrix4.data[15] = 1
 		return matrix4
 	}
+
+	/**
+	 * @description 创建正交投影矩阵
+	 * @function setOrtho
+	 * @param {number} left 可视范围左侧裁剪位置(左侧边界)
+	 * @param {number} right 可视范围右侧裁剪位置(右侧边界)
+	 * @param {number} bottom 可视范围底部裁剪位置(底部边界)
+	 * @param {number} top 可视范围顶部裁剪位置(顶部边界)
+	 * @param {number} near 可视范围纵深方向近端裁剪位置(近端边界)
+	 * @param {number} far 可视范围纵深方向远端裁剪位置(远端边界)
+	 * @return {Ven$Matrix4}
+	 */
+	static setOrtho(left, right, bottom, top, near, far) {
+		const matrix4 = new Ven$Matrix4()
+		let rw = 0
+		let rh = 0
+		let rd = 0
+		if (left === right || bottom === top || near === far) {
+			throw 'null frustum'
+		}
+		rw = 1 / (right - left)
+		rh = 1 / (top - bottom)
+		rd = 1 / (far - near)
+		matrix4.data[0] = 2 * rw
+		matrix4.data[1] = 0
+		matrix4.data[2] = 0
+		matrix4.data[3] = 0
+		matrix4.data[4] = 0
+		matrix4.data[5] = 2 * rh
+		matrix4.data[6] = 0
+		matrix4.data[7] = 0
+		matrix4.data[8] = 0
+		matrix4.data[9] = 0
+		matrix4.data[10] = -2 * rd
+		matrix4.data[11] = 0
+		matrix4.data[12] = -(right + left) * rw
+		matrix4.data[13] = -(top + bottom) * rh
+		matrix4.data[14] = -(far + near) * rd
+		matrix4.data[15] = 1
+		return matrix4
+	}
 }
 
-/********************************************************************************/
-/********************************************************************************/
-/********************************************************************************/
-/********************************************************************************/
-/********************************************************************************/
+/****************************************************************************************************/
+/****************************************************************************************************/
+/****************************************************************************************************/
+/****************************************************************************************************/
+/****************************************************************************************************/
 
 /**
  * @description 创建绕轴旋转矩阵

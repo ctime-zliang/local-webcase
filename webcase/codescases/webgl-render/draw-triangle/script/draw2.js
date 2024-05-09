@@ -56,6 +56,9 @@ function drawCanvas2(containerElement) {
 	const render = angle => {
 		gl.clearColor(0.0, 0.0, 0.0, 1.0)
 		gl.clear(gl.COLOR_BUFFER_BIT)
+		/**
+		 * 创建绕轴旋转矩阵
+		 */
 		const transformMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(angle), new Ven$Vector3(0, 0, 1))
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(transformMatrix4.data))
 		gl.drawArrays(gl.TRIANGLES, 0, 3)
@@ -73,12 +76,14 @@ function drawCanvas2(containerElement) {
 		return newAngle % 360
 	}
 
+	const strat = performance.now()
 	const exec = () => {
 		render(angle)
 		angle = getNextAngle(angle)
 		if (angle >= 90) {
 			angle = 90
 			render(angle)
+			console.log(`draw2: matrix-transform finish: `, performance.now() - strat)
 			return
 		}
 		requestAnimationFrame(exec)

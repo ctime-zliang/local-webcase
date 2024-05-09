@@ -53,26 +53,48 @@ function drawCanvas3(containerElement) {
 
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW)
 
+	/**
+	 * 创建平移矩阵
+	 */
 	const translateMatrix4 = Ven$CanvasMatrix4.setTranslate(new Ven$Vector3(0.5, 0, 0))
 
-	const render = () => {
+	const render = angle => {
 		gl.clearColor(0.0, 0.0, 0.0, 1.0)
 		gl.clear(gl.COLOR_BUFFER_BIT)
-		const rotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(zAngle), new Ven$Vector3(0, 0, 1))
+		/**
+		 * 创建绕轴旋转矩阵
+		 */
+		const rotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(angle), new Ven$Vector3(0, 0, 1))
+		/**
+		 * 生成复合变换矩阵
+		 */
 		const transformMatrix4 = translateMatrix4.multiply4(rotationMatrix4)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(transformMatrix4.data))
 		gl.drawArrays(gl.TRIANGLES, 0, 3)
 	}
 
-	let zAngle = 0
+	let angle = 0
 
+	const ANGLE_STEP = 45.0
+	let lastTimeStamp = performance.now()
+	const getNextAngle = (angle = 0) => {
+		const now = performance.now()
+		const elapsed = now - lastTimeStamp
+		lastTimeStamp = now
+		const newAngle = angle + (ANGLE_STEP * elapsed) / 1000.0
+		return newAngle % 360
+	}
+
+	const strat = performance.now()
 	const exec = () => {
-		zAngle += 0.5
-		if (zAngle >= 90) {
-			render()
+		render(angle)
+		angle = getNextAngle(angle)
+		if (angle >= 90) {
+			angle = 90
+			render(angle)
+			console.log(`draw3: matrix-transform finish: `, performance.now() - strat)
 			return
 		}
-		render()
 		requestAnimationFrame(exec)
 	}
 
