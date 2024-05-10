@@ -93,7 +93,7 @@ function drawCanvas4(containerElement) {
 		 * 			表现为:
 		 * 				使图形在平移矩阵标记点 P 的位置
 		 */
-		const modelEffectMatrix4_0 = rotationMatrix4_1.multiply4(translateMatrix4)
+		const modelEffectMatrix4_0 = rotationMatrix4_2.multiply4(translateMatrix4).multiply4(rotationMatrix4_1)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelEffectMatrix4_0.data))
 		gl.drawArrays(gl.TRIANGLES, 0, 3)
 	}
