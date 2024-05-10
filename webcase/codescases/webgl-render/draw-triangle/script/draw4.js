@@ -23,9 +23,9 @@ function drawCanvas4(containerElement) {
 
 	// prettier-ignore
 	const positions = [
-		0.25, -0.25, 0, 
-		0, 0.35, 0, 
-		-0.25, -0.25, 0
+		0, 0.45, 0, 
+		0, 0, 0, 
+		0.45, 0, 0
 	]
 
 	const canvasElement = containerElement.querySelector('canvas')
@@ -55,34 +55,57 @@ function drawCanvas4(containerElement) {
 
 	/**
 	 * 创建平移矩阵
-	 * 		平移标记点 P(0.5, 0, 0)
 	 */
-	const translateMatrix4 = Ven$CanvasMatrix4.setTranslate(new Ven$Vector3(0.5, 0, 0))
+	const translate1Matrix4 = Ven$CanvasMatrix4.setTranslate(new Ven$Vector3(0.4, 0, 0))
+	const translate2Matrix4 = Ven$CanvasMatrix4.setTranslate(new Ven$Vector3(0, 0.1, 0))
+	const translate3Matrix4 = Ven$CanvasMatrix4.setTranslate(new Ven$Vector3(0, 0.1, 0.2))
+
+	/**
+	 * 复合平移矩阵
+	 * 		平移目标点 P
+	 */
+	const translateMatrix4 = translate2Matrix4.multiply4(translate1Matrix4)
+
+	{
+		console.log(`\n`)
+		console.log(`平移矩阵: `, translateMatrix4.toStringFormat())
+		const angle = 30
+		const rotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(angle), new Ven$Vector3(0, 0, 1))
+		const rotationMatrix4_1 = Ven$Matrix4.createRotateZMatrix4ByRadian(Ven$Angles.degreeToRadian(angle))
+		console.log(`绕 Z 坐标轴旋转矩阵: `, rotationMatrix4.toStringFormat())
+		console.log(`绕 Z 坐标轴旋转矩阵: `, rotationMatrix4_1.toStringFormat())
+
+		const aMatrix4 = rotationMatrix4_1.multiply4(translateMatrix4)
+		const bMatrix4 = translateMatrix4.multiply4(rotationMatrix4_1)
+		console.log(`R * T 变换矩阵: `, aMatrix4.toStringFormat())
+		console.log(`T * R 变换矩阵: `, bMatrix4.toStringFormat())
+		console.log(`\n`)
+	}
 
 	const render = angle => {
 		gl.clearColor(0.0, 0.0, 0.0, 1.0)
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		/**
-		 * 创建绕轴旋转矩阵
-		 * 		绕轴 Ven$Vector3(0, 0, 1) 旋转 angle 角度
-		 * 		绕轴 Ven$Vector3(0, 0, 1) 旋转 -angle 角度
+		 * 创建旋转矩阵
+		 * 		绕 Ven$Vector3(0, 0, 1) 轴方向自旋 angle 角度
+		 * 创建旋转矩阵
+		 * 		绕 Ven$Vector3(0, 0, 1) 轴方向自旋 -angle 角度
 		 */
 		const rotationMatrix4_1 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(angle), new Ven$Vector3(0, 0, 1))
 		const rotationMatrix4_2 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(-angle), new Ven$Vector3(0, 0, 1))
 		/**
 		 * 生成复合变换矩阵
 		 * 		rotationMatrix4_1.multiply4(translateMatrix4)
-		 * 			表现为:
-		 * 				使图形在平移矩阵标记点 P 的位置绕图形中心旋转 angle 角度
+		 * 			对旋转矩阵应用平移矩阵
+		 * 			表现为: 平移后在新的旋转中心自旋转
 		 * 		translateMatrix4.multiply4(rotationMatrix4_1)
-		 * 			表现为:
-		 * 				先将平移矩阵标记点 P 的位置旋转 angle 角度到点 P(r), 后将图形平移到点 P(r), 使图形在点 P(r) 的位置绕图形中心旋转 angle 角度
-		 * 		rotationMatrix4_2.multiply4(translateMatrix4).multiply4(rotationMatrix4_1)
-		 * 			表现为:
-		 * 				先将平移矩阵标记点 P 的位置旋转 angle 角度到点 P(r), 后将图形平移到点 P(r)
+		 * 			- 将图形平移至 P 点
+		 * 			- 将图形绕 Ven$Vector3(0, 0, 1) 轴方向自旋 angle 角度
 		 * 		rotationMatrix4_1.multiply4(translateMatrix4).multiply4(rotationMatrix4_2)
-		 * 			表现为:
-		 * 				先将平移矩阵标记点 P 的位置旋转 -angle 角度到点 P(r), 后将图形平移到点 P(r)
+		 * 			- 将图形绕 Ven$Vector3(0, 0, 1) 轴方向自旋 angle 角度
+		 * 			- 将图形平移至 P 点
+		 * 			- 将图形绕 Ven$Vector3(0, 0, 1) 轴方向自旋 -angle 角度
+		 * 		rotationMatrix4_2.multiply4(translateMatrix4).multiply4(rotationMatrix4_1)
 		 *
 		 * 		translateMatrix4.multiply4(rotationMatrix4_1).multiply4(rotationMatrix4_2)
 		 * 		translateMatrix4.multiply4(rotationMatrix4_2).multiply4(rotationMatrix4_1)
@@ -93,7 +116,7 @@ function drawCanvas4(containerElement) {
 		 * 			表现为:
 		 * 				使图形在平移矩阵标记点 P 的位置
 		 */
-		const modelEffectMatrix4_0 = rotationMatrix4_2.multiply4(translateMatrix4).multiply4(rotationMatrix4_1)
+		const modelEffectMatrix4_0 = rotationMatrix4_1.multiply4(translateMatrix4)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelEffectMatrix4_0.data))
 		gl.drawArrays(gl.TRIANGLES, 0, 3)
 	}
@@ -110,10 +133,13 @@ function drawCanvas4(containerElement) {
 		return newAngle % 360
 	}
 
+	let flag = false
 	const strat = performance.now()
 	const exec = () => {
 		render(angle)
-		angle = getNextAngle(angle)
+		if (flag) {
+			angle = getNextAngle(angle)
+		}
 		if (angle >= 90) {
 			angle = 90
 			render(angle)
@@ -122,6 +148,11 @@ function drawCanvas4(containerElement) {
 		}
 		requestAnimationFrame(exec)
 	}
+
+	window.setTimeout(() => {
+		flag = true
+		lastTimeStamp = performance.now()
+	}, 1000)
 
 	exec()
 }

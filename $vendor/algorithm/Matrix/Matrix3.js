@@ -1,4 +1,9 @@
-const VEN$MATRIX3_ORIGIN_DATA = [1, 0, 0, 0, 1, 0, 0, 0, 1]
+// prettier-ignore
+const VEN$MATRIX3_ORIGIN_DATA = [
+	1, 0, 0, 
+	0, 1, 0, 
+	0, 0, 1
+]
 
 class Ven$Matrix3 extends Ven$Matrix {
 	static ORIGIN = new Ven$Matrix3()
@@ -7,11 +12,24 @@ class Ven$Matrix3 extends Ven$Matrix {
 	 * 平移矩阵(坐标)
 	 */
 	static createTranslateMatrix3ByCoordinate(x, y) {
+		// prettier-ignore
 		/**
 		 * 转置前
-		 * 		[1, 0, x, 0, 1, y, 0, 0, 1]
+		 * 		[
+		 * 			1, 0, x,
+		 * 			0, 1, y,
+		 * 			0, 0, 1
+		 *		]
 		 */
-		return new Ven$Matrix3([1, 0, 0, 0, 1, 0, x, y, 1])
+		// prettier-ignore
+		return new Ven$Matrix3(
+			// prettier-ignore
+			[
+				1, 0, 0, 
+				0, 1, 0, 
+				x, y, 1
+			]
+		)
 	}
 
 	/**
@@ -20,33 +38,71 @@ class Ven$Matrix3 extends Ven$Matrix {
 	static createRotateZMatrix3ByRadian(radian) {
 		const cos = Math.cos(radian)
 		const sin = Math.sin(radian)
+		// prettier-ignore
 		/**
 		 * 转置前
-		 * 		[cos, -sin, 0, sin, cos, 0, 0, 0, 1]
+		 * 		[
+		 * 			cos, -sin, 0,
+		 * 			sin, cos,  0,
+		 * 			0,   0,    1
+		 * 		]
 		 */
-		return new Ven$Matrix3([cos, sin, 0, -sin, cos, 0, 0, 0, 1])
+		// prettier-ignore
+		return new Ven$Matrix3(
+			// prettier-ignore
+			[
+				cos,  sin, 0, 
+				-sin, cos, 0, 
+				0,    0,   1
+			]
+		)
 	}
 
 	/**
 	 * 缩放矩阵(比例)
 	 */
 	static createScaleMatrix3ByRatio(ratio) {
+		// prettier-ignore
 		/**
 		 * 转置前
-		 * 		[ratio, 0, 0, 0, ratio, 0, 0, 0, 1]
+		 * 		[
+		 * 			ratio, 0,     0,
+		 * 			0,     ratio, 0,
+		 * 			0,     0,     1
+		 * 		]
 		 */
-		return new Ven$Matrix3([ratio, 0, 0, 0, ratio, 0, 0, 0, 1])
+		// prettier-ignore
+		return new Ven$Matrix3(
+			// prettier-ignore
+			[
+				ratio, 0,     0, 
+				0,     ratio, 0, 
+				0,     0,     1
+			]
+		)
 	}
 
 	/**
 	 * 缩放矩阵(坐标)
 	 */
 	static createScaleMatrix3ByCoordinate(x, y) {
+		// prettier-ignore
 		/**
 		 * 转置前
-		 * 		[x, 0, 0, 0, y, 0, 0, 0, 1]
+		 * 		[
+		 * 			x, 0, 0,
+		 * 			0, y, 0,
+		 * 			0, 0, 1
+		 * 		]
 		 */
-		return new Ven$Matrix3([x, 0, 0, 0, y, 0, 0, 0, 1])
+		return new Ven$Matrix3(
+			// prettier-ignore
+			[
+				x, 0, 0, 
+				0, y, 0, 
+				0, 0, 1
+			]
+		)
 	}
 
 	constructor(data = [...VEN$MATRIX3_ORIGIN_DATA]) {

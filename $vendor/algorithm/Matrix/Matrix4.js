@@ -1,4 +1,10 @@
-const VEN$MATRIX4_ORIGIN_DATA = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+// prettier-ignore
+const VEN$MATRIX4_ORIGIN_DATA = [
+	1, 0, 0, 0, 
+	0, 1, 0, 0, 
+	0, 0, 1, 0,
+	0, 0, 0, 1
+]
 
 class Ven$Matrix4 extends Ven$Matrix {
 	static ORIGIN = new Ven$Matrix4()
@@ -7,11 +13,26 @@ class Ven$Matrix4 extends Ven$Matrix {
 	 * 平移矩阵(坐标)
 	 */
 	static createTranslateMatrix4ByCoordinate(x, y, z) {
+		// prettier-ignore
 		/**
 		 * 转置前
-		 * 		[1, 0, 0, x, 0, 1, 0, y, 0, 0, 1, z, 0, 0, 0, 1]
+		 * 		[
+		 * 			1, 0, 0, x,
+		 * 			0, 1, 0, y,
+		 * 			0, 0, 1, z,
+		 * 			0, 0, 0, 1
+		 * 		]
 		 */
-		return new Ven$Matrix4([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1])
+		// prettier-ignore
+		return new Ven$Matrix4(
+			// prettier-ignore
+			[
+				1, 0, 0, 0, 
+				0, 1, 0, 0, 
+				0, 0, 1, 0, 
+				x, y, z, 1
+			]
+		)
 	}
 
 	/**
@@ -20,58 +41,147 @@ class Ven$Matrix4 extends Ven$Matrix {
 	static createRotateXMatrix4ByRadian(radian) {
 		const cos = Math.cos(radian)
 		const sin = Math.sin(radian)
+		// prettier-ignore
 		/**
 		 * 转置前
-		 * 		[1, 0, 0, 0, 0, cos, -sin, 0, 0, sin, cos, 0, 0, 0, 0, 1]
+		 * 		[
+		 * 			1, 0,   0,    0,
+		 * 			0, cos, -sin, 0,
+		 * 			0, sin, cos,  0,
+		 * 			0, 0,   0,    1
+		 * 		]
 		 */
-		return new Ven$Matrix4([1, 0, 0, 0, 0, cos, sin, 0, 0, -sin, cos, 0, 0, 0, 0, 1])
+		// prettier-ignore
+		return new Ven$Matrix4(
+			// prettier-ignore
+			[
+				1, 0,    0,   0, 
+				0, cos,  sin, 0, 
+				0, -sin, cos, 0, 
+				0, 0,    0,   1
+			]
+		)
 	}
 	static createRotateYMatrix4ByRadian(radian) {
 		const cos = Math.cos(radian)
 		const sin = Math.sin(radian)
+		// prettier-ignore
 		/**
 		 * 转置前
-		 * 		[cos, 0, sin, 0, 0, 1, 0, 0, -sin, 0, cos, 0, 0, 0, 0, 1]
+		 * 		[
+		 * 			cos,  0, sin, 0,
+		 * 			0,    1, 0,   0,
+		 * 			-sin, 0, cos, 0,
+		 * 			0, 0, 0, 1
+		 * 		]
 		 */
-		return new Ven$Matrix4([cos, 0, -sin, 0, 0, 1, 0, 0, sin, 0, cos, 0, 0, 0, 0, 1])
+		// prettier-ignore
+		return new Ven$Matrix4(
+			// prettier-ignore
+			[
+				cos, 0, -sin, 0, 
+				0,   1, 0,    0, 
+				sin, 0, cos,  0, 
+				0,   0, 0,    1
+			]
+		)
 	}
 	static createRotateZMatrix4ByRadian(radian) {
 		const cos = Math.cos(radian)
 		const sin = Math.sin(radian)
+		// prettier-ignore
 		/**
 		 * 转置前
-		 * 		[cos, -sin, 0, 0, sin, cos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+		 * 		[
+		 * 			cos, -sin, 0, 0,
+		 * 			sin, cos,  0, 0,
+		 * 			0,   0,    1, 0,
+		 * 			0,   0,    0, 1
+		 * 		]
 		 */
-		return new Ven$Matrix4([cos, sin, 0, 0, -sin, cos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
+		// prettier-ignore
+		return new Ven$Matrix4(
+			// prettier-ignore
+			[
+				cos,  sin, 0, 0, 
+				-sin, cos, 0, 0, 
+				0,    0,   1, 0, 
+				0,    0,   0, 1
+			]
+		)
 	}
 
 	/**
 	 * 缩放矩阵(坐标)
 	 */
 	static createScaleMatrix4ByCoordinate(x, y, z) {
+		// prettier-ignore
 		/**
 		 * 转置前
-		 * 		[x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1]
+		 * 		[
+		 * 			x, 0, 0, 0,
+		 * 			0, y, 0, 0,
+		 * 			0, 0, z, 0,
+		 * 			0, 0, 0, 1
+		 * 		]
 		 */
-		return new Ven$Matrix4([x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1])
+		// prettier-ignore
+		return new Ven$Matrix4(
+			// prettier-ignore
+			[
+				x, 0, 0, 0, 
+				0, y, 0, 0, 
+				0, 0, z, 0, 
+				0, 0, 0, 1
+			]
+		)
 	}
 
 	/**
 	 * 翻转矩阵
 	 */
 	static createFlipXMatrix4() {
+		// prettier-ignore
 		/**
 		 * 转置前
-		 * 		[1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+		 * 		[
+		 * 			1, 0,  0, 0,
+		 * 			0, -1, 0, 0,
+		 * 			0, 0,  1, 0,
+		 * 			0, 0,  0, 1
+		 * 		]
 		 */
-		return new Ven$Matrix4([1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
+		// prettier-ignore
+		return new Ven$Matrix4(
+			// prettier-ignore
+			[
+				1, 0,  0, 0, 
+				0, -1, 0, 0, 
+				0, 0,  1, 0, 
+				0, 0,  0, 1
+			]
+		)
 	}
 	static createFlipYMatrix4() {
+		// prettier-ignore
 		/**
 		 * 转置前
-		 * 		[-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+		 * 		[
+		 * 			-1, 0, 0, 0,
+		 * 			0,  1, 0, 0,
+		 * 			0,  0, 1, 0,
+		 * 			0,  0, 0, 1
+		 * 		]
 		 */
-		return new Ven$Matrix4([-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
+		// prettier-ignore
+		return new Ven$Matrix4(
+			// prettier-ignore
+			[
+				-1, 0, 0, 0, 
+				0,  1, 0, 0, 
+				0,  0, 1, 0, 
+				0,  0, 0, 1
+			])
 	}
 
 	static matrix4RotateZByRadianForPoint(radian, centerPoint) {
