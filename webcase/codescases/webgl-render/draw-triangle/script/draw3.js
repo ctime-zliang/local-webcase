@@ -65,10 +65,12 @@ function drawCanvas3(containerElement) {
 		 * 创建绕轴旋转矩阵
 		 */
 		const rotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(angle), new Ven$Vector3(0, 0, 1))
+		const rotationMatrix4_1 = Ven$Matrix4.createRotateZMatrix4ByRadian(Ven$Angles.degreeToRadian(angle))
 		/**
 		 * 生成复合变换矩阵
 		 */
 		const modelEffectMatrix4 = translateMatrix4.multiply4(rotationMatrix4)
+		const modelEffectMatrix4_1 = translateMatrix4.multiply4(rotationMatrix4_1)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelEffectMatrix4.data))
 		gl.drawArrays(gl.TRIANGLES, 0, 3)
 	}
