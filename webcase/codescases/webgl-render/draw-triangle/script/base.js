@@ -13,6 +13,11 @@ function main() {
 
 	const appContainer5Element = document.getElementById('appContainer5')
 	drawCanvas5(appContainer5Element)
+
+	const appContainer6Element = document.getElementById('appContainer6')
+	drawCanvas6(appContainer6Element)
 }
 
-window.document.addEventListener('DOMContentLoaded', main)
+window.onload = function () {
+	main()
+}

@@ -9,4 +9,6 @@ function main() {
 	drawCanvas1(appContainer3Element, 'LINE_LOOP')
 }
 
-window.document.addEventListener('DOMContentLoaded', main)
+window.onload = function () {
+	main()
+}

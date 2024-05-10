@@ -9,4 +9,6 @@ function main() {
 	drawCanvas3(appContainer3Element)
 }
 
-window.document.addEventListener('DOMContentLoaded', main)
+window.onload = function () {
+	main()
+}

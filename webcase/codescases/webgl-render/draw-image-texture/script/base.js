@@ -6,4 +6,6 @@ function main() {
 	drawCanvas2(appContainer2Element)
 }
 
-window.document.addEventListener('DOMContentLoaded', main)
+window.onload = function () {
+	main()
+}

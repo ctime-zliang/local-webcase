@@ -1,4 +1,8 @@
 class Ven$CanvasMatrix4 {
+	static setMatrix4() {
+		return new Ven$Matrix4()
+	}
+
 	/**
 	 * @description 创建(相机)视图矩阵
 	 * @function createViewAtMatrix4
@@ -147,11 +151,14 @@ class Ven$CanvasMatrix4 {
 	static setRotateMatrxi4(radian, axisVector3) {
 		const matrix4 = new Ven$Matrix4()
 		const { x, y, z } = axisVector3
+		let vx = x
+		let vy = y
+		let vz = z
 		let s = Math.sin(radian)
 		let c = Math.cos(radian)
-		if (0 !== x && 0 === y && 0 === z) {
+		if (0 !== vx && 0 === vy && 0 === vz) {
 			// Rotation around X axis
-			if (x < 0) {
+			if (vx < 0) {
 				s = -s
 			}
 			matrix4.data[0] = 1
@@ -170,9 +177,9 @@ class Ven$CanvasMatrix4 {
 			matrix4.data[7] = 0
 			matrix4.data[11] = 0
 			matrix4.data[15] = 1
-		} else if (0 === x && 0 !== y && 0 === z) {
+		} else if (0 === vx && 0 !== vy && 0 === vz) {
 			// Rotation around Y axis
-			if (y < 0) {
+			if (vy < 0) {
 				s = -s
 			}
 			matrix4.data[0] = c
@@ -191,9 +198,9 @@ class Ven$CanvasMatrix4 {
 			matrix4.data[7] = 0
 			matrix4.data[11] = 0
 			matrix4.data[15] = 1
-		} else if (0 === x && 0 === y && 0 !== z) {
+		} else if (0 === vx && 0 === vy && 0 !== vz) {
 			// Rotation around Z axis
-			if (z < 0) {
+			if (vz < 0) {
 				s = -s
 			}
 			matrix4.data[0] = c
@@ -214,31 +221,31 @@ class Ven$CanvasMatrix4 {
 			matrix4.data[15] = 1
 		} else {
 			// Rotation around another axis
-			const len = Math.sqrt(x * x + y * y + z * z)
+			const len = Math.sqrt(vx * vx + vy * vy + vz * vz)
 			if (len !== 1) {
 				const rlen = 1 / len
-				x *= rlen
-				y *= rlen
-				z *= rlen
+				vx *= rlen
+				vy *= rlen
+				vz *= rlen
 			}
 			let nc = 1 - c
-			let xy = x * y
-			let yz = y * z
-			let zx = z * x
-			let xs = x * s
-			let ys = y * s
-			let zs = z * s
-			matrix4.data[0] = x * x * nc + c
+			let xy = vx * vy
+			let yz = vy * vz
+			let zx = vz * vx
+			let xs = vx * s
+			let ys = vy * s
+			let zs = vz * s
+			matrix4.data[0] = vx * vx * nc + c
 			matrix4.data[1] = xy * nc + zs
 			matrix4.data[2] = zx * nc - ys
 			matrix4.data[3] = 0
 			matrix4.data[4] = xy * nc - zs
-			matrix4.data[5] = y * y * nc + c
+			matrix4.data[5] = vy * vy * nc + c
 			matrix4.data[6] = yz * nc + xs
 			matrix4.data[7] = 0
 			matrix4.data[8] = zx * nc + ys
 			matrix4.data[9] = yz * nc - xs
-			matrix4.data[10] = z * z * nc + c
+			matrix4.data[10] = vz * vz * nc + c
 			matrix4.data[11] = 0
 			matrix4.data[12] = 0
 			matrix4.data[13] = 0
@@ -346,6 +353,54 @@ class Ven$CanvasMatrix4 {
 	}
 	static setOrthoRectView(aspect, near = 100, far = -100, padding = 1) {
 		return this.setOrtho(-aspect * padding, aspect * padding, -padding, padding, near, far)
+	}
+
+	static setLookAt(eyeVector3, atVector3, upVector3 = new Ven$Vector3(0, 1, 0)) {
+		const matrix4 = new Ven$Matrix4()
+		const { x: eyeX, y: eyeY, z: eyeZ } = eyeVector3
+		const { x: atX, y: atY, z: atZ } = atVector3
+		const { x: upX, y: upY, z: upZ } = upVector3
+
+		let fx = atX - eyeX
+		let fy = atY - eyeY
+		let fz = atZ - eyeZ
+
+		const rlf = 1 / Math.sqrt(fx * fx + fy * fy + fz * fz)
+		fx *= rlf
+		fy *= rlf
+		fz *= rlf
+
+		let sx = fy * upZ - fz * upY
+		let sy = fz * upX - fx * upZ
+		let sz = fx * upY - fy * upX
+
+		const rls = 1 / Math.sqrt(sx * sx + sy * sy + sz * sz)
+		sx *= rls
+		sy *= rls
+		sz *= rls
+
+		let ux = sy * fz - sz * fy
+		let uy = sz * fx - sx * fz
+		let uz = sx * fy - sy * fx
+
+		matrix4.data[0] = sx
+		matrix4.data[1] = ux
+		matrix4.data[2] = -fx
+		matrix4.data[3] = 0
+		matrix4.data[4] = sy
+		matrix4.data[5] = uy
+		matrix4.data[6] = -fy
+		matrix4.data[7] = 0
+		matrix4.data[8] = sz
+		matrix4.data[9] = uz
+		matrix4.data[10] = -fz
+		matrix4.data[11] = 0
+		matrix4.data[12] = 0
+		matrix4.data[13] = 0
+		matrix4.data[14] = 0
+		matrix4.data[15] = 1
+
+		return Ven$CanvasMatrix4.setTranslate(new Ven$Vector3(-eyeX, -eyeY, -eyeZ)).multiply4(matrix4)
 	}
 }
 

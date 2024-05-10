@@ -359,3 +359,17 @@ function ven$accurateSetTimeout(callback, options = null, interval = (1 / 60) * 
 
 	instance()
 }
+
+/**
+ * @description 动态引入 script
+ * @function ven$importScript
+ * @param {string} src script url
+ * @return {void}
+ */
+function ven$importScript(src) {
+	const iScriptElement = document.createElement('script')
+	iScriptElement.src = src
+	iScriptElement.type = 'text/javascript'
+	const tScriptElement = document.getElementsByTagName('script')[0]
+	tScriptElement.parentNode.insertBefore(iScriptElement, tScriptElement)
+}
