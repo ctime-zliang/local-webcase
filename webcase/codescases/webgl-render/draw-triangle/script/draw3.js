@@ -67,10 +67,6 @@ function drawCanvas3(containerElement) {
 		const rotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(angle), new Ven$Vector3(0, 0, 1))
 		/**
 		 * 生成复合变换矩阵
-		 * 		rotationMatrix4.multiply4(translateMatrix4)
-		 * 			表现为: 使图形在平移矩阵标记的位置绕图形中心旋转
-		 * 		translateMatrix4.multiply4(rotationMatrix4)
-		 * 			表现为: 先将平移矩阵标记的位置旋转到点 P(r), 后将图形平移到点 P(r), 使图形在点 P(r) 的位置绕图形中心旋转
 		 */
 		const modelEffectMatrix4 = translateMatrix4.multiply4(rotationMatrix4)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelEffectMatrix4.data))

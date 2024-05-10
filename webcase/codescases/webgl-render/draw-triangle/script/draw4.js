@@ -55,6 +55,7 @@ function drawCanvas4(containerElement) {
 
 	/**
 	 * 创建平移矩阵
+	 * 		平移标记点 P(0.5, 0, 0)
 	 */
 	const translateMatrix4 = Ven$CanvasMatrix4.setTranslate(new Ven$Vector3(0.5, 0, 0))
 
@@ -63,14 +64,37 @@ function drawCanvas4(containerElement) {
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		/**
 		 * 创建绕轴旋转矩阵
+		 * 		绕轴 Ven$Vector3(0, 0, 1) 旋转 angle 角度
+		 * 		绕轴 Ven$Vector3(0, 0, 1) 旋转 -angle 角度
 		 */
-		const rotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(angle), new Ven$Vector3(0, 0, 1))
+		const rotationMatrix4_1 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(angle), new Ven$Vector3(0, 0, 1))
 		const rotationMatrix4_2 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(-angle), new Ven$Vector3(0, 0, 1))
 		/**
 		 * 生成复合变换矩阵
+		 * 		rotationMatrix4_1.multiply4(translateMatrix4)
+		 * 			表现为:
+		 * 				使图形在平移矩阵标记点 P 的位置绕图形中心旋转 angle 角度
+		 * 		translateMatrix4.multiply4(rotationMatrix4_1)
+		 * 			表现为:
+		 * 				先将平移矩阵标记点 P 的位置旋转 angle 角度到点 P(r), 后将图形平移到点 P(r), 使图形在点 P(r) 的位置绕图形中心旋转 angle 角度
+		 * 		rotationMatrix4_2.multiply4(translateMatrix4).multiply4(rotationMatrix4_1)
+		 * 			表现为:
+		 * 				先将平移矩阵标记点 P 的位置旋转 angle 角度到点 P(r), 后将图形平移到点 P(r)
+		 * 		rotationMatrix4_1.multiply4(translateMatrix4).multiply4(rotationMatrix4_2)
+		 * 			表现为:
+		 * 				先将平移矩阵标记点 P 的位置旋转 -angle 角度到点 P(r), 后将图形平移到点 P(r)
+		 *
+		 * 		translateMatrix4.multiply4(rotationMatrix4_1).multiply4(rotationMatrix4_2)
+		 * 		translateMatrix4.multiply4(rotationMatrix4_2).multiply4(rotationMatrix4_1)
+		 * 			表现为:
+		 * 				使图形在平移矩阵标记点 P 的位置
+		 * 		rotationMatrix4_1.multiply4(rotationMatrix4_2).multiply4(translateMatrix4)
+		 * 		rotationMatrix4_2.multiply4(rotationMatrix4_1).multiply4(translateMatrix4)
+		 * 			表现为:
+		 * 				使图形在平移矩阵标记点 P 的位置
 		 */
-		const modelEffectMatrix4 = rotationMatrix4_2.multiply4(translateMatrix4).multiply4(rotationMatrix4)
-		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelEffectMatrix4.data))
+		const modelEffectMatrix4_0 = rotationMatrix4_1.multiply4(translateMatrix4)
+		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelEffectMatrix4_0.data))
 		gl.drawArrays(gl.TRIANGLES, 0, 3)
 	}
 
