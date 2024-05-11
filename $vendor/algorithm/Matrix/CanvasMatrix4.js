@@ -355,6 +355,14 @@ class Ven$CanvasMatrix4 {
 		return this.setOrtho(-aspect * padding, aspect * padding, -padding, padding, near, far)
 	}
 
+	/**
+	 * @description 创建视图矩阵
+	 * @function setLookAt
+	 * @param {Ven$Vector3} eyeVector3 观察者视点位置
+	 * @param {Ven$Vector3} atVector3 观察目标点位置
+	 * @param {Ven$Vector3} upVector3 观察者上方向
+	 * @return {Ven$Matrix4}
+	 */
 	static setLookAt(eyeVector3, atVector3, upVector3 = new Ven$Vector3(0, 1, 0)) {
 		const matrix4 = new Ven$Matrix4()
 		const { x: eyeX, y: eyeY, z: eyeZ } = eyeVector3

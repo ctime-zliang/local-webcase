@@ -90,9 +90,10 @@ function drawCanvas2(containerElement) {
 		attribute vec3 a_Position;
 		attribute vec4 a_Color;
 		varying vec4 v_Color;
-		uniform mat4 u_Matrix;
+		uniform mat4 u_ViewMatrix;
+		uniform mat4 u_ModelMatrix;
 		void main() {
-			gl_Position = u_Matrix * vec4(a_Position, 1);
+			gl_Position = u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1);
 			v_Color = a_Color;
 			gl_PointSize = 5.0;
 		}
@@ -108,18 +109,18 @@ function drawCanvas2(containerElement) {
 	// prettier-ignore
 	const datasResult = {
 		vertexPositions: new Float32Array([
-			/* 红色 */
-			0.0, 0.5, -0.4, 1.0, 0.0, 0.0, 1.0,
-			-0.5, -0.5, -0.4, 1.0, 0.0, 0.0, 1.0,
-			0.5, -0.5, -0.4, 1.0, 0.0, 0.0, 1.0,
 			/* 绿色 */
-			0.5, 0.5, -0.2, 0.0, 1.0, 0.0, 1.0,
-			-0.5, 0.5, -0.2, 0.0, 1.0, 0.0, 1.0,
-			0.0, -0.5, -0.2, 0.0, 1.0, 0.0, 1.0,
+			0.0, 0.5, -0.4, 0.4, 1.0, 0.4, 1.0,
+			-0.5, -0.5, -0.4, 0.4, 1.0, 0.4, 1.0,
+			0.5, -0.5, -0.4, 1.0, 0.4, 0.4, 1.0,
 			/* 黄色 */
-			0.0, 0.5, 0.0, 1.0, 1.0, 0.0, 1.0,
-			-0.5, -0.5, 0.0, 1.0, 1.0, 0.0, 1.0,
-			0.5, -0.5, 0.0, 1.0, 1.0, 0.0, 1.0,
+			0.5, 0.4, -0.2, 1.0, 0.4, 0.4, 1.0,
+			-0.5, 0.4, -0.2, 1.0, 1.0, 0.4, 1.0,
+			0.0, -0.6, -0.2, 1.0, 1.0, 0.4, 1.0,
+			/* 蓝色 */
+			0.0, 0.5, 0.0, 0.4, 0.4, 1.0, 1.0,
+			-0.5, -0.5, 0.0, 0.4, 0.4, 1.0, 1.0,
+			0.5, -0.5, 0.0, 1.0, 0.4, 0.4, 1.0
 		]),
 	}
 	console.log(datasResult)
@@ -135,10 +136,11 @@ function drawCanvas2(containerElement) {
 
 	gl.clearColor(0.0, 0.0, 0.0, 1.0)
 	gl.clear(gl.COLOR_BUFFER_BIT)
-	gl.enable(gl.CULL_FACE)
-	gl.enable(gl.DEPTH_TEST)
+	// gl.enable(gl.CULL_FACE)
+	// gl.enable(gl.DEPTH_TEST)
 
-	const u_Matrix = gl.getUniformLocation(program, 'u_Matrix')
+	const u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix')
+	const u_ModelMatrix = gl.getUniformLocation(program, 'u_ModelMatrix')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 	const a_Color = gl.getAttribLocation(program, 'a_Color')
 
@@ -156,7 +158,13 @@ function drawCanvas2(containerElement) {
 	 */
 	const orthoProjectionMatrix4 = Ven$CanvasMatrix4.setOrthoRectView(canvasElement.width / canvasElement.height, -25, 25, 1)
 
-	const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(new Ven$Vector3(0.2, 0.2, 0.2), new Ven$Vector3(0, 0, 0), new Ven$Vector3(0, 1, 0))
+	const webglDefaultLookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(new Ven$Vector3(0, 0, 0), new Ven$Vector3(0, 0, -1), new Ven$Vector3(0, 1, 0))
+	const lookAtMatrix4_1 = Ven$CanvasMatrix4.setLookAt(new Ven$Vector3(0.2, 0.2, 0.2), new Ven$Vector3(0, 0, -1), new Ven$Vector3(0, 1, 0))
+	const lookAtMatrix4_2 = Ven$CanvasMatrix4.setLookAt(new Ven$Vector3(0.2, 0.2, 0.2), new Ven$Vector3(0, 0, -0.5), new Ven$Vector3(0, 1, 0))
+	const lookAtMatrix4_3 = Ven$CanvasMatrix4.setLookAt(new Ven$Vector3(0.2, 0.2, 0.2), new Ven$Vector3(0, 0, 0), new Ven$Vector3(0, 1, 0))
+
+	const viewMatrix = new Matrix4()
+	viewMatrix.setLookAt(0.2, 0.2, 0.2, 0, 0, 0, 0, 1, 0)
 
 	const render = () => {
 		/**
@@ -189,7 +197,9 @@ function drawCanvas2(containerElement) {
 			.multiply4(modelOffsetMatrix4)
 		const modelResultMatrix4 = modelEffectMatrix4.multiply4(orthoProjectionMatrix4)
 
-		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(lookAtMatrix4.data))
+		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelZRotationMatrix4.data))
+		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4_3.data))
+		// gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements)
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, datasResult.vertexPositions.length / 7)
 	}
