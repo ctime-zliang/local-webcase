@@ -1,8 +1,8 @@
 /**
- * 通过视点观察固定图形
+ * 通过视点观察动态图形
  */
 
-class Program1 {
+class Program2 {
 	static containerElement
 	static profile = {
 		/**
@@ -29,13 +29,61 @@ class Program1 {
 		this.eventHandle()
 	}
 
-	static initFormView() {}
+	static initFormView() {
+		const self = this
+		const modelXRotationRangeElement = this.containerElement.querySelector(`[name="modelXRotationRange"]`)
+		const modelYRotationRangeElement = this.containerElement.querySelector(`[name="modelYRotationRange"]`)
+		const modelZRotationRangeElement = this.containerElement.querySelector(`[name="modelZRotationRange"]`)
+		const modelXOffsetRangeElement = this.containerElement.querySelector(`[name="modelXOffsetRange"]`)
+		const modelYOffsetRangeElement = this.containerElement.querySelector(`[name="modelYOffsetRange"]`)
+		const modelZOffsetRangeElement = this.containerElement.querySelector(`[name="modelZOffsetRange"]`)
 
-	static eventHandle() {}
+		modelXRotationRangeElement.value = self.profile.modelRatation.x
+		modelYRotationRangeElement.value = self.profile.modelRatation.y
+		modelZRotationRangeElement.value = self.profile.modelRatation.z
+		modelXOffsetRangeElement.value = self.profile.modelOffset.x
+		modelYOffsetRangeElement.value = self.profile.modelOffset.y
+		modelZOffsetRangeElement.value = self.profile.modelOffset.z
+	}
+
+	static eventHandle() {
+		const self = this
+		const modelXRotationRangeElement = this.containerElement.querySelector(`[name="modelXRotationRange"]`)
+		const modelYRotationRangeElement = this.containerElement.querySelector(`[name="modelYRotationRange"]`)
+		const modelZRotationRangeElement = this.containerElement.querySelector(`[name="modelZRotationRange"]`)
+		const modelXOffsetRangeElement = this.containerElement.querySelector(`[name="modelXOffsetRange"]`)
+		const modelYOffsetRangeElement = this.containerElement.querySelector(`[name="modelYOffsetRange"]`)
+		const modelZOffsetRangeElement = this.containerElement.querySelector(`[name="modelZOffsetRange"]`)
+
+		modelXRotationRangeElement.addEventListener('input', function (e) {
+			self.profile.modelRatation.x = +this.value
+			console.log('modelRatation:', JSON.stringify(self.profile.modelRatation))
+		})
+		modelYRotationRangeElement.addEventListener('input', function (e) {
+			self.profile.modelRatation.y = +this.value
+			console.log('modelRatation:', JSON.stringify(self.profile.modelRatation))
+		})
+		modelZRotationRangeElement.addEventListener('input', function (e) {
+			self.profile.modelRatation.z = +this.value
+			console.log('modelRatation:', JSON.stringify(self.profile.modelRatation))
+		})
+		modelXOffsetRangeElement.addEventListener('input', function (e) {
+			self.profile.modelOffset.x = +this.value
+			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
+		})
+		modelYOffsetRangeElement.addEventListener('input', function (e) {
+			self.profile.modelOffset.y = +this.value
+			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
+		})
+		modelZOffsetRangeElement.addEventListener('input', function (e) {
+			self.profile.modelOffset.z = +this.value
+			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
+		})
+	}
 }
 
-function drawCanvas1(containerElement) {
-	Program1.init(containerElement)
+function drawCanvas2(containerElement) {
+	Program2.init(containerElement)
 
 	const VS = `
 		precision mediump float;
@@ -109,35 +157,28 @@ function drawCanvas1(containerElement) {
 	const orthoProjectionMatrix4 = Ven$CanvasMatrix4.setOrthoRectView(canvasElement.width / canvasElement.height, -25, 25, 1)
 
 	const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(new Ven$Vector3(0.2, 0.2, 0.2), new Ven$Vector3(0, 0, 0), new Ven$Vector3(0, 1, 0))
-	const viewMatrix = new Matrix4()
-	viewMatrix.setLookAt(0.2, 0.2, 0.2, 0, 0, 0, 0, 1, 0)
-
-	console.log(lookAtMatrix4.data)
-	console.log(Array.from(viewMatrix.elements))
-
-	const initMatrix4 = Ven$CanvasMatrix4.setMatrix4()
 
 	const render = () => {
 		/**
 		 * 创建旋转矩阵
 		 */
 		const modelXRotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
-			Ven$Angles.degreeToRadian(Program1.profile.modelRatation.x),
+			Ven$Angles.degreeToRadian(Program2.profile.modelRatation.x),
 			new Ven$Vector3(1, 0, 0)
 		)
 		const modelYRotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
-			Ven$Angles.degreeToRadian(Program1.profile.modelRatation.y),
+			Ven$Angles.degreeToRadian(Program2.profile.modelRatation.y),
 			new Ven$Vector3(0, 1, 0)
 		)
 		const modelZRotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
-			Ven$Angles.degreeToRadian(Program1.profile.modelRatation.z),
+			Ven$Angles.degreeToRadian(Program2.profile.modelRatation.z),
 			new Ven$Vector3(0, 0, 1)
 		)
 		/**
 		 * 创建平移矩阵
 		 */
 		const modelOffsetMatrix4 = Ven$CanvasMatrix4.setTranslate(
-			new Ven$Vector3(Program1.profile.modelOffset.x, Program1.profile.modelOffset.y, Program1.profile.modelOffset.z)
+			new Ven$Vector3(Program2.profile.modelOffset.x, Program2.profile.modelOffset.y, Program2.profile.modelOffset.z)
 		)
 		/**
 		 * 生成复合变换矩阵
@@ -149,7 +190,6 @@ function drawCanvas1(containerElement) {
 		const modelResultMatrix4 = modelEffectMatrix4.multiply4(orthoProjectionMatrix4)
 
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(lookAtMatrix4.data))
-		// gl.uniformMatrix4fv(u_Matrix, false, viewMatrix.elements)
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, datasResult.vertexPositions.length / 7)
 	}

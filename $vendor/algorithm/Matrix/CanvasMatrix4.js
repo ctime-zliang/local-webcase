@@ -400,6 +400,7 @@ class Ven$CanvasMatrix4 {
 		matrix4.data[14] = 0
 		matrix4.data[15] = 1
 
+		// return matrix4.multiply4(Ven$CanvasMatrix4.setTranslate(new Ven$Vector3(-eyeX, -eyeY, -eyeZ)))
 		return Ven$CanvasMatrix4.setTranslate(new Ven$Vector3(-eyeX, -eyeY, -eyeZ)).multiply4(matrix4)
 	}
 }

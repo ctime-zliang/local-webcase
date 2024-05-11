@@ -23,9 +23,9 @@ function drawCanvas4(containerElement) {
 
 	// prettier-ignore
 	const positions = [
-		0, 0.45, 0, 
-		0, 0, 0, 
-		0.45, 0, 0
+		0.1, 0.45, 0, 
+		0.1, 0.1, 0, 
+		0.45, 0.1, 0
 	]
 
 	const canvasElement = containerElement.querySelector('canvas')
@@ -58,27 +58,28 @@ function drawCanvas4(containerElement) {
 	 */
 	const translate1Matrix4 = Ven$CanvasMatrix4.setTranslate(new Ven$Vector3(0.4, 0, 0))
 	const translate2Matrix4 = Ven$CanvasMatrix4.setTranslate(new Ven$Vector3(0, 0.1, 0))
-	const translate3Matrix4 = Ven$CanvasMatrix4.setTranslate(new Ven$Vector3(0, 0.1, 0.2))
 
 	/**
 	 * 复合平移矩阵
-	 * 		平移目标点 P
 	 */
 	const translateMatrix4 = translate2Matrix4.multiply4(translate1Matrix4)
 
 	{
 		console.log(`\n`)
-		console.log(`平移矩阵: `, translateMatrix4.toStringFormat())
+		console.log(`平移矩阵 T: `, translateMatrix4.toStringFormat())
 		const angle = 30
-		const rotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(angle), new Ven$Vector3(0, 0, 1))
-		const rotationMatrix4_1 = Ven$Matrix4.createRotateZMatrix4ByRadian(Ven$Angles.degreeToRadian(angle))
-		console.log(`绕 Z 坐标轴旋转矩阵: `, rotationMatrix4.toStringFormat())
-		console.log(`绕 Z 坐标轴旋转矩阵: `, rotationMatrix4_1.toStringFormat())
+		const rotationMatrix4_i = Ven$Matrix4.createRotateZMatrix4ByRadian(Ven$Angles.degreeToRadian(angle))
+		const rotationMatrix4_1 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(angle), new Ven$Vector3(0, 0, 1))
+		const rotationMatrix4_2 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(-angle), new Ven$Vector3(0, 0, 1))
 
-		const aMatrix4 = rotationMatrix4_1.multiply4(translateMatrix4)
-		const bMatrix4 = translateMatrix4.multiply4(rotationMatrix4_1)
-		console.log(`R * T 变换矩阵: `, aMatrix4.toStringFormat())
-		console.log(`T * R 变换矩阵: `, bMatrix4.toStringFormat())
+		// console.log(`绕 Z 坐标轴旋转矩阵 R: `, rotationMatrix4_i.toStringFormat())
+		console.log(`旋转矩阵 R1: `, rotationMatrix4_1.toStringFormat())
+
+		console.log(`R1 * T 变换矩阵: `, rotationMatrix4_1.multiply4(translateMatrix4).toStringFormat())
+		console.log(`T * R1 变换矩阵: `, translateMatrix4.multiply4(rotationMatrix4_1).toStringFormat())
+		console.log(`R1 * T * R2 变换矩阵: `, rotationMatrix4_1.multiply4(translateMatrix4).multiply4(rotationMatrix4_2).toStringFormat())
+		console.log(`R2 * T * R1 变换矩阵: `, rotationMatrix4_2.multiply4(translateMatrix4).multiply4(rotationMatrix4_1).toStringFormat())
+		console.log(`R1 * R2 * T 变换矩阵: `, rotationMatrix4_1.multiply4(rotationMatrix4_2).multiply4(translateMatrix4).toStringFormat())
 		console.log(`\n`)
 	}
 
@@ -87,36 +88,38 @@ function drawCanvas4(containerElement) {
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		/**
 		 * 创建旋转矩阵
-		 * 		绕 Ven$Vector3(0, 0, 1) 轴方向自旋 angle 角度
+		 * 		绕 L(O): Ven$Vector3(0, 0, 1) 轴方向自旋 angle 角度
 		 * 创建旋转矩阵
-		 * 		绕 Ven$Vector3(0, 0, 1) 轴方向自旋 -angle 角度
+		 * 		绕 L(O): Ven$Vector3(0, 0, 1) 轴方向自旋 -angle 角度
 		 */
 		const rotationMatrix4_1 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(angle), new Ven$Vector3(0, 0, 1))
 		const rotationMatrix4_2 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(-angle), new Ven$Vector3(0, 0, 1))
 		/**
 		 * 生成复合变换矩阵
 		 * 		rotationMatrix4_1.multiply4(translateMatrix4)
-		 * 			对旋转矩阵应用平移矩阵
-		 * 			表现为: 平移后在新的旋转中心自旋转
+		 * 			对旋转矩阵应用平移矩阵, 生成新矩阵 M(1)
+		 * 				将旋转矩阵包含的旋转量(包含旋转轴坐标/旋转角度/旋转方向)按照平移矩阵包含的平移量(包含长度/方向)进行平移
+		 * 			图形将按照 M(1) 进行变换
+		 * 				图形在固定的平移终点 P(r) 坐标点位置旋转
+		 *
 		 * 		translateMatrix4.multiply4(rotationMatrix4_1)
-		 * 			- 将图形平移至 P 点
-		 * 			- 将图形绕 Ven$Vector3(0, 0, 1) 轴方向自旋 angle 角度
+		 * 			对平移矩阵应用旋转矩阵, 生成新矩阵 M(1)
+		 * 				将平移矩阵包含的平移量(包含长度/方向)按照旋转矩阵包含的旋转量(包含旋转轴坐标/旋转角度/旋转方向)进行旋转
+		 * 			图形将按照 M(1) 进行变换
+		 * 				由于旋转矩阵包含的旋转量(包含旋转轴坐标/旋转角度/旋转方向)是一个跟随 angle 变化而变化的值
+		 * 				因此平移终点 P(r) 将围绕平移起点 P(o) 旋转
+		 * 				图形在动态的平移终点 P(r) 坐标点位置旋转
+		 *
 		 * 		rotationMatrix4_1.multiply4(translateMatrix4).multiply4(rotationMatrix4_2)
-		 * 			- 将图形绕 Ven$Vector3(0, 0, 1) 轴方向自旋 angle 角度
-		 * 			- 将图形平移至 P 点
-		 * 			- 将图形绕 Ven$Vector3(0, 0, 1) 轴方向自旋 -angle 角度
 		 * 		rotationMatrix4_2.multiply4(translateMatrix4).multiply4(rotationMatrix4_1)
 		 *
 		 * 		translateMatrix4.multiply4(rotationMatrix4_1).multiply4(rotationMatrix4_2)
 		 * 		translateMatrix4.multiply4(rotationMatrix4_2).multiply4(rotationMatrix4_1)
-		 * 			表现为:
-		 * 				使图形在平移矩阵标记点 P 的位置
+		 *
 		 * 		rotationMatrix4_1.multiply4(rotationMatrix4_2).multiply4(translateMatrix4)
 		 * 		rotationMatrix4_2.multiply4(rotationMatrix4_1).multiply4(translateMatrix4)
-		 * 			表现为:
-		 * 				使图形在平移矩阵标记点 P 的位置
 		 */
-		const modelEffectMatrix4_0 = rotationMatrix4_1.multiply4(translateMatrix4)
+		const modelEffectMatrix4_0 = rotationMatrix4_1.multiply4(translateMatrix4).multiply4(rotationMatrix4_2)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelEffectMatrix4_0.data))
 		gl.drawArrays(gl.TRIANGLES, 0, 3)
 	}
