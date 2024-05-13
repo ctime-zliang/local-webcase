@@ -74,48 +74,6 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0">Model X Offset: </label>
-					<input type="range" value="0" name="modelXOffsetRange" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
-				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0">Model Y Offset: </label>
-					<input type="range" value="0" name="modelYOffsetRange" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
-				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0">Model Z Offset: </label>
-					<input type="range" value="0" name="modelZOffsetRange" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
-				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
 					<label style="color: #ffffff; padding-right: 10px; margin: 0">LookAt-EyePosition X: </label>
 					<input type="range" name="lookAtMatrix4EyePositionX" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
 				</div>
@@ -163,6 +121,42 @@
 				</div>
 			</div>
 		</div>
+
+		<div id="appContainer3" class="app-container" style="position: relative">
+			<canvas width="512" height="512" style="background-color: transparent; border: 1px dashed #888888"></canvas>
+			<div style="position: absolute; left: 0; top: 256px; width: 512px; height: 0; border-top: 1px dashed #aaaaaa"></div>
+			<div style="position: absolute; left: 256px; top: 0; width: 0; height: 512px; border-left: 1px dashed #aaaaaa"></div>
+			<div style="position: absolute; left: 0; top: 0; padding: 10px 10px">
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">Ortho Near: </label>
+					<input type="range" value="0" name="orthoNear" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">Ortho Far: </label>
+					<input type="range" value="0" name="orthoFar" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+				</div>
+			</div>
+		</div>
 	</body>
 	<script type="text/javascript" src="../../../../$vendor/utils/utils.js"></script>
 	<script type="text/javascript" src="../../../../$vendor/utils/color.js"></script>
@@ -189,5 +183,6 @@
 	<!-- ... -->
 	<script type="text/javascript" src="./script/draw1.js"></script>
 	<script type="text/javascript" src="./script/draw2.js"></script>
+	<script type="text/javascript" src="./script/draw3.js"></script>
 	<script type="text/javascript" src="./script/base.js"></script>
 </html>

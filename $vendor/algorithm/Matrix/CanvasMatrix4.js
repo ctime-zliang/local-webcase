@@ -355,6 +355,49 @@ class Ven$CanvasMatrix4 {
 		return this.setOrtho(-aspect * padding, aspect * padding, -padding, padding, near, far)
 	}
 
+	static setPerspective(fovy, aspect, near, far) {
+		const matrix4 = new Ven$Matrix4()
+		if (near === far || aspect === 0) {
+			throw 'null frustum'
+		}
+		if (near <= 0) {
+			throw 'near <= 0'
+		}
+		if (far <= 0) {
+			throw 'far <= 0'
+		}
+
+		let _fovy = (Math.PI * fovy) / 180 / 2
+		let s = Math.sin(_fovy)
+		if (s === 0) {
+			throw 'null frustum'
+		}
+		let rd = 1 / (far - near)
+		let ct = Math.cos(_fovy) / s
+
+		matrix4.data[0] = ct / aspect
+		matrix4.data[1] = 0
+		matrix4.data[2] = 0
+		matrix4.data[3] = 0
+
+		matrix4.data[4] = 0
+		matrix4.data[5] = ct
+		matrix4.data[6] = 0
+		matrix4.data[7] = 0
+
+		matrix4.data[8] = 0
+		matrix4.data[9] = 0
+		matrix4.data[10] = -(far + near) * rd
+		matrix4.data[11] = -1
+
+		matrix4.data[12] = 0
+		matrix4.data[13] = 0
+		matrix4.data[14] = -2 * near * far * rd
+		matrix4.data[15] = 0
+
+		return matrix4
+	}
+
 	/**
 	 * @description 创建视图矩阵
 	 * @function setLookAt
