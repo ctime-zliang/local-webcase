@@ -80,6 +80,17 @@ class Program2 {
 			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
 		})
 	}
+
+	static getLookMatrix4EyePosition() {
+		const selectElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePosition"]`)
+		const valString = selectElement.value
+		return valString.split('|')
+	}
+	static getLookMatrix4AtPosition() {
+		const selectElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPosition"]`)
+		const valString = selectElement.value
+		return valString.split('|')
+	}
 }
 
 function drawCanvas2(containerElement) {
@@ -167,6 +178,13 @@ function drawCanvas2(containerElement) {
 	viewMatrix.setLookAt(0.2, 0.2, 0.2, 0, 0, 0, 0, 1, 0)
 
 	const render = () => {
+		const lookMatrix4EyePosition = Program2.getLookMatrix4EyePosition()
+		const lookMatrix4AtPosition = Program2.getLookMatrix4AtPosition()
+		const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
+			new Ven$Vector3(lookMatrix4EyePosition[0], lookMatrix4EyePosition[1], lookMatrix4EyePosition[2]),
+			new Ven$Vector3(lookMatrix4AtPosition[0], lookMatrix4AtPosition[1], lookMatrix4AtPosition[2]),
+			new Ven$Vector3(0, 1, 0)
+		)
 		/**
 		 * 创建旋转矩阵
 		 */
@@ -198,7 +216,7 @@ function drawCanvas2(containerElement) {
 		const modelResultMatrix4 = modelEffectMatrix4.multiply4(orthoProjectionMatrix4)
 
 		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelZRotationMatrix4.data))
-		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4_3.data))
+		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 		// gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements)
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, datasResult.vertexPositions.length / 7)

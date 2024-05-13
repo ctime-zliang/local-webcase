@@ -105,6 +105,55 @@
 					<label style="color: #ffffff; padding-right: 10px; margin: 0">Model Z Offset: </label>
 					<input type="range" value="0" name="modelZOffsetRange" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
 				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">LookAt-EyePosition: </label>
+					<select name="lookAtMatrix4EyePosition" value="0.2|0.2|0.2" style="background-color: #ffffff">
+						<option value="0.2|0.2|0.2">0.2|0.2|0.2</option>
+						<option value="0.1|0.1|0.1">0.1|0.1|0.1</option>
+						<option value="0.3|0.3|0.3">0.3|0.3|0.3</option>
+						<option value="0.4|0.4|0.4">0.4|0.4|0.4</option>
+						<option value="0.5|0.5|0.5">0.5|0.5|0.5</option>
+						<option value="0.6|0.6|0.6">0.6|0.6|0.6</option>
+						<option value="0.7|0.7|0.7">0.7|0.7|0.7</option>
+						<option value="0.8|0.8|0.8">0.8|0.8|0.8</option>
+						<option value="0|0|0">0|0|0</option>
+					</select>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">LookAt-AtPosition: </label>
+					<select name="lookAtMatrix4AtPosition" value="0|0|-1" style="background-color: #ffffff">
+						<option value="0|0|-1">0|0|-1</option>
+						<option value="0|0|-0.8">0|0|-0.8</option>
+						<option value="0|0|-0.6">0|0|-0.6</option>
+						<option value="0|0|-0.4">0|0|-0.4</option>
+						<option value="0|0|-0.2">0|0|-0.2</option>
+						<option value="0|0|0">0|0|0</option>
+						<option value="0|0|0.2">0|0|0.2</option>
+						<option value="0|0|0.4">0|0|0.4</option>
+						<option value="0|0|0.6">0|0|0.6</option>
+						<option value="0|0|0.8">0|0|0.8</option>
+					</select>
+				</div>
 			</div>
 		</div>
 	</body>
