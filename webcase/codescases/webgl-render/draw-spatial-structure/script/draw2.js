@@ -1,5 +1,5 @@
 /**
- * 通过视点观察动态图形
+ * 通过视点观察图形
  */
 
 class Program2 {
@@ -26,7 +26,7 @@ class Program2 {
 		modelRatation: {
 			x: 0,
 			y: 0,
-			z: 0,
+			z: -10,
 		},
 		/**
 		 * 模型偏移坐标
@@ -52,10 +52,14 @@ class Program2 {
 		const modelXOffsetRangeElement = this.containerElement.querySelector(`[name="modelXOffsetRange"]`)
 		const modelYOffsetRangeElement = this.containerElement.querySelector(`[name="modelYOffsetRange"]`)
 		const modelZOffsetRangeElement = this.containerElement.querySelector(`[name="modelZOffsetRange"]`)
-		const lookAtMatrix4EyePositionSelectElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePosition"]`)
+		const lookAtMatrix4EyePositionXSelectElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionX"]`)
+		const lookAtMatrix4EyePositionYSelectElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionY"]`)
+		const lookAtMatrix4EyePositionZSelectElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionZ"]`)
 		const lookAtMatrix4AtPositionZSelectElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZ"]`)
 
-		lookAtMatrix4EyePositionSelectElement.value = self.profile.lookAt.eyePosition.x
+		lookAtMatrix4EyePositionXSelectElement.value = self.profile.lookAt.eyePosition.x
+		lookAtMatrix4EyePositionYSelectElement.value = self.profile.lookAt.eyePosition.y
+		lookAtMatrix4EyePositionZSelectElement.value = self.profile.lookAt.eyePosition.z
 		lookAtMatrix4AtPositionZSelectElement.value = self.profile.lookAt.atPosition.z
 		modelXRotationRangeElement.value = self.profile.modelRatation.x
 		modelYRotationRangeElement.value = self.profile.modelRatation.y
@@ -73,7 +77,9 @@ class Program2 {
 		const modelXOffsetRangeElement = this.containerElement.querySelector(`[name="modelXOffsetRange"]`)
 		const modelYOffsetRangeElement = this.containerElement.querySelector(`[name="modelYOffsetRange"]`)
 		const modelZOffsetRangeElement = this.containerElement.querySelector(`[name="modelZOffsetRange"]`)
-		const lookAtMatrix4EyePositionSelectElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePosition"]`)
+		const lookAtMatrix4EyePositionXSelectElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionX"]`)
+		const lookAtMatrix4EyePositionYSelectElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionY"]`)
+		const lookAtMatrix4EyePositionZSelectElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionZ"]`)
 		const lookAtMatrix4AtPositionZSelectElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZ"]`)
 
 		modelXRotationRangeElement.addEventListener('input', function (e) {
@@ -100,8 +106,16 @@ class Program2 {
 			self.profile.modelOffset.z = +this.value
 			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
 		})
-		lookAtMatrix4EyePositionSelectElement.addEventListener('input', function (e) {
-			self.profile.lookAt.eyePosition.x = self.profile.lookAt.eyePosition.y = self.profile.lookAt.eyePosition.z = +this.value
+		lookAtMatrix4EyePositionXSelectElement.addEventListener('input', function (e) {
+			self.profile.lookAt.eyePosition.x = +this.value
+			console.log('lookAt.eyePosition:', JSON.stringify(self.profile.lookAt.eyePosition))
+		})
+		lookAtMatrix4EyePositionYSelectElement.addEventListener('input', function (e) {
+			self.profile.lookAt.eyePosition.y = +this.value
+			console.log('lookAt.eyePosition:', JSON.stringify(self.profile.lookAt.eyePosition))
+		})
+		lookAtMatrix4EyePositionZSelectElement.addEventListener('input', function (e) {
+			self.profile.lookAt.eyePosition.z = +this.value
 			console.log('lookAt.eyePosition:', JSON.stringify(self.profile.lookAt.eyePosition))
 		})
 		lookAtMatrix4AtPositionZSelectElement.addEventListener('input', function (e) {
