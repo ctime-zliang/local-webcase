@@ -6,6 +6,21 @@ class Program2 {
 	static containerElement
 	static profile = {
 		/**
+		 * 视图矩阵参数
+		 */
+		lookAt: {
+			eyePosition: {
+				x: 0.2,
+				y: 0.2,
+				z: 0.2,
+			},
+			atPosition: {
+				x: 0,
+				y: 0,
+				z: 0,
+			},
+		},
+		/**
 		 * 模型旋转角度
 		 */
 		modelRatation: {
@@ -37,7 +52,11 @@ class Program2 {
 		const modelXOffsetRangeElement = this.containerElement.querySelector(`[name="modelXOffsetRange"]`)
 		const modelYOffsetRangeElement = this.containerElement.querySelector(`[name="modelYOffsetRange"]`)
 		const modelZOffsetRangeElement = this.containerElement.querySelector(`[name="modelZOffsetRange"]`)
+		const lookAtMatrix4EyePositionSelectElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePosition"]`)
+		const lookAtMatrix4AtPositionZSelectElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZ"]`)
 
+		lookAtMatrix4EyePositionSelectElement.value = self.profile.lookAt.eyePosition.x
+		lookAtMatrix4AtPositionZSelectElement.value = self.profile.lookAt.atPosition.z
 		modelXRotationRangeElement.value = self.profile.modelRatation.x
 		modelYRotationRangeElement.value = self.profile.modelRatation.y
 		modelZRotationRangeElement.value = self.profile.modelRatation.z
@@ -54,6 +73,8 @@ class Program2 {
 		const modelXOffsetRangeElement = this.containerElement.querySelector(`[name="modelXOffsetRange"]`)
 		const modelYOffsetRangeElement = this.containerElement.querySelector(`[name="modelYOffsetRange"]`)
 		const modelZOffsetRangeElement = this.containerElement.querySelector(`[name="modelZOffsetRange"]`)
+		const lookAtMatrix4EyePositionSelectElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePosition"]`)
+		const lookAtMatrix4AtPositionZSelectElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZ"]`)
 
 		modelXRotationRangeElement.addEventListener('input', function (e) {
 			self.profile.modelRatation.x = +this.value
@@ -79,17 +100,14 @@ class Program2 {
 			self.profile.modelOffset.z = +this.value
 			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
 		})
-	}
-
-	static getLookMatrix4EyePosition() {
-		const selectElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePosition"]`)
-		const valString = selectElement.value
-		return valString.split('|')
-	}
-	static getLookMatrix4AtPosition() {
-		const selectElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPosition"]`)
-		const valString = selectElement.value
-		return valString.split('|')
+		lookAtMatrix4EyePositionSelectElement.addEventListener('input', function (e) {
+			self.profile.lookAt.eyePosition.x = self.profile.lookAt.eyePosition.y = self.profile.lookAt.eyePosition.z = +this.value
+			console.log('lookAt.eyePosition:', JSON.stringify(self.profile.lookAt.eyePosition))
+		})
+		lookAtMatrix4AtPositionZSelectElement.addEventListener('input', function (e) {
+			self.profile.lookAt.atPosition.z = +this.value
+			console.log('lookAt.atPosition:', JSON.stringify(self.profile.lookAt.atPosition))
+		})
 	}
 }
 
@@ -103,8 +121,10 @@ function drawCanvas2(containerElement) {
 		varying vec4 v_Color;
 		uniform mat4 u_ViewMatrix;
 		uniform mat4 u_ModelMatrix;
+		uniform mat4 u_ViewModelMatrix;
 		void main() {
-			gl_Position = u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1);
+			// gl_Position = u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1);
+			gl_Position = u_ViewModelMatrix * vec4(a_Position, 1);
 			v_Color = a_Color;
 			gl_PointSize = 5.0;
 		}
@@ -152,6 +172,7 @@ function drawCanvas2(containerElement) {
 
 	const u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix')
 	const u_ModelMatrix = gl.getUniformLocation(program, 'u_ModelMatrix')
+	const u_ViewModelMatrix = gl.getUniformLocation(program, 'u_ViewModelMatrix')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 	const a_Color = gl.getAttribLocation(program, 'a_Color')
 
@@ -178,11 +199,9 @@ function drawCanvas2(containerElement) {
 	viewMatrix.setLookAt(0.2, 0.2, 0.2, 0, 0, 0, 0, 1, 0)
 
 	const render = () => {
-		const lookMatrix4EyePosition = Program2.getLookMatrix4EyePosition()
-		const lookMatrix4AtPosition = Program2.getLookMatrix4AtPosition()
 		const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
-			new Ven$Vector3(lookMatrix4EyePosition[0], lookMatrix4EyePosition[1], lookMatrix4EyePosition[2]),
-			new Ven$Vector3(lookMatrix4AtPosition[0], lookMatrix4AtPosition[1], lookMatrix4AtPosition[2]),
+			new Ven$Vector3(Program2.profile.lookAt.eyePosition.x, Program2.profile.lookAt.eyePosition.y, Program2.profile.lookAt.eyePosition.z),
+			new Ven$Vector3(Program2.profile.lookAt.atPosition.x, Program2.profile.lookAt.atPosition.y, Program2.profile.lookAt.atPosition.z),
 			new Ven$Vector3(0, 1, 0)
 		)
 		/**
@@ -215,9 +234,11 @@ function drawCanvas2(containerElement) {
 			.multiply4(modelOffsetMatrix4)
 		const modelResultMatrix4 = modelEffectMatrix4.multiply4(orthoProjectionMatrix4)
 
-		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelZRotationMatrix4.data))
-		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
+		// gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelZRotationMatrix4.data))
+		// gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 		// gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements)
+		const viewModelMatrix4 = lookAtMatrix4.multiply4(modelZRotationMatrix4)
+		gl.uniformMatrix4fv(u_ViewModelMatrix, false, new Float32Array(viewModelMatrix4.data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, datasResult.vertexPositions.length / 7)
 	}
