@@ -28,8 +28,8 @@ class Program3 {
 			right: 1,
 			bottom: -1,
 			top: 1,
-			near: 0,
-			far: 0.5,
+			near: -1,
+			far: 2,
 		},
 		/**
 		 * 模型旋转角度
@@ -57,25 +57,53 @@ class Program3 {
 
 	static initFormView() {
 		const self = this
-		const orthoNearRangeElement = this.containerElement.querySelector(`[name="orthoNear"]`)
-		const orthoFarRangeElement = this.containerElement.querySelector(`[name="orthoFar"]`)
+		const projectionNearRangeElement = this.containerElement.querySelector(`[name="projectionNear"]`)
+		const projectionFarRangeElement = this.containerElement.querySelector(`[name="projectionFar"]`)
+		const lookAtMatrix4EyePositionXRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionX"]`)
+		const lookAtMatrix4EyePositionYRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionY"]`)
+		const lookAtMatrix4EyePositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionZ"]`)
+		const lookAtMatrix4AtPositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZ"]`)
 
-		orthoNearRangeElement.value = self.profile.orthoProjection.near
-		orthoFarRangeElement.value = self.profile.orthoProjection.far
+		projectionNearRangeElement.value = self.profile.orthoProjection.near
+		projectionFarRangeElement.value = self.profile.orthoProjection.far
+		lookAtMatrix4EyePositionXRangeElement.value = self.profile.lookAt.eyePosition.x
+		lookAtMatrix4EyePositionYRangeElement.value = self.profile.lookAt.eyePosition.y
+		lookAtMatrix4EyePositionZRangeElement.value = self.profile.lookAt.eyePosition.z
+		lookAtMatrix4AtPositionZRangeElement.value = self.profile.lookAt.atPosition.z
 	}
 
 	static eventHandle() {
 		const self = this
-		const orthoNearRangeElement = this.containerElement.querySelector(`[name="orthoNear"]`)
-		const orthoFarRangeElement = this.containerElement.querySelector(`[name="orthoFar"]`)
+		const projectionNearRangeElement = this.containerElement.querySelector(`[name="projectionNear"]`)
+		const projectionFarRangeElement = this.containerElement.querySelector(`[name="projectionFar"]`)
+		const lookAtMatrix4EyePositionXRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionX"]`)
+		const lookAtMatrix4EyePositionYRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionY"]`)
+		const lookAtMatrix4EyePositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionZ"]`)
+		const lookAtMatrix4AtPositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZ"]`)
 
-		orthoNearRangeElement.addEventListener('input', function (e) {
+		projectionNearRangeElement.addEventListener('input', function (e) {
 			self.profile.orthoProjection.near = +this.value
 			console.log('orthoProjection:', JSON.stringify(self.profile.orthoProjection))
 		})
-		orthoFarRangeElement.addEventListener('input', function (e) {
+		projectionFarRangeElement.addEventListener('input', function (e) {
 			self.profile.orthoProjection.far = +this.value
 			console.log('orthoProjection:', JSON.stringify(self.profile.orthoProjection))
+		})
+		lookAtMatrix4EyePositionXRangeElement.addEventListener('input', function (e) {
+			self.profile.lookAt.eyePosition.x = +this.value
+			console.log('lookAt.eyePosition:', JSON.stringify(self.profile.lookAt.eyePosition))
+		})
+		lookAtMatrix4EyePositionYRangeElement.addEventListener('input', function (e) {
+			self.profile.lookAt.eyePosition.y = +this.value
+			console.log('lookAt.eyePosition:', JSON.stringify(self.profile.lookAt.eyePosition))
+		})
+		lookAtMatrix4EyePositionZRangeElement.addEventListener('input', function (e) {
+			self.profile.lookAt.eyePosition.z = +this.value
+			console.log('lookAt.eyePosition:', JSON.stringify(self.profile.lookAt.eyePosition))
+		})
+		lookAtMatrix4AtPositionZRangeElement.addEventListener('input', function (e) {
+			self.profile.lookAt.atPosition.z = +this.value
+			console.log('lookAt.atPosition:', JSON.stringify(self.profile.lookAt.atPosition))
 		})
 	}
 }
@@ -88,9 +116,10 @@ function drawCanvas3(containerElement) {
 		attribute vec3 a_Position;
 		attribute vec4 a_Color;
 		varying vec4 v_Color;
-		uniform mat4 u_OrthoProjMatrix;
+		uniform mat4 u_ViewMatrix;
+		uniform mat4 u_ProjMatrix;
 		void main() {
-			gl_Position = u_OrthoProjMatrix * vec4(a_Position, 1);
+			gl_Position = u_ProjMatrix * u_ViewMatrix * vec4(a_Position, 1);
 			v_Color = a_Color;
 			gl_PointSize = 5.0;
 		}
@@ -136,7 +165,8 @@ function drawCanvas3(containerElement) {
 	// gl.enable(gl.CULL_FACE)
 	// gl.enable(gl.DEPTH_TEST)
 
-	const u_OrthoProjMatrix = gl.getUniformLocation(program, 'u_OrthoProjMatrix')
+	const u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix')
+	const u_ProjMatrix = gl.getUniformLocation(program, 'u_ProjMatrix')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 	const a_Color = gl.getAttribLocation(program, 'a_Color')
 
@@ -151,9 +181,9 @@ function drawCanvas3(containerElement) {
 
 	const render = () => {
 		/**
-		 * 创建矩形视口正交投影矩阵
+		 * 创建正交投影矩阵
 		 */
-		const orthoProjectionMatrix4 = Ven$CanvasMatrix4.setOrtho(
+		const projectionMatrix4 = Ven$CanvasMatrix4.setOrtho(
 			Program3.profile.orthoProjection.left,
 			Program3.profile.orthoProjection.right,
 			Program3.profile.orthoProjection.bottom,
@@ -161,7 +191,6 @@ function drawCanvas3(containerElement) {
 			Program3.profile.orthoProjection.near,
 			Program3.profile.orthoProjection.far
 		)
-
 		/**
 		 * 创建视图矩阵
 		 */
@@ -170,8 +199,17 @@ function drawCanvas3(containerElement) {
 			new Ven$Vector3(Program3.profile.lookAt.atPosition.x, Program3.profile.lookAt.atPosition.y, Program3.profile.lookAt.atPosition.z),
 			new Ven$Vector3(0, 1, 0)
 		)
+		/**
+		 * 创建旋转矩阵
+		 */
+		const modelZRotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
+			Ven$Angles.degreeToRadian(Program3.profile.modelRatation.z),
+			new Ven$Vector3(0, 0, 1)
+		)
 
-		gl.uniformMatrix4fv(u_OrthoProjMatrix, false, new Float32Array(orthoProjectionMatrix4.data))
+		const viewMatrix4 = lookAtMatrix4.multiply4(modelZRotationMatrix4)
+		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(viewMatrix4.data))
+		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, datasResult.vertexPositions.length / 7)
 	}

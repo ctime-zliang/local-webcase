@@ -138,8 +138,8 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0">Ortho Near: </label>
-					<input type="range" value="0" name="orthoNear" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">LookAt-EyePosition X: </label>
+					<input type="range" name="lookAtMatrix4EyePositionX" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
 				</div>
 				<div
 					style="
@@ -152,8 +152,64 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0">Ortho Far: </label>
-					<input type="range" value="0" name="orthoFar" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">LookAt-EyePosition Y: </label>
+					<input type="range" name="lookAtMatrix4EyePositionY" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">LookAt-EyePosition Z: </label>
+					<input type="range" name="lookAtMatrix4EyePositionZ" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">LookAt-AtPosition Z: </label>
+					<input type="range" name="lookAtMatrix4AtPositionZ" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">Projection Near: </label>
+					<input type="range" value="0" name="projectionNear" min="-5" max="5" step="0.01" style="width: 300px; cursor: pointer" />
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0">Projection Far: </label>
+					<input type="range" value="0" name="projectionFar" min="-5" max="5" step="0.01" style="width: 300px; cursor: pointer" />
 				</div>
 			</div>
 		</div>
