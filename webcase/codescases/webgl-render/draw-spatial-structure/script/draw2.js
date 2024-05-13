@@ -26,7 +26,7 @@ class Program2 {
 		modelRatation: {
 			x: 0,
 			y: 0,
-			z: -10,
+			z: 0,
 		},
 		/**
 		 * 模型偏移坐标
