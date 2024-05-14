@@ -10,9 +10,9 @@ class Program3 {
 		 */
 		lookAt: {
 			eyePosition: {
-				x: 0.2,
-				y: 0.2,
-				z: 0.2,
+				x: 0,
+				y: 0,
+				z: 1,
 			},
 			atPosition: {
 				x: 0,
@@ -58,51 +58,63 @@ class Program3 {
 	static initFormView() {
 		const self = this
 		const projectionNearRangeElement = this.containerElement.querySelector(`[name="projectionNear"]`)
+		const projectionNearShowSpanElement = this.containerElement.querySelector(`[name="projectionNearShow"]`)
 		const projectionFarRangeElement = this.containerElement.querySelector(`[name="projectionFar"]`)
+		const projectionFarShowSpanElement = this.containerElement.querySelector(`[name="projectionFarShow"]`)
 		const lookAtMatrix4EyePositionXRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionX"]`)
+		const lookAtMatrix4EyePositionXShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionXShow"]`)
 		const lookAtMatrix4EyePositionYRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionY"]`)
+		const lookAtMatrix4EyePositionYShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionYShow"]`)
 		const lookAtMatrix4EyePositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionZ"]`)
+		const lookAtMatrix4EyePositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionZShow"]`)
 		const lookAtMatrix4AtPositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZ"]`)
+		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZShow"]`)
 
-		projectionNearRangeElement.value = self.profile.orthoProjection.near
-		projectionFarRangeElement.value = self.profile.orthoProjection.far
-		lookAtMatrix4EyePositionXRangeElement.value = self.profile.lookAt.eyePosition.x
-		lookAtMatrix4EyePositionYRangeElement.value = self.profile.lookAt.eyePosition.y
-		lookAtMatrix4EyePositionZRangeElement.value = self.profile.lookAt.eyePosition.z
-		lookAtMatrix4AtPositionZRangeElement.value = self.profile.lookAt.atPosition.z
+		projectionNearShowSpanElement.textContent = projectionNearRangeElement.value = self.profile.orthoProjection.near
+		projectionFarShowSpanElement.textContent = projectionFarRangeElement.value = self.profile.orthoProjection.far
+		lookAtMatrix4EyePositionXShowSpanElement.textContent = lookAtMatrix4EyePositionXRangeElement.value = self.profile.lookAt.eyePosition.x
+		lookAtMatrix4EyePositionYShowSpanElement.textContent = lookAtMatrix4EyePositionYRangeElement.value = self.profile.lookAt.eyePosition.y
+		lookAtMatrix4EyePositionZShowSpanElement.textContent = lookAtMatrix4EyePositionZRangeElement.value = self.profile.lookAt.eyePosition.z
+		lookAtMatrix4AtPositionZShowSpanElement.textContent = lookAtMatrix4AtPositionZRangeElement.value = self.profile.lookAt.atPosition.z
 	}
 
 	static eventHandle() {
 		const self = this
 		const projectionNearRangeElement = this.containerElement.querySelector(`[name="projectionNear"]`)
+		const projectionNearShowSpanElement = this.containerElement.querySelector(`[name="projectionNearShow"]`)
 		const projectionFarRangeElement = this.containerElement.querySelector(`[name="projectionFar"]`)
+		const projectionFarShowSpanElement = this.containerElement.querySelector(`[name="projectionFarShow"]`)
 		const lookAtMatrix4EyePositionXRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionX"]`)
+		const lookAtMatrix4EyePositionXShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionXShow"]`)
 		const lookAtMatrix4EyePositionYRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionY"]`)
+		const lookAtMatrix4EyePositionYShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionYShow"]`)
 		const lookAtMatrix4EyePositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionZ"]`)
+		const lookAtMatrix4EyePositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionZShow"]`)
 		const lookAtMatrix4AtPositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZ"]`)
+		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZShow"]`)
 
 		projectionNearRangeElement.addEventListener('input', function (e) {
-			self.profile.orthoProjection.near = +this.value
+			projectionNearShowSpanElement.textContent = self.profile.orthoProjection.near = +this.value
 			console.log('orthoProjection:', JSON.stringify(self.profile.orthoProjection))
 		})
 		projectionFarRangeElement.addEventListener('input', function (e) {
-			self.profile.orthoProjection.far = +this.value
+			projectionFarShowSpanElement.textContent = self.profile.orthoProjection.far = +this.value
 			console.log('orthoProjection:', JSON.stringify(self.profile.orthoProjection))
 		})
 		lookAtMatrix4EyePositionXRangeElement.addEventListener('input', function (e) {
-			self.profile.lookAt.eyePosition.x = +this.value
+			lookAtMatrix4EyePositionXShowSpanElement.textContent = self.profile.lookAt.eyePosition.x = +this.value
 			console.log('lookAt.eyePosition:', JSON.stringify(self.profile.lookAt.eyePosition))
 		})
 		lookAtMatrix4EyePositionYRangeElement.addEventListener('input', function (e) {
-			self.profile.lookAt.eyePosition.y = +this.value
+			lookAtMatrix4EyePositionYShowSpanElement.textContent = self.profile.lookAt.eyePosition.y = +this.value
 			console.log('lookAt.eyePosition:', JSON.stringify(self.profile.lookAt.eyePosition))
 		})
 		lookAtMatrix4EyePositionZRangeElement.addEventListener('input', function (e) {
-			self.profile.lookAt.eyePosition.z = +this.value
+			lookAtMatrix4EyePositionZShowSpanElement.textContent = self.profile.lookAt.eyePosition.z = +this.value
 			console.log('lookAt.eyePosition:', JSON.stringify(self.profile.lookAt.eyePosition))
 		})
 		lookAtMatrix4AtPositionZRangeElement.addEventListener('input', function (e) {
-			self.profile.lookAt.atPosition.z = +this.value
+			lookAtMatrix4AtPositionZShowSpanElement.textContent = self.profile.lookAt.atPosition.z = +this.value
 			console.log('lookAt.atPosition:', JSON.stringify(self.profile.lookAt.atPosition))
 		})
 	}
