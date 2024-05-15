@@ -100,6 +100,21 @@ class Program4 {
 			0.0, 1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
 			-0.5, -1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
 			0.5, -1.0, 0.0, 1.0, 0.4, 0.4, 1.0,
+		]),
+		// prettier-ignore
+		pos3: new Float32Array([
+			/* 蓝色(前) */
+			0.0, 1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
+			-0.5, -1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
+			0.5, -1.0, 0.0, 1.0, 0.4, 0.4, 1.0,
+			/* 黄色(中) */
+			0.0, 1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
+			-0.5, -1.0, -2.0, 1.0, 1.0, 0.4, 1.0, 
+			0.5, -1.0, -2.0, 1.0, 0.4, 0.4, 1.0,
+			/* 绿色(后) */
+			0.0, 1.0, -4.0, 0.4, 1.0, 0.4, 1.0,
+			-0.5, -1.0, -4.0, 0.4, 1.0, 0.4, 1.0,
+			0.5, -1.0, -4.0, 1.0, 0.4, 0.4, 1.0,
 		])
 	}
 
@@ -296,9 +311,11 @@ function drawCanvas4(containerElement) {
 	gl.useProgram(program)
 
 	gl.clearColor(0.0, 0.0, 0.0, 1.0)
-	gl.clear(gl.COLOR_BUFFER_BIT)
-	// gl.enable(gl.CULL_FACE)
-	// gl.enable(gl.DEPTH_TEST)
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+	gl.enable(gl.CULL_FACE)
+	gl.enable(gl.DEPTH_TEST)
+	gl.enable(gl.POLYGON_OFFSET_FILL)
+	gl.polygonOffset(1.0, 1.0)
 
 	const u_ModelMatrix = gl.getUniformLocation(program, 'u_ModelMatrix')
 	const u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix')
@@ -364,7 +381,7 @@ function drawCanvas4(containerElement) {
 		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
-		gl.clear(gl.COLOR_BUFFER_BIT)
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		gl.clearColor(0.0, 0.0, 0.0, 1.0)
 		gl.bufferData(gl.ARRAY_BUFFER, Program4.vertexPosition, gl.STATIC_DRAW)
 		gl.drawArrays(gl.TRIANGLES, 0, Program4.vertexPosition.length / 7)

@@ -61,7 +61,7 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 			 * 计算纬线圆的每个分割点在 X 轴和 Z 轴上的坐标
 			 */
 			const coordinateX = (j === 0 || j === 3 ? -halfX : halfX) + centerX
-			const coordinateZ = (j <= 1 ? -halfZ : halfZ) + centerZ
+			const coordinateZ = (j <= 1 ? halfZ : -halfZ) + centerZ
 			originalPositions.push(coordinateX, coordinateY, coordinateZ)
 			originalPositionsSequence[`${i}-${j}`] = {
 				x: coordinateX,
