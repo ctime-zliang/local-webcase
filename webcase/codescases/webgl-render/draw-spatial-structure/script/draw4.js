@@ -186,11 +186,11 @@ class Program4 {
 			console.log('lookAt.eyePosition:', JSON.stringify(self.profile.lookAt.eyePosition))
 		})
 		lookAtMatrix4AtPositionXRangeElement.addEventListener('input', function (e) {
-			lookAtMatrix4AtPositionXShowSpanElement.textContent = self.profile.lookAt.atPosition.z = +this.value
+			lookAtMatrix4AtPositionXShowSpanElement.textContent = self.profile.lookAt.atPosition.x = +this.value
 			console.log('lookAt.atPosition:', JSON.stringify(self.profile.lookAt.atPosition))
 		})
 		lookAtMatrix4AtPositionYRangeElement.addEventListener('input', function (e) {
-			lookAtMatrix4AtPositionYShowSpanElement.textContent = self.profile.lookAt.atPosition.z = +this.value
+			lookAtMatrix4AtPositionYShowSpanElement.textContent = self.profile.lookAt.atPosition.y = +this.value
 			console.log('lookAt.atPosition:', JSON.stringify(self.profile.lookAt.atPosition))
 		})
 		lookAtMatrix4AtPositionZRangeElement.addEventListener('input', function (e) {
@@ -228,26 +228,32 @@ function drawCanvas4(containerElement) {
 	const datasResult = {
 		vertexPositions: new Float32Array([
 			/**
-			 * Three triangles on the right side
+			 * 右侧三角
 			 */
+			/* 绿色 */
 			0.75, 1.0, -4.0, 0.4, 1.0,  0.4, 1.0,
 			0.25, -1.0, -4.0, 0.4, 1.0, 0.4, 1.0,
 			1.25, -1.0, -4.0, 1.0, 0.4, 0.4, 1.0,
+			/* 黄色 */
 			0.75, 1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
 			0.25, -1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
 			1.25, -1.0, -2.0, 1.0, 0.4, 0.4, 1.0,
+			/* 蓝色 */
 			0.75, 1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
 			0.25, -1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
 			1.25, -1.0, 0.0, 1.0, 0.4, 0.4, 1.0,
 			/**
-			 * Three triangles on the left side
+			 * 左侧三角
 			 */
+			/* 绿色 */
 			-0.75, 1.0, -4.0, 0.4, 1.0, 0.4, 1.0, 
 			-1.25, -1.0, -4.0, 0.4, 1.0, 0.4, 1.0,
 			-0.25, -1.0, -4.0, 1.0, 0.4, 0.4, 1.0,
+			/* 黄色 */
 			-0.75, 1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
 			-1.25, -1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
 			-0.25, -1.0, -2.0, 1.0, 0.4, 0.4, 1.0,
+			/* 蓝色 */
 			-0.75, 1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
 			-1.25, -1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
 			-0.25, -1.0, 0.0, 1.0, 0.4, 0.4, 1.0,
@@ -330,7 +336,7 @@ function drawCanvas4(containerElement) {
 			.multiply4(modelRotationZMatrix4)
 			.multiply4(modelOffsetMatrix4)
 
-		const viewMatrix4 = lookAtMatrix4.multiply4(modelRotationZMatrix4)
+		const viewMatrix4 = lookAtMatrix4.multiply4(modelEffectMatrix4)
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(viewMatrix4.data))
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 		gl.clear(gl.COLOR_BUFFER_BIT)

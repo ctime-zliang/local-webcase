@@ -149,11 +149,11 @@ class Program2 {
 			console.log('lookAt.eyePosition:', JSON.stringify(self.profile.lookAt.eyePosition))
 		})
 		lookAtMatrix4AtPositionXRangeElement.addEventListener('input', function (e) {
-			lookAtMatrix4AtPositionXShowSpanElement.textContent = self.profile.lookAt.atPosition.z = +this.value
+			lookAtMatrix4AtPositionXShowSpanElement.textContent = self.profile.lookAt.atPosition.x = +this.value
 			console.log('lookAt.atPosition:', JSON.stringify(self.profile.lookAt.atPosition))
 		})
 		lookAtMatrix4AtPositionYRangeElement.addEventListener('input', function (e) {
-			lookAtMatrix4AtPositionYShowSpanElement.textContent = self.profile.lookAt.atPosition.z = +this.value
+			lookAtMatrix4AtPositionYShowSpanElement.textContent = self.profile.lookAt.atPosition.y = +this.value
 			console.log('lookAt.atPosition:', JSON.stringify(self.profile.lookAt.atPosition))
 		})
 		lookAtMatrix4AtPositionZRangeElement.addEventListener('input', function (e) {
