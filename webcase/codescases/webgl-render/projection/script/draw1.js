@@ -192,6 +192,7 @@ function drawCanvas1(containerElement) {
 		const modelResultMatrix4 = modelEffectMatrix4.multiply4(orthoProjectionMatrix4)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelResultMatrix4.data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
+		gl.clearColor(0.0, 0.0, 0.0, 1.0)
 		gl.drawArrays(gl.TRIANGLES, 0, datasResult.vertexPositions.length / 7)
 	}
 

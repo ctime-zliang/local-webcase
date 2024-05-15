@@ -20,7 +20,7 @@
 			<canvas width="512" height="512" style="background-color: transparent; border: 1px dashed #888888"></canvas>
 			<div style="position: absolute; left: 0; top: 256px; width: 512px; height: 0; border-top: 1px dashed #aaaaaa"></div>
 			<div style="position: absolute; left: 256px; top: 0; width: 0; height: 512px; border-left: 1px dashed #aaaaaa"></div>
-			<div style="position: absolute; left: 0; top: 0; padding: 5px 5px">
+			<div data-tagitem="profile-panel" style="position: absolute; left: 0; top: 0; padding: 5px 5px; opacity: 0.3">
 				<div
 					style="
 						width: fit-content;
@@ -232,7 +232,7 @@
 			<canvas width="512" height="512" style="background-color: transparent; border: 1px dashed #888888"></canvas>
 			<div style="position: absolute; left: 0; top: 256px; width: 512px; height: 0; border-top: 1px dashed #aaaaaa"></div>
 			<div style="position: absolute; left: 256px; top: 0; width: 0; height: 512px; border-left: 1px dashed #aaaaaa"></div>
-			<div style="position: absolute; left: 0; top: 0; padding: 5px 5px">
+			<div data-tagitem="profile-panel" style="position: absolute; left: 0; top: 0; padding: 5px 5px; opacity: 0.3">
 				<div
 					style="
 						width: fit-content;
@@ -478,7 +478,24 @@
 			<canvas width="512" height="512" style="background-color: transparent; border: 1px dashed #888888"></canvas>
 			<div style="position: absolute; left: 0; top: 256px; width: 512px; height: 0; border-top: 1px dashed #aaaaaa"></div>
 			<div style="position: absolute; left: 256px; top: 0; width: 0; height: 512px; border-left: 1px dashed #aaaaaa"></div>
-			<div style="position: absolute; left: 0; top: 0; padding: 5px 5px">
+			<div data-tagitem="profile-panel" style="position: absolute; left: 0; top: 0; padding: 5px 5px; opacity: 0.3">
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Vertex Position Item: </label>
+					<select name="vertexPositionItem" value="pos1" style="background-color: #ffffff">
+						<option value="pos1">pos1</option>
+						<option value="pos2">pos2</option>
+					</select>
+				</div>
 				<div
 					style="
 						width: fit-content;
@@ -695,9 +712,9 @@
 					"
 				>
 					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Projection Fovy: </label>
-					<span style="color: #ffffff">5</span>
-					<input type="range" value="0" name="projectionFovy" min="5" max="90" step="1" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">90</span>
+					<span style="color: #ffffff">1</span>
+					<input type="range" value="0" name="projectionFovy" min="1" max="180" step="1" style="width: 300px; cursor: pointer" />
+					<span style="color: #ffffff">180</span>
 					<strong style="color: #ffffff">&nbsp;(<span name="projectionFovyShow">0</span>)</strong>
 				</div>
 				<div

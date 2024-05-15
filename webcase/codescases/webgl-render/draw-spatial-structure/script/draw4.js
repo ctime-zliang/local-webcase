@@ -7,6 +7,10 @@ class Program4 {
 	static containerElement
 	static profile = {
 		/**
+		 * 顶点坐标
+		 */
+		vertexPosition: new Float32Array([]),
+		/**
 		 * 视图矩阵参数
 		 */
 		lookAt: {
@@ -46,6 +50,57 @@ class Program4 {
 			y: 0,
 			z: 0,
 		},
+	}
+	// prettier-ignore
+	static vertexProfile = {
+		// prettier-ignore
+		pos1: new Float32Array([
+			/* 绿色 */
+			0.0, 1.0, -4.0, 0.4, 1.0, 0.4, 1.0,
+			-0.5, -1.0, -4.0, 0.4, 1.0, 0.4, 1.0,
+			0.5, -1.0, -4.0, 1.0, 0.4, 0.4, 1.0,
+			/* 黄色 */
+			0.0, 1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
+			-0.5, -1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
+			0.5, -1.0, -2.0, 1.0, 0.4, 0.4, 1.0,
+			/* 蓝色 */
+			0.0, 1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
+			-0.5, -1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
+			0.5, -1.0, 0.0, 1.0, 0.4, 0.4, 1.0,
+		]),
+		// prettier-ignore
+		pos2: new Float32Array([
+			/**
+			 * 右侧三角
+			 */
+			/* 绿色 */
+			0.75, 1.0, -4.0, 0.4, 1.0,  0.4, 1.0,
+			0.25, -1.0, -4.0, 0.4, 1.0, 0.4, 1.0,
+			1.25, -1.0, -4.0, 1.0, 0.4, 0.4, 1.0,
+			/* 黄色 */
+			0.75, 1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
+			0.25, -1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
+			1.25, -1.0, -2.0, 1.0, 0.4, 0.4, 1.0,
+			/* 蓝色 */
+			0.75, 1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
+			0.25, -1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
+			1.25, -1.0, 0.0, 1.0, 0.4, 0.4, 1.0,
+			/**
+			 * 左侧三角
+			 */
+			/* 绿色 */
+			-0.75, 1.0, -4.0, 0.4, 1.0, 0.4, 1.0, 
+			-1.25, -1.0, -4.0, 0.4, 1.0, 0.4, 1.0,
+			-0.25, -1.0, -4.0, 1.0, 0.4, 0.4, 1.0,
+			/* 黄色 */
+			-0.75, 1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
+			-1.25, -1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
+			-0.25, -1.0, -2.0, 1.0, 0.4, 0.4, 1.0,
+			/* 蓝色 */
+			-0.75, 1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
+			-1.25, -1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
+			-0.25, -1.0, 0.0, 1.0, 0.4, 0.4, 1.0,
+		])
 	}
 
 	static init(containerElement) {
@@ -136,6 +191,7 @@ class Program4 {
 		const lookAtMatrix4AtPositionYShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionYShow"]`)
 		const lookAtMatrix4AtPositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZ"]`)
 		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZShow"]`)
+		const vertexPositionItemSelectElement = this.containerElement.querySelector(`[name="vertexPositionItem"]`)
 
 		projectionFovyRangeElement.addEventListener('input', function (e) {
 			projectionFovyShowSpanElement.textContent = self.profile.persProjection.fovy = +this.value
@@ -197,6 +253,9 @@ class Program4 {
 			lookAtMatrix4AtPositionZShowSpanElement.textContent = self.profile.lookAt.atPosition.z = +this.value
 			console.log('lookAt.atPosition:', JSON.stringify(self.profile.lookAt.atPosition))
 		})
+		vertexPositionItemSelectElement.addEventListener('change', function (e) {
+			self.vertexPosition = self.vertexProfile[this.value]
+		})
 	}
 }
 
@@ -208,10 +267,11 @@ function drawCanvas4(containerElement) {
 		attribute vec3 a_Position;
 		attribute vec4 a_Color;
 		varying vec4 v_Color;
+		uniform mat4 u_ModelMatrix;
 		uniform mat4 u_ViewMatrix;
 		uniform mat4 u_ProjMatrix;
 		void main() {
-			gl_Position = u_ProjMatrix * u_ViewMatrix * vec4(a_Position, 1);
+			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1);
 			v_Color = a_Color;
 			gl_PointSize = 5.0;
 		}
@@ -224,42 +284,7 @@ function drawCanvas4(containerElement) {
 		}
 	`
 
-	// prettier-ignore
-	const datasResult = {
-		vertexPositions: new Float32Array([
-			/**
-			 * 右侧三角
-			 */
-			/* 绿色 */
-			0.75, 1.0, -4.0, 0.4, 1.0,  0.4, 1.0,
-			0.25, -1.0, -4.0, 0.4, 1.0, 0.4, 1.0,
-			1.25, -1.0, -4.0, 1.0, 0.4, 0.4, 1.0,
-			/* 黄色 */
-			0.75, 1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
-			0.25, -1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
-			1.25, -1.0, -2.0, 1.0, 0.4, 0.4, 1.0,
-			/* 蓝色 */
-			0.75, 1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
-			0.25, -1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
-			1.25, -1.0, 0.0, 1.0, 0.4, 0.4, 1.0,
-			/**
-			 * 左侧三角
-			 */
-			/* 绿色 */
-			-0.75, 1.0, -4.0, 0.4, 1.0, 0.4, 1.0, 
-			-1.25, -1.0, -4.0, 0.4, 1.0, 0.4, 1.0,
-			-0.25, -1.0, -4.0, 1.0, 0.4, 0.4, 1.0,
-			/* 黄色 */
-			-0.75, 1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
-			-1.25, -1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
-			-0.25, -1.0, -2.0, 1.0, 0.4, 0.4, 1.0,
-			/* 蓝色 */
-			-0.75, 1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
-			-1.25, -1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
-			-0.25, -1.0, 0.0, 1.0, 0.4, 0.4, 1.0,
-		]),
-	}
-	console.log(datasResult)
+	Program4.vertexPosition = Program4.vertexProfile['pos1']
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
@@ -275,6 +300,7 @@ function drawCanvas4(containerElement) {
 	// gl.enable(gl.CULL_FACE)
 	// gl.enable(gl.DEPTH_TEST)
 
+	const u_ModelMatrix = gl.getUniformLocation(program, 'u_ModelMatrix')
 	const u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix')
 	const u_ProjMatrix = gl.getUniformLocation(program, 'u_ProjMatrix')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
@@ -287,7 +313,6 @@ function drawCanvas4(containerElement) {
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
 	gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
-	gl.bufferData(gl.ARRAY_BUFFER, datasResult.vertexPositions, gl.STATIC_DRAW)
 
 	const render = () => {
 		/**
@@ -336,11 +361,13 @@ function drawCanvas4(containerElement) {
 			.multiply4(modelRotationZMatrix4)
 			.multiply4(modelOffsetMatrix4)
 
-		const viewMatrix4 = lookAtMatrix4.multiply4(modelEffectMatrix4)
-		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(viewMatrix4.data))
+		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
+		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
-		gl.drawArrays(gl.TRIANGLES, 0, datasResult.vertexPositions.length / 7)
+		gl.clearColor(0.0, 0.0, 0.0, 1.0)
+		gl.bufferData(gl.ARRAY_BUFFER, Program4.vertexPosition, gl.STATIC_DRAW)
+		gl.drawArrays(gl.TRIANGLES, 0, Program4.vertexPosition.length / 7)
 	}
 
 	const exec = () => {
