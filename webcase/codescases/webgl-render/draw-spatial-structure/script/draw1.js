@@ -129,11 +129,11 @@ function drawCanvas1(containerElement) {
 			Ven$Angles.degreeToRadian(Program1.profile.modelRatation.x),
 			new Ven$Vector3(1, 0, 0)
 		)
-		const modelYRotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
+		const modelRotationYMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
 			Ven$Angles.degreeToRadian(Program1.profile.modelRatation.y),
 			new Ven$Vector3(0, 1, 0)
 		)
-		const modelZRotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
+		const modelRotationZMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
 			Ven$Angles.degreeToRadian(Program1.profile.modelRatation.z),
 			new Ven$Vector3(0, 0, 1)
 		)
@@ -147,8 +147,8 @@ function drawCanvas1(containerElement) {
 		 * 生成复合变换矩阵
 		 */
 		const modelEffectMatrix4 = modelXRotationMatrix4
-			.multiply4(modelYRotationMatrix4)
-			.multiply4(modelZRotationMatrix4)
+			.multiply4(modelRotationYMatrix4)
+			.multiply4(modelRotationZMatrix4)
 			.multiply4(modelOffsetMatrix4)
 		const modelResultMatrix4 = modelEffectMatrix4.multiply4(orthoProjectionMatrix4)
 

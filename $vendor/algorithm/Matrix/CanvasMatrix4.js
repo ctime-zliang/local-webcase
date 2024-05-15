@@ -394,7 +394,6 @@ class Ven$CanvasMatrix4 {
 		matrix4.data[13] = 0
 		matrix4.data[14] = -2 * near * far * rd
 		matrix4.data[15] = 0
-
 		return matrix4
 	}
 

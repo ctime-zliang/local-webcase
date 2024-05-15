@@ -1,8 +1,9 @@
 /**
  * 通过视点观察图形
+ * 		透视投影
  */
 
-class Program2 {
+class Program4 {
 	static containerElement
 	static profile = {
 		/**
@@ -10,15 +11,24 @@ class Program2 {
 		 */
 		lookAt: {
 			eyePosition: {
-				x: 0.2,
-				y: 0.2,
-				z: 0.2,
+				x: 0,
+				y: 0,
+				z: 5,
 			},
 			atPosition: {
 				x: 0,
 				y: 0,
-				z: 0,
+				z: -5,
 			},
+		},
+		/**
+		 * 透视投影矩阵参数
+		 */
+		persProjection: {
+			fovy: 30,
+			aspect: 1,
+			near: 1,
+			far: 10,
 		},
 		/**
 		 * 模型旋转角度
@@ -46,6 +56,12 @@ class Program2 {
 
 	static initFormView() {
 		const self = this
+		const projectionFovyRangeElement = this.containerElement.querySelector(`[name="projectionFovy"]`)
+		const projectionFovyShowSpanElement = this.containerElement.querySelector(`[name="projectionFovyShow"]`)
+		const projectionNearRangeElement = this.containerElement.querySelector(`[name="projectionNear"]`)
+		const projectionNearShowSpanElement = this.containerElement.querySelector(`[name="projectionNearShow"]`)
+		const projectionFarRangeElement = this.containerElement.querySelector(`[name="projectionFar"]`)
+		const projectionFarShowSpanElement = this.containerElement.querySelector(`[name="projectionFarShow"]`)
 		const modelRotationXRangeElement = this.containerElement.querySelector(`[name="modelRotationXRange"]`)
 		const modelRotationXShowSpanElement = this.containerElement.querySelector(`[name="modelRotationXRangeShow"]`)
 		const modelRotationYRangeElement = this.containerElement.querySelector(`[name="modelRotationYRange"]`)
@@ -71,6 +87,9 @@ class Program2 {
 		const lookAtMatrix4AtPositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZ"]`)
 		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZShow"]`)
 
+		projectionFovyShowSpanElement.textContent = projectionFovyRangeElement.value = self.profile.persProjection.fovy
+		projectionNearShowSpanElement.textContent = projectionNearRangeElement.value = self.profile.persProjection.near
+		projectionFarShowSpanElement.textContent = projectionFarRangeElement.value = self.profile.persProjection.far
 		modelRotationXShowSpanElement.textContent = modelRotationXRangeElement.value = self.profile.modelRatation.x
 		modelRotationYShowSpanElement.textContent = modelRotationYRangeElement.value = self.profile.modelRatation.y
 		modelRotationZShowSpanElement.textContent = modelRotationZRangeElement.value = self.profile.modelRatation.z
@@ -87,6 +106,12 @@ class Program2 {
 
 	static eventHandle() {
 		const self = this
+		const projectionFovyRangeElement = this.containerElement.querySelector(`[name="projectionFovy"]`)
+		const projectionFovyShowSpanElement = this.containerElement.querySelector(`[name="projectionFovyShow"]`)
+		const projectionNearRangeElement = this.containerElement.querySelector(`[name="projectionNear"]`)
+		const projectionNearShowSpanElement = this.containerElement.querySelector(`[name="projectionNearShow"]`)
+		const projectionFarRangeElement = this.containerElement.querySelector(`[name="projectionFar"]`)
+		const projectionFarShowSpanElement = this.containerElement.querySelector(`[name="projectionFarShow"]`)
 		const modelRotationXRangeElement = this.containerElement.querySelector(`[name="modelRotationXRange"]`)
 		const modelRotationXShowSpanElement = this.containerElement.querySelector(`[name="modelRotationXRangeShow"]`)
 		const modelRotationYRangeElement = this.containerElement.querySelector(`[name="modelRotationYRange"]`)
@@ -112,6 +137,18 @@ class Program2 {
 		const lookAtMatrix4AtPositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZ"]`)
 		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZShow"]`)
 
+		projectionFovyRangeElement.addEventListener('input', function (e) {
+			projectionFovyShowSpanElement.textContent = self.profile.persProjection.fovy = +this.value
+			console.log('persProjection:', JSON.stringify(self.profile.persProjection))
+		})
+		projectionNearRangeElement.addEventListener('input', function (e) {
+			projectionNearShowSpanElement.textContent = self.profile.persProjection.near = +this.value
+			console.log('persProjection:', JSON.stringify(self.profile.persProjection))
+		})
+		projectionFarRangeElement.addEventListener('input', function (e) {
+			projectionFarShowSpanElement.textContent = self.profile.persProjection.far = +this.value
+			console.log('persProjection:', JSON.stringify(self.profile.persProjection))
+		})
 		modelRotationXRangeElement.addEventListener('input', function (e) {
 			modelRotationXShowSpanElement.textContent = self.profile.modelRatation.x = +this.value
 			console.log('modelRatation:', JSON.stringify(self.profile.modelRatation))
@@ -163,8 +200,8 @@ class Program2 {
 	}
 }
 
-function drawCanvas2(containerElement) {
-	Program2.init(containerElement)
+function drawCanvas4(containerElement) {
+	Program4.init(containerElement)
 
 	const VS = `
 		precision mediump float;
@@ -172,11 +209,9 @@ function drawCanvas2(containerElement) {
 		attribute vec4 a_Color;
 		varying vec4 v_Color;
 		uniform mat4 u_ViewMatrix;
-		uniform mat4 u_ModelMatrix;
-		uniform mat4 u_ViewModelMatrix;
+		uniform mat4 u_ProjMatrix;
 		void main() {
-			// gl_Position = u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1);
-			gl_Position = u_ViewModelMatrix * vec4(a_Position, 1);
+			gl_Position = u_ProjMatrix * u_ViewMatrix * vec4(a_Position, 1);
 			v_Color = a_Color;
 			gl_PointSize = 5.0;
 		}
@@ -192,18 +227,30 @@ function drawCanvas2(containerElement) {
 	// prettier-ignore
 	const datasResult = {
 		vertexPositions: new Float32Array([
-			/* 绿色 */
-			0.0, 0.5, -0.4, 0.4, 1.0, 0.4, 1.0,
-			-0.5, -0.5, -0.4, 0.4, 1.0, 0.4, 1.0,
-			0.5, -0.5, -0.4, 1.0, 0.4, 0.4, 1.0,
-			/* 黄色 */
-			0.5, 0.4, -0.2, 1.0, 0.4, 0.4, 1.0,
-			-0.5, 0.4, -0.2, 1.0, 1.0, 0.4, 1.0,
-			0.0, -0.6, -0.2, 1.0, 1.0, 0.4, 1.0,
-			/* 蓝色 */
-			0.0, 0.5, 0.0, 0.4, 0.4, 1.0, 1.0,
-			-0.5, -0.5, 0.0, 0.4, 0.4, 1.0, 1.0,
-			0.5, -0.5, 0.0, 1.0, 0.4, 0.4, 1.0
+			/**
+			 * Three triangles on the right side
+			 */
+			0.75, 1.0, -4.0, 0.4, 1.0,  0.4, 1.0,
+			0.25, -1.0, -4.0, 0.4, 1.0, 0.4, 1.0,
+			1.25, -1.0, -4.0, 1.0, 0.4, 0.4, 1.0,
+			0.75, 1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
+			0.25, -1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
+			1.25, -1.0, -2.0, 1.0, 0.4, 0.4, 1.0,
+			0.75, 1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
+			0.25, -1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
+			1.25, -1.0, 0.0, 1.0, 0.4, 0.4, 1.0,
+			/**
+			 * Three triangles on the left side
+			 */
+			-0.75, 1.0, -4.0, 0.4, 1.0, 0.4, 1.0, 
+			-1.25, -1.0, -4.0, 0.4, 1.0, 0.4, 1.0,
+			-0.25, -1.0, -4.0, 1.0, 0.4, 0.4, 1.0,
+			-0.75, 1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
+			-1.25, -1.0, -2.0, 1.0, 1.0, 0.4, 1.0,
+			-0.25, -1.0, -2.0, 1.0, 0.4, 0.4, 1.0,
+			-0.75, 1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
+			-1.25, -1.0, 0.0, 0.4, 0.4, 1.0, 1.0,
+			-0.25, -1.0, 0.0, 1.0, 0.4, 0.4, 1.0,
 		]),
 	}
 	console.log(datasResult)
@@ -223,8 +270,7 @@ function drawCanvas2(containerElement) {
 	// gl.enable(gl.DEPTH_TEST)
 
 	const u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix')
-	const u_ModelMatrix = gl.getUniformLocation(program, 'u_ModelMatrix')
-	const u_ViewModelMatrix = gl.getUniformLocation(program, 'u_ViewModelMatrix')
+	const u_ProjMatrix = gl.getUniformLocation(program, 'u_ProjMatrix')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 	const a_Color = gl.getAttribLocation(program, 'a_Color')
 
@@ -237,37 +283,44 @@ function drawCanvas2(containerElement) {
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
 	gl.bufferData(gl.ARRAY_BUFFER, datasResult.vertexPositions, gl.STATIC_DRAW)
 
-	const webglDefaultLookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(new Ven$Vector3(0, 0, 0), new Ven$Vector3(0, 0, -1), new Ven$Vector3(0, 1, 0))
-
 	const render = () => {
+		/**
+		 * 创建透视投影矩阵
+		 */
+		const projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
+			Program4.profile.persProjection.fovy,
+			Program4.profile.persProjection.aspect,
+			Program4.profile.persProjection.near,
+			Program4.profile.persProjection.far
+		)
 		/**
 		 * 创建视图矩阵
 		 */
 		const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
-			new Ven$Vector3(Program2.profile.lookAt.eyePosition.x, Program2.profile.lookAt.eyePosition.y, Program2.profile.lookAt.eyePosition.z),
-			new Ven$Vector3(Program2.profile.lookAt.atPosition.x, Program2.profile.lookAt.atPosition.y, Program2.profile.lookAt.atPosition.z),
+			new Ven$Vector3(Program4.profile.lookAt.eyePosition.x, Program4.profile.lookAt.eyePosition.y, Program4.profile.lookAt.eyePosition.z),
+			new Ven$Vector3(Program4.profile.lookAt.atPosition.x, Program4.profile.lookAt.atPosition.y, Program4.profile.lookAt.atPosition.z),
 			new Ven$Vector3(0, 1, 0)
 		)
 		/**
 		 * 创建旋转矩阵
 		 */
 		const modelXRotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
-			Ven$Angles.degreeToRadian(Program2.profile.modelRatation.x),
+			Ven$Angles.degreeToRadian(Program4.profile.modelRatation.x),
 			new Ven$Vector3(1, 0, 0)
 		)
 		const modelRotationYMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
-			Ven$Angles.degreeToRadian(Program2.profile.modelRatation.y),
+			Ven$Angles.degreeToRadian(Program4.profile.modelRatation.y),
 			new Ven$Vector3(0, 1, 0)
 		)
 		const modelRotationZMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
-			Ven$Angles.degreeToRadian(Program2.profile.modelRatation.z),
+			Ven$Angles.degreeToRadian(Program4.profile.modelRatation.z),
 			new Ven$Vector3(0, 0, 1)
 		)
 		/**
 		 * 创建平移矩阵
 		 */
 		const modelOffsetMatrix4 = Ven$CanvasMatrix4.setTranslate(
-			new Ven$Vector3(Program2.profile.modelOffset.x, Program2.profile.modelOffset.y, Program2.profile.modelOffset.z)
+			new Ven$Vector3(Program4.profile.modelOffset.x, Program4.profile.modelOffset.y, Program4.profile.modelOffset.z)
 		)
 		/**
 		 * 生成复合变换矩阵
@@ -277,10 +330,9 @@ function drawCanvas2(containerElement) {
 			.multiply4(modelRotationZMatrix4)
 			.multiply4(modelOffsetMatrix4)
 
-		// gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelRotationZMatrix4.data))
-		// gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
-		const viewModelMatrix4 = lookAtMatrix4.multiply4(modelRotationZMatrix4)
-		gl.uniformMatrix4fv(u_ViewModelMatrix, false, new Float32Array(viewModelMatrix4.data))
+		const viewMatrix4 = lookAtMatrix4.multiply4(modelRotationZMatrix4)
+		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(viewMatrix4.data))
+		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, datasResult.vertexPositions.length / 7)
 	}
