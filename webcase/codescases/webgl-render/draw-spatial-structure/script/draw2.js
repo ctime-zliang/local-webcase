@@ -277,9 +277,9 @@ function drawCanvas2(containerElement) {
 			.multiply4(modelRotationZMatrix4)
 			.multiply4(modelOffsetMatrix4)
 
-		// gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelRotationZMatrix4.data))
+		// gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
 		// gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
-		const viewModelMatrix4 = lookAtMatrix4.multiply4(modelRotationZMatrix4)
+		const viewModelMatrix4 = lookAtMatrix4.multiply4(modelEffectMatrix4)
 		gl.uniformMatrix4fv(u_ViewModelMatrix, false, new Float32Array(viewModelMatrix4.data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, datasResult.vertexPositions.length / 7)

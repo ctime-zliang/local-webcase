@@ -313,7 +313,7 @@ function drawCanvas3(containerElement) {
 			.multiply4(modelRotationZMatrix4)
 			.multiply4(modelOffsetMatrix4)
 
-		const viewMatrix4 = lookAtMatrix4.multiply4(modelRotationZMatrix4)
+		const viewMatrix4 = lookAtMatrix4.multiply4(modelEffectMatrix4)
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(viewMatrix4.data))
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
