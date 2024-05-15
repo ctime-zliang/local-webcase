@@ -201,10 +201,11 @@ function drawCanvas3(containerElement) {
 		attribute vec3 a_Position;
 		attribute vec4 a_Color;
 		varying vec4 v_Color;
+		uniform mat4 u_ModelMatrix;
 		uniform mat4 u_ViewMatrix;
 		uniform mat4 u_ProjMatrix;
 		void main() {
-			gl_Position = u_ProjMatrix * u_ViewMatrix * vec4(a_Position, 1);
+			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1);
 			v_Color = a_Color;
 			gl_PointSize = 5.0;
 		}
@@ -250,6 +251,7 @@ function drawCanvas3(containerElement) {
 	// gl.enable(gl.CULL_FACE)
 	// gl.enable(gl.DEPTH_TEST)
 
+	const u_ModelMatrix = gl.getUniformLocation(program, 'u_ModelMatrix')
 	const u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix')
 	const u_ProjMatrix = gl.getUniformLocation(program, 'u_ProjMatrix')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
@@ -306,15 +308,15 @@ function drawCanvas3(containerElement) {
 			new Ven$Vector3(Program3.profile.modelOffset.x, Program3.profile.modelOffset.y, Program3.profile.modelOffset.z)
 		)
 		/**
-		 * 生成复合变换矩阵
+		 * 生成模型变换矩阵
 		 */
 		const modelEffectMatrix4 = modelXRotationMatrix4
 			.multiply4(modelRotationYMatrix4)
 			.multiply4(modelRotationZMatrix4)
 			.multiply4(modelOffsetMatrix4)
 
-		const viewMatrix4 = lookAtMatrix4.multiply4(modelEffectMatrix4)
-		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(viewMatrix4.data))
+		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
+		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.clearColor(0.0, 0.0, 0.0, 1.0)

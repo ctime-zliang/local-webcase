@@ -354,7 +354,7 @@ function drawCanvas4(containerElement) {
 			new Ven$Vector3(Program4.profile.modelOffset.x, Program4.profile.modelOffset.y, Program4.profile.modelOffset.z)
 		)
 		/**
-		 * 生成复合变换矩阵
+		 * 生成模型变换矩阵
 		 */
 		const modelEffectMatrix4 = modelXRotationMatrix4
 			.multiply4(modelRotationYMatrix4)
