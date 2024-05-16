@@ -307,8 +307,7 @@ function drawCanvas1(containerElement) {
 		uniform mat4 u_ProjMatrix;
 		void main() {
 			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1);
-			// vec3 normal = normalize(a_Normal.xyz);
-			vec3 normal = normalize(vec3(1.0, 1.0, 1.0));
+			vec3 normal = normalize(a_Normal.xyz);
 			float nDotL = max(dot(u_LightDirection, normal), 0.0);
 			vec4 diffuse = u_LightColor * a_Color * nDotL;
 			v_Color = diffuse;
@@ -356,11 +355,18 @@ function drawCanvas1(containerElement) {
 	const u_ModelMatrix = gl.getUniformLocation(program, 'u_ModelMatrix')
 	const u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix')
 	const u_ProjMatrix = gl.getUniformLocation(program, 'u_ProjMatrix')
+	const a_Normal = gl.getAttribLocation(program, 'a_Normal')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 	const a_Color = gl.getAttribLocation(program, 'a_Color')
 
+	gl.enableVertexAttribArray(a_Normal)
 	gl.enableVertexAttribArray(a_Position)
 	gl.enableVertexAttribArray(a_Color)
+
+	const normalBuffer = gl.createBuffer()
+	gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer)
+	gl.vertexAttribPointer(a_Normal, 4, gl.FLOAT, false, 0, 0)
+	gl.bufferData(gl.ARRAY_BUFFER, cubeDatasResult.originNormals, gl.STATIC_DRAW)
 
 	const vertextBuffer = gl.createBuffer()
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)

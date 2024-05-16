@@ -126,6 +126,19 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 			}
 		}
 	}
+	const CUBE_NORMALS = [
+		0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0,
+
+		1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0,
+
+		0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0,
+
+		-1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0,
+
+		0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0,
+
+		0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0,
+	]
 	return {
 		vertexPositions: new Float32Array(vertexPositions),
 		vertexPositionsSequence,
@@ -136,5 +149,6 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 		},
 		originalPositions,
 		originalPositionsSequence,
+		originNormals: new Float32Array(CUBE_NORMALS),
 	}
 }
