@@ -6,21 +6,25 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<link rel="stylesheet" type="text/css" href="../../../../$vendor/css/comm.preset.css" />
 		<title>Code Case</title>
-		<style></style>
+		<style>
+			* {
+				box-sizing: border-box;
+			}
+		</style>
 	</head>
 
-	<body style="display: flex; justify-content: space-between; flex-wrap: wrap">
-		<div id="appContainer1" class="app-container" style="position: relative">
-			<canvas width="512" height="512" style="background-color: transparent; border: 1px dashed #888888"></canvas>
-			<div style="position: absolute; left: 0; top: 256px; width: 512px; height: 0; border-top: 1px dashed #aaaaaa"></div>
-			<div style="position: absolute; left: 256px; top: 0; width: 0; height: 512px; border-left: 1px dashed #aaaaaa"></div>
+	<body style="display: flex; justify-content: space-between; flex-wrap: wrap; background-color: grey">
+		<div id="appContainer1" class="app-container" style="height: fit-content; display: flex">
+			<div data-tagitem="profile-panel" style="width: 600px; height: inherit; overflow: hidden; padding: 5px 5px"></div>
+			<div style="position: relative; width: 512px; height: 512px">
+				<canvas width="512" height="512" style="background-color: transparent; border: 1px dashed #888888"></canvas>
+				<div style="position: absolute; left: 0; top: 256px; width: 512px; height: 0; border-top: 1px dashed #aaaaaa"></div>
+				<div style="position: absolute; left: 256px; top: 0; width: 0; height: 512px; border-left: 1px dashed #aaaaaa"></div>
+			</div>
 		</div>
 
-		<div id="appContainer2" class="app-container" style="position: relative">
-			<canvas width="512" height="512" style="background-color: transparent; border: 1px dashed #888888"></canvas>
-			<div style="position: absolute; left: 0; top: 256px; width: 512px; height: 0; border-top: 1px dashed #aaaaaa"></div>
-			<div style="position: absolute; left: 256px; top: 0; width: 0; height: 512px; border-left: 1px dashed #aaaaaa"></div>
-			<div data-tagitem="profile-panel" style="position: absolute; left: 0; top: 0; padding: 5px 5px; opacity: 0.3">
+		<div id="appContainer2" class="app-container" style="height: fit-content; display: flex; padding: 5px 0">
+			<div data-tagitem="profile-panel" style="width: 600px; height: inherit; overflow: hidden; padding: 5px 5px">
 				<div
 					style="
 						width: fit-content;
@@ -32,11 +36,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Model Rotation X: </label>
-					<span style="color: #ffffff">-360</span>
-					<input type="range" value="0" name="modelRotationXRange" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">360</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="modelRotationXRangeShow">0</span>)</strong>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Rotation X: </label>
+					<span>-360</span>
+					<input type="range" value="0" name="modelRotationRangeX" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
+					<span>360</span>
+					<strong>&nbsp;(<span name="modelRotationRangeXShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -49,11 +53,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Model Rotation Y: </label>
-					<span style="color: #ffffff">-360</span>
-					<input type="range" value="0" name="modelRotationYRange" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">360</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="modelRotationYRangeShow">0</span>)</strong>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Rotation Y: </label>
+					<span>-360</span>
+					<input type="range" value="0" name="modelRotationRangeY" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
+					<span>360</span>
+					<strong>&nbsp;(<span name="modelRotationRangeYShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -66,11 +70,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Model Rotation Z: </label>
-					<span style="color: #ffffff">-360</span>
-					<input type="range" value="0" name="modelRotationZRange" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">360</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="modelRotationZRangeShow">0</span>)</strong>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Rotation Z: </label>
+					<span>-360</span>
+					<input type="range" value="0" name="modelRotationRangeZ" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
+					<span>360</span>
+					<strong>&nbsp;(<span name="modelRotationRangeZShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -83,11 +87,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Model Offset X: </label>
-					<span style="color: #ffffff">-1</span>
-					<input type="range" value="0" name="modelOffsetXRange" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">1</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="modelOffsetXRangeShow">0</span>)</strong>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Offset X: </label>
+					<span>-1</span>
+					<input type="range" value="0" name="modelOffsetRangeX" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>1</span>
+					<strong>&nbsp;(<span name="modelOffsetRangeXShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -100,11 +104,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Model Offset Y: </label>
-					<span style="color: #ffffff">-1</span>
-					<input type="range" value="0" name="modelOffsetYRange" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">1</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="modelOffsetYRangeShow">0</span>)</strong>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Offset Y: </label>
+					<span>-1</span>
+					<input type="range" value="0" name="modelOffsetRangeY" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>1</span>
+					<strong>&nbsp;(<span name="modelOffsetRangeYShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -117,11 +121,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Model Offset Z: </label>
-					<span style="color: #ffffff">-1</span>
-					<input type="range" value="0" name="modelOffsetZRange" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">1</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="modelOffsetZRangeShow">0</span>)</strong>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Offset Z: </label>
+					<span>-1</span>
+					<input type="range" value="0" name="modelOffsetRangeZ" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>1</span>
+					<strong>&nbsp;(<span name="modelOffsetRangeZShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -134,11 +138,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">LookAt-EyePosition X: </label>
-					<span style="color: #ffffff">-1</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-EyePosition X: </label>
+					<span>-1</span>
 					<input type="range" name="lookAtMatrix4EyePositionX" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">1</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="lookAtMatrix4EyePositionXShow">0</span>)</strong>
+					<span>1</span>
+					<strong>&nbsp;(<span name="lookAtMatrix4EyePositionXShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -151,11 +155,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">LookAt-EyePosition Y: </label>
-					<span style="color: #ffffff">-1</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-EyePosition Y: </label>
+					<span>-1</span>
 					<input type="range" name="lookAtMatrix4EyePositionY" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">1</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="lookAtMatrix4EyePositionYShow">0</span>)</strong>
+					<span>1</span>
+					<strong>&nbsp;(<span name="lookAtMatrix4EyePositionYShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -168,11 +172,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">LookAt-EyePosition Z: </label>
-					<span style="color: #ffffff">-1</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-EyePosition Z: </label>
+					<span>-1</span>
 					<input type="range" name="lookAtMatrix4EyePositionZ" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">1</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="lookAtMatrix4EyePositionZShow">0</span>)</strong>
+					<span>1</span>
+					<strong>&nbsp;(<span name="lookAtMatrix4EyePositionZShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -185,11 +189,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">LookAt-AtPosition X: </label>
-					<span style="color: #ffffff">-1</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-AtPosition X: </label>
+					<span>-1</span>
 					<input type="range" name="lookAtMatrix4AtPositionX" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">1</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="lookAtMatrix4AtPositionXShow">0</span>)</strong>
+					<span>1</span>
+					<strong>&nbsp;(<span name="lookAtMatrix4AtPositionXShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -202,11 +206,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">LookAt-AtPosition Y: </label>
-					<span style="color: #ffffff">-1</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-AtPosition Y: </label>
+					<span>-1</span>
 					<input type="range" name="lookAtMatrix4AtPositionY" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">1</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="lookAtMatrix4AtPositionYShow">0</span>)</strong>
+					<span>1</span>
+					<strong>&nbsp;(<span name="lookAtMatrix4AtPositionYShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -219,20 +223,22 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">LookAt-AtPosition Z: </label>
-					<span style="color: #ffffff">-1</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-AtPosition Z: </label>
+					<span>-1</span>
 					<input type="range" name="lookAtMatrix4AtPositionZ" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">1</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="lookAtMatrix4AtPositionZShow">0</span>)</strong>
+					<span>1</span>
+					<strong>&nbsp;(<span name="lookAtMatrix4AtPositionZShow">0</span>)</strong>
 				</div>
+			</div>
+			<div style="position: relative; width: 512px; height: 512px">
+				<canvas width="512" height="512" style="background-color: transparent; border: 1px dashed #888888"></canvas>
+				<div style="position: absolute; left: 0; top: 256px; width: 512px; height: 0; border-top: 1px dashed #aaaaaa"></div>
+				<div style="position: absolute; left: 256px; top: 0; width: 0; height: 512px; border-left: 1px dashed #aaaaaa"></div>
 			</div>
 		</div>
 
-		<div id="appContainer3" class="app-container" style="position: relative">
-			<canvas width="512" height="512" style="background-color: transparent; border: 1px dashed #888888"></canvas>
-			<div style="position: absolute; left: 0; top: 256px; width: 512px; height: 0; border-top: 1px dashed #aaaaaa"></div>
-			<div style="position: absolute; left: 256px; top: 0; width: 0; height: 512px; border-left: 1px dashed #aaaaaa"></div>
-			<div data-tagitem="profile-panel" style="position: absolute; left: 0; top: 0; padding: 5px 5px; opacity: 0.3">
+		<div id="appContainer3" class="app-container" style="height: fit-content; display: flex; padding: 5px 0">
+			<div data-tagitem="profile-panel" style="width: 600px; height: inherit; overflow: hidden; padding: 5px 5px">
 				<div
 					style="
 						width: fit-content;
@@ -244,11 +250,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Model Rotation X: </label>
-					<span style="color: #ffffff">-360</span>
-					<input type="range" value="0" name="modelRotationXRange" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">360</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="modelRotationXRangeShow">0</span>)</strong>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Rotation X: </label>
+					<span>-360</span>
+					<input type="range" value="0" name="modelRotationRangeX" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
+					<span>360</span>
+					<strong>&nbsp;(<span name="modelRotationRangeXShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -261,11 +267,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Model Rotation Y: </label>
-					<span style="color: #ffffff">-360</span>
-					<input type="range" value="0" name="modelRotationYRange" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">360</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="modelRotationYRangeShow">0</span>)</strong>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Rotation Y: </label>
+					<span>-360</span>
+					<input type="range" value="0" name="modelRotationRangeY" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
+					<span>360</span>
+					<strong>&nbsp;(<span name="modelRotationRangeYShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -278,11 +284,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Model Rotation Z: </label>
-					<span style="color: #ffffff">-360</span>
-					<input type="range" value="0" name="modelRotationZRange" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">360</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="modelRotationZRangeShow">0</span>)</strong>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Rotation Z: </label>
+					<span>-360</span>
+					<input type="range" value="0" name="modelRotationRangeZ" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
+					<span>360</span>
+					<strong>&nbsp;(<span name="modelRotationRangeZShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -295,11 +301,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Model Offset X: </label>
-					<span style="color: #ffffff">-1</span>
-					<input type="range" value="0" name="modelOffsetXRange" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">1</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="modelOffsetXRangeShow">0</span>)</strong>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Offset X: </label>
+					<span>-1</span>
+					<input type="range" value="0" name="modelOffsetRangeX" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>1</span>
+					<strong>&nbsp;(<span name="modelOffsetRangeXShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -312,11 +318,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Model Offset Y: </label>
-					<span style="color: #ffffff">-1</span>
-					<input type="range" value="0" name="modelOffsetYRange" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">1</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="modelOffsetYRangeShow">0</span>)</strong>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Offset Y: </label>
+					<span>-1</span>
+					<input type="range" value="0" name="modelOffsetRangeY" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>1</span>
+					<strong>&nbsp;(<span name="modelOffsetRangeYShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -329,11 +335,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Model Offset Z: </label>
-					<span style="color: #ffffff">-1</span>
-					<input type="range" value="0" name="modelOffsetZRange" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">1</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="modelOffsetZRangeShow">0</span>)</strong>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Offset Z: </label>
+					<span>-1</span>
+					<input type="range" value="0" name="modelOffsetRangeZ" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>1</span>
+					<strong>&nbsp;(<span name="modelOffsetRangeZShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -346,11 +352,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">LookAt-EyePosition X: </label>
-					<span style="color: #ffffff">-3</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-EyePosition X: </label>
+					<span>-3</span>
 					<input type="range" name="lookAtMatrix4EyePositionX" min="-3" max="3" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">3</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="lookAtMatrix4EyePositionXShow">0</span>)</strong>
+					<span>3</span>
+					<strong>&nbsp;(<span name="lookAtMatrix4EyePositionXShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -363,11 +369,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">LookAt-EyePosition Y: </label>
-					<span style="color: #ffffff">-3</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-EyePosition Y: </label>
+					<span>-3</span>
 					<input type="range" name="lookAtMatrix4EyePositionY" min="-3" max="3" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">3</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="lookAtMatrix4EyePositionYShow">0</span>)</strong>
+					<span>3</span>
+					<strong>&nbsp;(<span name="lookAtMatrix4EyePositionYShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -380,11 +386,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">LookAt-EyePosition Z: </label>
-					<span style="color: #ffffff">-3</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-EyePosition Z: </label>
+					<span>-3</span>
 					<input type="range" name="lookAtMatrix4EyePositionZ" min="-3" max="3" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">3</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="lookAtMatrix4EyePositionZShow">0</span>)</strong>
+					<span>3</span>
+					<strong>&nbsp;(<span name="lookAtMatrix4EyePositionZShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -397,11 +403,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">LookAt-AtPosition X: </label>
-					<span style="color: #ffffff">-3</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-AtPosition X: </label>
+					<span>-3</span>
 					<input type="range" name="lookAtMatrix4AtPositionX" min="-3" max="3" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">3</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="lookAtMatrix4AtPositionXShow">0</span>)</strong>
+					<span>3</span>
+					<strong>&nbsp;(<span name="lookAtMatrix4AtPositionXShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -414,11 +420,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">LookAt-AtPosition Y: </label>
-					<span style="color: #ffffff">-3</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-AtPosition Y: </label>
+					<span>-3</span>
 					<input type="range" name="lookAtMatrix4AtPositionY" min="-3" max="3" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">3</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="lookAtMatrix4AtPositionYShow">0</span>)</strong>
+					<span>3</span>
+					<strong>&nbsp;(<span name="lookAtMatrix4AtPositionYShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -431,11 +437,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">LookAt-AtPosition Z: </label>
-					<span style="color: #ffffff">-3</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-AtPosition Z: </label>
+					<span>-3</span>
 					<input type="range" name="lookAtMatrix4AtPositionZ" min="-3" max="3" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">3</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="lookAtMatrix4AtPositionZShow">0</span>)</strong>
+					<span>3</span>
+					<strong>&nbsp;(<span name="lookAtMatrix4AtPositionZShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -448,11 +454,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Projection Near: </label>
-					<span style="color: #ffffff">-10</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Projection Near: </label>
+					<span>-10</span>
 					<input type="range" value="0" name="projectionNear" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">10</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="projectionNearShow">0</span>)</strong>
+					<span>10</span>
+					<strong>&nbsp;(<span name="projectionNearShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -465,20 +471,22 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Projection Far: </label>
-					<span style="color: #ffffff">-10</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Projection Far: </label>
+					<span>-10</span>
 					<input type="range" value="0" name="projectionFar" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">10</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="projectionFarShow">0</span>)</strong>
+					<span>10</span>
+					<strong>&nbsp;(<span name="projectionFarShow">0</span>)</strong>
 				</div>
+			</div>
+			<div style="position: relative; width: 512px; height: 512px">
+				<canvas width="512" height="512" style="background-color: transparent; border: 1px dashed #888888"></canvas>
+				<div style="position: absolute; left: 0; top: 256px; width: 512px; height: 0; border-top: 1px dashed #aaaaaa"></div>
+				<div style="position: absolute; left: 256px; top: 0; width: 0; height: 512px; border-left: 1px dashed #aaaaaa"></div>
 			</div>
 		</div>
 
-		<div id="appContainer4" class="app-container" style="position: relative">
-			<canvas width="512" height="512" style="background-color: transparent; border: 1px dashed #888888"></canvas>
-			<div style="position: absolute; left: 0; top: 256px; width: 512px; height: 0; border-top: 1px dashed #aaaaaa"></div>
-			<div style="position: absolute; left: 256px; top: 0; width: 0; height: 512px; border-left: 1px dashed #aaaaaa"></div>
-			<div data-tagitem="profile-panel" style="position: absolute; left: 0; top: 0; padding: 5px 5px; opacity: 0.3">
+		<div id="appContainer4" class="app-container" style="height: fit-content; display: flex; padding: 5px 0">
+			<div data-tagitem="profile-panel" style="width: 600px; height: inherit; overflow: hidden; padding: 5px 5px">
 				<div
 					style="
 						width: fit-content;
@@ -490,8 +498,8 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Vertex Position Item: </label>
-					<select name="vertexPositionItem" value="pos1" style="background-color: #ffffff">
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Vertex Position Item: </label>
+					<select name="vertexPositionItem" value="pos1">
 						<option value="pos1">pos1</option>
 						<option value="pos2">pos2</option>
 						<option value="pos3">pos3</option>
@@ -508,11 +516,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Model Rotation X: </label>
-					<span style="color: #ffffff">-360</span>
-					<input type="range" value="0" name="modelRotationXRange" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">360</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="modelRotationXRangeShow">0</span>)</strong>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Rotation X: </label>
+					<span>-360</span>
+					<input type="range" value="0" name="modelRotationRangeX" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
+					<span>360</span>
+					<strong>&nbsp;(<span name="modelRotationRangeXShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -525,11 +533,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Model Rotation Y: </label>
-					<span style="color: #ffffff">-360</span>
-					<input type="range" value="0" name="modelRotationYRange" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">360</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="modelRotationYRangeShow">0</span>)</strong>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Rotation Y: </label>
+					<span>-360</span>
+					<input type="range" value="0" name="modelRotationRangeY" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
+					<span>360</span>
+					<strong>&nbsp;(<span name="modelRotationRangeYShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -542,11 +550,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Model Rotation Z: </label>
-					<span style="color: #ffffff">-360</span>
-					<input type="range" value="0" name="modelRotationZRange" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">360</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="modelRotationZRangeShow">0</span>)</strong>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Rotation Z: </label>
+					<span>-360</span>
+					<input type="range" value="0" name="modelRotationRangeZ" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
+					<span>360</span>
+					<strong>&nbsp;(<span name="modelRotationRangeZShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -559,11 +567,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Model Offset X: </label>
-					<span style="color: #ffffff">-1</span>
-					<input type="range" value="0" name="modelOffsetXRange" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">1</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="modelOffsetXRangeShow">0</span>)</strong>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Offset X: </label>
+					<span>-1</span>
+					<input type="range" value="0" name="modelOffsetRangeX" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>1</span>
+					<strong>&nbsp;(<span name="modelOffsetRangeXShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -576,11 +584,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Model Offset Y: </label>
-					<span style="color: #ffffff">-1</span>
-					<input type="range" value="0" name="modelOffsetYRange" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">1</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="modelOffsetYRangeShow">0</span>)</strong>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Offset Y: </label>
+					<span>-1</span>
+					<input type="range" value="0" name="modelOffsetRangeY" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>1</span>
+					<strong>&nbsp;(<span name="modelOffsetRangeYShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -593,11 +601,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Model Offset Z: </label>
-					<span style="color: #ffffff">-1</span>
-					<input type="range" value="0" name="modelOffsetZRange" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">1</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="modelOffsetZRangeShow">0</span>)</strong>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Offset Z: </label>
+					<span>-1</span>
+					<input type="range" value="0" name="modelOffsetRangeZ" min="-1" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>1</span>
+					<strong>&nbsp;(<span name="modelOffsetRangeZShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -610,11 +618,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">LookAt-EyePosition X: </label>
-					<span style="color: #ffffff">-10</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-EyePosition X: </label>
+					<span>-10</span>
 					<input type="range" name="lookAtMatrix4EyePositionX" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">10</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="lookAtMatrix4EyePositionXShow">0</span>)</strong>
+					<span>10</span>
+					<strong>&nbsp;(<span name="lookAtMatrix4EyePositionXShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -627,11 +635,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">LookAt-EyePosition Y: </label>
-					<span style="color: #ffffff">-10</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-EyePosition Y: </label>
+					<span>-10</span>
 					<input type="range" name="lookAtMatrix4EyePositionY" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">10</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="lookAtMatrix4EyePositionYShow">0</span>)</strong>
+					<span>10</span>
+					<strong>&nbsp;(<span name="lookAtMatrix4EyePositionYShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -644,11 +652,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">LookAt-EyePosition Z: </label>
-					<span style="color: #ffffff">-10</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-EyePosition Z: </label>
+					<span>-10</span>
 					<input type="range" name="lookAtMatrix4EyePositionZ" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">10</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="lookAtMatrix4EyePositionZShow">0</span>)</strong>
+					<span>10</span>
+					<strong>&nbsp;(<span name="lookAtMatrix4EyePositionZShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -661,11 +669,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">LookAt-AtPosition X: </label>
-					<span style="color: #ffffff">-10</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-AtPosition X: </label>
+					<span>-10</span>
 					<input type="range" name="lookAtMatrix4AtPositionX" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">10</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="lookAtMatrix4AtPositionXShow">0</span>)</strong>
+					<span>10</span>
+					<strong>&nbsp;(<span name="lookAtMatrix4AtPositionXShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -678,11 +686,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">LookAt-AtPosition Y: </label>
-					<span style="color: #ffffff">-10</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-AtPosition Y: </label>
+					<span>-10</span>
 					<input type="range" name="lookAtMatrix4AtPositionY" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">10</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="lookAtMatrix4AtPositionYShow">0</span>)</strong>
+					<span>10</span>
+					<strong>&nbsp;(<span name="lookAtMatrix4AtPositionYShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -695,11 +703,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">LookAt-AtPosition Z: </label>
-					<span style="color: #ffffff">-10</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-AtPosition Z: </label>
+					<span>-10</span>
 					<input type="range" name="lookAtMatrix4AtPositionZ" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">10</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="lookAtMatrix4AtPositionZShow">0</span>)</strong>
+					<span>10</span>
+					<strong>&nbsp;(<span name="lookAtMatrix4AtPositionZShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -712,11 +720,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Projection Fovy: </label>
-					<span style="color: #ffffff">1</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Projection Fovy: </label>
+					<span>1</span>
 					<input type="range" value="0" name="projectionFovy" min="1" max="180" step="1" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">180</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="projectionFovyShow">0</span>)</strong>
+					<span>180</span>
+					<strong>&nbsp;(<span name="projectionFovyShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -729,11 +737,11 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Projection Near: </label>
-					<span style="color: #ffffff">1</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Projection Near: </label>
+					<span>1</span>
 					<input type="range" value="0" name="projectionNear" min="1" max="50" step="0.1" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">50</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="projectionNearShow">0</span>)</strong>
+					<span>50</span>
+					<strong>&nbsp;(<span name="projectionNearShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -746,12 +754,17 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="color: #ffffff; padding-right: 10px; margin: 0; max-width: 110px; min-width: 110px">Projection Far: </label>
-					<span style="color: #ffffff">1</span>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Projection Far: </label>
+					<span>1</span>
 					<input type="range" value="0" name="projectionFar" min="1" max="50" step="0.1" style="width: 300px; cursor: pointer" />
-					<span style="color: #ffffff">50</span>
-					<strong style="color: #ffffff">&nbsp;(<span name="projectionFarShow">0</span>)</strong>
+					<span>50</span>
+					<strong>&nbsp;(<span name="projectionFarShow">0</span>)</strong>
 				</div>
+			</div>
+			<div style="position: relative; width: 512px; height: 512px">
+				<canvas width="512" height="512" style="background-color: transparent; border: 1px dashed #888888"></canvas>
+				<div style="position: absolute; left: 0; top: 256px; width: 512px; height: 0; border-top: 1px dashed #aaaaaa"></div>
+				<div style="position: absolute; left: 256px; top: 0; width: 0; height: 512px; border-left: 1px dashed #aaaaaa"></div>
 			</div>
 		</div>
 	</body>

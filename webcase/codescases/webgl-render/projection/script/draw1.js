@@ -3,6 +3,7 @@
  */
 
 class Program1 {
+	static isRender = true
 	static containerElement
 	static profile = {
 		/**
@@ -124,6 +125,10 @@ function drawCanvas1(containerElement) {
 	const lookAtMatrix4_3 = Ven$CanvasMatrix4.setLookAt(new Ven$Vector3(0.2, 0.2, 0.2), new Ven$Vector3(0, 0, 0), new Ven$Vector3(0, 1, 0))
 
 	const render = () => {
+		if (!Program1.isRender) {
+			return
+		}
+		Program1.isRender = false
 		/**
 		 * 创建旋转矩阵
 		 */

@@ -3,6 +3,7 @@
  */
 
 class Program1 {
+	static isRender = true
 	static containerElement
 	static profile = {
 		/**
@@ -10,13 +11,13 @@ class Program1 {
 		 */
 		lookAt: {
 			eyePosition: {
-				x: 0,
-				y: 0,
+				x: 2,
+				y: 2,
 				z: 5,
 			},
 			atPosition: {
-				x: 0,
-				y: 0,
+				x: -2,
+				y: -2,
 				z: -5,
 			},
 		},
@@ -29,6 +30,25 @@ class Program1 {
 			near: 1,
 			far: 30,
 		},
+		/**
+		 * 光照参数
+		 */
+		light: {
+			direction: {
+				x: 0.5,
+				y: 3.0,
+				z: 4.0,
+			},
+			color: {
+				r: 255,
+				g: 255,
+				b: 255,
+				a: 1,
+			},
+		},
+		/**
+		 * 模型参数
+		 */
 		modelSize: {
 			cubeLength: 0.8,
 		},
@@ -64,18 +84,18 @@ class Program1 {
 		const projectionNearShowSpanElement = this.containerElement.querySelector(`[name="projectionNearShow"]`)
 		const projectionFarRangeElement = this.containerElement.querySelector(`[name="projectionFar"]`)
 		const projectionFarShowSpanElement = this.containerElement.querySelector(`[name="projectionFarShow"]`)
-		const modelRotationXRangeElement = this.containerElement.querySelector(`[name="modelRotationXRange"]`)
-		const modelRotationXShowSpanElement = this.containerElement.querySelector(`[name="modelRotationXRangeShow"]`)
-		const modelRotationYRangeElement = this.containerElement.querySelector(`[name="modelRotationYRange"]`)
-		const modelRotationYShowSpanElement = this.containerElement.querySelector(`[name="modelRotationYRangeShow"]`)
-		const modelRotationZRangeElement = this.containerElement.querySelector(`[name="modelRotationZRange"]`)
-		const modelRotationZShowSpanElement = this.containerElement.querySelector(`[name="modelRotationZRangeShow"]`)
-		const modelOffsetXRangeElement = this.containerElement.querySelector(`[name="modelOffsetXRange"]`)
-		const modelOffsetXShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetXRangeShow"]`)
-		const modelOffsetYRangeElement = this.containerElement.querySelector(`[name="modelOffsetYRange"]`)
-		const modelOffsetYShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetYRangeShow"]`)
-		const modelOffsetZRangeElement = this.containerElement.querySelector(`[name="modelOffsetZRange"]`)
-		const modelOffsetZShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetZRangeShow"]`)
+		const modelRotationRangeXElement = this.containerElement.querySelector(`[name="modelRotationRangeX"]`)
+		const modelRotationXShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeXShow"]`)
+		const modelRotationRangeYElement = this.containerElement.querySelector(`[name="modelRotationRangeY"]`)
+		const modelRotationYShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeYShow"]`)
+		const modelRotationRangeZElement = this.containerElement.querySelector(`[name="modelRotationRangeZ"]`)
+		const modelRotationZShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeZShow"]`)
+		const modelOffsetRangeXElement = this.containerElement.querySelector(`[name="modelOffsetRangeX"]`)
+		const modelOffsetXShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeXShow"]`)
+		const modelOffsetRangeYElement = this.containerElement.querySelector(`[name="modelOffsetRangeY"]`)
+		const modelOffsetYShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeYShow"]`)
+		const modelOffsetRangeZElement = this.containerElement.querySelector(`[name="modelOffsetRangeZ"]`)
+		const modelOffsetZShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeZShow"]`)
 		const lookAtMatrix4EyePositionXRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionX"]`)
 		const lookAtMatrix4EyePositionXShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionXShow"]`)
 		const lookAtMatrix4EyePositionYRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionY"]`)
@@ -88,22 +108,37 @@ class Program1 {
 		const lookAtMatrix4AtPositionYShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionYShow"]`)
 		const lookAtMatrix4AtPositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZ"]`)
 		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZShow"]`)
+		const lightColorPickElement = this.containerElement.querySelector(`[name="lightColor"]`)
+		const lightColorShowSpanElement = this.containerElement.querySelector(`[name="lightColorShow"]`)
+		const lightColorAlphaRangeElement = this.containerElement.querySelector(`[name="lightColorAlpha"]`)
+		const lightColorAlphaShowSpanElement = this.containerElement.querySelector(`[name="lightColorAlphaShow"]`)
+		const lightDirectionRangeXElement = this.containerElement.querySelector(`[name="lightDirectionRangeX"]`)
+		const lightDirectionRangeXShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeXShow"]`)
+		const lightDirectionRangeYElement = this.containerElement.querySelector(`[name="lightDirectionRangeY"]`)
+		const lightDirectionRangeYShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeYShow"]`)
+		const lightDirectionRangeZElement = this.containerElement.querySelector(`[name="lightDirectionRangeZ"]`)
+		const lightDirectionRangeZShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeZShow"]`)
 
 		projectionFovyShowSpanElement.textContent = projectionFovyRangeElement.value = self.profile.persProjection.fovy
 		projectionNearShowSpanElement.textContent = projectionNearRangeElement.value = self.profile.persProjection.near
 		projectionFarShowSpanElement.textContent = projectionFarRangeElement.value = self.profile.persProjection.far
-		modelRotationXShowSpanElement.textContent = modelRotationXRangeElement.value = self.profile.modelRatation.x
-		modelRotationYShowSpanElement.textContent = modelRotationYRangeElement.value = self.profile.modelRatation.y
-		modelRotationZShowSpanElement.textContent = modelRotationZRangeElement.value = self.profile.modelRatation.z
-		modelOffsetXShowSpanElement.textContent = modelOffsetXRangeElement.value = self.profile.modelOffset.x
-		modelOffsetYShowSpanElement.textContent = modelOffsetYRangeElement.value = self.profile.modelOffset.y
-		modelOffsetZShowSpanElement.textContent = modelOffsetZRangeElement.value = self.profile.modelOffset.z
+		modelRotationXShowSpanElement.textContent = modelRotationRangeXElement.value = self.profile.modelRatation.x
+		modelRotationYShowSpanElement.textContent = modelRotationRangeYElement.value = self.profile.modelRatation.y
+		modelRotationZShowSpanElement.textContent = modelRotationRangeZElement.value = self.profile.modelRatation.z
+		modelOffsetXShowSpanElement.textContent = modelOffsetRangeXElement.value = self.profile.modelOffset.x
+		modelOffsetYShowSpanElement.textContent = modelOffsetRangeYElement.value = self.profile.modelOffset.y
+		modelOffsetZShowSpanElement.textContent = modelOffsetRangeZElement.value = self.profile.modelOffset.z
 		lookAtMatrix4EyePositionXShowSpanElement.textContent = lookAtMatrix4EyePositionXRangeElement.value = self.profile.lookAt.eyePosition.x
 		lookAtMatrix4EyePositionYShowSpanElement.textContent = lookAtMatrix4EyePositionYRangeElement.value = self.profile.lookAt.eyePosition.y
 		lookAtMatrix4EyePositionZShowSpanElement.textContent = lookAtMatrix4EyePositionZRangeElement.value = self.profile.lookAt.eyePosition.z
 		lookAtMatrix4AtPositionXShowSpanElement.textContent = lookAtMatrix4AtPositionXRangeElement.value = self.profile.lookAt.atPosition.x
 		lookAtMatrix4AtPositionYShowSpanElement.textContent = lookAtMatrix4AtPositionYRangeElement.value = self.profile.lookAt.atPosition.y
 		lookAtMatrix4AtPositionZShowSpanElement.textContent = lookAtMatrix4AtPositionZRangeElement.value = self.profile.lookAt.atPosition.z
+		lightColorShowSpanElement.textContent = lightColorPickElement.value = ven$rgba2Hex(self.profile.light.color)
+		lightColorAlphaShowSpanElement.textContent = lightColorAlphaRangeElement.value = self.profile.light.color.a
+		lightDirectionRangeXShowElement.textContent = lightDirectionRangeXElement.value = self.profile.light.direction.x
+		lightDirectionRangeYShowElement.textContent = lightDirectionRangeYElement.value = self.profile.light.direction.y
+		lightDirectionRangeZShowElement.textContent = lightDirectionRangeZElement.value = self.profile.light.direction.z
 	}
 
 	static eventHandle() {
@@ -114,18 +149,18 @@ class Program1 {
 		const projectionNearShowSpanElement = this.containerElement.querySelector(`[name="projectionNearShow"]`)
 		const projectionFarRangeElement = this.containerElement.querySelector(`[name="projectionFar"]`)
 		const projectionFarShowSpanElement = this.containerElement.querySelector(`[name="projectionFarShow"]`)
-		const modelRotationXRangeElement = this.containerElement.querySelector(`[name="modelRotationXRange"]`)
-		const modelRotationXShowSpanElement = this.containerElement.querySelector(`[name="modelRotationXRangeShow"]`)
-		const modelRotationYRangeElement = this.containerElement.querySelector(`[name="modelRotationYRange"]`)
-		const modelRotationYShowSpanElement = this.containerElement.querySelector(`[name="modelRotationYRangeShow"]`)
-		const modelRotationZRangeElement = this.containerElement.querySelector(`[name="modelRotationZRange"]`)
-		const modelRotationZShowSpanElement = this.containerElement.querySelector(`[name="modelRotationZRangeShow"]`)
-		const modelOffsetXRangeElement = this.containerElement.querySelector(`[name="modelOffsetXRange"]`)
-		const modelOffsetXShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetXRangeShow"]`)
-		const modelOffsetYRangeElement = this.containerElement.querySelector(`[name="modelOffsetYRange"]`)
-		const modelOffsetYShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetYRangeShow"]`)
-		const modelOffsetZRangeElement = this.containerElement.querySelector(`[name="modelOffsetZRange"]`)
-		const modelOffsetZShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetZRangeShow"]`)
+		const modelRotationRangeXElement = this.containerElement.querySelector(`[name="modelRotationRangeX"]`)
+		const modelRotationXShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeXShow"]`)
+		const modelRotationRangeYElement = this.containerElement.querySelector(`[name="modelRotationRangeY"]`)
+		const modelRotationYShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeYShow"]`)
+		const modelRotationRangeZElement = this.containerElement.querySelector(`[name="modelRotationRangeZ"]`)
+		const modelRotationZShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeZShow"]`)
+		const modelOffsetRangeXElement = this.containerElement.querySelector(`[name="modelOffsetRangeX"]`)
+		const modelOffsetXShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeXShow"]`)
+		const modelOffsetRangeYElement = this.containerElement.querySelector(`[name="modelOffsetRangeY"]`)
+		const modelOffsetYShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeYShow"]`)
+		const modelOffsetRangeZElement = this.containerElement.querySelector(`[name="modelOffsetRangeZ"]`)
+		const modelOffsetZShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeZShow"]`)
 		const lookAtMatrix4EyePositionXRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionX"]`)
 		const lookAtMatrix4EyePositionXShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionXShow"]`)
 		const lookAtMatrix4EyePositionYRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionY"]`)
@@ -138,66 +173,120 @@ class Program1 {
 		const lookAtMatrix4AtPositionYShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionYShow"]`)
 		const lookAtMatrix4AtPositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZ"]`)
 		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZShow"]`)
+		const lightColorPickElement = this.containerElement.querySelector(`[name="lightColor"]`)
+		const lightColorShowSpanElement = this.containerElement.querySelector(`[name="lightColorShow"]`)
+		const lightColorAlphaRangeElement = this.containerElement.querySelector(`[name="lightColorAlpha"]`)
+		const lightColorAlphaShowSpanElement = this.containerElement.querySelector(`[name="lightColorAlphaShow"]`)
+		const lightDirectionRangeXElement = this.containerElement.querySelector(`[name="lightDirectionRangeX"]`)
+		const lightDirectionRangeXShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeXShow"]`)
+		const lightDirectionRangeYElement = this.containerElement.querySelector(`[name="lightDirectionRangeY"]`)
+		const lightDirectionRangeYShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeYShow"]`)
+		const lightDirectionRangeZElement = this.containerElement.querySelector(`[name="lightDirectionRangeZ"]`)
+		const lightDirectionRangeZShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeZShow"]`)
 
 		projectionFovyRangeElement.addEventListener('input', function (e) {
 			projectionFovyShowSpanElement.textContent = self.profile.persProjection.fovy = +this.value
 			console.log('persProjection:', JSON.stringify(self.profile.persProjection))
+			self.isRender = true
 		})
 		projectionNearRangeElement.addEventListener('input', function (e) {
 			projectionNearShowSpanElement.textContent = self.profile.persProjection.near = +this.value
 			console.log('persProjection:', JSON.stringify(self.profile.persProjection))
+			self.isRender = true
 		})
 		projectionFarRangeElement.addEventListener('input', function (e) {
 			projectionFarShowSpanElement.textContent = self.profile.persProjection.far = +this.value
 			console.log('persProjection:', JSON.stringify(self.profile.persProjection))
+			self.isRender = true
 		})
-		modelRotationXRangeElement.addEventListener('input', function (e) {
+		modelRotationRangeXElement.addEventListener('input', function (e) {
 			modelRotationXShowSpanElement.textContent = self.profile.modelRatation.x = +this.value
 			console.log('modelRatation:', JSON.stringify(self.profile.modelRatation))
+			self.isRender = true
 		})
-		modelRotationYRangeElement.addEventListener('input', function (e) {
+		modelRotationRangeYElement.addEventListener('input', function (e) {
 			modelRotationYShowSpanElement.textContent = self.profile.modelRatation.y = +this.value
 			console.log('modelRatation:', JSON.stringify(self.profile.modelRatation))
+			self.isRender = true
 		})
-		modelRotationZRangeElement.addEventListener('input', function (e) {
+		modelRotationRangeZElement.addEventListener('input', function (e) {
 			modelRotationZShowSpanElement.textContent = self.profile.modelRatation.z = +this.value
 			console.log('modelRatation:', JSON.stringify(self.profile.modelRatation))
+			self.isRender = true
 		})
-		modelOffsetXRangeElement.addEventListener('input', function (e) {
+		modelOffsetRangeXElement.addEventListener('input', function (e) {
 			modelOffsetXShowSpanElement.textContent = self.profile.modelOffset.x = +this.value
 			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
+			self.isRender = true
 		})
-		modelOffsetYRangeElement.addEventListener('input', function (e) {
+		modelOffsetRangeYElement.addEventListener('input', function (e) {
 			modelOffsetYShowSpanElement.textContent = self.profile.modelOffset.y = +this.value
 			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
+			self.isRender = true
 		})
-		modelOffsetZRangeElement.addEventListener('input', function (e) {
+		modelOffsetRangeZElement.addEventListener('input', function (e) {
 			modelOffsetZShowSpanElement.textContent = self.profile.modelOffset.z = +this.value
 			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
+			self.isRender = true
 		})
 		lookAtMatrix4EyePositionXRangeElement.addEventListener('input', function (e) {
 			lookAtMatrix4EyePositionXShowSpanElement.textContent = self.profile.lookAt.eyePosition.x = +this.value
 			console.log('lookAt.eyePosition:', JSON.stringify(self.profile.lookAt.eyePosition))
+			self.isRender = true
 		})
 		lookAtMatrix4EyePositionYRangeElement.addEventListener('input', function (e) {
 			lookAtMatrix4EyePositionYShowSpanElement.textContent = self.profile.lookAt.eyePosition.y = +this.value
 			console.log('lookAt.eyePosition:', JSON.stringify(self.profile.lookAt.eyePosition))
+			self.isRender = true
 		})
 		lookAtMatrix4EyePositionZRangeElement.addEventListener('input', function (e) {
 			lookAtMatrix4EyePositionZShowSpanElement.textContent = self.profile.lookAt.eyePosition.z = +this.value
 			console.log('lookAt.eyePosition:', JSON.stringify(self.profile.lookAt.eyePosition))
+			self.isRender = true
 		})
 		lookAtMatrix4AtPositionXRangeElement.addEventListener('input', function (e) {
 			lookAtMatrix4AtPositionXShowSpanElement.textContent = self.profile.lookAt.atPosition.x = +this.value
 			console.log('lookAt.atPosition:', JSON.stringify(self.profile.lookAt.atPosition))
+			self.isRender = true
 		})
 		lookAtMatrix4AtPositionYRangeElement.addEventListener('input', function (e) {
 			lookAtMatrix4AtPositionYShowSpanElement.textContent = self.profile.lookAt.atPosition.y = +this.value
 			console.log('lookAt.atPosition:', JSON.stringify(self.profile.lookAt.atPosition))
+			self.isRender = true
 		})
 		lookAtMatrix4AtPositionZRangeElement.addEventListener('input', function (e) {
 			lookAtMatrix4AtPositionZShowSpanElement.textContent = self.profile.lookAt.atPosition.z = +this.value
 			console.log('lookAt.atPosition:', JSON.stringify(self.profile.lookAt.atPosition))
+			self.isRender = true
+		})
+		lightColorPickElement.addEventListener('input', function (e) {
+			const setRGBAColor = ven$hex2Rgba(this.value)
+			Object.keys(self.profile.light.color).forEach(key => {
+				self.profile.light.color[key] = setRGBAColor[key]
+			})
+			lightColorShowSpanElement.textContent = ven$rgba2Hex(self.profile.light.color)
+			console.log('light.color:', JSON.stringify(self.profile.light.color))
+			self.isRender = true
+		})
+		lightColorAlphaRangeElement.addEventListener('input', function (e) {
+			lightColorAlphaShowSpanElement.textContent = self.profile.light.color.a = +this.value
+			console.log('light.color:', JSON.stringify(self.profile.light.color))
+			self.isRender = true
+		})
+		lightDirectionRangeXElement.addEventListener('input', function (e) {
+			lightDirectionRangeXShowElement.textContent = self.profile.light.direction.x = +this.value
+			console.log('light.direction:', JSON.stringify(self.profile.light.direction))
+			self.isRender = true
+		})
+		lightDirectionRangeYElement.addEventListener('input', function (e) {
+			lightDirectionRangeYShowElement.textContent = self.profile.light.direction.y = +this.value
+			console.log('light.direction:', JSON.stringify(self.profile.light.direction))
+			self.isRender = true
+		})
+		lightDirectionRangeZElement.addEventListener('input', function (e) {
+			lightDirectionRangeZShowElement.textContent = self.profile.light.direction.z = +this.value
+			console.log('light.direction:', JSON.stringify(self.profile.light.direction))
+			self.isRender = true
 		})
 	}
 }
@@ -209,13 +298,20 @@ function drawCanvas1(containerElement) {
 		precision mediump float;
 		attribute vec3 a_Position;
 		attribute vec4 a_Color;
+		attribute vec4 a_Normal;
 		varying vec4 v_Color;
+		uniform vec4 u_LightColor;
+		uniform vec3 u_LightDirection;
 		uniform mat4 u_ModelMatrix;
 		uniform mat4 u_ViewMatrix;
 		uniform mat4 u_ProjMatrix;
 		void main() {
 			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1);
-			v_Color = a_Color;
+			// vec3 normal = normalize(a_Normal.xyz);
+			vec3 normal = normalize(vec3(1.0, 1.0, 1.0));
+			float nDotL = max(dot(u_LightDirection, normal), 0.0);
+			vec4 diffuse = u_LightColor * a_Color * nDotL;
+			v_Color = diffuse;
 			gl_PointSize = 5.0;
 		}
 	`
@@ -255,6 +351,8 @@ function drawCanvas1(containerElement) {
 	gl.enable(gl.POLYGON_OFFSET_FILL)
 	gl.polygonOffset(1.0, 1.0)
 
+	const u_LightColor = gl.getUniformLocation(program, 'u_LightColor')
+	const u_LightDirection = gl.getUniformLocation(program, 'u_LightDirection')
 	const u_ModelMatrix = gl.getUniformLocation(program, 'u_ModelMatrix')
 	const u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix')
 	const u_ProjMatrix = gl.getUniformLocation(program, 'u_ProjMatrix')
@@ -271,6 +369,20 @@ function drawCanvas1(containerElement) {
 	gl.bufferData(gl.ARRAY_BUFFER, cubeDatasResult.vertexPositions, gl.STATIC_DRAW)
 
 	const render = () => {
+		if (!Program1.isRender) {
+			return
+		}
+		// Program1.isRender = false
+
+		/**
+		 * 创建光照信息
+		 */
+		const lightDirection = new Ven$Vector3(
+			Program1.profile.light.direction.x,
+			Program1.profile.light.direction.y,
+			Program1.profile.light.direction.z
+		)
+		const lightNormalizeDirection = lightDirection.normalize()
 		/**
 		 * 创建透视投影矩阵
 		 */
@@ -317,6 +429,14 @@ function drawCanvas1(containerElement) {
 			.multiply4(modelRotationZMatrix4)
 			.multiply4(modelOffsetMatrix4)
 
+		gl.uniform4f(
+			u_LightColor,
+			Program1.profile.light.color.r / 255,
+			Program1.profile.light.color.g / 255,
+			Program1.profile.light.color.b / 255,
+			Program1.profile.light.color.a
+		)
+		gl.uniform3fv(u_LightDirection, new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z]))
 		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
