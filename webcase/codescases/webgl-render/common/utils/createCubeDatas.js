@@ -146,20 +146,20 @@ function createCubeDatas(width, height, depth, colorSetting) {
 		/**
 		 * 顶面
 		 */
-		1.0, 0.0, 0.0,
-		1.0, 0.0, 0.0,
-		1.0, 0.0, 0.0,
-		1.0, 0.0, 0.0,
-		1.0, 0.0, 0.0,
-		1.0, 0.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 1.0, 0.0,
 		/**
 		 * 前面
 		 */
 		0.0, 0.0, 1.0,
-		0.0,0.0, 1.0,
-		0.0, 0.0,1.0,
 		0.0, 0.0, 1.0,
-		0.0, 0.0,1.0,
+		0.0, 0.0, 1.0,
+		0.0, 0.0, 1.0,
+		0.0, 0.0, 1.0,
 		0.0, 0.0, 1.0,
 		/**
 		 * 后面
@@ -173,12 +173,12 @@ function createCubeDatas(width, height, depth, colorSetting) {
 		/**
 		 * 右面
 		 */
-		0.0, 1.0, 0.0,
-		0.0, 1.0, 0.0,
-		0.0, 1.0, 0.0,
-		0.0, 1.0, 0.0,
-		0.0, 1.0, 0.0,
-		0.0, 1.0, 0.0,
+		1.0, 0.0, 0.0,
+		1.0, 0.0, 0.0,
+		1.0, 0.0, 0.0,
+		1.0, 0.0, 0.0,
+		1.0, 0.0, 0.0,
+		1.0, 0.0, 0.0,
 		/**
 		 * 左面
 		 */
@@ -194,6 +194,6 @@ function createCubeDatas(width, height, depth, colorSetting) {
 		vertexPositionsSequence,
 		originalPositions,
 		originalPositionsSequence,
-		originNormals: new Float32Array(CUBE_NORMALS),
+		originNormals: [...CUBE_NORMALS],
 	}
 }
