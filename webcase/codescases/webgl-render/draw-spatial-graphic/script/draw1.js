@@ -35,7 +35,7 @@ class Program1 {
 		 */
 		light: {
 			direction: {
-				x: 0.5,
+				x: 2.0,
 				y: 3.0,
 				z: 4.0,
 			},
@@ -43,7 +43,6 @@ class Program1 {
 				r: 255,
 				g: 255,
 				b: 255,
-				a: 1,
 			},
 		},
 		/**
@@ -110,8 +109,6 @@ class Program1 {
 		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZShow"]`)
 		const lightColorPickElement = this.containerElement.querySelector(`[name="lightColor"]`)
 		const lightColorShowSpanElement = this.containerElement.querySelector(`[name="lightColorShow"]`)
-		const lightColorAlphaRangeElement = this.containerElement.querySelector(`[name="lightColorAlpha"]`)
-		const lightColorAlphaShowSpanElement = this.containerElement.querySelector(`[name="lightColorAlphaShow"]`)
 		const lightDirectionRangeXElement = this.containerElement.querySelector(`[name="lightDirectionRangeX"]`)
 		const lightDirectionRangeXShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeXShow"]`)
 		const lightDirectionRangeYElement = this.containerElement.querySelector(`[name="lightDirectionRangeY"]`)
@@ -135,7 +132,6 @@ class Program1 {
 		lookAtMatrix4AtPositionYShowSpanElement.textContent = lookAtMatrix4AtPositionYRangeElement.value = self.profile.lookAt.atPosition.y
 		lookAtMatrix4AtPositionZShowSpanElement.textContent = lookAtMatrix4AtPositionZRangeElement.value = self.profile.lookAt.atPosition.z
 		lightColorShowSpanElement.textContent = lightColorPickElement.value = ven$rgba2Hex(self.profile.light.color)
-		lightColorAlphaShowSpanElement.textContent = lightColorAlphaRangeElement.value = self.profile.light.color.a
 		lightDirectionRangeXShowElement.textContent = lightDirectionRangeXElement.value = self.profile.light.direction.x
 		lightDirectionRangeYShowElement.textContent = lightDirectionRangeYElement.value = self.profile.light.direction.y
 		lightDirectionRangeZShowElement.textContent = lightDirectionRangeZElement.value = self.profile.light.direction.z
@@ -175,8 +171,6 @@ class Program1 {
 		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZShow"]`)
 		const lightColorPickElement = this.containerElement.querySelector(`[name="lightColor"]`)
 		const lightColorShowSpanElement = this.containerElement.querySelector(`[name="lightColorShow"]`)
-		const lightColorAlphaRangeElement = this.containerElement.querySelector(`[name="lightColorAlpha"]`)
-		const lightColorAlphaShowSpanElement = this.containerElement.querySelector(`[name="lightColorAlphaShow"]`)
 		const lightDirectionRangeXElement = this.containerElement.querySelector(`[name="lightDirectionRangeX"]`)
 		const lightDirectionRangeXShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeXShow"]`)
 		const lightDirectionRangeYElement = this.containerElement.querySelector(`[name="lightDirectionRangeY"]`)
@@ -268,11 +262,6 @@ class Program1 {
 			console.log('light.color:', JSON.stringify(self.profile.light.color))
 			self.isRender = true
 		})
-		lightColorAlphaRangeElement.addEventListener('input', function (e) {
-			lightColorAlphaShowSpanElement.textContent = self.profile.light.color.a = +this.value
-			console.log('light.color:', JSON.stringify(self.profile.light.color))
-			self.isRender = true
-		})
 		lightDirectionRangeXElement.addEventListener('input', function (e) {
 			lightDirectionRangeXShowElement.textContent = self.profile.light.direction.x = +this.value
 			console.log('light.direction:', JSON.stringify(self.profile.light.direction))
@@ -300,7 +289,7 @@ function drawCanvas1(containerElement) {
 		attribute vec4 a_Color;
 		attribute vec4 a_Normal;
 		varying vec4 v_Color;
-		uniform vec4 u_LightColor;
+		uniform vec3 u_LightColor;
 		uniform vec3 u_LightDirection;
 		uniform mat4 u_ModelMatrix;
 		uniform mat4 u_ViewMatrix;
@@ -309,8 +298,8 @@ function drawCanvas1(containerElement) {
 			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1);
 			vec3 normal = normalize(a_Normal.xyz);
 			float nDotL = max(dot(u_LightDirection, normal), 0.0);
-			vec4 diffuse = u_LightColor * a_Color * nDotL;
-			v_Color = diffuse;
+			vec3 diffuse = u_LightColor * a_Color.rgb * nDotL;
+			v_Color = vec4(diffuse, a_Color.a);
 			gl_PointSize = 5.0;
 		}
 	`
@@ -440,13 +429,7 @@ function drawCanvas1(containerElement) {
 			.multiply4(modelRotationZMatrix4)
 			.multiply4(modelOffsetMatrix4)
 
-		gl.uniform4f(
-			u_LightColor,
-			Program1.profile.light.color.r / 255,
-			Program1.profile.light.color.g / 255,
-			Program1.profile.light.color.b / 255,
-			Program1.profile.light.color.a
-		)
+		gl.uniform3f(u_LightColor, Program1.profile.light.color.r / 255, Program1.profile.light.color.g / 255, Program1.profile.light.color.b / 255)
 		gl.uniform3fv(u_LightDirection, new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z]))
 		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
