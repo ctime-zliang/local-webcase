@@ -50,11 +50,11 @@
  * @param {number} latitudeCount 球体纬线圆个数(包含两个极点)
  * @return {object}
  */
-function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, centerX = 0, centerY = 0, centerZ = 0, optional = {}) {
+function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, optional = {}) {
 	const iOptional = {
-		redRange: [80, 200],
-		greenRange: [80, 200],
-		blueRange: [80, 200],
+		redRange: [50, 200],
+		greenRange: [50, 200],
+		blueRange: [50, 200],
 		alphaRange: [1, 1],
 		...optional,
 	}
@@ -118,10 +118,10 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, centerX 
 			const tmpX = Math.sin(radianEachDivideCountMeridian * i) * Math.sin(radianEachDivideCountLatitude * j)
 			const tmpZ = Math.sin(radianEachDivideCountMeridian * i) * Math.cos(radianEachDivideCountLatitude * j)
 			const coordinateX = Ven$Math.calcAbsoluteValue(radius * tmpX)
-			const coordinateZ = Ven$Math.calcAbsoluteValue(-1 * radius * tmpZ)
+			const coordinateZ = Ven$Math.calcAbsoluteValue(radius * tmpZ)
 			originalPositions.push(coordinateX, coordinateY, coordinateZ)
 			originalNormals.push(tmpX, tmpY, tmpZ)
-			originalPositionsSequence[`${i}-${j}`] = {
+			originalPositionsSequence[`${i * 4 + j}#:${i}-${j}`] = {
 				x: coordinateX,
 				y: coordinateY,
 				z: coordinateZ,
@@ -228,11 +228,6 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, centerX 
 	return {
 		vertexPositions: new Float32Array(vertexPositions),
 		vertexPositionsSequence,
-		origin: {
-			x: centerX,
-			y: centerY,
-			z: centerZ,
-		},
 		originalPositions,
 		originalPositionsSequence,
 		originalNormals: new Float32Array(originalNormals),
