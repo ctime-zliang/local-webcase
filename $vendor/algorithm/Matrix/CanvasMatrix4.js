@@ -19,7 +19,9 @@ class Ven$CanvasMatrix4 {
 		let s = Math.sin(radian)
 		let c = Math.cos(radian)
 		if (0 !== vx && 0 === vy && 0 === vz) {
-			// Rotation around X axis
+			/**
+			 * 绕 X 轴
+			 */
 			if (vx < 0) {
 				s = -s
 			}
@@ -40,7 +42,9 @@ class Ven$CanvasMatrix4 {
 			matrix4.data[11] = 0
 			matrix4.data[15] = 1
 		} else if (0 === vx && 0 !== vy && 0 === vz) {
-			// Rotation around Y axis
+			/**
+			 * 绕 Y 轴
+			 */
 			if (vy < 0) {
 				s = -s
 			}
@@ -61,7 +65,9 @@ class Ven$CanvasMatrix4 {
 			matrix4.data[11] = 0
 			matrix4.data[15] = 1
 		} else if (0 === vx && 0 === vy && 0 !== vz) {
-			// Rotation around Z axis
+			/**
+			 * 绕 Z 轴
+			 */
 			if (vz < 0) {
 				s = -s
 			}
@@ -82,7 +88,9 @@ class Ven$CanvasMatrix4 {
 			matrix4.data[11] = 0
 			matrix4.data[15] = 1
 		} else {
-			// Rotation around another axis
+			/**
+			 * 绕任意方向轴
+			 */
 			const len = Math.sqrt(vx * vx + vy * vy + vz * vz)
 			if (len !== 1) {
 				const rlen = 1 / len
@@ -228,7 +236,6 @@ class Ven$CanvasMatrix4 {
 		if (far <= 0) {
 			throw 'far <= 0'
 		}
-
 		let _fovy = (Math.PI * fovy) / 180 / 2
 		let s = Math.sin(_fovy)
 		if (s === 0) {
