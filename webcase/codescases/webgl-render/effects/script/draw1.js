@@ -42,8 +42,8 @@ class Program1 {
 			},
 			color: {
 				r: 255,
-				g: 255,
-				b: 255,
+				g: 0,
+				b: 0,
 			},
 			ambient: {
 				r: 50,
@@ -323,7 +323,7 @@ function drawCanvas1(containerElement) {
 		precision mediump float;
 		attribute vec3 a_Position;
 		attribute vec4 a_Color;
-		attribute vec4 a_Normal;
+		attribute vec3 a_Normal;
 		varying vec4 v_Color;
 		uniform vec3 u_DiffuseLight;
 		uniform vec3 u_LightDirection;
@@ -334,7 +334,7 @@ function drawCanvas1(containerElement) {
 		uniform mat4 u_ProjMatrix;
 		void main() {
 			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1);
-			vec4 normal = u_NormalMatrix * a_Normal;
+			vec3 normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1.0)));
 			float nDotL = max(dot(u_LightDirection, normalize(normal.xyz)), 0.0);
 			vec3 diffuse = u_DiffuseLight * a_Color.rgb * nDotL;
 			vec3 ambient = u_AmbientLight * a_Color.rgb;
