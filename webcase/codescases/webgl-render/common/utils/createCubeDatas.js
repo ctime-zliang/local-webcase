@@ -18,6 +18,13 @@
  * 			0 --------- 1
  * 		- 记底面左外顶点为 0, 底面右外顶点为 1, 底面右内顶点为 2, 底面左内顶点为 3
  * 		- 记顶面左外顶点为 4, 顶面右外顶点为 5, 顶面右内顶点为 6, 顶面左内顶点为 7
+ * 			 v7----- v6
+ * 		 	/|      /|
+ * 		   v4------v5|
+ * 		   | |     | |
+ * 		   | |v3---|-|v2
+ * 		   |/      |/
+ * 	       v0------v1
  * - 定义方体六面的三角形顶点索引 CUBE_FACE_INDICES
  * 		- 由于采用 gl.drawArrays: gl.TRIANGLES 方式绘制, 需要将方体每个面拆分成三角形
  * 		- 以面 A0(底面) 为例, 按照正面三角形顶点顺序, 可将其拆分成 [0, 3, 2] 和 [0, 2, 1] 两组顶点索引
@@ -36,12 +43,19 @@
  * @param {number} width 方体长度
  * @param {number} height 方体高度
  * @param {number} depth 方体纵深
- * @param {number} centerX 方体中心点坐标 X 轴分量
- * @param {number} centerY 方体中心点坐标 Y 轴分量
- * @param {number} centerZ 方体中心点坐标 Z 轴分量
  * @return {object}
  */
-function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ = 0) {
+function createCubeDatas(width, height, depth, colorSetting) {
+	const defaultColorSetting = {
+		up: [255, 0, 0, 1], // 红色
+		bottom: [0, 255, 0, 1], // 绿色
+		front: [0, 0, 255, 1], // 蓝色
+		back: [255, 255, 0, 1], // 黄色
+		right: [0, 255, 255, 1], // 青色
+		left: [255, 0, 255, 1], // 粉色
+	}
+	const iColorSetting = { ...defaultColorSetting, ...colorSetting }
+	const CUBE_FACE_COLOR = Object.values(iColorSetting)
 	/**
 	 * 生成方体原始顶点坐标数据 originalPositions
 	 * 		遍历纬线圈个数: 遍历经线半圆个数
@@ -55,15 +69,15 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 		/**
 		 * 计算经线半圆的每个分割点在 Y 轴上的坐标
 		 */
-		const coordinateY = (i <= 0 ? -halfY : halfY) + centerY
+		const coordinateY = i <= 0 ? -halfY : halfY
 		for (let j = 0; j < 4; j++) {
 			/**
 			 * 计算纬线圆的每个分割点在 X 轴和 Z 轴上的坐标
 			 */
-			const coordinateX = (j === 0 || j === 3 ? -halfX : halfX) + centerX
-			const coordinateZ = (j <= 1 ? halfZ : -halfZ) + centerZ
+			const coordinateX = j === 0 || j === 3 ? -halfX : halfX
+			const coordinateZ = j <= 1 ? halfZ : -halfZ
 			originalPositions.push(coordinateX, coordinateY, coordinateZ)
-			originalPositionsSequence[`${i}-${j}`] = {
+			originalPositionsSequence[`${i * 4 + j}#:${i}-${j}`] = {
 				x: coordinateX,
 				y: coordinateY,
 				z: coordinateZ,
@@ -71,14 +85,6 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 			}
 		}
 	}
-	const CUBE_FACE_COLOR = [
-		[255, 0, 0, 1], // 红色
-		[0, 255, 0, 1], // 绿色
-		[0, 0, 255, 1], // 蓝色
-		[255, 255, 0, 1], // 黄色
-		[0, 255, 255, 1], // 青色
-		[255, 0, 255, 1], // 粉色
-	]
 	/**
 	 * 定义构成每个方体面的两个三角形的 2 * 3 = 6 份顶点坐标在原始顶点坐标数据 originalPositions 中的索引
 	 */
@@ -114,7 +120,7 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 			 * key 规则:
 			 * 		面序号 - 三角形序号 - 三角形顶点序号
 			 */
-			vertexPositionsSequence[`${i}-${parseInt((j + 0) / 3)}-${parseInt((j + 0) % 3)}`] = {
+			vertexPositionsSequence[`${i * faceIndices.length + j}#:${i}-${parseInt((j + 0) / 3)}-${parseInt((j + 0) % 3)}`] = {
 				x: originalPositions[pointIndex * 3],
 				y: originalPositions[pointIndex * 3 + 1],
 				z: originalPositions[pointIndex * 3 + 2],
@@ -128,38 +134,64 @@ function createCubeDatas(width, height, depth, centerX = 0, centerY = 0, centerZ
 	}
 	// prettier-ignore
 	const CUBE_NORMALS = [
-		0.0, 0.0, 1.0, 0.0, 
-		0.0, 1.0, 0.0, 0.0, 
-		1.0, 0.0, 0.0, 1.0,
-
-		1.0, 0.0, 0.0, 1.0, 
-		0.0, 0.0, 1.0, 0.0, 
-		0.0, 1.0, 0.0, 0.0,
-
-		0.0, 1.0, 0.0, 0.0, 
-		1.0, 0.0, 0.0, 1.0, 
-		0.0, 0.0, 1.0, 0.0,
-
-		-1.0, 0.0, 0.0, -1.0, 
-		0.0, 0.0, -1.0, 0.0, 
-		0.0, -1.0, 0.0, 0.0,
-
-		0.0, -1.0, 0.0, 0.0, 
-		-1.0, 0.0, 0.0, -1.0, 
-		0.0, 0.0, -1.0, 0.0,
-
-		0.0, 0.0, -1.0, 0.0, 
-		0.0, -1.0, 0.0, 0.0, 
-		-1.0, 0.0, 0.0, -1.0,
+		/**
+		 * 底面
+		 */
+		0.0, -1.0, 0.0,
+		0.0, -1.0, 0.0,
+		0.0, -1.0, 0.0,
+		0.0, -1.0, 0.0,
+		0.0, -1.0, 0.0,
+		0.0, -1.0, 0.0,
+		/**
+		 * 顶面
+		 */
+		1.0, 0.0, 0.0,
+		1.0, 0.0, 0.0,
+		1.0, 0.0, 0.0,
+		1.0, 0.0, 0.0,
+		1.0, 0.0, 0.0,
+		1.0, 0.0, 0.0,
+		/**
+		 * 前面
+		 */
+		0.0, 0.0, 1.0,
+		0.0,0.0, 1.0,
+		0.0, 0.0,1.0,
+		0.0, 0.0, 1.0,
+		0.0, 0.0,1.0,
+		0.0, 0.0, 1.0,
+		/**
+		 * 后面
+		 */
+		0.0, 0.0, -1.0,
+		0.0, 0.0, -1.0,
+		0.0, 0.0, -1.0,
+		0.0, 0.0, -1.0,
+		0.0, 0.0, -1.0,
+		0.0, 0.0, -1.0,
+		/**
+		 * 右面
+		 */
+		0.0, 1.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 1.0, 0.0,
+		/**
+		 * 左面
+		 */
+		-1.0, 0.0, 0.0,
+		-1.0, 0.0, 0.0,
+		-1.0, 0.0, 0.0,
+		-1.0, 0.0, 0.0,
+		-1.0, 0.0, 0.0,
+		-1.0, 0.0, 0.0,
 	]
 	return {
 		vertexPositions: new Float32Array(vertexPositions),
 		vertexPositionsSequence,
-		origin: {
-			x: centerX,
-			y: centerY,
-			z: centerZ,
-		},
 		originalPositions,
 		originalPositionsSequence,
 		originNormals: new Float32Array(CUBE_NORMALS),

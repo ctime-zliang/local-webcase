@@ -327,9 +327,14 @@ function drawCanvas1(containerElement) {
 		Program1.profile.modelSize.cubeLength,
 		Program1.profile.modelSize.cubeLength,
 		Program1.profile.modelSize.cubeLength,
-		0,
-		0,
-		0
+		{
+			up: [255, 255, 255, 1],
+			bottom: [255, 255, 255, 1],
+			front: [255, 255, 255, 1],
+			back: [255, 255, 255, 1],
+			right: [255, 255, 255, 1],
+			left: [255, 255, 255, 1],
+		}
 	)
 	console.log(cubeDatasResult)
 	console.timeEnd(`CreateCubeDatas`)
@@ -365,7 +370,7 @@ function drawCanvas1(containerElement) {
 
 	const normalBuffer = gl.createBuffer()
 	gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer)
-	gl.vertexAttribPointer(a_Normal, 4, gl.FLOAT, false, 0, 0)
+	gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0)
 	gl.bufferData(gl.ARRAY_BUFFER, cubeDatasResult.originNormals, gl.STATIC_DRAW)
 
 	const vertextBuffer = gl.createBuffer()
