@@ -1,5 +1,5 @@
 /**
- * 绘制立方体
+ * 绘制方体
  * 		光照效果
  */
 
@@ -46,9 +46,9 @@ class Program1 {
 				b: 0,
 			},
 			ambient: {
-				r: 50,
-				g: 50,
-				b: 50,
+				r: 0.2,
+				g: 0.2,
+				b: 0.2,
 			},
 		},
 		/**
@@ -325,19 +325,22 @@ function drawCanvas1(containerElement) {
 		attribute vec4 a_Color;
 		attribute vec3 a_Normal;
 		varying vec4 v_Color;
-		uniform vec3 u_DiffuseLight;
+		// 平行光颜色
+		uniform vec3 u_LightColor;
+		// 平行光方向
 		uniform vec3 u_LightDirection;
-		uniform vec3 u_AmbientLight;
+		// 环境光颜色
+		uniform vec3 u_AmbientLightColor;
 		uniform mat4 u_NormalMatrix;
 		uniform mat4 u_ModelMatrix;
 		uniform mat4 u_ViewMatrix;
 		uniform mat4 u_ProjMatrix;
 		void main() {
-			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1);
+			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
 			vec3 normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1.0)));
 			float nDotL = max(dot(u_LightDirection, normalize(normal.xyz)), 0.0);
-			vec3 diffuse = u_DiffuseLight * a_Color.rgb * nDotL;
-			vec3 ambient = u_AmbientLight * a_Color.rgb;
+			vec3 diffuse = u_LightColor * a_Color.rgb * nDotL;
+			vec3 ambient = u_AmbientLightColor * a_Color.rgb;
 			v_Color = vec4(diffuse + ambient, a_Color.a);
 			gl_PointSize = 5.0;
 		}
@@ -383,9 +386,9 @@ function drawCanvas1(containerElement) {
 	gl.enable(gl.POLYGON_OFFSET_FILL)
 	gl.polygonOffset(1.0, 1.0)
 
-	const u_DiffuseLight = gl.getUniformLocation(program, 'u_DiffuseLight')
+	const u_LightColor = gl.getUniformLocation(program, 'u_LightColor')
 	const u_LightDirection = gl.getUniformLocation(program, 'u_LightDirection')
-	const u_AmbientLight = gl.getUniformLocation(program, 'u_AmbientLight')
+	const u_AmbientLightColor = gl.getUniformLocation(program, 'u_AmbientLightColor')
 	const u_NormalMatrix = gl.getUniformLocation(program, 'u_NormalMatrix')
 	const u_ModelMatrix = gl.getUniformLocation(program, 'u_ModelMatrix')
 	const u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix')
@@ -476,20 +479,14 @@ function drawCanvas1(containerElement) {
 		const modelEffectInverseTransposeMatrix4 = Ven$CanvasMatrix4.setTranspose(modelEffectInverseMatrix4)
 		const normalMatrix4 = modelEffectInverseTransposeMatrix4
 
-		gl.uniform3f(u_DiffuseLight, Program1.profile.light.color.r / 255, Program1.profile.light.color.g / 255, Program1.profile.light.color.b / 255)
+		gl.uniform3f(u_LightColor, Program1.profile.light.color.r / 255, Program1.profile.light.color.g / 255, Program1.profile.light.color.b / 255)
 		gl.uniform3fv(u_LightDirection, new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z]))
 		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 		gl.uniformMatrix4fv(u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
 		// gl.uniformMatrix4fv(u_NormalMatrix, false, new Float32Array(Ven$CanvasMatrix4.setMatrix4().data))
-		gl.uniform3f(
-			u_AmbientLight,
-			Program1.profile.light.ambient.r / 255,
-			Program1.profile.light.ambient.g / 255,
-			Program1.profile.light.ambient.b / 255
-		)
-		// gl.uniform3f(u_AmbientLight, 0.2, 0.2, 0.2)
+		gl.uniform3f(u_AmbientLightColor, Program1.profile.light.ambient.r, Program1.profile.light.ambient.g, Program1.profile.light.ambient.b)
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		gl.clearColor(0.0, 0.0, 0.0, 1.0)
 		gl.drawArrays(gl.TRIANGLES, 0, cubeDatasResult.vertexPositions.length / 7)

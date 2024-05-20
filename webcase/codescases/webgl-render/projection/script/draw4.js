@@ -304,7 +304,7 @@ function drawCanvas4(containerElement) {
 		uniform mat4 u_ViewMatrix;
 		uniform mat4 u_ProjMatrix;
 		void main() {
-			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1);
+			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
 			v_Color = a_Color;
 			gl_PointSize = 5.0;
 		}

@@ -1,6 +1,6 @@
 /**
- * 通过视点观察图形
- * 		正交投影
+ * 绘制球体
+ * 		光照效果
  */
 
 class Program3 {
@@ -12,9 +12,9 @@ class Program3 {
 		 */
 		lookAt: {
 			eyePosition: {
-				x: 0,
-				y: 0,
-				z: 1,
+				x: 3,
+				y: 3,
+				z: 7,
 			},
 			atPosition: {
 				x: 0,
@@ -23,15 +23,39 @@ class Program3 {
 			},
 		},
 		/**
-		 * 正交投影矩阵参数
+		 * 透视投影矩阵参数
 		 */
-		orthoProjection: {
-			left: -1,
-			right: 1,
-			bottom: -1,
-			top: 1,
-			near: -1,
-			far: 2,
+		persProjection: {
+			fovy: 30,
+			aspect: 1,
+			near: 1,
+			far: 30,
+		},
+		/**
+		 * 光照参数
+		 */
+		light: {
+			direction: {
+				x: 0.5,
+				y: 3.0,
+				z: 4.0,
+			},
+			color: {
+				r: 255,
+				g: 0,
+				b: 0,
+			},
+			ambient: {
+				r: 0.2,
+				g: 0.2,
+				b: 0.2,
+			},
+		},
+		/**
+		 * 模型参数
+		 */
+		modelSize: {
+			cubeLength: 1.0,
 		},
 		/**
 		 * 模型旋转角度
@@ -59,6 +83,8 @@ class Program3 {
 
 	static initFormView() {
 		const self = this
+		const projectionFovyRangeElement = this.containerElement.querySelector(`[name="projectionFovy"]`)
+		const projectionFovyShowSpanElement = this.containerElement.querySelector(`[name="projectionFovyShow"]`)
 		const projectionNearRangeElement = this.containerElement.querySelector(`[name="projectionNear"]`)
 		const projectionNearShowSpanElement = this.containerElement.querySelector(`[name="projectionNearShow"]`)
 		const projectionFarRangeElement = this.containerElement.querySelector(`[name="projectionFar"]`)
@@ -87,9 +113,24 @@ class Program3 {
 		const lookAtMatrix4AtPositionYShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionYShow"]`)
 		const lookAtMatrix4AtPositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZ"]`)
 		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZShow"]`)
+		const lightColorPickElement = this.containerElement.querySelector(`[name="lightColor"]`)
+		const lightColorShowSpanElement = this.containerElement.querySelector(`[name="lightColorShow"]`)
+		const lightDirectionRangeXElement = this.containerElement.querySelector(`[name="lightDirectionRangeX"]`)
+		const lightDirectionRangeXShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeXShow"]`)
+		const lightDirectionRangeYElement = this.containerElement.querySelector(`[name="lightDirectionRangeY"]`)
+		const lightDirectionRangeYShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeYShow"]`)
+		const lightDirectionRangeZElement = this.containerElement.querySelector(`[name="lightDirectionRangeZ"]`)
+		const lightDirectionRangeZShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeZShow"]`)
+		const ambientLightRElement = this.containerElement.querySelector(`[name="ambientLightR"]`)
+		const ambientLightRShowElement = this.containerElement.querySelector(`[name="ambientLightRShow"]`)
+		const ambientLightGElement = this.containerElement.querySelector(`[name="ambientLightG"]`)
+		const ambientLightGShowElement = this.containerElement.querySelector(`[name="ambientLightGShow"]`)
+		const ambientLightBElement = this.containerElement.querySelector(`[name="ambientLightB"]`)
+		const ambientLightBShowElement = this.containerElement.querySelector(`[name="ambientLightBShow"]`)
 
-		projectionNearShowSpanElement.textContent = projectionNearRangeElement.value = self.profile.orthoProjection.near
-		projectionFarShowSpanElement.textContent = projectionFarRangeElement.value = self.profile.orthoProjection.far
+		projectionFovyShowSpanElement.textContent = projectionFovyRangeElement.value = self.profile.persProjection.fovy
+		projectionNearShowSpanElement.textContent = projectionNearRangeElement.value = self.profile.persProjection.near
+		projectionFarShowSpanElement.textContent = projectionFarRangeElement.value = self.profile.persProjection.far
 		modelRotationXShowSpanElement.textContent = modelRotationRangeXElement.value = self.profile.modelRatation.x
 		modelRotationYShowSpanElement.textContent = modelRotationRangeYElement.value = self.profile.modelRatation.y
 		modelRotationZShowSpanElement.textContent = modelRotationRangeZElement.value = self.profile.modelRatation.z
@@ -102,10 +143,19 @@ class Program3 {
 		lookAtMatrix4AtPositionXShowSpanElement.textContent = lookAtMatrix4AtPositionXRangeElement.value = self.profile.lookAt.atPosition.x
 		lookAtMatrix4AtPositionYShowSpanElement.textContent = lookAtMatrix4AtPositionYRangeElement.value = self.profile.lookAt.atPosition.y
 		lookAtMatrix4AtPositionZShowSpanElement.textContent = lookAtMatrix4AtPositionZRangeElement.value = self.profile.lookAt.atPosition.z
+		lightColorShowSpanElement.textContent = lightColorPickElement.value = ven$rgba2Hex(self.profile.light.color)
+		lightDirectionRangeXShowElement.textContent = lightDirectionRangeXElement.value = self.profile.light.direction.x
+		lightDirectionRangeYShowElement.textContent = lightDirectionRangeYElement.value = self.profile.light.direction.y
+		lightDirectionRangeZShowElement.textContent = lightDirectionRangeZElement.value = self.profile.light.direction.z
+		ambientLightRShowElement.textContent = ambientLightRElement.value = self.profile.light.ambient.r
+		ambientLightGShowElement.textContent = ambientLightGElement.value = self.profile.light.ambient.g
+		ambientLightBShowElement.textContent = ambientLightBElement.value = self.profile.light.ambient.b
 	}
 
 	static eventHandle() {
 		const self = this
+		const projectionFovyRangeElement = this.containerElement.querySelector(`[name="projectionFovy"]`)
+		const projectionFovyShowSpanElement = this.containerElement.querySelector(`[name="projectionFovyShow"]`)
 		const projectionNearRangeElement = this.containerElement.querySelector(`[name="projectionNear"]`)
 		const projectionNearShowSpanElement = this.containerElement.querySelector(`[name="projectionNearShow"]`)
 		const projectionFarRangeElement = this.containerElement.querySelector(`[name="projectionFar"]`)
@@ -134,15 +184,34 @@ class Program3 {
 		const lookAtMatrix4AtPositionYShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionYShow"]`)
 		const lookAtMatrix4AtPositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZ"]`)
 		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZShow"]`)
+		const lightColorPickElement = this.containerElement.querySelector(`[name="lightColor"]`)
+		const lightColorShowSpanElement = this.containerElement.querySelector(`[name="lightColorShow"]`)
+		const lightDirectionRangeXElement = this.containerElement.querySelector(`[name="lightDirectionRangeX"]`)
+		const lightDirectionRangeXShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeXShow"]`)
+		const lightDirectionRangeYElement = this.containerElement.querySelector(`[name="lightDirectionRangeY"]`)
+		const lightDirectionRangeYShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeYShow"]`)
+		const lightDirectionRangeZElement = this.containerElement.querySelector(`[name="lightDirectionRangeZ"]`)
+		const lightDirectionRangeZShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeZShow"]`)
+		const ambientLightRElement = this.containerElement.querySelector(`[name="ambientLightR"]`)
+		const ambientLightRShowElement = this.containerElement.querySelector(`[name="ambientLightRShow"]`)
+		const ambientLightGElement = this.containerElement.querySelector(`[name="ambientLightG"]`)
+		const ambientLightGShowElement = this.containerElement.querySelector(`[name="ambientLightGShow"]`)
+		const ambientLightBElement = this.containerElement.querySelector(`[name="ambientLightB"]`)
+		const ambientLightBShowElement = this.containerElement.querySelector(`[name="ambientLightBShow"]`)
 
+		projectionFovyRangeElement.addEventListener('input', function (e) {
+			projectionFovyShowSpanElement.textContent = self.profile.persProjection.fovy = +this.value
+			console.log('persProjection:', JSON.stringify(self.profile.persProjection))
+			self.isRender = true
+		})
 		projectionNearRangeElement.addEventListener('input', function (e) {
-			projectionNearShowSpanElement.textContent = self.profile.orthoProjection.near = +this.value
-			console.log('orthoProjection:', JSON.stringify(self.profile.orthoProjection))
+			projectionNearShowSpanElement.textContent = self.profile.persProjection.near = +this.value
+			console.log('persProjection:', JSON.stringify(self.profile.persProjection))
 			self.isRender = true
 		})
 		projectionFarRangeElement.addEventListener('input', function (e) {
-			projectionFarShowSpanElement.textContent = self.profile.orthoProjection.far = +this.value
-			console.log('orthoProjection:', JSON.stringify(self.profile.orthoProjection))
+			projectionFarShowSpanElement.textContent = self.profile.persProjection.far = +this.value
+			console.log('persProjection:', JSON.stringify(self.profile.persProjection))
 			self.isRender = true
 		})
 		modelRotationRangeXElement.addEventListener('input', function (e) {
@@ -205,6 +274,45 @@ class Program3 {
 			console.log('lookAt.atPosition:', JSON.stringify(self.profile.lookAt.atPosition))
 			self.isRender = true
 		})
+		lightColorPickElement.addEventListener('input', function (e) {
+			const setRGBAColor = ven$hex2Rgba(this.value)
+			Object.keys(self.profile.light.color).forEach(key => {
+				self.profile.light.color[key] = setRGBAColor[key]
+			})
+			lightColorShowSpanElement.textContent = ven$rgba2Hex(self.profile.light.color)
+			console.log('light.color:', JSON.stringify(self.profile.light.color))
+			self.isRender = true
+		})
+		lightDirectionRangeXElement.addEventListener('input', function (e) {
+			lightDirectionRangeXShowElement.textContent = self.profile.light.direction.x = +this.value
+			console.log('light.direction:', JSON.stringify(self.profile.light.direction))
+			self.isRender = true
+		})
+		lightDirectionRangeYElement.addEventListener('input', function (e) {
+			lightDirectionRangeYShowElement.textContent = self.profile.light.direction.y = +this.value
+			console.log('light.direction:', JSON.stringify(self.profile.light.direction))
+			self.isRender = true
+		})
+		lightDirectionRangeZElement.addEventListener('input', function (e) {
+			lightDirectionRangeZShowElement.textContent = self.profile.light.direction.z = +this.value
+			console.log('light.direction:', JSON.stringify(self.profile.light.direction))
+			self.isRender = true
+		})
+		ambientLightRElement.addEventListener('input', function (e) {
+			ambientLightRShowElement.textContent = self.profile.light.ambient.r = +this.value
+			console.log('light.ambient:', JSON.stringify(self.profile.light.ambient))
+			self.isRender = true
+		})
+		ambientLightGElement.addEventListener('input', function (e) {
+			ambientLightGShowElement.textContent = self.profile.light.ambient.g = +this.value
+			console.log('light.ambient:', JSON.stringify(self.profile.light.ambient))
+			self.isRender = true
+		})
+		ambientLightBElement.addEventListener('input', function (e) {
+			ambientLightBShowElement.textContent = self.profile.light.ambient.b = +this.value
+			console.log('light.ambient:', JSON.stringify(self.profile.light.ambient))
+			self.isRender = true
+		})
 	}
 }
 
@@ -215,13 +323,25 @@ function drawCanvas3(containerElement) {
 		precision mediump float;
 		attribute vec3 a_Position;
 		attribute vec4 a_Color;
+		attribute vec3 a_Normal;
 		varying vec4 v_Color;
+		// 平行光颜色
+		uniform vec3 u_LightColor;
+		// 平行光方向
+		uniform vec3 u_LightDirection;
+		// 环境光颜色
+		uniform vec3 u_AmbientLightColor;
+		uniform mat4 u_NormalMatrix;
 		uniform mat4 u_ModelMatrix;
 		uniform mat4 u_ViewMatrix;
 		uniform mat4 u_ProjMatrix;
 		void main() {
 			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
-			v_Color = a_Color;
+			vec3 normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1.0)));
+			float nDotL = max(dot(u_LightDirection, normalize(normal.xyz)), 0.0);
+			vec3 diffuse = u_LightColor * a_Color.rgb * nDotL;
+			vec3 ambient = u_AmbientLightColor * a_Color.rgb;
+			v_Color = vec4(diffuse + ambient, a_Color.a);
 			gl_PointSize = 5.0;
 		}
 	`
@@ -233,24 +353,20 @@ function drawCanvas3(containerElement) {
 		}
 	`
 
-	// prettier-ignore
-	const datasResult = {
-		vertexPositions: new Float32Array([
-			/* 绿色 */
-			0.0, 0.5, -0.4, 0.4, 1.0, 0.4, 1.0,
-			-0.5, -0.5, -0.4, 0.4, 1.0, 0.4, 1.0,
-			0.5, -0.5, -0.4, 1.0, 0.4, 0.4, 1.0,
-			/* 黄色 */
-			0.5, 0.4, -0.2, 1.0, 0.4, 0.4, 1.0,
-			-0.5, 0.4, -0.2, 1.0, 1.0, 0.4, 1.0,
-			0.0, -0.6, -0.2, 1.0, 1.0, 0.4, 1.0,
-			/* 蓝色 */
-			0.0, 0.5, 0.0, 0.4, 0.4, 1.0, 1.0,
-			-0.5, -0.5, 0.0, 0.4, 0.4, 1.0, 1.0,
-			0.5, -0.5, 0.0, 1.0, 0.4, 0.4, 1.0
-		]),
-	}
-	console.log(datasResult)
+	console.time(`CreateShereDatas`)
+	const shereDatasResult = createShereDatas(
+		Program4.profile.modelSize.radius,
+		Program4.profile.modelSize.meridianCount,
+		Program4.profile.modelSize.latitudeCount,
+		{
+			redRange: [80, 200],
+			greenRange: [80, 200],
+			blueRange: [80, 200],
+			alphaRange: [1, 1],
+		}
+	)
+	console.log(shereDatasResult)
+	console.timeEnd(`CreateShereDatas`)
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
@@ -268,36 +384,55 @@ function drawCanvas3(containerElement) {
 	gl.enable(gl.POLYGON_OFFSET_FILL)
 	gl.polygonOffset(1.0, 1.0)
 
+	const u_LightColor = gl.getUniformLocation(program, 'u_LightColor')
+	const u_LightDirection = gl.getUniformLocation(program, 'u_LightDirection')
+	const u_AmbientLightColor = gl.getUniformLocation(program, 'u_AmbientLightColor')
+	const u_NormalMatrix = gl.getUniformLocation(program, 'u_NormalMatrix')
 	const u_ModelMatrix = gl.getUniformLocation(program, 'u_ModelMatrix')
 	const u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix')
 	const u_ProjMatrix = gl.getUniformLocation(program, 'u_ProjMatrix')
+	const a_Normal = gl.getAttribLocation(program, 'a_Normal')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 	const a_Color = gl.getAttribLocation(program, 'a_Color')
 
+	gl.enableVertexAttribArray(a_Normal)
 	gl.enableVertexAttribArray(a_Position)
 	gl.enableVertexAttribArray(a_Color)
+
+	const normalBuffer = gl.createBuffer()
+	gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer)
+	gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0)
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(shereDatasResult.originNormals), gl.STATIC_DRAW)
 
 	const vertextBuffer = gl.createBuffer()
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
 	gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
-	gl.bufferData(gl.ARRAY_BUFFER, datasResult.vertexPositions, gl.STATIC_DRAW)
+	gl.bufferData(gl.ARRAY_BUFFER, shereDatasResult.vertexPositions, gl.STATIC_DRAW)
 
 	const render = () => {
 		if (!Program3.isRender) {
 			return
 		}
-		Program3.isRender = false
+		// Program3.isRender = false
+
 		/**
-		 * 创建正交投影矩阵
+		 * 创建平行光方向向量
 		 */
-		const projectionMatrix4 = Ven$CanvasMatrix4.setOrtho(
-			Program3.profile.orthoProjection.left,
-			Program3.profile.orthoProjection.right,
-			Program3.profile.orthoProjection.bottom,
-			Program3.profile.orthoProjection.top,
-			Program3.profile.orthoProjection.near,
-			Program3.profile.orthoProjection.far
+		const lightDirection = new Ven$Vector3(
+			Program3.profile.light.direction.x,
+			Program3.profile.light.direction.y,
+			Program3.profile.light.direction.z
+		)
+		const lightNormalizeDirection = lightDirection.normalize()
+		/**
+		 * 创建透视投影矩阵
+		 */
+		const projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
+			Program3.profile.persProjection.fovy,
+			Program3.profile.persProjection.aspect,
+			Program3.profile.persProjection.near,
+			Program3.profile.persProjection.far
 		)
 		/**
 		 * 创建视图矩阵
@@ -335,13 +470,24 @@ function drawCanvas3(containerElement) {
 			.multiply4(modelRotationYMatrix4)
 			.multiply4(modelRotationZMatrix4)
 			.multiply4(modelOffsetMatrix4)
+		/**
+		 * 创建法线变换矩阵
+		 */
+		const modelEffectInverseMatrix4 = Ven$CanvasMatrix4.setInverse(modelEffectMatrix4)
+		const modelEffectInverseTransposeMatrix4 = Ven$CanvasMatrix4.setTranspose(modelEffectInverseMatrix4)
+		const normalMatrix4 = modelEffectInverseTransposeMatrix4
 
+		gl.uniform3f(u_LightColor, Program3.profile.light.color.r / 255, Program3.profile.light.color.g / 255, Program3.profile.light.color.b / 255)
+		gl.uniform3fv(u_LightDirection, new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z]))
 		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
-		gl.clear(gl.COLOR_BUFFER_BIT)
+		gl.uniformMatrix4fv(u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
+		// gl.uniformMatrix4fv(u_NormalMatrix, false, new Float32Array(Ven$CanvasMatrix4.setMatrix4().data))
+		gl.uniform3f(u_AmbientLightColor, Program3.profile.light.ambient.r, Program3.profile.light.ambient.g, Program3.profile.light.ambient.b)
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		gl.clearColor(0.0, 0.0, 0.0, 1.0)
-		gl.drawArrays(gl.TRIANGLES, 0, datasResult.vertexPositions.length / 7)
+		gl.drawArrays(gl.TRIANGLES, 0, shereDatasResult.vertexPositions.length / 7)
 	}
 
 	const exec = () => {
