@@ -37,8 +37,8 @@ class Program2 {
 		light: {
 			position: {
 				x: 1.0,
-				y: 1.0,
-				z: 1.0,
+				y: 2.5,
+				z: 2.0,
 			},
 			color: {
 				r: 255,
@@ -55,7 +55,7 @@ class Program2 {
 		 * 模型参数
 		 */
 		modelSize: {
-			cubeLength: 1.0,
+			cubeLength: 1.5,
 		},
 		/**
 		 * 模型旋转角度
