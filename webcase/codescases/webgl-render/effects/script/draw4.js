@@ -42,8 +42,8 @@ class Program4 {
 			},
 			color: {
 				r: 255,
-				g: 0,
-				b: 0,
+				g: 255,
+				b: 255,
 			},
 			ambient: {
 				r: 0.2,
@@ -374,9 +374,9 @@ function drawCanvas4(containerElement) {
 		Program4.profile.modelSize.meridianCount,
 		Program4.profile.modelSize.latitudeCount,
 		{
-			redRange: [80, 200],
-			greenRange: [80, 200],
-			blueRange: [80, 200],
+			redRange: [255, 255],
+			greenRange: [255, 255],
+			blueRange: [255, 255],
 			alphaRange: [1, 1],
 		}
 	)
@@ -417,7 +417,7 @@ function drawCanvas4(containerElement) {
 	const normalBuffer = gl.createBuffer()
 	gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer)
 	gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0)
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(shereDatasResult.originNormals), gl.STATIC_DRAW)
+	gl.bufferData(gl.ARRAY_BUFFER, shereDatasResult.vertexNormals, gl.STATIC_DRAW)
 
 	const vertextBuffer = gl.createBuffer()
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)

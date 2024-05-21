@@ -104,6 +104,7 @@ function createCubeDatas(width, height, depth, colorSetting) {
 	 */
 	const vertexPositionsSequence = {}
 	const vertexPositions = []
+	const vertexNormals = []
 	for (let i = 0; i < CUBE_FACE_INDICES.length; i++) {
 		const faceIndices = CUBE_FACE_INDICES[i]
 		// const color = ven$randomColor()
@@ -116,10 +117,6 @@ function createCubeDatas(width, height, depth, colorSetting) {
 			vertexPositions.push(originalPositions[pointIndex * 3], originalPositions[pointIndex * 3 + 1], originalPositions[pointIndex * 3 + 2])
 			vertexPositions.push(color.r / 255, color.g / 255, color.b / 255, color.a)
 			/* ... */
-			/**
-			 * key 规则:
-			 * 		面序号 - 三角形序号 - 三角形顶点序号
-			 */
 			vertexPositionsSequence[`${i * faceIndices.length + j}#:${i}-${parseInt((j + 0) / 3)}-${parseInt((j + 0) % 3)}`] = {
 				x: originalPositions[pointIndex * 3],
 				y: originalPositions[pointIndex * 3 + 1],
@@ -189,11 +186,14 @@ function createCubeDatas(width, height, depth, colorSetting) {
 		-1.0, 0.0, 0.0,
 		-1.0, 0.0, 0.0,
 	]
+	CUBE_NORMALS.forEach(item => {
+		vertexNormals.push(item)
+	})
 	return {
 		vertexPositions: new Float32Array(vertexPositions),
+		vertexNormals: new Float32Array(vertexNormals),
 		vertexPositionsSequence,
 		originalPositions,
 		originalPositionsSequence,
-		originNormals: [...CUBE_NORMALS],
 	}
 }
