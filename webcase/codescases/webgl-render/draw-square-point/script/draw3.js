@@ -6,12 +6,12 @@
 function drawCanvas3(containerElement) {
 	const VS = `
 		precision mediump float;
+		varying vec4 v_Color;
+		// 顶点配置(组)
 		attribute vec3 a_Position;
 		attribute vec4 a_Color;
-		varying vec4 v_Color;
-		uniform mat4 u_Matrix;
 		void main() {
-			gl_Position = u_Matrix * vec4(a_Position, 1.0);
+			gl_Position = vec4(a_Position, 1.0);
 			v_Color = a_Color;
 			gl_PointSize = 15.0;
 		}
@@ -49,7 +49,6 @@ function drawCanvas3(containerElement) {
 	gl.enable(gl.CULL_FACE)
 	gl.enable(gl.DEPTH_TEST)
 
-	const u_Matrix = gl.getUniformLocation(program, 'u_Matrix')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 	const a_Color = gl.getAttribLocation(program, 'a_Color')
 
@@ -62,32 +61,10 @@ function drawCanvas3(containerElement) {
 
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(points), gl.STATIC_DRAW)
 
-	const orthoProjectionMatrix4 = Ven$CanvasMatrix4.createOrthoProjectionMatrix4OfRectView(canvasElement.width / canvasElement.height)
-
 	const render = () => {
-		const modelXRotationMatrix4 = Ven$Matrix4.createRotateXMatrix4ByRadian(Ven$Angles.degreeToRadian(xAngle))
-		const modelYRotationMatrix4 = Ven$Matrix4.createRotateYMatrix4ByRadian(Ven$Angles.degreeToRadian(yAngle))
-		const modelEffectMatrix4 = modelXRotationMatrix4.multiply4(modelYRotationMatrix4)
-		const modelResultMatrix4 = modelEffectMatrix4.multiply4(orthoProjectionMatrix4)
-		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelResultMatrix4.data))
-		// gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(new Ven$Matrix4().data))
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.POINTS, 0, 2)
 	}
 
-	let xAngle = 0
-	let yAngle = 0
-
-	const exec = () => {
-		// xAngle += 0.5
-		// yAngle += 0.5
-		// if (xAngle >= 30 || yAngle >= 30) {
-		// 	render()
-		// 	return
-		// }
-		render()
-		requestAnimationFrame(exec)
-	}
-
-	exec()
+	render()
 }

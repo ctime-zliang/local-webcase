@@ -4,8 +4,9 @@
 function drawCanvas1(containerElement) {
 	const VS = `
 		precision mediump float;
-		attribute vec2 a_Position;
 		attribute vec2 a_CanvasSize;
+		// 顶点配置(组)
+		attribute vec2 a_Position;
 		attribute float a_PointSize;
 		void main() {
 			vec2 position = (a_Position / a_CanvasSize) * 2.0 - 1.0; 
@@ -16,6 +17,7 @@ function drawCanvas1(containerElement) {
 	`
 	const FS = `
 		precision mediump float;
+		// 顶点配置(组)
 		uniform vec4 u_Color;
 		void main() {
 			vec4 color = u_Color / vec4(255, 255, 255, 1.0);

@@ -321,35 +321,45 @@ function drawCanvas3(containerElement) {
 
 	const VS = `
 		precision mediump float;
+		varying vec4 v_Color;
+		varying vec3 v_Normal;
+		varying vec3 v_Position;
+		// 顶点配置(组)
 		attribute vec3 a_Position;
 		attribute vec4 a_Color;
 		attribute vec3 a_Normal;
-		varying vec4 v_Color;
-		// 平行光颜色
-		uniform vec3 u_LightColor;
-		// 平行光方向
-		uniform vec3 u_LightDirection;
-		// 环境光颜色
-		uniform vec3 u_AmbientLightColor;
+		// 变换矩阵(组)
 		uniform mat4 u_NormalMatrix;
 		uniform mat4 u_ModelMatrix;
 		uniform mat4 u_ViewMatrix;
 		uniform mat4 u_ProjMatrix;
 		void main() {
 			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
-			vec3 normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1.0)));
-			float nDotL = max(dot(u_LightDirection, normalize(normal.xyz)), 0.0);
-			vec3 diffuse = u_LightColor * a_Color.rgb * nDotL;
-			vec3 ambient = u_AmbientLightColor * a_Color.rgb;
-			v_Color = vec4(diffuse + ambient, a_Color.a);
+			// 计算顶点的世界坐标
+			v_Position = vec3(u_ModelMatrix * vec4(a_Position, 1.0));
+			// 根据法线变换矩阵重新计算法线坐标并归一化
+			v_Normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1.0)));
+			v_Color = a_Color;
 			gl_PointSize = 5.0;
 		}
 	`
 	const FS = `
 		precision mediump float;
 		varying vec4 v_Color;
+		varying vec3 v_Normal;
+		varying vec3 v_Position;
+		// 平行光配置(组)
+		uniform vec3 u_LightColor;
+		uniform vec3 u_LightDirection;
+		uniform vec3 u_AmbientLightColor;
 		void main() {
-			gl_FragColor = v_Color;
+			vec3 normal = normalize(v_Normal);
+			// 计算光线方向与法线的点积
+			float nDotL = max(dot(u_LightDirection, normal), 0.0);
+			// 计算漫反射光和环境光的色值
+			vec3 diffuse = u_LightColor * v_Color.rgb * nDotL;
+			vec3 ambient = u_AmbientLightColor * v_Color.rgb;
+			gl_FragColor = vec4(diffuse + ambient, v_Color.a);
 		}
 	`
 

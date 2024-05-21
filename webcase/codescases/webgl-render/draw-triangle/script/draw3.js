@@ -5,7 +5,9 @@
 function drawCanvas3(containerElement) {
 	const VS = `
 		precision mediump float;
+		// 顶点配置(组)
 		attribute vec3 a_Position;
+		// 变换矩阵(组)
 		uniform mat4 u_Matrix;
 		void main() {
 			gl_Position = u_Matrix * vec4(a_Position, 1.0);

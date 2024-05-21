@@ -4,6 +4,7 @@
 function drawCanvas1(containerElement) {
 	const VS = `
 		precision mediump float;
+		// 顶点配置(组)
 		attribute vec2 a_Position;
 		void main() {
 			gl_Position = vec4(a_Position, 0, 1);
@@ -12,6 +13,7 @@ function drawCanvas1(containerElement) {
 	`
 	const FS = `
 		precision mediump float;
+		// 顶点配置(组)
 		uniform vec4 u_Color;
 		void main() {
 			vec4 color = u_Color / vec4(255, 0.0, 0.0, 1.0);

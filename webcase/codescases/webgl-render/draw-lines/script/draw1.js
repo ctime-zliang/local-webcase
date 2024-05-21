@@ -4,8 +4,9 @@
 function drawCanvas1(containerElement, type) {
 	const VS = `
 		precision mediump float;
-		attribute vec2 a_Position;
 		attribute vec2 a_CanvasSize;
+		// 顶点配置(组)
+		attribute vec2 a_Position;
 		void main() {
 			vec2 position = (a_Position / a_CanvasSize) * 2.0 - 1.0; 
 			position = position * vec2(1.0, -1.0);

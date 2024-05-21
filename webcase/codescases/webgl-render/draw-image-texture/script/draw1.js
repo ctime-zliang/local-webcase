@@ -3,15 +3,13 @@
  */
 function drawCanvas1(containerElement) {
 	const VS = `
-		// 设置浮点数精度为中等精度
 		precision mediump float;
-		// 接收顶点坐标 (x, y)
-		attribute vec2 a_Position;
-		// 接收画布尺寸 (width, height)
-		attribute vec2 a_CanvasSize;
-		// 纹理坐标
-		attribute vec2 a_Uv;
 		varying vec2 v_Uv;
+		attribute vec2 a_CanvasSize;
+		// 顶点配置(组)
+		attribute vec2 a_Position;		
+		// 纹理配置(组)
+		attribute vec2 a_Uv;
 		void main() {
 			vec2 position = (a_Position / a_CanvasSize) * 2.0 - 1.0; 
 			position = position * vec2(1.0, -1.0);
@@ -21,12 +19,10 @@ function drawCanvas1(containerElement) {
 	`
 	const FS = `
 		#ifdef GL_ES
-		// 设置浮点数精度为中等精度
 		precision mediump float;
 		#endif
-		// 接收纹理采样坐标
 		varying vec2 v_Uv;
-		// 接收纹理数据(内容)
+		// 纹理数据(内容)(组)
 		uniform sampler2D u_Sampler;
 		void main() {
 			gl_FragColor = texture2D(u_Sampler, v_Uv);
