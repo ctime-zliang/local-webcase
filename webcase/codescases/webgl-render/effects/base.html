@@ -259,6 +259,23 @@
 						padding: 3px 0;
 					"
 				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Intensity Gain: </label>
+					<span>0.01</span>
+					<input type="range" name="lightIntensityGainRange" min="-0.01" max="2" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>2</span>
+					<strong>&nbsp;(<span name="lightIntensityGainRangeShow">0</span>)</strong>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Direction X: </label>
 					<span>-10</span>
 					<input type="range" value="0" name="lightDirectionRangeX" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
@@ -312,7 +329,7 @@
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ambient Light R: </label>
 					<span>0</span>
-					<input type="range" value="0" name="ambientLightR" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<input type="range" value="0" name="ambientLightRangeR" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
 					<span>1</span>
 					<strong>&nbsp;(<span name="ambientLightRShow">0</span>)</strong>
 				</div>
@@ -329,7 +346,7 @@
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ambient Light G: </label>
 					<span>0</span>
-					<input type="range" value="0" name="ambientLightG" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<input type="range" value="0" name="ambientLightRangeG" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
 					<span>1</span>
 					<strong>&nbsp;(<span name="ambientLightGShow">0</span>)</strong>
 				</div>
@@ -346,7 +363,7 @@
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ambient Light B: </label>
 					<span>0</span>
-					<input type="range" value="0" name="ambientLightB" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<input type="range" value="0" name="ambientLightRangeB" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
 					<span>1</span>
 					<strong>&nbsp;(<span name="ambientLightBShow">0</span>)</strong>
 				</div>
@@ -654,6 +671,23 @@
 						padding: 3px 0;
 					"
 				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Intensity Gain: </label>
+					<span>0.01</span>
+					<input type="range" name="lightIntensityGainRange" min="-0.01" max="2" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>2</span>
+					<strong>&nbsp;(<span name="lightIntensityGainRangeShow">0</span>)</strong>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Position X: </label>
 					<span>-10</span>
 					<input type="range" value="0" name="lightPositionRangeX" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
@@ -707,7 +741,7 @@
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ambient Light R: </label>
 					<span>0</span>
-					<input type="range" value="0" name="ambientLightR" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<input type="range" value="0" name="ambientLightRangeR" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
 					<span>1</span>
 					<strong>&nbsp;(<span name="ambientLightRShow">0</span>)</strong>
 				</div>
@@ -724,7 +758,7 @@
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ambient Light G: </label>
 					<span>0</span>
-					<input type="range" value="0" name="ambientLightG" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<input type="range" value="0" name="ambientLightRangeG" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
 					<span>1</span>
 					<strong>&nbsp;(<span name="ambientLightGShow">0</span>)</strong>
 				</div>
@@ -741,7 +775,7 @@
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ambient Light B: </label>
 					<span>0</span>
-					<input type="range" value="0" name="ambientLightB" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<input type="range" value="0" name="ambientLightRangeB" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
 					<span>1</span>
 					<strong>&nbsp;(<span name="ambientLightBShow">0</span>)</strong>
 				</div>
@@ -1049,6 +1083,23 @@
 						padding: 3px 0;
 					"
 				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Intensity Gain: </label>
+					<span>0.01</span>
+					<input type="range" name="lightIntensityGainRange" min="-0.01" max="2" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>2</span>
+					<strong>&nbsp;(<span name="lightIntensityGainRangeShow">0</span>)</strong>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Direction X: </label>
 					<span>-10</span>
 					<input type="range" value="0" name="lightDirectionRangeX" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
@@ -1102,7 +1153,7 @@
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ambient Light R: </label>
 					<span>0</span>
-					<input type="range" value="0" name="ambientLightR" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<input type="range" value="0" name="ambientLightRangeR" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
 					<span>1</span>
 					<strong>&nbsp;(<span name="ambientLightRShow">0</span>)</strong>
 				</div>
@@ -1119,7 +1170,7 @@
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ambient Light G: </label>
 					<span>0</span>
-					<input type="range" value="0" name="ambientLightG" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<input type="range" value="0" name="ambientLightRangeG" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
 					<span>1</span>
 					<strong>&nbsp;(<span name="ambientLightGShow">0</span>)</strong>
 				</div>
@@ -1136,7 +1187,7 @@
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ambient Light B: </label>
 					<span>0</span>
-					<input type="range" value="0" name="ambientLightB" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<input type="range" value="0" name="ambientLightRangeB" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
 					<span>1</span>
 					<strong>&nbsp;(<span name="ambientLightBShow">0</span>)</strong>
 				</div>
@@ -1444,6 +1495,23 @@
 						padding: 3px 0;
 					"
 				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Intensity Gain: </label>
+					<span>0.01</span>
+					<input type="range" name="lightIntensityGainRange" min="-0.01" max="2" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>2</span>
+					<strong>&nbsp;(<span name="lightIntensityGainRangeShow">0</span>)</strong>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Position X: </label>
 					<span>-10</span>
 					<input type="range" value="0" name="lightPositionRangeX" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
@@ -1497,7 +1565,7 @@
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ambient Light R: </label>
 					<span>0</span>
-					<input type="range" value="0" name="ambientLightR" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<input type="range" value="0" name="ambientLightRangeR" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
 					<span>1</span>
 					<strong>&nbsp;(<span name="ambientLightRShow">0</span>)</strong>
 				</div>
@@ -1514,7 +1582,7 @@
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ambient Light G: </label>
 					<span>0</span>
-					<input type="range" value="0" name="ambientLightG" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<input type="range" value="0" name="ambientLightRangeG" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
 					<span>1</span>
 					<strong>&nbsp;(<span name="ambientLightGShow">0</span>)</strong>
 				</div>
@@ -1531,7 +1599,7 @@
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ambient Light B: </label>
 					<span>0</span>
-					<input type="range" value="0" name="ambientLightB" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
+					<input type="range" value="0" name="ambientLightRangeB" min="0" max="1" step="0.01" style="width: 300px; cursor: pointer" />
 					<span>1</span>
 					<strong>&nbsp;(<span name="ambientLightBShow">0</span>)</strong>
 				</div>
