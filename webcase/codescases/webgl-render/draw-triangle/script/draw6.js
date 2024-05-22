@@ -71,7 +71,6 @@ function drawCanvas6(containerElement) {
 		const color = ven$randomColor()
 		colors.push(color.r, color.g, color.b, 1)
 		if (positions.length % 6 === 0) {
-			console.time(`draw-webgl`)
 			gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
 			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.DYNAMIC_DRAW)
 			gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer)
@@ -79,6 +78,8 @@ function drawCanvas6(containerElement) {
 			/* ... */
 			gl.clearColor(0.0, 0.0, 0.0, 1.0)
 			gl.clear(gl.COLOR_BUFFER_BIT)
+
+			console.time(`draw-webgl`)
 			gl.drawArrays(gl.TRIANGLES, 0, positions.length / 2)
 			console.timeEnd(`draw-webgl`)
 		}

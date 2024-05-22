@@ -61,12 +61,13 @@ function drawCanvas5(containerElement) {
 		const color = ven$randomColor()
 		datas.push(color.r, color.g, color.b, 1)
 		if (datas.length % 18 === 0) {
-			console.time(`draw-webgl`)
 			gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
 			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.DYNAMIC_DRAW)
 			/* ... */
 			gl.clearColor(0.0, 0.0, 0.0, 1.0)
 			gl.clear(gl.COLOR_BUFFER_BIT)
+
+			console.time(`draw-webgl`)
 			gl.drawArrays(gl.TRIANGLES, 0, datas.length / 6)
 			console.timeEnd(`draw-webgl`)
 		}

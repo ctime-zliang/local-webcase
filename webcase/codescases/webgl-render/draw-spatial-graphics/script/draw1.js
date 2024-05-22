@@ -302,6 +302,9 @@ function drawCanvas1(containerElement) {
 		}
 		// Program1.isRender = false
 
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+		gl.clearColor(0.0, 0.0, 0.0, 1.0)
+
 		/**
 		 * 创建透视投影矩阵
 		 */
@@ -351,8 +354,7 @@ function drawCanvas1(containerElement) {
 		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
-		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		gl.clearColor(0.0, 0.0, 0.0, 1.0)
+
 		gl.drawArrays(gl.TRIANGLES, 0, cubeDatasResult.vertexPositions.length / 7)
 	}
 

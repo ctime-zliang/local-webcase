@@ -57,10 +57,10 @@ function drawCanvas1(containerElement) {
 	gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 24, 0)
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 24, 8)
 
-	console.time(`draw-webgl`)
 	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.DYNAMIC_DRAW)
-	/* ... */
+
+	console.time(`draw-webgl`)
 	gl.drawArrays(gl.TRIANGLE_FAN, 0, datas.length / 6)
 	console.timeEnd(`draw-webgl`)
 }

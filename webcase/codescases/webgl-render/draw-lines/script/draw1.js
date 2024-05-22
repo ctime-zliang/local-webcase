@@ -53,10 +53,12 @@ function drawCanvas1(containerElement, type) {
 		const canvasRect = canvasElement.getBoundingClientRect().toJSON()
 		positions.push(e.clientX - canvasRect.left, e.clientY - canvasRect.top)
 		if (positions.length > 0) {
-			console.time(`draw-webgl`)
-			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.DYNAMIC_DRAW)
 			gl.clearColor(0, 0, 0, 1.0)
 			gl.clear(gl.COLOR_BUFFER_BIT)
+
+			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.DYNAMIC_DRAW)
+
+			console.time(`draw-webgl`)
 			gl.drawArrays(gl.POINTS, 0, positions.length / 2)
 			switch (type) {
 				case 'LINES': {

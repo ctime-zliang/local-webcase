@@ -124,6 +124,7 @@ function drawCanvas4(containerElement) {
 		 */
 		const modelEffectMatrix4_0 = rotationMatrix4_1.multiply4(translateMatrix4).multiply4(rotationMatrix4_2)
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelEffectMatrix4_0.data))
+
 		gl.drawArrays(gl.TRIANGLES, 0, 3)
 	}
 

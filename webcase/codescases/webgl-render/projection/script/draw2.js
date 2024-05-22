@@ -261,6 +261,10 @@ function drawCanvas2(containerElement) {
 			return
 		}
 		Program2.isRender = false
+
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+		gl.clearColor(0.0, 0.0, 0.0, 1.0)
+
 		/**
 		 * 创建视图矩阵
 		 */
@@ -302,8 +306,7 @@ function drawCanvas2(containerElement) {
 		// gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 		const viewModelMatrix4 = lookAtMatrix4.multiply4(modelEffectMatrix4)
 		gl.uniformMatrix4fv(u_ViewModelMatrix, false, new Float32Array(viewModelMatrix4.data))
-		gl.clear(gl.COLOR_BUFFER_BIT)
-		gl.clearColor(0.0, 0.0, 0.0, 1.0)
+
 		gl.drawArrays(gl.TRIANGLES, 0, datasResult.vertexPositions.length / 7)
 	}
 

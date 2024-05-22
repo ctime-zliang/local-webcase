@@ -20,6 +20,8 @@ class RectangularModel1 {
 			z: 0,
 		}
 		this._vertexData = this._createVertexData()
+		this._vertextBuffer = null
+		this._normalBuffer = null
 	}
 
 	get modelParam() {
@@ -33,6 +35,20 @@ class RectangularModel1 {
 	}
 	get vertexData() {
 		return this._vertexData
+	}
+
+	get vertextBuffer() {
+		return this._vertextBuffer
+	}
+	get normalBuffer() {
+		return this._normalBuffer
+	}
+
+	bindVertextBuffer(glBuffer) {
+		this._vertextBuffer = glBuffer
+	}
+	bindNormalBuffer(glBuffer) {
+		this._normalBuffer = glBuffer
 	}
 
 	_createVertexData() {
@@ -469,19 +485,19 @@ function drawCanvas1(containerElement) {
 	gl.enableVertexAttribArray(a_Position)
 	gl.enableVertexAttribArray(a_Color)
 
-	const modelNormalBuffer1 = gl.createBuffer()
-	const modelVertextBuffer1 = gl.createBuffer()
-	const modelNormalBuffer2 = gl.createBuffer()
-	const modelVertextBuffer2 = gl.createBuffer()
+	modelInstance1.bindVertextBuffer(gl.createBuffer())
+	modelInstance1.bindNormalBuffer(gl.createBuffer())
+	modelInstance2.bindVertextBuffer(gl.createBuffer())
+	modelInstance2.bindNormalBuffer(gl.createBuffer())
 
-	const writeBuffer = (vertextBuffer, vertexPositions, normalBuffer, vertexNormals) => {
-		gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer)
+	const writeBuffer = modelInstance => {
+		gl.bindBuffer(gl.ARRAY_BUFFER, modelInstance.normalBuffer)
 		gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0)
-		gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(vertexNormals), gl.STATIC_DRAW)
-		gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
+		gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(modelInstance.vertexData.vertexNormals), gl.STATIC_DRAW)
+		gl.bindBuffer(gl.ARRAY_BUFFER, modelInstance.vertextBuffer)
 		gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
 		gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
-		gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(vertexPositions), gl.STATIC_DRAW)
+		gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(modelInstance.vertexData.vertexPositions), gl.STATIC_DRAW)
 	}
 
 	const applyTranslateMatrix = modelInstance => {
@@ -524,6 +540,12 @@ function drawCanvas1(containerElement) {
 		gl.uniformMatrix4fv(u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
 	}
 
+	const drawModel = (modelInstance, vertexPositionsSize) => {
+		writeBuffer(modelInstance)
+		applyTranslateMatrix(modelInstance)
+		gl.drawArrays(gl.TRIANGLES, 0, vertexPositionsSize / 7)
+	}
+
 	const render = () => {
 		if (!Program1.isRender) {
 			return
@@ -532,9 +554,6 @@ function drawCanvas1(containerElement) {
 
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		gl.clearColor(0.0, 0.0, 0.0, 1.0)
-
-		writeBuffer(modelVertextBuffer1, modelInstance1.vertexData.vertexPositions, modelNormalBuffer1, modelInstance1.vertexData.vertexNormals)
-		writeBuffer(modelVertextBuffer2, modelInstance2.vertexData.vertexPositions, modelNormalBuffer2, modelInstance2.vertexData.vertexNormals)
 
 		/**
 		 * 创建点光坐标向量
@@ -558,8 +577,6 @@ function drawCanvas1(containerElement) {
 			new Ven$Vector3(0, 1, 0)
 		)
 
-		applyTranslateMatrix(modelInstance1)
-
 		gl.uniform3f(u_LightColor, Program1.profile.light.color.r / 255, Program1.profile.light.color.g / 255, Program1.profile.light.color.b / 255)
 		gl.uniform3fv(u_LightPosition, new Float32Array([lightPosition.x, lightPosition.y, lightPosition.z]))
 		gl.uniform1f(u_lightIntensityGain, Program1.profile.light.intensityGain)
@@ -567,7 +584,8 @@ function drawCanvas1(containerElement) {
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 
-		gl.drawArrays(gl.TRIANGLES, 0, vertexPositionsSize / 7)
+		drawModel(modelInstance1, vertexPositionsSize)
+		drawModel(modelInstance2, vertexPositionsSize)
 	}
 
 	const exec = () => {

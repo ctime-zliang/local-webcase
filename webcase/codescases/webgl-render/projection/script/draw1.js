@@ -131,6 +131,10 @@ function drawCanvas1(containerElement) {
 			return
 		}
 		Program1.isRender = false
+
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+		gl.clearColor(0.0, 0.0, 0.0, 1.0)
+
 		/**
 		 * 创建旋转矩阵
 		 */
@@ -162,7 +166,7 @@ function drawCanvas1(containerElement) {
 		const modelResultMatrix4 = modelEffectMatrix4.multiply4(orthoProjectionMatrix4)
 
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(lookAtMatrix4_3.data))
-		gl.clear(gl.COLOR_BUFFER_BIT)
+
 		gl.drawArrays(gl.TRIANGLES, 0, datasResult.vertexPositions.length / 7)
 	}
 

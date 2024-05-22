@@ -64,6 +64,7 @@ function drawCanvas2(containerElement) {
 		 */
 		const modelEffectMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(angle), new Ven$Vector3(0, 0, 1))
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(modelEffectMatrix4.data))
+
 		gl.drawArrays(gl.TRIANGLES, 0, 3)
 	}
 

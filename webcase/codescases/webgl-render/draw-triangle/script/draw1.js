@@ -50,5 +50,6 @@ function drawCanvas1(containerElement) {
 	gl.enableVertexAttribArray(a_Position)
 
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW)
+
 	gl.drawArrays(gl.TRIANGLES, 0, 3)
 }
