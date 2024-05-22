@@ -56,7 +56,9 @@ class Program3 {
 		 * 模型参数
 		 */
 		modelSize: {
-			cubeLength: 1.0,
+			radius: 1.0,
+			meridianCount: 30,
+			latitudeCount: 30,
 		},
 		/**
 		 * 模型旋转角度
@@ -377,10 +379,10 @@ function drawCanvas3(containerElement) {
 	`
 
 	console.time(`CreateShereDatas`)
-	const shereDatasResult = createShereDatas(
-		Program4.profile.modelSize.radius,
-		Program4.profile.modelSize.meridianCount,
-		Program4.profile.modelSize.latitudeCount,
+	const modelData = createShereDatas(
+		Program3.profile.modelSize.radius,
+		Program3.profile.modelSize.meridianCount,
+		Program3.profile.modelSize.latitudeCount,
 		{
 			redRange: [255, 255],
 			greenRange: [255, 255],
@@ -388,7 +390,7 @@ function drawCanvas3(containerElement) {
 			alphaRange: [1, 1],
 		}
 	)
-	console.log(shereDatasResult)
+	console.log(modelData)
 	console.timeEnd(`CreateShereDatas`)
 
 	const canvasElement = containerElement.querySelector('canvas')
@@ -426,19 +428,22 @@ function drawCanvas3(containerElement) {
 	const normalBuffer = gl.createBuffer()
 	gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer)
 	gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0)
-	gl.bufferData(gl.ARRAY_BUFFER, shereDatasResult.vertexNormals, gl.STATIC_DRAW)
+	gl.bufferData(gl.ARRAY_BUFFER, modelData.vertexNormals, gl.STATIC_DRAW)
 
 	const vertextBuffer = gl.createBuffer()
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
 	gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
-	gl.bufferData(gl.ARRAY_BUFFER, shereDatasResult.vertexPositions, gl.STATIC_DRAW)
+	gl.bufferData(gl.ARRAY_BUFFER, modelData.vertexPositions, gl.STATIC_DRAW)
 
 	const render = () => {
 		if (!Program3.isRender) {
 			return
 		}
 		Program3.isRender = false
+
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+		gl.clearColor(0.0, 0.0, 0.0, 1.0)
 
 		/**
 		 * 创建平行光方向向量
@@ -501,18 +506,17 @@ function drawCanvas3(containerElement) {
 		const modelEffectInverseTransposeMatrix4 = Ven$CanvasMatrix4.setTranspose(modelEffectInverseMatrix4)
 		const normalMatrix4 = modelEffectInverseTransposeMatrix4
 
+		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
+		gl.uniformMatrix4fv(u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
+
 		gl.uniform3f(u_LightColor, Program3.profile.light.color.r / 255, Program3.profile.light.color.g / 255, Program3.profile.light.color.b / 255)
 		gl.uniform3fv(u_LightDirection, new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z]))
 		gl.uniform1f(u_lightIntensityGain, Program3.profile.light.intensityGain)
-		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
+		gl.uniform3f(u_AmbientLightColor, Program3.profile.light.ambient.r, Program3.profile.light.ambient.g, Program3.profile.light.ambient.b)
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
-		gl.uniformMatrix4fv(u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
-		// gl.uniformMatrix4fv(u_NormalMatrix, false, new Float32Array(Ven$CanvasMatrix4.setMatrix4().data))
-		gl.uniform3f(u_AmbientLightColor, Program3.profile.light.ambient.r, Program3.profile.light.ambient.g, Program3.profile.light.ambient.b)
-		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		gl.clearColor(0.0, 0.0, 0.0, 1.0)
-		gl.drawArrays(gl.TRIANGLES, 0, shereDatasResult.vertexPositions.length / 7)
+
+		gl.drawArrays(gl.TRIANGLES, 0, modelData.vertexPositions.length / 7)
 	}
 
 	const exec = () => {

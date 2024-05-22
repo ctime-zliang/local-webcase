@@ -45,7 +45,7 @@
  * @param {number} depth 方体纵深
  * @return {object}
  */
-function createCubeDatas(width, height, depth, colorSetting) {
+function createCubeDatas(width, height, depth, colorSetting = {}, offsetX = 0, offsetY = 0, offsetZ = 0) {
 	const defaultColorSetting = {
 		up: [255, 0, 0, 1], // 红色
 		bottom: [0, 255, 0, 1], // 绿色
@@ -69,13 +69,13 @@ function createCubeDatas(width, height, depth, colorSetting) {
 		/**
 		 * 计算经线半圆的每个分割点在 Y 轴上的坐标
 		 */
-		const coordinateY = i <= 0 ? -halfY : halfY
+		const coordinateY = (i <= 0 ? -halfY : halfY) + offsetY
 		for (let j = 0; j < 4; j++) {
 			/**
 			 * 计算纬线圆的每个分割点在 X 轴和 Z 轴上的坐标
 			 */
-			const coordinateX = j === 0 || j === 3 ? -halfX : halfX
-			const coordinateZ = j <= 1 ? halfZ : -halfZ
+			const coordinateX = (j === 0 || j === 3 ? -halfX : halfX) + offsetX
+			const coordinateZ = (j <= 1 ? halfZ : -halfZ) + offsetZ
 			originalPositions.push(coordinateX, coordinateY, coordinateZ)
 			originalPositionsSequence[`${i * 4 + j}#:${i}-${j}`] = {
 				x: coordinateX,
@@ -193,6 +193,11 @@ function createCubeDatas(width, height, depth, colorSetting) {
 		vertexPositions: new Float32Array(vertexPositions),
 		vertexNormals: new Float32Array(vertexNormals),
 		vertexPositionsSequence,
+		originCenter: {
+			x: offsetX,
+			y: offsetY,
+			z: offsetZ,
+		},
 		originalPositions,
 		originalPositionsSequence,
 	}

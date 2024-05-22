@@ -1,9 +1,61 @@
-/**
- * 绘制球体
- * 		光照效果
- */
+class RectangularModel1 {
+	constructor(width, length, depth, color = '#ffffff', offsetX = 0, offsetY = 0, offsetZ = 0) {
+		this._modelParma = {
+			width,
+			length,
+			depth,
+			rgba: ven$hex2Rgba(color),
+			offsetX,
+			offsetY,
+			offsetZ,
+		}
+		this._modelRatation = {
+			x: 0,
+			y: 0,
+			z: 0,
+		}
+		this._modelOffset = {
+			x: 0,
+			y: 0,
+			z: 0,
+		}
+		this._vertexData = this._createVertexData()
+	}
 
-class Program4 {
+	get modelParam() {
+		return this._modelParma
+	}
+	get modelRatation() {
+		return this._modelRatation
+	}
+	get modelOffset() {
+		return this._modelOffset
+	}
+	get vertexData() {
+		return this._vertexData
+	}
+
+	_createVertexData() {
+		return createCubeDatas(
+			this._modelParma.width,
+			this._modelParma.length,
+			this._modelParma.depth,
+			{
+				up: [this._modelParma.rgba.r, this._modelParma.rgba.g, this._modelParma.rgba.b, 1],
+				bottom: [this._modelParma.rgba.r, this._modelParma.rgba.g, this._modelParma.rgba.b, 1],
+				front: [this._modelParma.rgba.r, this._modelParma.rgba.g, this._modelParma.rgba.b, 1],
+				back: [this._modelParma.rgba.r, this._modelParma.rgba.g, this._modelParma.rgba.b, 1],
+				right: [this._modelParma.rgba.r, this._modelParma.rgba.g, this._modelParma.rgba.b, 1],
+				left: [this._modelParma.rgba.r, this._modelParma.rgba.g, this._modelParma.rgba.b, 1],
+			},
+			this._modelParma.offsetX,
+			this._modelParma.offsetY,
+			this._modelParma.offsetZ
+		)
+	}
+}
+
+class Program1 {
 	static isRender = true
 	static containerElement
 	static profile = {
@@ -37,9 +89,9 @@ class Program4 {
 		light: {
 			intensityGain: 1.0,
 			position: {
-				x: 2.0,
-				y: 4.0,
-				z: 3.5,
+				x: 1.0,
+				y: 2.0,
+				z: 1.5,
 			},
 			color: {
 				r: 255,
@@ -47,20 +99,17 @@ class Program4 {
 				b: 255,
 			},
 			ambient: {
-				r: 0.2,
-				g: 0.2,
-				b: 0.2,
+				r: 0.1,
+				g: 0.1,
+				b: 0.1,
 			},
 		},
 		/**
 		 * 模型参数
 		 */
 		modelSize: {
-			radius: 1.0,
-			meridianCount: 30,
-			latitudeCount: 30,
+			cubeLength: 1.25,
 		},
-		/**
 		/**
 		 * 模型旋转角度
 		 */
@@ -330,8 +379,8 @@ class Program4 {
 	}
 }
 
-function drawCanvas4(containerElement) {
-	Program4.init(containerElement)
+function drawCanvas1(containerElement) {
+	Program1.init(containerElement)
 
 	const VS = `
 		precision mediump float;
@@ -381,20 +430,12 @@ function drawCanvas4(containerElement) {
 		}
 	`
 
-	console.time(`CreateModelData`)
-	const modelData = createShereDatas(
-		Program4.profile.modelSize.radius,
-		Program4.profile.modelSize.meridianCount,
-		Program4.profile.modelSize.latitudeCount,
-		{
-			redRange: [255, 255],
-			greenRange: [255, 255],
-			blueRange: [255, 255],
-			alphaRange: [1, 1],
-		}
-	)
-	console.log(modelData)
-	console.timeEnd(`CreateModelData`)
+	console.time(`CreateModelDatas`)
+	const modelInstance1 = new RectangularModel1(0.3, 1.25, 0.3, '#ffffff', 0, -0.5, 0)
+	const modelInstance2 = new RectangularModel1(0.4, 1.0, 0.4, '#ffffff', 0, 0.5, 0)
+	const vertexPositionsSize = modelInstance1.vertexData.vertexPositions.length + modelInstance2.vertexData.vertexPositions.length
+	console.log(modelInstance1, modelInstance2)
+	console.timeEnd(`CreateModelDatas`)
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
@@ -428,67 +469,42 @@ function drawCanvas4(containerElement) {
 	gl.enableVertexAttribArray(a_Position)
 	gl.enableVertexAttribArray(a_Color)
 
-	const normalBuffer = gl.createBuffer()
-	gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer)
-	gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0)
-	gl.bufferData(gl.ARRAY_BUFFER, modelData.vertexNormals, gl.STATIC_DRAW)
+	const modelNormalBuffer1 = gl.createBuffer()
+	const modelVertextBuffer1 = gl.createBuffer()
+	const modelNormalBuffer2 = gl.createBuffer()
+	const modelVertextBuffer2 = gl.createBuffer()
 
-	const vertextBuffer = gl.createBuffer()
-	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
-	gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
-	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
-	gl.bufferData(gl.ARRAY_BUFFER, modelData.vertexPositions, gl.STATIC_DRAW)
+	const writeBuffer = (vertextBuffer, vertexPositions, normalBuffer, vertexNormals) => {
+		gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer)
+		gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0)
+		gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(vertexNormals), gl.STATIC_DRAW)
+		gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
+		gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
+		gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
+		gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(vertexPositions), gl.STATIC_DRAW)
+	}
 
-	const render = () => {
-		if (!Program4.isRender) {
-			return
-		}
-		Program4.isRender = false
-
-		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		gl.clearColor(0.0, 0.0, 0.0, 1.0)
-
-		/**
-		 * 创建点光坐标向量
-		 */
-		const lightPosition = new Ven$Vector3(Program4.profile.light.position.x, Program4.profile.light.position.y, Program4.profile.light.position.z)
-		/**
-		 * 创建透视投影矩阵
-		 */
-		const projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
-			Program4.profile.persProjection.fovy,
-			Program4.profile.persProjection.aspect,
-			Program4.profile.persProjection.near,
-			Program4.profile.persProjection.far
-		)
-		/**
-		 * 创建视图矩阵
-		 */
-		const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
-			new Ven$Vector3(Program4.profile.lookAt.eyePosition.x, Program4.profile.lookAt.eyePosition.y, Program4.profile.lookAt.eyePosition.z),
-			new Ven$Vector3(Program4.profile.lookAt.atPosition.x, Program4.profile.lookAt.atPosition.y, Program4.profile.lookAt.atPosition.z),
-			new Ven$Vector3(0, 1, 0)
-		)
+	const applyTranslateMatrix = modelInstance => {
 		/**
 		 * 创建旋转矩阵
 		 */
 		const modelXRotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
-			Ven$Angles.degreeToRadian(Program4.profile.modelRatation.x),
+			Ven$Angles.degreeToRadian(modelInstance.modelRatation.x),
 			new Ven$Vector3(1, 0, 0)
 		)
 		const modelRotationYMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
-			Ven$Angles.degreeToRadian(Program4.profile.modelRatation.y),
+			Ven$Angles.degreeToRadian(modelInstance.modelRatation.y),
 			new Ven$Vector3(0, 1, 0)
 		)
 		const modelRotationZMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
-			Ven$Angles.degreeToRadian(Program4.profile.modelRatation.z),
+			Ven$Angles.degreeToRadian(modelInstance.modelRatation.z),
 			new Ven$Vector3(0, 0, 1)
 		)
 		/**
 		 * 创建平移矩阵
 		 */
 		const modelOffsetMatrix4 = Ven$CanvasMatrix4.setTranslate(
-			new Ven$Vector3(Program4.profile.modelOffset.x, Program4.profile.modelOffset.y, Program4.profile.modelOffset.z)
+			new Ven$Vector3(modelInstance.modelOffset.x, modelInstance.modelOffset.y, modelInstance.modelOffset.z)
 		)
 		/**
 		 * 生成模型变换矩阵
@@ -506,15 +522,52 @@ function drawCanvas4(containerElement) {
 
 		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
 		gl.uniformMatrix4fv(u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
+	}
 
-		gl.uniform3f(u_LightColor, Program4.profile.light.color.r / 255, Program4.profile.light.color.g / 255, Program4.profile.light.color.b / 255)
+	const render = () => {
+		if (!Program1.isRender) {
+			return
+		}
+		Program1.isRender = false
+
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+		gl.clearColor(0.0, 0.0, 0.0, 1.0)
+
+		writeBuffer(modelVertextBuffer1, modelInstance1.vertexData.vertexPositions, modelNormalBuffer1, modelInstance1.vertexData.vertexNormals)
+		writeBuffer(modelVertextBuffer2, modelInstance2.vertexData.vertexPositions, modelNormalBuffer2, modelInstance2.vertexData.vertexNormals)
+
+		/**
+		 * 创建点光坐标向量
+		 */
+		const lightPosition = new Ven$Vector3(Program1.profile.light.position.x, Program1.profile.light.position.y, Program1.profile.light.position.z)
+		/**
+		 * 创建透视投影矩阵
+		 */
+		const projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
+			Program1.profile.persProjection.fovy,
+			Program1.profile.persProjection.aspect,
+			Program1.profile.persProjection.near,
+			Program1.profile.persProjection.far
+		)
+		/**
+		 * 创建视图矩阵
+		 */
+		const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
+			new Ven$Vector3(Program1.profile.lookAt.eyePosition.x, Program1.profile.lookAt.eyePosition.y, Program1.profile.lookAt.eyePosition.z),
+			new Ven$Vector3(Program1.profile.lookAt.atPosition.x, Program1.profile.lookAt.atPosition.y, Program1.profile.lookAt.atPosition.z),
+			new Ven$Vector3(0, 1, 0)
+		)
+
+		applyTranslateMatrix(modelInstance1)
+
+		gl.uniform3f(u_LightColor, Program1.profile.light.color.r / 255, Program1.profile.light.color.g / 255, Program1.profile.light.color.b / 255)
 		gl.uniform3fv(u_LightPosition, new Float32Array([lightPosition.x, lightPosition.y, lightPosition.z]))
-		gl.uniform1f(u_lightIntensityGain, Program4.profile.light.intensityGain)
-		gl.uniform3f(u_AmbientLightColor, Program4.profile.light.ambient.r, Program4.profile.light.ambient.g, Program4.profile.light.ambient.b)
+		gl.uniform1f(u_lightIntensityGain, Program1.profile.light.intensityGain)
+		gl.uniform3f(u_AmbientLightColor, Program1.profile.light.ambient.r, Program1.profile.light.ambient.g, Program1.profile.light.ambient.b)
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 
-		gl.drawArrays(gl.TRIANGLES, 0, modelData.vertexPositions.length / 7)
+		gl.drawArrays(gl.TRIANGLES, 0, vertexPositionsSize / 7)
 	}
 
 	const exec = () => {

@@ -50,14 +50,14 @@
  * @param {number} latitudeCount 球体纬线圆个数(包含两个极点)
  * @return {object}
  */
-function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, optional = {}) {
-	const iOptional = {
+function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, colorSetting = {}, offsetX = 0, offsetY = 0, offsetZ = 0) {
+	const defaultColorSetting = {
 		redRange: [50, 200],
 		greenRange: [50, 200],
 		blueRange: [50, 200],
 		alphaRange: [1, 1],
-		...optional,
 	}
+	const iColorSetting = { ...defaultColorSetting, ...colorSetting }
 	const calcStartIndex = (i, j, jLen) => {
 		return i * jLen * 3 + j * 3
 	}
@@ -99,7 +99,7 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, optional
 		 *      即可求 L(ij-Y) 的长度为 LENG{L(ij-Y)} = Math.cos(RADIAN_EACH_DIVIDE_COUNT_MERIDIAN * i), 也即 COORDINATE_Y 的值
 		 */
 		const tmpY = Math.cos(radianEachDivideCountMeridian * i)
-		const coordinateY = Ven$Math.calcAbsoluteValue(radius * tmpY)
+		const coordinateY = Ven$Math.calcAbsoluteValue(radius * tmpY) + offsetY
 		for (let j = 0; j < meridianCountNum; j++) {
 			/**
 			 * 计算纬线圈的每个分割点在 Z 轴上的坐标
@@ -117,8 +117,8 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, optional
 			 */
 			const tmpX = Math.sin(radianEachDivideCountMeridian * i) * Math.sin(radianEachDivideCountLatitude * j)
 			const tmpZ = Math.sin(radianEachDivideCountMeridian * i) * Math.cos(radianEachDivideCountLatitude * j)
-			const coordinateX = Ven$Math.calcAbsoluteValue(radius * tmpX)
-			const coordinateZ = Ven$Math.calcAbsoluteValue(radius * tmpZ)
+			const coordinateX = Ven$Math.calcAbsoluteValue(radius * tmpX) + offsetX
+			const coordinateZ = Ven$Math.calcAbsoluteValue(radius * tmpZ) + offsetZ
 			originalPositions.push(coordinateX, coordinateY, coordinateZ)
 			originalNormals.push(tmpX, tmpY, tmpZ)
 			originalPositionsSequence[`${i * 4 + j}#:${i}-${j}`] = {
@@ -136,10 +136,10 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, optional
 		for (let j = 0; j < meridianCountNum; j++) {
 			if (i === 0) {
 				const color = ven$randomRangeColor(
-					[...iOptional.redRange],
-					[...iOptional.greenRange],
-					[...iOptional.blueRange],
-					[...iOptional.alphaRange]
+					[...iColorSetting.redRange],
+					[...iColorSetting.greenRange],
+					[...iColorSetting.blueRange],
+					[...iColorSetting.alphaRange]
 				)
 				const xi = i
 				const xj = j
@@ -163,10 +163,10 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, optional
 			}
 			if (i === latitudeCountNum - 1) {
 				const color = ven$randomRangeColor(
-					[...iOptional.redRange],
-					[...iOptional.greenRange],
-					[...iOptional.blueRange],
-					[...iOptional.alphaRange]
+					[...iColorSetting.redRange],
+					[...iColorSetting.greenRange],
+					[...iColorSetting.blueRange],
+					[...iColorSetting.alphaRange]
 				)
 				const xi = i - 1
 				const xj = j
@@ -189,10 +189,10 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, optional
 				continue
 			}
 			const colorA = ven$randomRangeColor(
-				[...iOptional.redRange],
-				[...iOptional.greenRange],
-				[...iOptional.blueRange],
-				[...iOptional.alphaRange]
+				[...iColorSetting.redRange],
+				[...iColorSetting.greenRange],
+				[...iColorSetting.blueRange],
+				[...iColorSetting.alphaRange]
 			)
 			const axi = i
 			const axj = j
@@ -213,10 +213,10 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, optional
 			vertexPositions.push(colorA.r / 255, colorA.g / 255, colorA.b / 255, colorA.a)
 			vertexNormals.push(originalPositions[aStartZ], originalPositions[aStartZ + 1], originalPositions[aStartZ + 2])
 			const colorB = ven$randomRangeColor(
-				[...iOptional.redRange],
-				[...iOptional.greenRange],
-				[...iOptional.blueRange],
-				[...iOptional.alphaRange]
+				[...iColorSetting.redRange],
+				[...iColorSetting.greenRange],
+				[...iColorSetting.blueRange],
+				[...iColorSetting.alphaRange]
 			)
 			const bxi = i
 			const bxj = j
@@ -242,6 +242,11 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, optional
 		vertexPositions: new Float32Array(vertexPositions),
 		vertexNormals: new Float32Array(vertexNormals),
 		vertexPositionsSequence,
+		originCenter: {
+			x: offsetX,
+			y: offsetY,
+			z: offsetZ,
+		},
 		originalPositions,
 		originalPositionsSequence,
 		originalNormals: new Float32Array(originalNormals),
