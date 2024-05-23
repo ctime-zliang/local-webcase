@@ -1,4 +1,4 @@
-class Model {
+class Model1 {
 	constructor() {
 		this._modelParma = null
 		this._modelRatation = {
@@ -44,7 +44,7 @@ class Model {
 	}
 }
 
-class RectangularModel1 extends Model {
+class RectangularModel1 extends Model1 {
 	constructor(width, length, depth, color = '#ffffff', offsetX = 0, offsetY = 0, offsetZ = 0) {
 		super()
 		this._modelParma = {
@@ -79,7 +79,7 @@ class RectangularModel1 extends Model {
 	}
 }
 
-class ShereModel1 extends Model {
+class ShereModel1 extends Model1 {
 	constructor(radius, meridianCount, latitudeCount, color = '#ffffff', offsetX = 0, offsetY = 0, offsetZ = 0) {
 		super()
 		this._modelParma = {
