@@ -495,7 +495,7 @@ class Program1 {
 	}
 
 	static getModelInstances(downNumberKeys) {
-		if (downNumberKeys.size <= 0) {
+		if (!downNumberKeys || downNumberKeys.size <= 0) {
 			return [...this.modelInstances]
 		}
 		const modelInstances = []
@@ -584,7 +584,7 @@ function drawCanvas1(containerElement) {
 	`
 
 	console.time(`CreateModelDatas`)
-	const modelHead = new ShereModel1(0.3, 30, 30, '#ffffff', 0, 1.3, 0)
+	const modelHead = new ShereModel1(0.25, 30, 30, '#ffffff', 0, 1.25, 0)
 	const modelBody = new RectangularModel1(0.8, 1.0, 0.4, '#ffffff', 0, 0.5, 0)
 	const modelLeftArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', 0.55, 0.3, 0)
 	const modelRightArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', -0.55, 0.3, 0)
@@ -732,7 +732,26 @@ function drawCanvas1(containerElement) {
 		})
 	}
 
+	let angle = 0
+
+	const ANGLE_STEP = 90
+	let lastTimeStamp = performance.now()
+	const getNextAngle = (angle = 0) => {
+		const now = performance.now()
+		const elapsed = now - lastTimeStamp
+		lastTimeStamp = now
+		const newAngle = angle + (ANGLE_STEP * elapsed) / 1000.0
+		return newAngle % 360
+	}
+
 	const exec = () => {
+		render(angle)
+		angle = getNextAngle(angle)
+		Program1.getModelInstances().forEach(modelInstanceItem => {
+			modelInstanceItem.modelRatation.y = angle
+		})
+		Program1.isRender = true
+		Program1.renderModelInfomationView()
 		render()
 		requestAnimationFrame(exec)
 	}
