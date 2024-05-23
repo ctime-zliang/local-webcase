@@ -500,8 +500,9 @@ class Program1 {
 		}
 		const modelInstances = []
 		downNumberKeys.forEach(number => {
-			if (this.modelInstances[number - 1]) {
-				modelInstances.push(this.modelInstances[number])
+			const idx = number - 1
+			if (this.modelInstances[idx]) {
+				modelInstances.push(this.modelInstances[idx])
 			}
 		})
 		return modelInstances
