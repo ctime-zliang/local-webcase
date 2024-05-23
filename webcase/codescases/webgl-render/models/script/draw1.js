@@ -119,6 +119,7 @@ class Program1 {
 	static downKeys = new Set()
 	static downNumberKeys = new Set()
 	static profile = {
+		autoTransition: true,
 		/**
 		 * 视图矩阵参数
 		 */
@@ -208,6 +209,7 @@ class Program1 {
 		const ambientLightRangeBShowSpanElement = this.containerElement.querySelector(`[name="ambientLightBShow"]`)
 		const lightIntensityGainRangeRangeElement = this.containerElement.querySelector(`[name="lightIntensityGainRange"]`)
 		const lightIntensityGainRangeShowSpanElement = this.containerElement.querySelector(`[name="lightIntensityGainRangeShow"]`)
+		const autoTransitionCheckboxElement = this.containerElement.querySelector(`[name="autoTransition"]`)
 
 		projectionFovyShowSpanElement.textContent = projectionFovyRangeElement.value = self.profile.persProjection.fovy
 		projectionNearShowSpanElement.textContent = projectionNearRangeElement.value = self.profile.persProjection.near
@@ -226,6 +228,7 @@ class Program1 {
 		ambientLightRangeGShowSpanElement.textContent = ambientLightRangeGRangeElement.value = self.profile.light.ambient.g
 		ambientLightRangeBShowSpanElement.textContent = ambientLightRangeBRangeElement.value = self.profile.light.ambient.b
 		lightIntensityGainRangeShowSpanElement.textContent = lightIntensityGainRangeRangeElement.value = self.profile.light.intensityGain
+		autoTransitionCheckboxElement.checked = self.profile.autoTransition
 	}
 
 	static eventHandle() {
@@ -264,6 +267,7 @@ class Program1 {
 		const ambientLightRangeBShowSpanElement = this.containerElement.querySelector(`[name="ambientLightBShow"]`)
 		const lightIntensityGainRangeRangeElement = this.containerElement.querySelector(`[name="lightIntensityGainRange"]`)
 		const lightIntensityGainRangeShowSpanElement = this.containerElement.querySelector(`[name="lightIntensityGainRangeShow"]`)
+		const autoTransitionCheckboxElement = this.containerElement.querySelector(`[name="autoTransition"]`)
 
 		document.addEventListener('keydown', function (e) {
 			e.preventDefault()
@@ -491,6 +495,9 @@ class Program1 {
 			lightIntensityGainRangeShowSpanElement.textContent = self.profile.light.intensityGain = +this.value
 			console.log('light.intensityGain:', self.profile.light.intensityGain)
 			self.isRender = true
+		})
+		autoTransitionCheckboxElement.addEventListener('change', function (e) {
+			self.profile.autoTransition = this.checked
 		})
 	}
 
@@ -732,25 +739,20 @@ function drawCanvas1(containerElement) {
 		})
 	}
 
+	const setpControl = new Ven$StepControl(0, 90, 360)
 	let angle = 0
 
-	const ANGLE_STEP = 90
-	let lastTimeStamp = performance.now()
-	const getNextAngle = (angle = 0) => {
-		const now = performance.now()
-		const elapsed = now - lastTimeStamp
-		lastTimeStamp = now
-		const newAngle = angle + (ANGLE_STEP * elapsed) / 1000.0
-		return newAngle % 360
-	}
-
 	const exec = () => {
-		angle = getNextAngle(angle)
-		Program1.getModelInstances().forEach(modelInstanceItem => {
-			modelInstanceItem.modelRatation.y = angle
-		})
-		Program1.isRender = true
-		Program1.renderModelInfomationView()
+		if (Program1.profile.autoTransition) {
+			angle = setpControl.getNextValue() % 360
+			Program1.getModelInstances().forEach(modelInstanceItem => {
+				modelInstanceItem.modelRatation.y = angle
+			})
+			Program1.isRender = true
+			Program1.renderModelInfomationView()
+		} else {
+			setpControl.updateLastStamp()
+		}
 		render()
 		requestAnimationFrame(exec)
 	}

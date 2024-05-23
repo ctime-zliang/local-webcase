@@ -128,25 +128,13 @@ function drawCanvas4(containerElement) {
 		gl.drawArrays(gl.TRIANGLES, 0, 3)
 	}
 
+	const setpControl = new Ven$StepControl(0, 45, 360)
 	let angle = 0
 
-	const ANGLE_STEP = 45.0
-	let lastTimeStamp = performance.now()
-	const getNextAngle = (angle = 0) => {
-		const now = performance.now()
-		const elapsed = now - lastTimeStamp
-		lastTimeStamp = now
-		const newAngle = angle + (ANGLE_STEP * elapsed) / 1000.0
-		return newAngle % 360
-	}
-
-	let flag = false
 	const strat = performance.now()
 	const exec = () => {
 		render(angle)
-		if (flag) {
-			angle = getNextAngle(angle)
-		}
+		angle = setpControl.getNextValue() % 360
 		if (angle >= 90) {
 			angle = 90
 			render(angle)
@@ -155,11 +143,6 @@ function drawCanvas4(containerElement) {
 		}
 		requestAnimationFrame(exec)
 	}
-
-	window.setTimeout(() => {
-		flag = true
-		lastTimeStamp = performance.now()
-	}, 1000)
 
 	exec()
 }
