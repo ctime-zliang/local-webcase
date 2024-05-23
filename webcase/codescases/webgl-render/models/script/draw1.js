@@ -1,14 +1,6 @@
-class RectangularModel1 {
-	constructor(width, length, depth, color = '#ffffff', offsetX = 0, offsetY = 0, offsetZ = 0) {
-		this._modelParma = {
-			width,
-			length,
-			depth,
-			rgba: ven$hex2Rgba(color),
-			offsetX,
-			offsetY,
-			offsetZ,
-		}
+class Model {
+	constructor() {
+		this._modelParma = null
 		this._modelRatation = {
 			x: 0,
 			y: 0,
@@ -19,7 +11,7 @@ class RectangularModel1 {
 			y: 0,
 			z: 0,
 		}
-		this._vertexData = this._createVertexData()
+		this._vertexData = null
 		this._vertextBuffer = null
 		this._normalBuffer = null
 	}
@@ -50,6 +42,22 @@ class RectangularModel1 {
 	bindNormalBuffer(glBuffer) {
 		this._normalBuffer = glBuffer
 	}
+}
+
+class RectangularModel1 extends Model {
+	constructor(width, length, depth, color = '#ffffff', offsetX = 0, offsetY = 0, offsetZ = 0) {
+		super()
+		this._modelParma = {
+			width,
+			length,
+			depth,
+			rgba: ven$hex2Rgba(color),
+			offsetX,
+			offsetY,
+			offsetZ,
+		}
+		this._vertexData = this._createVertexData()
+	}
 
 	_createVertexData() {
 		return createCubeDatas(
@@ -63,6 +71,39 @@ class RectangularModel1 {
 				back: [this._modelParma.rgba.r, this._modelParma.rgba.g, this._modelParma.rgba.b, 1],
 				right: [this._modelParma.rgba.r, this._modelParma.rgba.g, this._modelParma.rgba.b, 1],
 				left: [this._modelParma.rgba.r, this._modelParma.rgba.g, this._modelParma.rgba.b, 1],
+			},
+			this._modelParma.offsetX,
+			this._modelParma.offsetY,
+			this._modelParma.offsetZ
+		)
+	}
+}
+
+class ShereModel1 extends Model {
+	constructor(radius, meridianCount, latitudeCount, color = '#ffffff', offsetX = 0, offsetY = 0, offsetZ = 0) {
+		super()
+		this._modelParma = {
+			radius,
+			meridianCount,
+			latitudeCount,
+			rgba: ven$hex2Rgba(color),
+			offsetX,
+			offsetY,
+			offsetZ,
+		}
+		this._vertexData = this._createVertexData()
+	}
+
+	_createVertexData() {
+		return createShereDatas(
+			this._modelParma.radius,
+			this._modelParma.meridianCount,
+			this._modelParma.latitudeCount,
+			{
+				redRange: [this._modelParma.rgba.r, this._modelParma.rgba.r],
+				greenRange: [this._modelParma.rgba.g, this._modelParma.rgba.g],
+				blueRange: [this._modelParma.rgba.b, this._modelParma.rgba.b],
+				alphaRange: [1, 1],
 			},
 			this._modelParma.offsetX,
 			this._modelParma.offsetY,
@@ -480,6 +521,14 @@ class Program1 {
 		})
 		modelInfomationElement.innerHTML = htmlString
 	}
+
+	static getVertexPositionSize() {
+		let len = 0
+		this.modelInstances.forEach((modelInstanceItem, index) => {
+			len += modelInstanceItem.vertexData.vertexPositions.length
+		})
+		return len
+	}
 }
 
 function drawCanvas1(containerElement) {
@@ -536,8 +585,9 @@ function drawCanvas1(containerElement) {
 	console.time(`CreateModelDatas`)
 	const modelInstance1 = new RectangularModel1(0.3, 1.25, 0.3, '#ffffff', 0, -0.5, 0)
 	const modelInstance2 = new RectangularModel1(0.4, 1.0, 0.4, '#ffffff', 0, 0.5, 0)
-	const vertexPositionsSize = modelInstance1.vertexData.vertexPositions.length + modelInstance2.vertexData.vertexPositions.length
-	Program1.modelInstances.push(modelInstance1, modelInstance2)
+	const modelInstance3 = new ShereModel1(0.5, 30, 30, '#ffffff', 0, 0, 0)
+	Program1.modelInstances.push(modelInstance1, modelInstance2, modelInstance3)
+	const vertexPositionsSize = Program1.getVertexPositionSize()
 	Program1.renderModelInfomationView()
 	console.log(Program1.modelInstances)
 	console.timeEnd(`CreateModelDatas`)
