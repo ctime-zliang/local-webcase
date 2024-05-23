@@ -138,15 +138,15 @@ function drawCanvas1(containerElement) {
 		/**
 		 * 创建旋转矩阵
 		 */
-		const modelXRotationMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
+		const modelXRotationMatrix4 = Ven$CanvasMatrix4.setRotate(
 			Ven$Angles.degreeToRadian(Program1.profile.modelRatation.x),
 			new Ven$Vector3(1, 0, 0)
 		)
-		const modelRotationYMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
+		const modelRotationYMatrix4 = Ven$CanvasMatrix4.setRotate(
 			Ven$Angles.degreeToRadian(Program1.profile.modelRatation.y),
 			new Ven$Vector3(0, 1, 0)
 		)
-		const modelRotationZMatrix4 = Ven$CanvasMatrix4.setRotateMatrxi4(
+		const modelRotationZMatrix4 = Ven$CanvasMatrix4.setRotate(
 			Ven$Angles.degreeToRadian(Program1.profile.modelRatation.z),
 			new Ven$Vector3(0, 0, 1)
 		)

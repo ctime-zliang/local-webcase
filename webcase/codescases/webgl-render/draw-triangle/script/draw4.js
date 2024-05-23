@@ -72,8 +72,8 @@ function drawCanvas4(containerElement) {
 		console.log(`平移矩阵 T: `, translateMatrix4.toStringFormat())
 		const angle = 30
 		const rotationMatrix4_i = Ven$Matrix4.createRotateZMatrix4ByRadian(Ven$Angles.degreeToRadian(angle))
-		const rotationMatrix4_1 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(angle), new Ven$Vector3(0, 0, 1))
-		const rotationMatrix4_2 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(-angle), new Ven$Vector3(0, 0, 1))
+		const rotationMatrix4_1 = Ven$CanvasMatrix4.setRotate(Ven$Angles.degreeToRadian(angle), new Ven$Vector3(0, 0, 1))
+		const rotationMatrix4_2 = Ven$CanvasMatrix4.setRotate(Ven$Angles.degreeToRadian(-angle), new Ven$Vector3(0, 0, 1))
 
 		// console.log(`绕 Z 坐标轴旋转矩阵 R: `, rotationMatrix4_i.toStringFormat())
 		console.log(`旋转矩阵 R1: `, rotationMatrix4_1.toStringFormat())
@@ -95,8 +95,8 @@ function drawCanvas4(containerElement) {
 		 * 创建旋转矩阵
 		 * 		绕 L(O): Ven$Vector3(0, 0, 1) 轴方向自旋 -angle 角度
 		 */
-		const rotationMatrix4_1 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(angle), new Ven$Vector3(0, 0, 1))
-		const rotationMatrix4_2 = Ven$CanvasMatrix4.setRotateMatrxi4(Ven$Angles.degreeToRadian(-angle), new Ven$Vector3(0, 0, 1))
+		const rotationMatrix4_1 = Ven$CanvasMatrix4.setRotate(Ven$Angles.degreeToRadian(angle), new Ven$Vector3(0, 0, 1))
+		const rotationMatrix4_2 = Ven$CanvasMatrix4.setRotate(Ven$Angles.degreeToRadian(-angle), new Ven$Vector3(0, 0, 1))
 		/**
 		 * 生成复合变换矩阵
 		 * 		rotationMatrix4_1.multiply4(translateMatrix4)

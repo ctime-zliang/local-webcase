@@ -5,12 +5,12 @@ class Ven$CanvasMatrix4 {
 
 	/**
 	 * @description 创建变换矩阵: 旋转矩阵
-	 * @function setRotateMatrxi4
+	 * @function setRotate
 	 * @param {number} radian 旋转弧度
 	 * @param {Ven$Vector3} axisVector3 旋转轴(向量)
 	 * @return {Ven$Matrix4}
 	 */
-	static setRotateMatrxi4(radian, axisVector3) {
+	static setRotate(radian, axisVector3) {
 		const matrix4 = new Ven$Matrix4()
 		const { x, y, z } = axisVector3
 		let vx = x
@@ -194,15 +194,12 @@ class Ven$CanvasMatrix4 {
 	 */
 	static setOrtho(left, right, bottom, top, near, far) {
 		const matrix4 = new Ven$Matrix4()
-		let rw = 0
-		let rh = 0
-		let rd = 0
 		if (left === right || bottom === top || near === far) {
 			throw 'null frustum'
 		}
-		rw = 1 / (right - left)
-		rh = 1 / (top - bottom)
-		rd = 1 / (far - near)
+		const rw = 1 / (right - left)
+		const rh = 1 / (top - bottom)
+		const rd = 1 / (far - near)
 		matrix4.data[0] = 2 * rw
 		matrix4.data[1] = 0
 		matrix4.data[2] = 0
@@ -225,6 +222,15 @@ class Ven$CanvasMatrix4 {
 		return this.setOrtho(-aspect * padding, aspect * padding, -padding, padding, near, far)
 	}
 
+	/**
+	 * @description 创建透视投影矩阵
+	 * @function setPerspective
+	 * @param {number} fovy 可视范围上下边界面构成的夹角
+	 * @param {number} aspect 可视范围宽高比
+	 * @param {number} near 可视范围纵深方向近端裁剪位置(近端边界)
+	 * @param {number} far 可视范围纵深方向远端裁剪位置(远端边界)
+	 * @return {Ven$Matrix4}
+	 */
 	static setPerspective(fovy, aspect, near, far) {
 		const matrix4 = new Ven$Matrix4()
 		if (near === far || aspect === 0) {
@@ -267,6 +273,54 @@ class Ven$CanvasMatrix4 {
 	}
 
 	/**
+	 * @description 创建透视投影矩阵
+	 * @function setOrtho
+	 * @param {number} left 可视范围左侧裁剪位置(左侧边界)
+	 * @param {number} right 可视范围右侧裁剪位置(右侧边界)
+	 * @param {number} bottom 可视范围底部裁剪位置(底部边界)
+	 * @param {number} top 可视范围顶部裁剪位置(顶部边界)
+	 * @param {number} near 可视范围纵深方向近端裁剪位置(近端边界)
+	 * @param {number} far 可视范围纵深方向远端裁剪位置(远端边界)
+	 * @return {Ven$Matrix4}
+	 */
+	static setFrustum(left, right, bottom, top, near, far) {
+		const matrix4 = new Ven$Matrix4()
+		if (left === right || top === bottom || near === far) {
+			throw 'null frustum'
+		}
+		if (near <= 0) {
+			throw 'near <= 0'
+		}
+		if (far <= 0) {
+			throw 'far <= 0'
+		}
+		const rw = 1 / (right - left)
+		const rh = 1 / (top - bottom)
+		const rd = 1 / (far - near)
+
+		matrix4.data[0] = 2 * near * rw
+		matrix4.data[1] = 0
+		matrix4.data[2] = 0
+		matrix4.data[3] = 0
+
+		matrix4.data[4] = 0
+		matrix4.data[5] = 2 * near * rh
+		matrix4.data[6] = 0
+		matrix4.data[7] = 0
+
+		matrix4.data[8] = (right + left) * rw
+		matrix4.data[9] = (top + bottom) * rh
+		matrix4.data[10] = -(far + near) * rd
+		matrix4.data[11] = -1
+
+		matrix4.data[12] = 0
+		matrix4.data[13] = 0
+		matrix4.data[14] = -2 * near * far * rd
+		matrix4.data[15] = 0
+		return matrix4
+	}
+
+	/**
 	 * @description 创建视图矩阵
 	 * @function setLookAt
 	 * @param {Ven$Vector3} eyeVector3 观察者视点位置
@@ -279,7 +333,6 @@ class Ven$CanvasMatrix4 {
 		const { x: eyeX, y: eyeY, z: eyeZ } = eyeVector3
 		const { x: atX, y: atY, z: atZ } = atVector3
 		const { x: upX, y: upY, z: upZ } = upVector3
-
 		let fx = atX - eyeX
 		let fy = atY - eyeY
 		let fz = atZ - eyeZ
@@ -288,7 +341,6 @@ class Ven$CanvasMatrix4 {
 		fx *= rlf
 		fy *= rlf
 		fz *= rlf
-
 		let sx = fy * upZ - fz * upY
 		let sy = fz * upX - fx * upZ
 		let sz = fx * upY - fy * upX
@@ -297,7 +349,6 @@ class Ven$CanvasMatrix4 {
 		sx *= rls
 		sy *= rls
 		sz *= rls
-
 		let ux = sy * fz - sz * fy
 		let uy = sz * fx - sx * fz
 		let uz = sx * fy - sy * fx
@@ -318,7 +369,6 @@ class Ven$CanvasMatrix4 {
 		matrix4.data[13] = 0
 		matrix4.data[14] = 0
 		matrix4.data[15] = 1
-
 		// return matrix4.multiply4(Ven$CanvasMatrix4.setTranslate(new Ven$Vector3(-eyeX, -eyeY, -eyeZ)))
 		return Ven$CanvasMatrix4.setTranslate(new Ven$Vector3(-eyeX, -eyeY, -eyeZ)).multiply4(matrix4)
 	}
@@ -335,6 +385,7 @@ class Ven$CanvasMatrix4 {
 			matrix4.data[i] = sourceMatrix4.data[i]
 		}
 		let t = undefined
+
 		t = matrix4.data[1]
 		matrix4.data[1] = matrix4.data[4]
 		matrix4.data[4] = t
