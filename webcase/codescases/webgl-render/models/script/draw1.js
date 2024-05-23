@@ -583,10 +583,13 @@ function drawCanvas1(containerElement) {
 	`
 
 	console.time(`CreateModelDatas`)
-	const modelInstance1 = new RectangularModel1(0.3, 1.25, 0.3, '#ffffff', 0, -0.5, 0)
-	const modelInstance2 = new RectangularModel1(0.4, 1.0, 0.4, '#ffffff', 0, 0.5, 0)
-	const modelInstance3 = new ShereModel1(0.5, 30, 30, '#ffffff', 0, 0, 0)
-	Program1.modelInstances.push(modelInstance1, modelInstance2, modelInstance3)
+	const modelHead = new ShereModel1(0.3, 30, 30, '#ffffff', 0, 1.3, 0)
+	const modelBody = new RectangularModel1(0.8, 1.0, 0.4, '#ffffff', 0, 0.5, 0)
+	const modelLeftArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', 0.55, 0.3, 0)
+	const modelRightArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', -0.55, 0.3, 0)
+	const modelLeftFoot = new RectangularModel1(0.25, 1.45, 0.25, '#ffffff', 0.25, -0.75, 0)
+	const modelRightFoot = new RectangularModel1(0.25, 1.45, 0.25, '#ffffff', -0.25, -0.75, 0)
+	Program1.modelInstances.push(modelHead, modelBody, modelLeftArm, modelRightArm, modelLeftFoot, modelRightFoot)
 	const vertexPositionsSize = Program1.getVertexPositionSize()
 	Program1.renderModelInfomationView()
 	console.log(Program1.modelInstances)
