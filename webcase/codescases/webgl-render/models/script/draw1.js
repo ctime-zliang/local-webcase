@@ -745,7 +745,6 @@ function drawCanvas1(containerElement) {
 	}
 
 	const exec = () => {
-		render(angle)
 		angle = getNextAngle(angle)
 		Program1.getModelInstances().forEach(modelInstanceItem => {
 			modelInstanceItem.modelRatation.y = angle
