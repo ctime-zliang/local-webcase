@@ -74,6 +74,9 @@ class RectangularModel1 {
 class Program1 {
 	static isRender = true
 	static containerElement
+	static modelInstances = []
+	static downKeys = new Set()
+	static downNumberKeys = new Set()
 	static profile = {
 		/**
 		 * 视图矩阵参数
@@ -120,28 +123,6 @@ class Program1 {
 				b: 0.1,
 			},
 		},
-		/**
-		 * 模型参数
-		 */
-		modelSize: {
-			cubeLength: 1.25,
-		},
-		/**
-		 * 模型旋转角度
-		 */
-		modelRatation: {
-			x: 0,
-			y: 0,
-			z: 0,
-		},
-		/**
-		 * 模型偏移坐标
-		 */
-		modelOffset: {
-			x: 0,
-			y: 0,
-			z: 0,
-		},
 	}
 
 	static init(containerElement) {
@@ -158,18 +139,6 @@ class Program1 {
 		const projectionNearShowSpanElement = this.containerElement.querySelector(`[name="projectionNearShow"]`)
 		const projectionFarRangeElement = this.containerElement.querySelector(`[name="projectionFar"]`)
 		const projectionFarShowSpanElement = this.containerElement.querySelector(`[name="projectionFarShow"]`)
-		const modelRotationRangeXElement = this.containerElement.querySelector(`[name="modelRotationRangeX"]`)
-		const modelRotationXShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeXShow"]`)
-		const modelRotationRangeYElement = this.containerElement.querySelector(`[name="modelRotationRangeY"]`)
-		const modelRotationYShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeYShow"]`)
-		const modelRotationRangeZElement = this.containerElement.querySelector(`[name="modelRotationRangeZ"]`)
-		const modelRotationZShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeZShow"]`)
-		const modelOffsetRangeXElement = this.containerElement.querySelector(`[name="modelOffsetRangeX"]`)
-		const modelOffsetXShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeXShow"]`)
-		const modelOffsetRangeYElement = this.containerElement.querySelector(`[name="modelOffsetRangeY"]`)
-		const modelOffsetYShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeYShow"]`)
-		const modelOffsetRangeZElement = this.containerElement.querySelector(`[name="modelOffsetRangeZ"]`)
-		const modelOffsetZShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeZShow"]`)
 		const lookAtMatrix4EyePositionXRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionX"]`)
 		const lookAtMatrix4EyePositionXShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionXShow"]`)
 		const lookAtMatrix4EyePositionYRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionY"]`)
@@ -202,12 +171,6 @@ class Program1 {
 		projectionFovyShowSpanElement.textContent = projectionFovyRangeElement.value = self.profile.persProjection.fovy
 		projectionNearShowSpanElement.textContent = projectionNearRangeElement.value = self.profile.persProjection.near
 		projectionFarShowSpanElement.textContent = projectionFarRangeElement.value = self.profile.persProjection.far
-		modelRotationXShowSpanElement.textContent = modelRotationRangeXElement.value = self.profile.modelRatation.x
-		modelRotationYShowSpanElement.textContent = modelRotationRangeYElement.value = self.profile.modelRatation.y
-		modelRotationZShowSpanElement.textContent = modelRotationRangeZElement.value = self.profile.modelRatation.z
-		modelOffsetXShowSpanElement.textContent = modelOffsetRangeXElement.value = self.profile.modelOffset.x
-		modelOffsetYShowSpanElement.textContent = modelOffsetRangeYElement.value = self.profile.modelOffset.y
-		modelOffsetZShowSpanElement.textContent = modelOffsetRangeZElement.value = self.profile.modelOffset.z
 		lookAtMatrix4EyePositionXShowSpanElement.textContent = lookAtMatrix4EyePositionXRangeElement.value = self.profile.lookAt.eyePosition.x
 		lookAtMatrix4EyePositionYShowSpanElement.textContent = lookAtMatrix4EyePositionYRangeElement.value = self.profile.lookAt.eyePosition.y
 		lookAtMatrix4EyePositionZShowSpanElement.textContent = lookAtMatrix4EyePositionZRangeElement.value = self.profile.lookAt.eyePosition.z
@@ -232,18 +195,6 @@ class Program1 {
 		const projectionNearShowSpanElement = this.containerElement.querySelector(`[name="projectionNearShow"]`)
 		const projectionFarRangeElement = this.containerElement.querySelector(`[name="projectionFar"]`)
 		const projectionFarShowSpanElement = this.containerElement.querySelector(`[name="projectionFarShow"]`)
-		const modelRotationRangeXElement = this.containerElement.querySelector(`[name="modelRotationRangeX"]`)
-		const modelRotationXShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeXShow"]`)
-		const modelRotationRangeYElement = this.containerElement.querySelector(`[name="modelRotationRangeY"]`)
-		const modelRotationYShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeYShow"]`)
-		const modelRotationRangeZElement = this.containerElement.querySelector(`[name="modelRotationRangeZ"]`)
-		const modelRotationZShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeZShow"]`)
-		const modelOffsetRangeXElement = this.containerElement.querySelector(`[name="modelOffsetRangeX"]`)
-		const modelOffsetXShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeXShow"]`)
-		const modelOffsetRangeYElement = this.containerElement.querySelector(`[name="modelOffsetRangeY"]`)
-		const modelOffsetYShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeYShow"]`)
-		const modelOffsetRangeZElement = this.containerElement.querySelector(`[name="modelOffsetRangeZ"]`)
-		const modelOffsetZShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeZShow"]`)
 		const lookAtMatrix4EyePositionXRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionX"]`)
 		const lookAtMatrix4EyePositionXShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionXShow"]`)
 		const lookAtMatrix4EyePositionYRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionY"]`)
@@ -273,6 +224,144 @@ class Program1 {
 		const lightIntensityGainRangeRangeElement = this.containerElement.querySelector(`[name="lightIntensityGainRange"]`)
 		const lightIntensityGainRangeShowSpanElement = this.containerElement.querySelector(`[name="lightIntensityGainRangeShow"]`)
 
+		document.addEventListener('keydown', function (e) {
+			e.preventDefault()
+			e.stopPropagation()
+			self.downKeys.add(e.keyCode)
+			if (!Number.isNaN(+e.key)) {
+				self.downNumberKeys.add(+e.key)
+			}
+			switch (e.keyCode) {
+				// page-up
+				case 221: {
+					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
+						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+							modelInstanceItem.modelOffset.z -= 0.05
+						})
+						self.isRender = true
+						self.renderModelInfomationView()
+						break
+					}
+					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
+						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+							modelInstanceItem.modelRatation.z -= 1
+						})
+						self.isRender = true
+						self.renderModelInfomationView()
+						break
+					}
+					break
+				}
+				// page-down
+				case 219: {
+					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
+						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+							modelInstanceItem.modelOffset.z += 0.05
+						})
+						self.isRender = true
+						self.renderModelInfomationView()
+						break
+					}
+					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
+						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+							modelInstanceItem.modelRatation.z += 1
+						})
+						self.isRender = true
+						self.renderModelInfomationView()
+						break
+					}
+					break
+				}
+				// up
+				case 38: {
+					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
+						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+							modelInstanceItem.modelOffset.y += 0.05
+						})
+						self.isRender = true
+						self.renderModelInfomationView()
+						break
+					}
+					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
+						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+							modelInstanceItem.modelRatation.y += 1
+						})
+						self.isRender = true
+						self.renderModelInfomationView()
+						break
+					}
+					break
+				}
+				// right
+				case 39: {
+					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
+						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+							modelInstanceItem.modelOffset.x += 0.05
+						})
+						self.isRender = true
+						self.renderModelInfomationView()
+						break
+					}
+					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
+						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+							modelInstanceItem.modelRatation.x += 1
+						})
+						self.isRender = true
+						self.renderModelInfomationView()
+						break
+					}
+					break
+				}
+				// down
+				case 40: {
+					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
+						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+							modelInstanceItem.modelOffset.y -= 0.05
+						})
+						self.isRender = true
+						self.renderModelInfomationView()
+						break
+					}
+					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
+						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+							modelInstanceItem.modelRatation.y -= 1
+						})
+						self.isRender = true
+						self.renderModelInfomationView()
+						break
+					}
+					break
+				}
+				// left
+				case 37: {
+					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
+						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+							modelInstanceItem.modelOffset.x -= 0.05
+						})
+						self.isRender = true
+						self.renderModelInfomationView()
+						break
+					}
+					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
+						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+							modelInstanceItem.modelRatation.x -= 1
+						})
+						self.isRender = true
+						self.renderModelInfomationView()
+						break
+					}
+					break
+				}
+			}
+		})
+		document.addEventListener('keyup', function (e) {
+			e.preventDefault()
+			e.stopPropagation()
+			self.downKeys.delete(e.keyCode)
+			if (self.downNumberKeys.has(+e.key)) {
+				self.downNumberKeys.delete(+e.key)
+			}
+		})
 		projectionFovyRangeElement.addEventListener('input', function (e) {
 			projectionFovyShowSpanElement.textContent = self.profile.persProjection.fovy = +this.value
 			console.log('persProjection:', JSON.stringify(self.profile.persProjection))
@@ -286,36 +375,6 @@ class Program1 {
 		projectionFarRangeElement.addEventListener('input', function (e) {
 			projectionFarShowSpanElement.textContent = self.profile.persProjection.far = +this.value
 			console.log('persProjection:', JSON.stringify(self.profile.persProjection))
-			self.isRender = true
-		})
-		modelRotationRangeXElement.addEventListener('input', function (e) {
-			modelRotationXShowSpanElement.textContent = self.profile.modelRatation.x = +this.value
-			console.log('modelRatation:', JSON.stringify(self.profile.modelRatation))
-			self.isRender = true
-		})
-		modelRotationRangeYElement.addEventListener('input', function (e) {
-			modelRotationYShowSpanElement.textContent = self.profile.modelRatation.y = +this.value
-			console.log('modelRatation:', JSON.stringify(self.profile.modelRatation))
-			self.isRender = true
-		})
-		modelRotationRangeZElement.addEventListener('input', function (e) {
-			modelRotationZShowSpanElement.textContent = self.profile.modelRatation.z = +this.value
-			console.log('modelRatation:', JSON.stringify(self.profile.modelRatation))
-			self.isRender = true
-		})
-		modelOffsetRangeXElement.addEventListener('input', function (e) {
-			modelOffsetXShowSpanElement.textContent = self.profile.modelOffset.x = +this.value
-			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
-			self.isRender = true
-		})
-		modelOffsetRangeYElement.addEventListener('input', function (e) {
-			modelOffsetYShowSpanElement.textContent = self.profile.modelOffset.y = +this.value
-			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
-			self.isRender = true
-		})
-		modelOffsetRangeZElement.addEventListener('input', function (e) {
-			modelOffsetZShowSpanElement.textContent = self.profile.modelOffset.z = +this.value
-			console.log('modelOffset:', JSON.stringify(self.profile.modelOffset))
 			self.isRender = true
 		})
 		lookAtMatrix4EyePositionXRangeElement.addEventListener('input', function (e) {
@@ -393,6 +452,34 @@ class Program1 {
 			self.isRender = true
 		})
 	}
+
+	static getModelInstances(downNumberKeys) {
+		if (downNumberKeys.size <= 0) {
+			return [...this.modelInstances]
+		}
+		const modelInstances = []
+		downNumberKeys.forEach(number => {
+			if (this.modelInstances[number]) {
+				modelInstances.push(this.modelInstances[number])
+			}
+		})
+		return modelInstances
+	}
+
+	static renderModelInfomationView() {
+		const modelInfomationElement = this.containerElement.querySelector(`[data-tagitem="model-infomation"]`)
+		let htmlString = ``
+		this.modelInstances.forEach((modelInstanceItem, index) => {
+			htmlString += `
+				<div style="font-size: 14px;">
+					<div style="font-weight: 900;">MODEL ${index + 1}:</div> 
+					<div style="padding: 2px 2px 2px 10px;">Model Offset: ${JSON.stringify(modelInstanceItem.modelOffset)}</div>
+					<div style="padding: 2px 2px 2px 10px;">Model Ratation: ${JSON.stringify(modelInstanceItem.modelRatation)}</div>
+				</div>
+			`
+		})
+		modelInfomationElement.innerHTML = htmlString
+	}
 }
 
 function drawCanvas1(containerElement) {
@@ -450,7 +537,9 @@ function drawCanvas1(containerElement) {
 	const modelInstance1 = new RectangularModel1(0.3, 1.25, 0.3, '#ffffff', 0, -0.5, 0)
 	const modelInstance2 = new RectangularModel1(0.4, 1.0, 0.4, '#ffffff', 0, 0.5, 0)
 	const vertexPositionsSize = modelInstance1.vertexData.vertexPositions.length + modelInstance2.vertexData.vertexPositions.length
-	console.log(modelInstance1, modelInstance2)
+	Program1.modelInstances.push(modelInstance1, modelInstance2)
+	Program1.renderModelInfomationView()
+	console.log(Program1.modelInstances)
 	console.timeEnd(`CreateModelDatas`)
 
 	const canvasElement = containerElement.querySelector('canvas')
@@ -485,10 +574,10 @@ function drawCanvas1(containerElement) {
 	gl.enableVertexAttribArray(a_Position)
 	gl.enableVertexAttribArray(a_Color)
 
-	modelInstance1.bindVertextBuffer(gl.createBuffer())
-	modelInstance1.bindNormalBuffer(gl.createBuffer())
-	modelInstance2.bindVertextBuffer(gl.createBuffer())
-	modelInstance2.bindNormalBuffer(gl.createBuffer())
+	Program1.modelInstances.forEach(modelInstanceItem => {
+		modelInstanceItem.bindVertextBuffer(gl.createBuffer())
+		modelInstanceItem.bindNormalBuffer(gl.createBuffer())
+	})
 
 	const writeBuffer = modelInstance => {
 		gl.bindBuffer(gl.ARRAY_BUFFER, modelInstance.normalBuffer)
@@ -584,8 +673,9 @@ function drawCanvas1(containerElement) {
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 
-		drawModel(modelInstance1, vertexPositionsSize)
-		drawModel(modelInstance2, vertexPositionsSize)
+		Program1.modelInstances.forEach(modelInstanceItem => {
+			drawModel(modelInstanceItem, vertexPositionsSize)
+		})
 	}
 
 	const exec = () => {

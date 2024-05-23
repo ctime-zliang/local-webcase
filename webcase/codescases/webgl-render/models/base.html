@@ -38,109 +38,6 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Rotation X: </label>
-					<span>-360</span>
-					<input type="range" value="0" name="modelRotationRangeX" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
-					<span>360</span>
-					<strong>&nbsp;(<span name="modelRotationRangeXShow">0</span>)</strong>
-				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Rotation Y: </label>
-					<span>-360</span>
-					<input type="range" value="0" name="modelRotationRangeY" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
-					<span>360</span>
-					<strong>&nbsp;(<span name="modelRotationRangeYShow">0</span>)</strong>
-				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Rotation Z: </label>
-					<span>-360</span>
-					<input type="range" value="0" name="modelRotationRangeZ" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
-					<span>360</span>
-					<strong>&nbsp;(<span name="modelRotationRangeZShow">0</span>)</strong>
-				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Offset X: </label>
-					<span>-10</span>
-					<input type="range" value="0" name="modelOffsetRangeX" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
-					<span>10</span>
-					<strong>&nbsp;(<span name="modelOffsetRangeXShow">0</span>)</strong>
-				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Offset Y: </label>
-					<span>-10</span>
-					<input type="range" value="0" name="modelOffsetRangeY" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
-					<span>10</span>
-					<strong>&nbsp;(<span name="modelOffsetRangeYShow">0</span>)</strong>
-				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Offset Z: </label>
-					<span>-10</span>
-					<input type="range" value="0" name="modelOffsetRangeZ" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
-					<span>10</span>
-					<strong>&nbsp;(<span name="modelOffsetRangeZShow">0</span>)</strong>
-				</div>
-				<br />
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-EyePosition X: </label>
 					<span>-10</span>
 					<input type="range" name="lookAtMatrix4EyePositionX" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
@@ -419,6 +316,8 @@
 					<span>50</span>
 					<strong>&nbsp;(<span name="projectionFarShow">0</span>)</strong>
 				</div>
+				<br />
+				<div data-tagitem="model-infomation" style="padding: 5px 0"></div>
 			</div>
 			<div style="position: relative; width: 512px; height: 512px">
 				<canvas width="512" height="512" style="background-color: transparent; border: 1px dashed #888888"></canvas>
