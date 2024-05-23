@@ -601,9 +601,10 @@ function drawCanvas1(containerElement) {
 	const modelRightFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', -0.25, -1.55, 0.05)
 	Program1.modelInstances.push(modelHead, modelBody, modelLeftArm, modelRightArm, modelLeftLeg, modelRightLeg, modelLeftFoot, modelRightFoot)
 	const vertexPositionsSize = Program1.getVertexPositionSize()
-	Program1.renderModelInfomationView()
 	console.log(Program1.modelInstances)
 	console.timeEnd(`CreateModelDatas`)
+
+	Program1.renderModelInfomationView()
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
