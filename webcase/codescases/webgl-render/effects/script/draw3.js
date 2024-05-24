@@ -364,8 +364,8 @@ function drawCanvas3(containerElement) {
 		// 参数(组)
 		uniform float u_lightIntensityGain;
 		// 平行光配置(组)
-		uniform vec3 u_LightColor;
 		uniform vec3 u_LightDirection;
+		uniform vec3 u_LightColor;
 		uniform vec3 u_AmbientLightColor;
 		void main() {
 			vec3 normal = normalize(v_Normal);
@@ -509,8 +509,8 @@ function drawCanvas3(containerElement) {
 		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
 		gl.uniformMatrix4fv(u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
 
-		gl.uniform3f(u_LightColor, Program3.profile.light.color.r / 255, Program3.profile.light.color.g / 255, Program3.profile.light.color.b / 255)
 		gl.uniform3fv(u_LightDirection, new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z]))
+		gl.uniform3f(u_LightColor, Program3.profile.light.color.r / 255, Program3.profile.light.color.g / 255, Program3.profile.light.color.b / 255)
 		gl.uniform1f(u_lightIntensityGain, Program3.profile.light.intensityGain)
 		gl.uniform3f(u_AmbientLightColor, Program3.profile.light.ambient.r, Program3.profile.light.ambient.g, Program3.profile.light.ambient.b)
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))

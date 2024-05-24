@@ -180,6 +180,24 @@
 						padding: 3px 0;
 					"
 				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Illu Type: </label>
+					<input type="radio" name="lightIlluTypeCheck" value="1" style="width: 20px; height: 20px; cursor: pointer" />
+					<span>Parallel Light</span>
+					<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+					<input type="radio" name="lightIlluTypeCheck" value="2" style="width: 20px; height: 20px; cursor: pointer" />
+					<span>Spot Light</span>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: none;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Position X: </label>
 					<span>-10</span>
 					<input type="range" value="0" name="lightPositionRangeX" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
@@ -190,7 +208,7 @@
 					style="
 						width: fit-content;
 						font-size: 12px;
-						display: flex;
+						display: none;
 						flex-wrap: nowrap;
 						align-items: center;
 						align-content: center;
@@ -207,7 +225,7 @@
 					style="
 						width: fit-content;
 						font-size: 12px;
-						display: flex;
+						display: none;
 						flex-wrap: nowrap;
 						align-items: center;
 						align-content: center;
@@ -219,6 +237,57 @@
 					<input type="range" value="0" name="lightPositionRangeZ" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
 					<span>10</span>
 					<strong>&nbsp;(<span name="lightPositionRangeZShow">0</span>)</strong>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: none;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Direction X: </label>
+					<span>-10</span>
+					<input type="range" value="0" name="lightDirectionRangeX" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>10</span>
+					<strong>&nbsp;(<span name="lightDirectionRangeXShow">0</span>)</strong>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: none;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Direction Y: </label>
+					<span>-10</span>
+					<input type="range" value="0" name="lightDirectionRangeY" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>10</span>
+					<strong>&nbsp;(<span name="lightDirectionRangeYShow">0</span>)</strong>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: none;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Direction Z: </label>
+					<span>-10</span>
+					<input type="range" value="0" name="lightDirectionRangeZ" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>10</span>
+					<strong>&nbsp;(<span name="lightDirectionRangeZShow">0</span>)</strong>
 				</div>
 				<div
 					style="
@@ -335,7 +404,7 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Auto Transition: </label>
-					<input type="checkbox" value="1" name="autoTransition" style="width: 15px; height: 15px" />
+					<input type="checkbox" value="1" name="autoTransition" style="width: 20px; height: 20px" />
 				</div>
 				<br />
 				<div data-tagitem="model-infomation" style="padding: 5px 0"></div>

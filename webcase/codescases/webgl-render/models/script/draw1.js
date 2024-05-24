@@ -167,7 +167,13 @@ class Program1 {
 		 * 光照参数
 		 */
 		light: {
+			illuType: 1,
 			intensityGain: 1.0,
+			direction: {
+				x: 0.5,
+				y: 3.0,
+				z: 4.0,
+			},
 			position: {
 				x: 1.0,
 				y: 2.0,
@@ -214,12 +220,19 @@ class Program1 {
 		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZShow"]`)
 		const lightColorPickElement = this.containerElement.querySelector(`[name="lightColor"]`)
 		const lightColorShowSpanElement = this.containerElement.querySelector(`[name="lightColorShow"]`)
+		const lightIlluTypeCheckRadioElements = this.containerElement.querySelectorAll(`[name="lightIlluTypeCheck"]`)
 		const lightPositionRangeXRangeElement = this.containerElement.querySelector(`[name="lightPositionRangeX"]`)
 		const lightPositionRangeXShowElement = this.containerElement.querySelector(`[name="lightPositionRangeXShow"]`)
 		const lightPositionRangeYRangeElement = this.containerElement.querySelector(`[name="lightPositionRangeY"]`)
 		const lightPositionRangeYShowElement = this.containerElement.querySelector(`[name="lightPositionRangeYShow"]`)
 		const lightPositionRangeZRangeElement = this.containerElement.querySelector(`[name="lightPositionRangeZ"]`)
 		const lightPositionRangeZShowElement = this.containerElement.querySelector(`[name="lightPositionRangeZShow"]`)
+		const lightDirectionRangeXRangeElement = this.containerElement.querySelector(`[name="lightDirectionRangeX"]`)
+		const lightDirectionRangeXShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeXShow"]`)
+		const lightDirectionRangeYRangeElement = this.containerElement.querySelector(`[name="lightDirectionRangeY"]`)
+		const lightDirectionRangeYShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeYShow"]`)
+		const lightDirectionRangeZRangeElement = this.containerElement.querySelector(`[name="lightDirectionRangeZ"]`)
+		const lightDirectionRangeZShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeZShow"]`)
 		const ambientLightRangeRRangeElement = this.containerElement.querySelector(`[name="ambientLightRangeR"]`)
 		const ambientLightRShowSpanElement = this.containerElement.querySelector(`[name="ambientLightRShow"]`)
 		const ambientLightRangeGRangeElement = this.containerElement.querySelector(`[name="ambientLightRangeG"]`)
@@ -240,14 +253,22 @@ class Program1 {
 		lookAtMatrix4AtPositionYShowSpanElement.textContent = lookAtMatrix4AtPositionYRangeElement.value = self.profile.lookAt.atPosition.y
 		lookAtMatrix4AtPositionZShowSpanElement.textContent = lookAtMatrix4AtPositionZRangeElement.value = self.profile.lookAt.atPosition.z
 		lightColorShowSpanElement.textContent = lightColorPickElement.value = ven$rgba2Hex(self.profile.light.color)
+		lightIlluTypeCheckRadioElements.forEach(itemElement => {
+			itemElement.checked = itemElement.value === String(self.profile.light.illuType)
+		})
 		lightPositionRangeXShowElement.textContent = lightPositionRangeXRangeElement.value = self.profile.light.position.x
 		lightPositionRangeYShowElement.textContent = lightPositionRangeYRangeElement.value = self.profile.light.position.y
 		lightPositionRangeZShowElement.textContent = lightPositionRangeZRangeElement.value = self.profile.light.position.z
+		lightDirectionRangeXShowElement.textContent = lightDirectionRangeXRangeElement.value = self.profile.light.direction.x
+		lightDirectionRangeYShowElement.textContent = lightDirectionRangeYRangeElement.value = self.profile.light.direction.y
+		lightDirectionRangeZShowElement.textContent = lightDirectionRangeZRangeElement.value = self.profile.light.direction.z
 		ambientLightRShowSpanElement.textContent = ambientLightRangeRRangeElement.value = self.profile.light.ambient.r
 		ambientLightRangeGShowSpanElement.textContent = ambientLightRangeGRangeElement.value = self.profile.light.ambient.g
 		ambientLightRangeBShowSpanElement.textContent = ambientLightRangeBRangeElement.value = self.profile.light.ambient.b
 		lightIntensityGainRangeShowSpanElement.textContent = lightIntensityGainRangeRangeElement.value = self.profile.light.intensityGain
 		autoTransitionCheckboxElement.checked = self.profile.autoTransition
+
+		this.toggleLightIlluTypeView()
 	}
 
 	static eventHandle() {
@@ -273,12 +294,19 @@ class Program1 {
 		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZShow"]`)
 		const lightColorPickElement = this.containerElement.querySelector(`[name="lightColor"]`)
 		const lightColorShowSpanElement = this.containerElement.querySelector(`[name="lightColorShow"]`)
+		const lightIlluTypeCheckRadioElements = this.containerElement.querySelectorAll(`[name="lightIlluTypeCheck"]`)
 		const lightPositionRangeXRangeElement = this.containerElement.querySelector(`[name="lightPositionRangeX"]`)
 		const lightPositionRangeXShowElement = this.containerElement.querySelector(`[name="lightPositionRangeXShow"]`)
 		const lightPositionRangeYRangeElement = this.containerElement.querySelector(`[name="lightPositionRangeY"]`)
 		const lightPositionRangeYShowElement = this.containerElement.querySelector(`[name="lightPositionRangeYShow"]`)
 		const lightPositionRangeZRangeElement = this.containerElement.querySelector(`[name="lightPositionRangeZ"]`)
 		const lightPositionRangeZShowElement = this.containerElement.querySelector(`[name="lightPositionRangeZShow"]`)
+		const lightDirectionRangeXRangeElement = this.containerElement.querySelector(`[name="lightDirectionRangeX"]`)
+		const lightDirectionRangeXShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeXShow"]`)
+		const lightDirectionRangeYRangeElement = this.containerElement.querySelector(`[name="lightDirectionRangeY"]`)
+		const lightDirectionRangeYShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeYShow"]`)
+		const lightDirectionRangeZRangeElement = this.containerElement.querySelector(`[name="lightDirectionRangeZ"]`)
+		const lightDirectionRangeZShowElement = this.containerElement.querySelector(`[name="lightDirectionRangeZShow"]`)
 		const ambientLightRangeRRangeElement = this.containerElement.querySelector(`[name="ambientLightRangeR"]`)
 		const ambientLightRShowSpanElement = this.containerElement.querySelector(`[name="ambientLightRShow"]`)
 		const ambientLightRangeGRangeElement = this.containerElement.querySelector(`[name="ambientLightRangeG"]`)
@@ -294,8 +322,6 @@ class Program1 {
 			e.stopPropagation()
 		})
 		canvasElement.addEventListener('mousedown', function (e) {
-			e.preventDefault()
-			e.stopPropagation()
 			const canvasRect = this.getBoundingClientRect().toJSON()
 			self.mouseInfo.isLeftDown = self.mouseInfo.isMiddleDown = self.mouseInfo.isRightDown = false
 			self.mouseInfo.nativeLeftDownX = self.mouseInfo.nativeMiddleDownX = self.mouseInfo.nativeRightDownX = -1
@@ -317,8 +343,6 @@ class Program1 {
 			}
 		})
 		document.addEventListener('mousemove', function (e) {
-			e.preventDefault()
-			e.stopPropagation()
 			const nowX = e.clientX
 			const nowY = e.clientY
 			const distNativeX = nowX - self.mouseInfo.moveLastNativeX
@@ -339,8 +363,6 @@ class Program1 {
 			self.mouseInfo.moveLastNativeY = nowY
 		})
 		document.addEventListener('mouseup', function (e) {
-			e.preventDefault()
-			e.stopPropagation()
 			self.mouseInfo.isLeftDown = self.mouseInfo.isMiddleDown = self.mouseInfo.isRightDown = false
 			self.mouseInfo.nativeLeftDownX = self.mouseInfo.nativeMiddleDownX = self.mouseInfo.nativeRightDownX = -1
 			self.mouseInfo.nativeLeftDownY = self.mouseInfo.nativeMiddleDownY = self.mouseInfo.nativeRightDownY = -1
@@ -537,6 +559,14 @@ class Program1 {
 			console.log('light.color:', JSON.stringify(self.profile.light.color))
 			self.isRender = true
 		})
+		lightIlluTypeCheckRadioElements.forEach(itemElement => {
+			itemElement.addEventListener('change', function (e) {
+				self.profile.light.illuType = +this.value
+				self.toggleLightIlluTypeView()
+				console.log('light.illuType:', self.profile.light.illuType)
+				self.isRender = true
+			})
+		})
 		lightPositionRangeXRangeElement.addEventListener('input', function (e) {
 			lightPositionRangeXShowElement.textContent = self.profile.light.position.x = +this.value
 			console.log('light.position:', JSON.stringify(self.profile.light.position))
@@ -550,6 +580,21 @@ class Program1 {
 		lightPositionRangeZRangeElement.addEventListener('input', function (e) {
 			lightPositionRangeZShowElement.textContent = self.profile.light.position.z = +this.value
 			console.log('light.position:', JSON.stringify(self.profile.light.position))
+			self.isRender = true
+		})
+		lightDirectionRangeXRangeElement.addEventListener('input', function (e) {
+			lightDirectionRangeXShowElement.textContent = self.profile.light.direction.x = +this.value
+			console.log('light.direction:', JSON.stringify(self.profile.light.direction))
+			self.isRender = true
+		})
+		lightDirectionRangeYRangeElement.addEventListener('input', function (e) {
+			lightDirectionRangeYShowElement.textContent = self.profile.light.direction.y = +this.value
+			console.log('light.direction:', JSON.stringify(self.profile.light.direction))
+			self.isRender = true
+		})
+		lightDirectionRangeZRangeElement.addEventListener('input', function (e) {
+			lightDirectionRangeZShowElement.textContent = self.profile.light.direction.z = +this.value
+			console.log('light.direction:', JSON.stringify(self.profile.light.direction))
 			self.isRender = true
 		})
 		ambientLightRangeRRangeElement.addEventListener('input', function (e) {
@@ -613,6 +658,31 @@ class Program1 {
 		})
 		return len
 	}
+
+	static toggleLightIlluTypeView() {
+		const lightPositionRangeXRangeElement = this.containerElement.querySelector(`[name="lightPositionRangeX"]`)
+		const lightPositionRangeYRangeElement = this.containerElement.querySelector(`[name="lightPositionRangeY"]`)
+		const lightPositionRangeZRangeElement = this.containerElement.querySelector(`[name="lightPositionRangeZ"]`)
+		const lightDirectionRangeXRangeElement = this.containerElement.querySelector(`[name="lightDirectionRangeX"]`)
+		const lightDirectionRangeYRangeElement = this.containerElement.querySelector(`[name="lightDirectionRangeY"]`)
+		const lightDirectionRangeZRangeElement = this.containerElement.querySelector(`[name="lightDirectionRangeZ"]`)
+		if (this.profile.light.illuType === 1) {
+			lightPositionRangeXRangeElement.parentElement.style.display = 'none'
+			lightPositionRangeYRangeElement.parentElement.style.display = 'none'
+			lightPositionRangeZRangeElement.parentElement.style.display = 'none'
+			lightDirectionRangeXRangeElement.parentElement.style.display = 'flex'
+			lightDirectionRangeYRangeElement.parentElement.style.display = 'flex'
+			lightDirectionRangeZRangeElement.parentElement.style.display = 'flex'
+		}
+		if (this.profile.light.illuType === 2) {
+			lightDirectionRangeXRangeElement.parentElement.style.display = 'none'
+			lightDirectionRangeYRangeElement.parentElement.style.display = 'none'
+			lightDirectionRangeZRangeElement.parentElement.style.display = 'none'
+			lightPositionRangeXRangeElement.parentElement.style.display = 'flex'
+			lightPositionRangeYRangeElement.parentElement.style.display = 'flex'
+			lightPositionRangeZRangeElement.parentElement.style.display = 'flex'
+		}
+	}
 }
 
 function drawCanvas1(containerElement) {
@@ -639,7 +709,6 @@ function drawCanvas1(containerElement) {
 			// 根据法线变换矩阵重新计算法线坐标并归一化
 			v_Normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1.0)));
 			v_Color = a_Color;
-			gl_PointSize = 5.0;
 		}
 	`
 	const FS = `
@@ -649,25 +718,42 @@ function drawCanvas1(containerElement) {
 		varying vec3 v_Position;
 		// 参数(组)
 		uniform float u_lightIntensityGain;
+		uniform float u_illuType;
 		// 点光配置(组)
-		uniform vec3 u_LightColor;
 		uniform vec3 u_LightPosition;
+		uniform vec3 u_LightDirection;
+		uniform vec3 u_LightColor;
 		uniform vec3 u_AmbientLightColor;
 		void main() {
-			vec3 normal = normalize(v_Normal);
-			// 计算光线方向并归一化
-			vec3 lightDirection = normalize(u_LightPosition - v_Position);
-			// 计算光线方向与法线的点积
-			float nDotL = max(dot(lightDirection, normal), 0.0);
-			// 计算漫反射光和环境光的色值
-			vec3 diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
-			vec3 ambient = u_AmbientLightColor * v_Color.rgb;
-			gl_FragColor = vec4(diffuse + ambient, v_Color.a);
+			vec3 normal;
+			float nDotL;
+			vec3 ambient;
+			vec3 diffuse;
+			vec3 lightDirection;
+			if (u_illuType == 1.0) {  // 平行光
+				normal = normalize(v_Normal);
+				// 计算光线方向与法线的点积
+				nDotL = max(dot(u_LightDirection, normal), 0.0);
+				// 计算漫反射光和环境光的色值
+				diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
+				ambient = u_AmbientLightColor * v_Color.rgb;
+				gl_FragColor = vec4(diffuse + ambient, v_Color.a);
+			} else {  // 点光
+				normal = normalize(v_Normal);
+				// 计算光线方向并归一化
+				lightDirection = normalize(u_LightPosition - v_Position);
+				// 计算光线方向与法线的点积
+				nDotL = max(dot(lightDirection, normal), 0.0);
+				// 计算漫反射光和环境光的色值
+				diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
+				ambient = u_AmbientLightColor * v_Color.rgb;
+				gl_FragColor = vec4(diffuse + ambient, v_Color.a);
+			}
 		}
 	`
 
 	console.time(`CreateModelDatas`)
-	const modelHead = new ShereModel1(0.25, 30, 30, '#ffffff', 0, 1.25, 0)
+	const modelHead = new RectangularModel1(0.4, 0.35, 0.35, '#ffffff', 0, 1.2, 0)
 	const modelBody = new RectangularModel1(0.8, 1.0, 0.4, '#ffffff', 0, 0.5, 0)
 	const modelLeftArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', 0.55, 0.3, 0)
 	const modelRightArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', -0.55, 0.3, 0)
@@ -698,8 +784,10 @@ function drawCanvas1(containerElement) {
 	gl.enable(gl.POLYGON_OFFSET_FILL)
 	gl.polygonOffset(1.0, 1.0)
 
+	const u_illuType = gl.getUniformLocation(program, 'u_illuType')
 	const u_LightColor = gl.getUniformLocation(program, 'u_LightColor')
 	const u_LightPosition = gl.getUniformLocation(program, 'u_LightPosition')
+	const u_LightDirection = gl.getUniformLocation(program, 'u_LightDirection')
 	const u_AmbientLightColor = gl.getUniformLocation(program, 'u_AmbientLightColor')
 	const u_lightIntensityGain = gl.getUniformLocation(program, 'u_lightIntensityGain')
 	const u_NormalMatrix = gl.getUniformLocation(program, 'u_NormalMatrix')
@@ -779,6 +867,17 @@ function drawCanvas1(containerElement) {
 		 * 创建点光坐标向量
 		 */
 		const lightPosition = new Ven$Vector3(Program1.profile.light.position.x, Program1.profile.light.position.y, Program1.profile.light.position.z)
+
+		/**
+		 * 创建平行光方向向量
+		 */
+		const lightDirection = new Ven$Vector3(
+			Program1.profile.light.direction.x,
+			Program1.profile.light.direction.y,
+			Program1.profile.light.direction.z
+		)
+		const lightNormalizeDirection = lightDirection.normalize()
+
 		/**
 		 * 创建透视投影矩阵
 		 */
@@ -797,8 +896,14 @@ function drawCanvas1(containerElement) {
 			new Ven$Vector3(0, 1, 0)
 		)
 
+		gl.uniform1f(u_illuType, Program1.profile.light.illuType)
+		if (Program1.profile.light.illuType === 1) {
+			gl.uniform3fv(u_LightDirection, new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z]))
+		}
+		if (Program1.profile.light.illuType === 2) {
+			gl.uniform3fv(u_LightPosition, new Float32Array([lightPosition.x, lightPosition.y, lightPosition.z]))
+		}
 		gl.uniform3f(u_LightColor, Program1.profile.light.color.r / 255, Program1.profile.light.color.g / 255, Program1.profile.light.color.b / 255)
-		gl.uniform3fv(u_LightPosition, new Float32Array([lightPosition.x, lightPosition.y, lightPosition.z]))
 		gl.uniform1f(u_lightIntensityGain, Program1.profile.light.intensityGain)
 		gl.uniform3f(u_AmbientLightColor, Program1.profile.light.ambient.r, Program1.profile.light.ambient.g, Program1.profile.light.ambient.b)
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
