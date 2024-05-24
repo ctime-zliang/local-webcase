@@ -530,10 +530,10 @@ class Program1 {
 		modelInfomationElement.innerHTML = htmlString
 	}
 
-	static getVertexPositionSize() {
+	static getvertexFeatureize() {
 		let len = 0
 		this.modelInstances.forEach((modelInstanceItem, index) => {
-			len += modelInstanceItem.vertexData.vertexPositions.length
+			len += modelInstanceItem.vertexData.vertexFeature.length
 		})
 		return len
 	}
@@ -600,7 +600,7 @@ function drawCanvas1(containerElement) {
 	const modelLeftFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', 0.25, -1.55, 0.05)
 	const modelRightFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', -0.25, -1.55, 0.05)
 	Program1.modelInstances.push(modelHead, modelBody, modelLeftArm, modelRightArm, modelLeftLeg, modelRightLeg, modelLeftFoot, modelRightFoot)
-	const vertexPositionsSize = Program1.getVertexPositionSize()
+	const vertexFeatureSize = Program1.getvertexFeatureize()
 	console.log(Program1.modelInstances)
 	console.timeEnd(`CreateModelDatas`)
 
@@ -650,7 +650,7 @@ function drawCanvas1(containerElement) {
 		gl.bindBuffer(gl.ARRAY_BUFFER, modelInstance.vertextBuffer)
 		gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
 		gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
-		gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(modelInstance.vertexData.vertexPositions), gl.STATIC_DRAW)
+		gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(modelInstance.vertexData.vertexFeature), gl.STATIC_DRAW)
 	}
 
 	const applyTranslateMatrix = modelInstance => {
@@ -684,10 +684,10 @@ function drawCanvas1(containerElement) {
 		gl.uniformMatrix4fv(u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
 	}
 
-	const drawModel = (modelInstance, vertexPositionsSize) => {
+	const drawModel = (modelInstance, vertexFeatureSize) => {
 		writeBuffer(modelInstance)
 		applyTranslateMatrix(modelInstance)
-		gl.drawArrays(gl.TRIANGLES, 0, vertexPositionsSize / 7)
+		gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
 	}
 
 	const render = () => {
@@ -729,7 +729,7 @@ function drawCanvas1(containerElement) {
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 
 		Program1.modelInstances.forEach(modelInstanceItem => {
-			drawModel(modelInstanceItem, vertexPositionsSize)
+			drawModel(modelInstanceItem, vertexFeatureSize)
 		})
 	}
 

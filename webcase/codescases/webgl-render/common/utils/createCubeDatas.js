@@ -100,11 +100,12 @@ function createCubeDatas(width, height, depth, colorSetting = {}, offsetX = 0, o
 	]
 	/**
 	 * 遍历 6 个面: 遍历构成每个面的 2 * 3 = 6 份顶点索引
-	 * 逐一生成 6 * 6 = 36 份顶点数据, 写入 vertexPositions
+	 * 逐一生成 6 * 6 = 36 份顶点数据, 写入 vertexFeature
 	 */
-	const vertexPositionsSequence = {}
-	const vertexPositions = []
+	const vertexFeatureSequence = {}
+	const vertexFeature = []
 	const vertexNormals = []
+	const vertexCoordinate = []
 	for (let i = 0; i < CUBE_FACE_INDICES.length; i++) {
 		const faceIndices = CUBE_FACE_INDICES[i]
 		// const color = ven$randomColor()
@@ -114,10 +115,10 @@ function createCubeDatas(width, height, depth, colorSetting = {}, offsetX = 0, o
 			/**
 			 * 单个顶点的完整描述数据
 			 */
-			vertexPositions.push(originalPositions[pointIndex * 3], originalPositions[pointIndex * 3 + 1], originalPositions[pointIndex * 3 + 2])
-			vertexPositions.push(color.r / 255, color.g / 255, color.b / 255, color.a)
+			vertexFeature.push(originalPositions[pointIndex * 3], originalPositions[pointIndex * 3 + 1], originalPositions[pointIndex * 3 + 2])
+			vertexFeature.push(color.r / 255, color.g / 255, color.b / 255, color.a)
 			/* ... */
-			vertexPositionsSequence[`${i * faceIndices.length + j}#:${i}-${parseInt((j + 0) / 3)}-${parseInt((j + 0) % 3)}`] = {
+			vertexFeatureSequence[`${i * faceIndices.length + j}#:${i}-${parseInt((j + 0) / 3)}-${parseInt((j + 0) % 3)}`] = {
 				x: originalPositions[pointIndex * 3],
 				y: originalPositions[pointIndex * 3 + 1],
 				z: originalPositions[pointIndex * 3 + 2],
@@ -125,9 +126,11 @@ function createCubeDatas(width, height, depth, colorSetting = {}, offsetX = 0, o
 				g: color.g / 255,
 				b: color.b / 255,
 				a: color.a,
-				_arrIndexStart: vertexPositions.length - 3,
+				_arrIndexStart: vertexFeature.length - 3,
 			}
 		}
+		vertexCoordinate.push(0, 0, 0, 1, 1, 1)
+		vertexCoordinate.push(0, 0, 1, 1, 1, 0)
 	}
 	// prettier-ignore
 	const CUBE_NORMALS = [
@@ -186,13 +189,14 @@ function createCubeDatas(width, height, depth, colorSetting = {}, offsetX = 0, o
 		-1.0, 0.0, 0.0,
 		-1.0, 0.0, 0.0,
 	]
-	CUBE_NORMALS.forEach(item => {
-		vertexNormals.push(item)
-	})
+	for (let i = 0; i < CUBE_NORMALS.length; i++) {
+		vertexNormals.push(CUBE_NORMALS[i])
+	}
 	return {
-		vertexPositions: new Float32Array(vertexPositions),
+		vertexFeature: new Float32Array(vertexFeature),
+		vertexFeatureSequence,
 		vertexNormals: new Float32Array(vertexNormals),
-		vertexPositionsSequence,
+		vertexCoordinate: new Float32Array(vertexCoordinate),
 		originCenter: {
 			x: offsetX,
 			y: offsetY,

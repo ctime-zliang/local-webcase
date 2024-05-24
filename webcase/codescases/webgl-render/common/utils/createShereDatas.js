@@ -44,7 +44,7 @@
  *      - 生成顶点坐标数据 VERTEXT_POSITIONS
  *
  * @description 生成球体顶点数据
- * @function createShereDatas
+ * @function CreateModelDatas
  * @param {number} radius 球体半径
  * @param {number} meridianCount 球体经线半圆个数
  * @param {number} latitudeCount 球体纬线圆个数(包含两个极点)
@@ -129,9 +129,10 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, colorSet
 			}
 		}
 	}
-	const vertexPositionsSequence = {}
-	const vertexPositions = []
+	const vertexFeatureSequence = {}
+	const vertexFeature = []
 	const vertexNormals = []
+	const vertexCoordinate = []
 	for (let i = 0; i < latitudeCountNum; i++) {
 		for (let j = 0; j < meridianCountNum; j++) {
 			if (i === 0) {
@@ -148,16 +149,16 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, colorSet
 				const zi = i + 1
 				const zj = j + 1 >= meridianCountNum ? 0 : j + 1
 				const startX = calcStartIndex(xi, xj, meridianCountNum)
-				vertexPositions.push(originalPositions[startX], originalPositions[startX + 1], originalPositions[startX + 2])
-				vertexPositions.push(color.r / 255, color.g / 255, color.b / 255, color.a)
+				vertexFeature.push(originalPositions[startX], originalPositions[startX + 1], originalPositions[startX + 2])
+				vertexFeature.push(color.r / 255, color.g / 255, color.b / 255, color.a)
 				vertexNormals.push(originalPositions[startX], originalPositions[startX + 1], originalPositions[startX + 2])
 				const startY = calcStartIndex(yi, yj, meridianCountNum)
-				vertexPositions.push(originalPositions[startY], originalPositions[startY + 1], originalPositions[startY + 2])
-				vertexPositions.push(color.r / 255, color.g / 255, color.b / 255, color.a)
+				vertexFeature.push(originalPositions[startY], originalPositions[startY + 1], originalPositions[startY + 2])
+				vertexFeature.push(color.r / 255, color.g / 255, color.b / 255, color.a)
 				vertexNormals.push(originalPositions[startY], originalPositions[startY + 1], originalPositions[startY + 2])
 				const startZ = calcStartIndex(zi, zj, meridianCountNum)
-				vertexPositions.push(originalPositions[startZ], originalPositions[startZ + 1], originalPositions[startZ + 2])
-				vertexPositions.push(color.r / 255, color.g / 255, color.b / 255, color.a)
+				vertexFeature.push(originalPositions[startZ], originalPositions[startZ + 1], originalPositions[startZ + 2])
+				vertexFeature.push(color.r / 255, color.g / 255, color.b / 255, color.a)
 				vertexNormals.push(originalPositions[startZ], originalPositions[startZ + 1], originalPositions[startZ + 2])
 				continue
 			}
@@ -175,16 +176,16 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, colorSet
 				const zi = i - 1
 				const zj = j + 1 >= meridianCountNum ? 0 : j + 1
 				const startX = calcStartIndex(xi, xj, meridianCountNum)
-				vertexPositions.push(originalPositions[startX], originalPositions[startX + 1], originalPositions[startX + 2])
-				vertexPositions.push(color.r / 255, color.g / 255, color.b / 255, color.a)
+				vertexFeature.push(originalPositions[startX], originalPositions[startX + 1], originalPositions[startX + 2])
+				vertexFeature.push(color.r / 255, color.g / 255, color.b / 255, color.a)
 				vertexNormals.push(originalPositions[startX], originalPositions[startX + 1], originalPositions[startX + 2])
 				const startY = calcStartIndex(yi, yj, meridianCountNum)
-				vertexPositions.push(originalPositions[startY], originalPositions[startY + 1], originalPositions[startY + 2])
-				vertexPositions.push(color.r / 255, color.g / 255, color.b / 255, color.a)
+				vertexFeature.push(originalPositions[startY], originalPositions[startY + 1], originalPositions[startY + 2])
+				vertexFeature.push(color.r / 255, color.g / 255, color.b / 255, color.a)
 				vertexNormals.push(originalPositions[startY], originalPositions[startY + 1], originalPositions[startY + 2])
 				const startZ = calcStartIndex(zi, zj, meridianCountNum)
-				vertexPositions.push(originalPositions[startZ], originalPositions[startZ + 1], originalPositions[startZ + 2])
-				vertexPositions.push(color.r / 255, color.g / 255, color.b / 255, color.a)
+				vertexFeature.push(originalPositions[startZ], originalPositions[startZ + 1], originalPositions[startZ + 2])
+				vertexFeature.push(color.r / 255, color.g / 255, color.b / 255, color.a)
 				vertexNormals.push(originalPositions[startZ], originalPositions[startZ + 1], originalPositions[startZ + 2])
 				continue
 			}
@@ -201,16 +202,16 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, colorSet
 			const azi = i + 1
 			const azj = j + 1 >= meridianCountNum ? 0 : j + 1
 			const aStartX = calcStartIndex(axi, axj, meridianCountNum)
-			vertexPositions.push(originalPositions[aStartX], originalPositions[aStartX + 1], originalPositions[aStartX + 2])
-			vertexPositions.push(colorA.r / 255, colorA.g / 255, colorA.b / 255, colorA.a)
+			vertexFeature.push(originalPositions[aStartX], originalPositions[aStartX + 1], originalPositions[aStartX + 2])
+			vertexFeature.push(colorA.r / 255, colorA.g / 255, colorA.b / 255, colorA.a)
 			vertexNormals.push(originalPositions[aStartX], originalPositions[aStartX + 1], originalPositions[aStartX + 2])
 			const aStartY = calcStartIndex(ayi, ayj, meridianCountNum)
-			vertexPositions.push(originalPositions[aStartY], originalPositions[aStartY + 1], originalPositions[aStartY + 2])
-			vertexPositions.push(colorA.r / 255, colorA.g / 255, colorA.b / 255, colorA.a)
+			vertexFeature.push(originalPositions[aStartY], originalPositions[aStartY + 1], originalPositions[aStartY + 2])
+			vertexFeature.push(colorA.r / 255, colorA.g / 255, colorA.b / 255, colorA.a)
 			vertexNormals.push(originalPositions[aStartY], originalPositions[aStartY + 1], originalPositions[aStartY + 2])
 			const aStartZ = calcStartIndex(azi, azj, meridianCountNum)
-			vertexPositions.push(originalPositions[aStartZ], originalPositions[aStartZ + 1], originalPositions[aStartZ + 2])
-			vertexPositions.push(colorA.r / 255, colorA.g / 255, colorA.b / 255, colorA.a)
+			vertexFeature.push(originalPositions[aStartZ], originalPositions[aStartZ + 1], originalPositions[aStartZ + 2])
+			vertexFeature.push(colorA.r / 255, colorA.g / 255, colorA.b / 255, colorA.a)
 			vertexNormals.push(originalPositions[aStartZ], originalPositions[aStartZ + 1], originalPositions[aStartZ + 2])
 			const colorB = ven$randomRangeColor(
 				[...iColorSetting.redRange],
@@ -225,23 +226,24 @@ function createShereDatas(radius, meridianCount = 4, latitudeCount = 4, colorSet
 			const bzi = i
 			const bzj = j + 1 >= meridianCountNum ? 0 : j + 1
 			const bStartX = calcStartIndex(bxi, bxj, meridianCountNum)
-			vertexPositions.push(originalPositions[bStartX], originalPositions[bStartX + 1], originalPositions[bStartX + 2])
-			vertexPositions.push(colorB.r / 255, colorB.g / 255, colorB.b / 255, colorB.a)
+			vertexFeature.push(originalPositions[bStartX], originalPositions[bStartX + 1], originalPositions[bStartX + 2])
+			vertexFeature.push(colorB.r / 255, colorB.g / 255, colorB.b / 255, colorB.a)
 			vertexNormals.push(originalPositions[bStartX], originalPositions[bStartX + 1], originalPositions[bStartX + 2])
 			const bStartY = calcStartIndex(byi, byj, meridianCountNum)
-			vertexPositions.push(originalPositions[bStartY], originalPositions[bStartY + 1], originalPositions[bStartY + 2])
-			vertexPositions.push(colorB.r / 255, colorB.g / 255, colorB.b / 255, colorB.a)
+			vertexFeature.push(originalPositions[bStartY], originalPositions[bStartY + 1], originalPositions[bStartY + 2])
+			vertexFeature.push(colorB.r / 255, colorB.g / 255, colorB.b / 255, colorB.a)
 			vertexNormals.push(originalPositions[bStartY], originalPositions[bStartY + 1], originalPositions[bStartY + 2])
 			const bStartZ = calcStartIndex(bzi, bzj, meridianCountNum)
-			vertexPositions.push(originalPositions[bStartZ], originalPositions[bStartZ + 1], originalPositions[bStartZ + 2])
-			vertexPositions.push(colorB.r / 255, colorB.g / 255, colorB.b / 255, colorB.a)
+			vertexFeature.push(originalPositions[bStartZ], originalPositions[bStartZ + 1], originalPositions[bStartZ + 2])
+			vertexFeature.push(colorB.r / 255, colorB.g / 255, colorB.b / 255, colorB.a)
 			vertexNormals.push(originalPositions[bStartZ], originalPositions[bStartZ + 1], originalPositions[bStartZ + 2])
 		}
 	}
 	return {
-		vertexPositions: new Float32Array(vertexPositions),
+		vertexFeature: new Float32Array(vertexFeature),
+		vertexFeatureSequence,
 		vertexNormals: new Float32Array(vertexNormals),
-		vertexPositionsSequence,
+		vertexCoordinate: new Float32Array(vertexCoordinate),
 		originCenter: {
 			x: offsetX,
 			y: offsetY,

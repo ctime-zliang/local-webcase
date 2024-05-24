@@ -94,8 +94,6 @@ function drawCanvas2(containerElement) {
 	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
 	gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 16, 0)
 	gl.vertexAttribPointer(a_Uv, 2, gl.FLOAT, false, 16, 8)
-
-	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.STATIC_DRAW)
 
 	Program2.loadAllTexture(gl, [`../common/images/circle.gif`, `../common/images/demo-1024x1024.jpg`], [u_Sampler0, u_Sampler1]).then(() => {

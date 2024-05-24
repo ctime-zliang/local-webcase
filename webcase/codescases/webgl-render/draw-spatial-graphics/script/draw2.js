@@ -1,5 +1,5 @@
 /**
- * 绘制球体
+ * 绘制方体
  */
 
 class Program2 {
@@ -34,9 +34,7 @@ class Program2 {
 		 * 模型参数
 		 */
 		modelSize: {
-			radius: 1.0,
-			meridianCount: 30,
-			latitudeCount: 30,
+			cubeLength: 1.0,
 		},
 		/**
 		 * 模型旋转角度
@@ -229,9 +227,11 @@ function drawCanvas2(containerElement) {
 	const VS = `
 		precision mediump float;
 		varying vec4 v_Color;
+		varying vec2 v_TexCoord;
 		// 顶点配置(组)
 		attribute vec3 a_Position;
 		attribute vec4 a_Color;
+		attribute vec2 a_TexCoord;
 		// 变换矩阵(组)
 		uniform mat4 u_ModelMatrix;
 		uniform mat4 u_ViewMatrix;
@@ -240,30 +240,37 @@ function drawCanvas2(containerElement) {
 			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
 			v_Color = a_Color;
 			gl_PointSize = 5.0;
+			v_TexCoord = a_TexCoord;
 		}
 	`
 	const FS = `
 		precision mediump float;
 		varying vec4 v_Color;
+		varying vec2 v_TexCoord;
+		// 纹理数据(内容)(组)
+		uniform sampler2D u_Sampler;
 		void main() {
-			gl_FragColor = v_Color;
+			// gl_FragColor = v_Color;
+			gl_FragColor = texture2D(u_Sampler, v_TexCoord);
 		}
 	`
 
-	console.time(`CreateShereDatas`)
-	const shereDatasResult = createShereDatas(
-		Program2.profile.modelSize.radius,
-		Program2.profile.modelSize.meridianCount,
-		Program2.profile.modelSize.latitudeCount,
+	console.time(`CreateModelDatas`)
+	const modelDatasResult = createCubeDatas(
+		Program2.profile.modelSize.cubeLength,
+		Program2.profile.modelSize.cubeLength,
+		Program2.profile.modelSize.cubeLength,
 		{
-			redRange: [80, 200],
-			greenRange: [80, 200],
-			blueRange: [80, 200],
-			alphaRange: [1, 1],
+			up: [255, 0, 0, 1],
+			bottom: [0, 255, 0, 1],
+			front: [0, 0, 255, 1],
+			back: [255, 255, 0, 1],
+			right: [0, 255, 255, 1],
+			left: [255, 0, 255, 1],
 		}
 	)
-	console.log(shereDatasResult)
-	console.timeEnd(`CreateShereDatas`)
+	console.log(modelDatasResult)
+	console.timeEnd(`CreateModelDatas`)
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
@@ -284,17 +291,31 @@ function drawCanvas2(containerElement) {
 	const u_ModelMatrix = gl.getUniformLocation(program, 'u_ModelMatrix')
 	const u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix')
 	const u_ProjMatrix = gl.getUniformLocation(program, 'u_ProjMatrix')
+	const u_Sampler = gl.getUniformLocation(program, 'u_Sampler')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 	const a_Color = gl.getAttribLocation(program, 'a_Color')
+	const a_TexCoord = gl.getAttribLocation(program, 'a_TexCoord')
 
 	gl.enableVertexAttribArray(a_Position)
 	gl.enableVertexAttribArray(a_Color)
+	gl.enableVertexAttribArray(a_TexCoord)
 
 	const vertextBuffer = gl.createBuffer()
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
 	gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
-	gl.bufferData(gl.ARRAY_BUFFER, shereDatasResult.vertexPositions, gl.STATIC_DRAW)
+	gl.bufferData(gl.ARRAY_BUFFER, modelDatasResult.vertexFeature, gl.STATIC_DRAW)
+
+	const texCoordBuffer = gl.createBuffer()
+	gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer)
+	gl.vertexAttribPointer(a_TexCoord, 2, gl.FLOAT, false, 0, 0)
+	gl.bufferData(gl.ARRAY_BUFFER, modelDatasResult.vertexCoordinate, gl.STATIC_DRAW)
+
+	loadTexture(gl, '../common/images/demo-1024x1024.jpg', u_Sampler, 0, textureUnitIndex => {
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+		gl.clearColor(0.0, 0.0, 0.0, 1.0)
+		gl.drawArrays(gl.TRIANGLES, 0, modelDatasResult.vertexFeature.length / 7)
+	})
 
 	const render = () => {
 		if (!Program2.isRender) {
@@ -355,7 +376,7 @@ function drawCanvas2(containerElement) {
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 
-		gl.drawArrays(gl.TRIANGLES, 0, shereDatasResult.vertexPositions.length / 7)
+		gl.drawArrays(gl.TRIANGLES, 0, modelDatasResult.vertexFeature.length / 7)
 	}
 
 	const exec = () => {

@@ -62,7 +62,7 @@ function drawCanvas1(containerElement) {
 
 	// prettier-ignore
 	const datasResult = {
-		vertexPositions: new Float32Array([
+		vertexFeature: new Float32Array([
 			/* 绿色 */
 			0.0, 0.5, -0.4, 0.4, 1.0, 0.4, 1.0,
 			-0.5, -0.5, -0.4, 0.4, 1.0, 0.4, 1.0,
@@ -106,7 +106,7 @@ function drawCanvas1(containerElement) {
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
 	gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
-	gl.bufferData(gl.ARRAY_BUFFER, datasResult.vertexPositions, gl.STATIC_DRAW)
+	gl.bufferData(gl.ARRAY_BUFFER, datasResult.vertexFeature, gl.STATIC_DRAW)
 
 	/**
 	 * 创建矩形视口正交投影矩阵
@@ -167,7 +167,7 @@ function drawCanvas1(containerElement) {
 
 		gl.uniformMatrix4fv(u_Matrix, false, new Float32Array(lookAtMatrix4_3.data))
 
-		gl.drawArrays(gl.TRIANGLES, 0, datasResult.vertexPositions.length / 7)
+		gl.drawArrays(gl.TRIANGLES, 0, datasResult.vertexFeature.length / 7)
 	}
 
 	const exec = () => {

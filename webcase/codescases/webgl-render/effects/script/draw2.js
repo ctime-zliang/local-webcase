@@ -436,7 +436,7 @@ function drawCanvas2(containerElement) {
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
 	gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
-	gl.bufferData(gl.ARRAY_BUFFER, modelData.vertexPositions, gl.STATIC_DRAW)
+	gl.bufferData(gl.ARRAY_BUFFER, modelData.vertexFeature, gl.STATIC_DRAW)
 
 	const render = () => {
 		if (!Program2.isRender) {
@@ -513,7 +513,7 @@ function drawCanvas2(containerElement) {
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 
-		gl.drawArrays(gl.TRIANGLES, 0, modelData.vertexPositions.length / 7)
+		gl.drawArrays(gl.TRIANGLES, 0, modelData.vertexFeature.length / 7)
 	}
 
 	const exec = () => {

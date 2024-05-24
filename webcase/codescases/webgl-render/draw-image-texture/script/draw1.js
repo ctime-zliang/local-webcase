@@ -72,8 +72,6 @@ function drawCanvas1(containerElement) {
 	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
 	gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 16, 0)
 	gl.vertexAttribPointer(a_Uv, 2, gl.FLOAT, false, 16, 8)
-
-	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.STATIC_DRAW)
 
 	loadTexture(gl, '../common/images/demo-1024x1024.jpg', u_Sampler, 0, textureUnitIndex => {
