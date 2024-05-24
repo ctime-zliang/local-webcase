@@ -118,6 +118,25 @@ class Program1 {
 	static modelInstances = []
 	static downKeys = new Set()
 	static downNumberKeys = new Set()
+	static mouseInfo = {
+		isRightDown: false,
+		isLeftDown: false,
+		isMiddleDown: false,
+		moveLastNativeX: 0,
+		moveLastNativeY: 0,
+		nativeRightDownX: -1,
+		nativeRightDownY: -1,
+		nativeMiddleDownX: -1,
+		nativeMiddleDownY: -1,
+		nativeLeftDownX: -1,
+		nativeLeftDownY: -1,
+		sceneRightDownX: -1,
+		sceneRightDownY: -1,
+		sceneMiddleDownX: -1,
+		sceneMiddleDownY: -1,
+		sceneLeftDownX: -1,
+		sceneLeftDownY: -1,
+	}
 	static profile = {
 		autoTransition: false,
 		/**
@@ -233,6 +252,7 @@ class Program1 {
 
 	static eventHandle() {
 		const self = this
+		const canvasElement = this.containerElement.querySelector(`canvas`)
 		const projectionFovyRangeElement = this.containerElement.querySelector(`[name="projectionFovy"]`)
 		const projectionFovyShowSpanElement = this.containerElement.querySelector(`[name="projectionFovyShow"]`)
 		const projectionNearRangeElement = this.containerElement.querySelector(`[name="projectionNear"]`)
@@ -269,6 +289,62 @@ class Program1 {
 		const lightIntensityGainRangeShowSpanElement = this.containerElement.querySelector(`[name="lightIntensityGainRangeShow"]`)
 		const autoTransitionCheckboxElement = this.containerElement.querySelector(`[name="autoTransition"]`)
 
+		canvasElement.addEventListener('contextmenu', function (e) {
+			e.preventDefault()
+			e.stopPropagation()
+		})
+		canvasElement.addEventListener('mousedown', function (e) {
+			e.preventDefault()
+			e.stopPropagation()
+			const canvasRect = this.getBoundingClientRect().toJSON()
+			self.mouseInfo.isLeftDown = self.mouseInfo.isMiddleDown = self.mouseInfo.isRightDown = false
+			self.mouseInfo.nativeLeftDownX = self.mouseInfo.nativeMiddleDownX = self.mouseInfo.nativeRightDownX = -1
+			self.mouseInfo.nativeLeftDownY = self.mouseInfo.nativeMiddleDownY = self.mouseInfo.nativeRightDownY = -1
+			if (e.button === 0) {
+				self.mouseInfo.isLeftDown = true
+				self.mouseInfo.nativeLeftDownX = e.clientX - canvasRect.left
+				self.mouseInfo.nativeLeftDownY = e.clientY - canvasRect.top
+			}
+			if (e.button === 1) {
+				self.mouseInfo.isMiddleDown = true
+				self.mouseInfo.nativeMiddleDownX = e.clientX - canvasRect.left
+				self.mouseInfo.nativeMiddleDownY = e.clientY - canvasRect.top
+			}
+			if (e.button === 2) {
+				self.mouseInfo.isRightDown = true
+				self.mouseInfo.nativeRightDownX = e.clientX - canvasRect.left
+				self.mouseInfo.nativeRightDownY = e.clientY - canvasRect.top
+			}
+		})
+		document.addEventListener('mousemove', function (e) {
+			e.preventDefault()
+			e.stopPropagation()
+			const nowX = e.clientX
+			const nowY = e.clientY
+			const distNativeX = nowX - self.mouseInfo.moveLastNativeX
+			const distNativeY = nowY - self.mouseInfo.moveLastNativeY
+			if (self.mouseInfo.isLeftDown) {
+				const ratioDistX = 0.65 * distNativeX
+				const ratioDistY = 0.65 * distNativeY
+				Program1.getModelInstances().forEach(modelInstanceItem => {
+					modelInstanceItem.modelRatation.y += ratioDistX
+					modelInstanceItem.modelRatation.x += ratioDistY
+				})
+				Program1.isRender = true
+				Program1.renderModelInfomationView()
+			}
+			if (self.mouseInfo.isRightDown) {
+			}
+			self.mouseInfo.moveLastNativeX = nowX
+			self.mouseInfo.moveLastNativeY = nowY
+		})
+		document.addEventListener('mouseup', function (e) {
+			e.preventDefault()
+			e.stopPropagation()
+			self.mouseInfo.isLeftDown = self.mouseInfo.isMiddleDown = self.mouseInfo.isRightDown = false
+			self.mouseInfo.nativeLeftDownX = self.mouseInfo.nativeMiddleDownX = self.mouseInfo.nativeRightDownX = -1
+			self.mouseInfo.nativeLeftDownY = self.mouseInfo.nativeMiddleDownY = self.mouseInfo.nativeRightDownY = -1
+		})
 		document.addEventListener('keydown', function (e) {
 			e.preventDefault()
 			e.stopPropagation()
