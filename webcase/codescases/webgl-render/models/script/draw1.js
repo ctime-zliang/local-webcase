@@ -120,8 +120,11 @@ class Program1 {
 	static downNumberKeys = new Set()
 	static mouseInfo = {
 		isRightDown: false,
+		hasRightDownMove: false,
 		isLeftDown: false,
+		hasLeftDownMove: false,
 		isMiddleDown: false,
+		hasMiddleDownMove: false,
 		moveLastNativeX: 0,
 		moveLastNativeY: 0,
 		nativeRightDownX: -1,
@@ -191,6 +194,8 @@ class Program1 {
 			},
 		},
 	}
+
+	static glControl = {}
 
 	static init(containerElement) {
 		this.containerElement = containerElement
@@ -326,6 +331,7 @@ class Program1 {
 			self.mouseInfo.isLeftDown = self.mouseInfo.isMiddleDown = self.mouseInfo.isRightDown = false
 			self.mouseInfo.nativeLeftDownX = self.mouseInfo.nativeMiddleDownX = self.mouseInfo.nativeRightDownX = -1
 			self.mouseInfo.nativeLeftDownY = self.mouseInfo.nativeMiddleDownY = self.mouseInfo.nativeRightDownY = -1
+			self.mouseInfo.hasMoved = false
 			if (e.button === 0) {
 				self.mouseInfo.isLeftDown = true
 				self.mouseInfo.nativeLeftDownX = e.clientX - canvasRect.left
@@ -348,21 +354,30 @@ class Program1 {
 			const distNativeX = nowX - self.mouseInfo.moveLastNativeX
 			const distNativeY = nowY - self.mouseInfo.moveLastNativeY
 			if (self.mouseInfo.isLeftDown) {
+				self.mouseInfo.hasLeftDownMove = true
 				const ratioDistX = 0.65 * distNativeX
 				const ratioDistY = 0.65 * distNativeY
-				Program1.getModelInstances().forEach(modelInstanceItem => {
+				self.getModelInstances().forEach(modelInstanceItem => {
 					modelInstanceItem.modelRatation.y += ratioDistX
 					modelInstanceItem.modelRatation.x += ratioDistY
 				})
-				Program1.isRender = true
-				Program1.renderModelInfomationView()
+				self.isRender = true
+				self.renderModelInfomationView()
 			}
 			if (self.mouseInfo.isRightDown) {
+				self.mouseInfo.hasRightDownMove = true
+			}
+			if (self.mouseInfo.isMiddleDown) {
+				self.mouseInfo.hasMiddleDownMove = true
 			}
 			self.mouseInfo.moveLastNativeX = nowX
 			self.mouseInfo.moveLastNativeY = nowY
 		})
 		document.addEventListener('mouseup', function (e) {
+			if (self.mouseInfo.isLeftDown && !self.mouseInfo.hasLeftDownMove) {
+				self.canvasElementClickedAction.call(self, e)
+			}
+			self.mouseInfo.hasLeftDownMove = self.mouseInfo.hasRightDownMove = self.mouseInfo.hasMiddleDownMove = false
 			self.mouseInfo.isLeftDown = self.mouseInfo.isMiddleDown = self.mouseInfo.isRightDown = false
 			self.mouseInfo.nativeLeftDownX = self.mouseInfo.nativeMiddleDownX = self.mouseInfo.nativeRightDownX = -1
 			self.mouseInfo.nativeLeftDownY = self.mouseInfo.nativeMiddleDownY = self.mouseInfo.nativeRightDownY = -1
@@ -683,6 +698,27 @@ class Program1 {
 			lightPositionRangeZRangeElement.parentElement.style.display = 'flex'
 		}
 	}
+
+	static canvasElementClickedAction(e) {
+		const isPickedModelObject = this.isPickedModelObject(this.mouseInfo.nativeLeftDownX, this.mouseInfo.nativeLeftDownY)
+		if (isPickedModelObject) {
+			console.log(`has selected model body.`)
+		} else {
+			console.log(`click blank section.`)
+		}
+	}
+
+	static isPickedModelObject(x, y) {
+		this.glControl.setWebGLRenderClickedStatus()
+		const pixels = new Uint8Array(4)
+		let isPicked = false
+		this.glControl.gl.readPixels(x, y, 1, 1, this.glControl.gl.RGBA, this.glControl.gl.UNSIGNED_BYTE, pixels)
+		if (pixels[0] == 255) {
+			isPicked = true
+		}
+		this.glControl.setWebGLRenderNormalStatus()
+		return isPicked
+	}
 }
 
 function drawCanvas1(containerElement) {
@@ -719,6 +755,7 @@ function drawCanvas1(containerElement) {
 		// 参数(组)
 		uniform float u_lightIntensityGain;
 		uniform float u_illuType;
+		uniform bool u_Clicked;
 		// 点光配置(组)
 		uniform vec3 u_LightPosition;
 		uniform vec3 u_LightDirection;
@@ -730,24 +767,28 @@ function drawCanvas1(containerElement) {
 			vec3 ambient;
 			vec3 diffuse;
 			vec3 lightDirection;
-			if (u_illuType == 1.0) {  // 平行光
-				normal = normalize(v_Normal);
-				// 计算光线方向与法线的点积
-				nDotL = max(dot(u_LightDirection, normal), 0.0);
-				// 计算漫反射光和环境光的色值
-				diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
-				ambient = u_AmbientLightColor * v_Color.rgb;
-				gl_FragColor = vec4(diffuse + ambient, v_Color.a);
-			} else {  // 点光
-				normal = normalize(v_Normal);
-				// 计算光线方向并归一化
-				lightDirection = normalize(u_LightPosition - v_Position);
-				// 计算光线方向与法线的点积
-				nDotL = max(dot(lightDirection, normal), 0.0);
-				// 计算漫反射光和环境光的色值
-				diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
-				ambient = u_AmbientLightColor * v_Color.rgb;
-				gl_FragColor = vec4(diffuse + ambient, v_Color.a);
+			if (u_Clicked) {
+				gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+			} else {
+				if (u_illuType == 1.0) {  // 平行光
+					normal = normalize(v_Normal);
+					// 计算光线方向与法线的点积
+					nDotL = max(dot(u_LightDirection, normal), 0.0);
+					// 计算漫反射光和环境光的色值
+					diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
+					ambient = u_AmbientLightColor * v_Color.rgb;
+					gl_FragColor = vec4(diffuse + ambient, v_Color.a);
+				} else {  // 点光
+					normal = normalize(v_Normal);
+					// 计算光线方向并归一化
+					lightDirection = normalize(u_LightPosition - v_Position);
+					// 计算光线方向与法线的点积
+					nDotL = max(dot(lightDirection, normal), 0.0);
+					// 计算漫反射光和环境光的色值
+					diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
+					ambient = u_AmbientLightColor * v_Color.rgb;
+					gl_FragColor = vec4(diffuse + ambient, v_Color.a);
+				}
 			}
 		}
 	`
@@ -762,7 +803,7 @@ function drawCanvas1(containerElement) {
 	const modelLeftFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', 0.25, -1.55, 0.05)
 	const modelRightFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', -0.25, -1.55, 0.05)
 	Program1.modelInstances.push(modelHead, modelBody, modelLeftArm, modelRightArm, modelLeftLeg, modelRightLeg, modelLeftFoot, modelRightFoot)
-	const vertexFeatureSize = Program1.getvertexFeatureize()
+	Program1.glControl.vertexFeatureSize = Program1.getvertexFeatureize()
 	console.log(Program1.modelInstances)
 	console.timeEnd(`CreateModelDatas`)
 
@@ -770,6 +811,8 @@ function drawCanvas1(containerElement) {
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
+
+	Program1.glControl.gl = gl
 
 	const vertexShader = createShader(gl, gl.VERTEX_SHADER, VS)
 	const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, FS)
@@ -794,6 +837,7 @@ function drawCanvas1(containerElement) {
 	const u_ModelMatrix = gl.getUniformLocation(program, 'u_ModelMatrix')
 	const u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix')
 	const u_ProjMatrix = gl.getUniformLocation(program, 'u_ProjMatrix')
+	const u_Clicked = gl.getUniformLocation(program, 'u_Clicked')
 	const a_Normal = gl.getAttribLocation(program, 'a_Normal')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 	const a_Color = gl.getAttribLocation(program, 'a_Color')
@@ -807,7 +851,7 @@ function drawCanvas1(containerElement) {
 		modelInstanceItem.bindNormalBuffer(gl.createBuffer())
 	})
 
-	const writeBuffer = modelInstance => {
+	Program1.glControl.writeBufferAction = modelInstance => {
 		gl.bindBuffer(gl.ARRAY_BUFFER, modelInstance.normalBuffer)
 		gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0)
 		gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(modelInstance.vertexData.vertexNormals), gl.STATIC_DRAW)
@@ -816,8 +860,7 @@ function drawCanvas1(containerElement) {
 		gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
 		gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(modelInstance.vertexData.vertexFeature), gl.STATIC_DRAW)
 	}
-
-	const applyTranslateMatrix = modelInstance => {
+	Program1.glControl.applyTranslateMatrixAction = modelInstance => {
 		/**
 		 * 创建旋转矩阵
 		 */
@@ -847,11 +890,26 @@ function drawCanvas1(containerElement) {
 		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
 		gl.uniformMatrix4fv(u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
 	}
-
-	const drawModel = (modelInstance, vertexFeatureSize) => {
-		writeBuffer(modelInstance)
-		applyTranslateMatrix(modelInstance)
+	Program1.glControl.drawModelAction = (modelInstance, vertexFeatureSize) => {
+		Program1.glControl.writeBufferAction(modelInstance)
+		Program1.glControl.applyTranslateMatrixAction(modelInstance)
 		gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
+	}
+	Program1.glControl.setWebGLRenderClickedStatus = () => {
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+		gl.clearColor(0.0, 0.0, 0.0, 1.0)
+		gl.uniform1i(u_Clicked, 1)
+		Program1.modelInstances.forEach(modelInstanceItem => {
+			Program1.glControl.drawModelAction(modelInstanceItem, Program1.glControl.vertexFeatureSize)
+		})
+	}
+	Program1.glControl.setWebGLRenderNormalStatus = () => {
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+		gl.clearColor(0.0, 0.0, 0.0, 1.0)
+		gl.uniform1i(u_Clicked, 0)
+		Program1.modelInstances.forEach(modelInstanceItem => {
+			Program1.glControl.drawModelAction(modelInstanceItem, Program1.glControl.vertexFeatureSize)
+		})
 	}
 
 	const render = () => {
@@ -910,7 +968,7 @@ function drawCanvas1(containerElement) {
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 
 		Program1.modelInstances.forEach(modelInstanceItem => {
-			drawModel(modelInstanceItem, vertexFeatureSize)
+			Program1.glControl.drawModelAction(modelInstanceItem, Program1.glControl.vertexFeatureSize)
 		})
 	}
 
