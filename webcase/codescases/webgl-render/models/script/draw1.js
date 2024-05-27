@@ -203,7 +203,7 @@ class Program1 {
 				b: 0,
 			},
 			dist: {
-				distOfStartAndEye: 1,
+				distOfStartAndEye: 10,
 				distOfEndAndEye: 100,
 			},
 		},
@@ -795,7 +795,8 @@ function drawCanvas1(containerElement) {
 			v_Normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1.0)));
 			v_Color = a_Color;
 			// 计算顶点(世界坐标系)到视点的距离
-			v_Dist = distance(u_ModelMatrix * vec4(a_Position, 1.0), vec4(u_Eye, 1.0));
+			// v_Dist = distance(u_ModelMatrix * vec4(a_Position, 1.0), vec4(u_Eye, 1.0));
+			v_Dist = gl_Position.w;
 		}
 	`
 	const FS = `
@@ -822,7 +823,8 @@ function drawCanvas1(containerElement) {
 			vec3 diffuse;
 			vec3 lightDirection;
 			float fogFactor;
-			vec3 fragMixinColor;
+			vec3 ambientMixinColor;
+			vec3 fogMixinColor;
 			if (u_Clicked) {
 				gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 			} else {
@@ -835,9 +837,9 @@ function drawCanvas1(containerElement) {
 					diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
 					ambient = u_AmbientLightColor * v_Color.rgb;
 					// gl_FragColor = vec4(diffuse + ambient, v_Color.a);
-					fragMixinColor = diffuse + ambient;
-					vec3 color = mix(u_FogColor, vec3(fragMixinColor), fogFactor);
-					gl_FragColor = vec4(color, v_Color.a);
+					ambientMixinColor = diffuse + ambient;
+					fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
+					gl_FragColor = vec4(fogMixinColor, v_Color.a);
 				} else {  // 点光
 					normal = normalize(v_Normal);
 					// 计算光线方向并归一化
@@ -848,9 +850,9 @@ function drawCanvas1(containerElement) {
 					diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
 					ambient = u_AmbientLightColor * v_Color.rgb;
 					// gl_FragColor = vec4(diffuse + ambient, v_Color.a);
-					fragMixinColor = diffuse + ambient;
-					vec3 color = mix(u_FogColor, vec3(fragMixinColor), fogFactor);
-					gl_FragColor = vec4(color, v_Color.a);
+					ambientMixinColor = diffuse + ambient;
+					fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
+					gl_FragColor = vec4(fogMixinColor, v_Color.a);
 				}
 			}
 		}
