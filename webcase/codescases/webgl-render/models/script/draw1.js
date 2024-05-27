@@ -147,9 +147,9 @@ class Program1 {
 		 */
 		lookAt: {
 			eyePosition: {
-				x: 3,
-				y: 3,
-				z: 7,
+				x: 4,
+				y: 5,
+				z: 6,
 			},
 			atPosition: {
 				x: 0,
@@ -164,7 +164,7 @@ class Program1 {
 			fovy: 30,
 			aspect: 1,
 			near: 1,
-			far: 30,
+			far: 300,
 		},
 		/**
 		 * 光照参数
@@ -193,12 +193,32 @@ class Program1 {
 				b: 0.1,
 			},
 		},
+		/**
+		 * 雾化参数
+		 */
+		fog: {
+			color: {
+				r: 0,
+				g: 0,
+				b: 0,
+			},
+			dist: {
+				distOfStartAndEye: 1,
+				distOfEndAndEye: 100,
+			},
+		},
+		clearColor: {
+			r: 0,
+			g: 0,
+			b: 0,
+		},
 	}
 
 	static glControl = {}
 
 	static init(containerElement) {
 		this.containerElement = containerElement
+		this.syncFogColor2ClearColor()
 		this.initFormView()
 		this.eventHandle()
 	}
@@ -247,6 +267,10 @@ class Program1 {
 		const lightIntensityGainRangeRangeElement = this.containerElement.querySelector(`[name="lightIntensityGainRange"]`)
 		const lightIntensityGainRangeShowSpanElement = this.containerElement.querySelector(`[name="lightIntensityGainRangeShow"]`)
 		const autoTransitionCheckboxElement = this.containerElement.querySelector(`[name="autoTransition"]`)
+		const fogStartDistRangeElement = this.containerElement.querySelector(`[name="fogStartDist"]`)
+		const fogStartDistShowShowSpanElement = this.containerElement.querySelector(`[name="fogStartDistShow"]`)
+		const fogEndDistRangeElement = this.containerElement.querySelector(`[name="fogEndDist"]`)
+		const fogEndDistShowShowSpanElement = this.containerElement.querySelector(`[name="fogEndDistShow"]`)
 
 		projectionFovyShowSpanElement.textContent = projectionFovyRangeElement.value = self.profile.persProjection.fovy
 		projectionNearShowSpanElement.textContent = projectionNearRangeElement.value = self.profile.persProjection.near
@@ -272,6 +296,8 @@ class Program1 {
 		ambientLightRangeBShowSpanElement.textContent = ambientLightRangeBRangeElement.value = self.profile.light.ambient.b
 		lightIntensityGainRangeShowSpanElement.textContent = lightIntensityGainRangeRangeElement.value = self.profile.light.intensityGain
 		autoTransitionCheckboxElement.checked = self.profile.autoTransition
+		fogStartDistShowShowSpanElement.textContent = fogStartDistRangeElement.value = self.profile.fog.dist.distOfStartAndEye
+		fogEndDistShowShowSpanElement.textContent = fogEndDistRangeElement.value = self.profile.fog.dist.distOfEndAndEye
 
 		this.toggleLightIlluTypeView()
 	}
@@ -321,6 +347,10 @@ class Program1 {
 		const lightIntensityGainRangeRangeElement = this.containerElement.querySelector(`[name="lightIntensityGainRange"]`)
 		const lightIntensityGainRangeShowSpanElement = this.containerElement.querySelector(`[name="lightIntensityGainRangeShow"]`)
 		const autoTransitionCheckboxElement = this.containerElement.querySelector(`[name="autoTransition"]`)
+		const fogStartDistRangeElement = this.containerElement.querySelector(`[name="fogStartDist"]`)
+		const fogStartDistShowShowSpanElement = this.containerElement.querySelector(`[name="fogStartDistShow"]`)
+		const fogEndDistRangeElement = this.containerElement.querySelector(`[name="fogEndDist"]`)
+		const fogEndDistShowShowSpanElement = this.containerElement.querySelector(`[name="fogEndDistShow"]`)
 
 		canvasElement.addEventListener('contextmenu', function (e) {
 			e.preventDefault()
@@ -635,6 +665,16 @@ class Program1 {
 		autoTransitionCheckboxElement.addEventListener('change', function (e) {
 			self.profile.autoTransition = this.checked
 		})
+		fogStartDistRangeElement.addEventListener('input', function (e) {
+			fogStartDistShowShowSpanElement.textContent = self.profile.fog.dist.distOfStartAndEye = +this.value
+			console.log('light.fog.dist:', self.profile.light.intensityGain)
+			self.isRender = true
+		})
+		fogEndDistRangeElement.addEventListener('input', function (e) {
+			fogEndDistShowShowSpanElement.textContent = self.profile.fog.dist.distOfEndAndEye = +this.value
+			console.log('light.fog.dist:', self.profile.light.intensityGain)
+			self.isRender = true
+		})
 	}
 
 	static getModelInstances(downNumberKeys) {
@@ -719,6 +759,12 @@ class Program1 {
 		this.glControl.setWebGLRenderNormalStatus()
 		return isPicked
 	}
+
+	static syncFogColor2ClearColor() {
+		this.profile.clearColor.r = this.profile.fog.color.r
+		this.profile.clearColor.g = this.profile.fog.color.g
+		this.profile.clearColor.b = this.profile.fog.color.b
+	}
 }
 
 function drawCanvas1(containerElement) {
@@ -729,6 +775,7 @@ function drawCanvas1(containerElement) {
 		varying vec4 v_Color;
 		varying vec3 v_Normal;
 		varying vec3 v_Position;
+		varying float v_Dist;
 		// 顶点配置(组)
 		attribute vec3 a_Position;
 		attribute vec4 a_Color;
@@ -738,6 +785,8 @@ function drawCanvas1(containerElement) {
 		uniform mat4 u_ModelMatrix;
 		uniform mat4 u_ViewMatrix;
 		uniform mat4 u_ProjMatrix;
+		// 参数(组)
+		uniform vec3 u_Eye;
 		void main() {
 			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
 			// 计算顶点的世界坐标
@@ -745,6 +794,8 @@ function drawCanvas1(containerElement) {
 			// 根据法线变换矩阵重新计算法线坐标并归一化
 			v_Normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1.0)));
 			v_Color = a_Color;
+			// 计算顶点(世界坐标系)到视点的距离
+			v_Dist = distance(u_ModelMatrix * vec4(a_Position, 1.0), vec4(u_Eye, 1.0));
 		}
 	`
 	const FS = `
@@ -752,10 +803,13 @@ function drawCanvas1(containerElement) {
 		varying vec4 v_Color;
 		varying vec3 v_Normal;
 		varying vec3 v_Position;
+		varying float v_Dist;
 		// 参数(组)
 		uniform float u_lightIntensityGain;
 		uniform float u_illuType;
 		uniform bool u_Clicked;
+		uniform vec3 u_FogColor;
+		uniform vec2 u_FogDist;
 		// 点光配置(组)
 		uniform vec3 u_LightPosition;
 		uniform vec3 u_LightDirection;
@@ -767,9 +821,12 @@ function drawCanvas1(containerElement) {
 			vec3 ambient;
 			vec3 diffuse;
 			vec3 lightDirection;
+			float fogFactor;
+			vec3 fragMixinColor;
 			if (u_Clicked) {
 				gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 			} else {
+				fogFactor = clamp((u_FogDist.y - v_Dist) / (u_FogDist.y - u_FogDist.x), 0.0, 1.0);
 				if (u_illuType == 1.0) {  // 平行光
 					normal = normalize(v_Normal);
 					// 计算光线方向与法线的点积
@@ -777,7 +834,10 @@ function drawCanvas1(containerElement) {
 					// 计算漫反射光和环境光的色值
 					diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
 					ambient = u_AmbientLightColor * v_Color.rgb;
-					gl_FragColor = vec4(diffuse + ambient, v_Color.a);
+					// gl_FragColor = vec4(diffuse + ambient, v_Color.a);
+					fragMixinColor = diffuse + ambient;
+					vec3 color = mix(u_FogColor, vec3(fragMixinColor), fogFactor);
+					gl_FragColor = vec4(color, v_Color.a);
 				} else {  // 点光
 					normal = normalize(v_Normal);
 					// 计算光线方向并归一化
@@ -787,7 +847,10 @@ function drawCanvas1(containerElement) {
 					// 计算漫反射光和环境光的色值
 					diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
 					ambient = u_AmbientLightColor * v_Color.rgb;
-					gl_FragColor = vec4(diffuse + ambient, v_Color.a);
+					// gl_FragColor = vec4(diffuse + ambient, v_Color.a);
+					fragMixinColor = diffuse + ambient;
+					vec3 color = mix(u_FogColor, vec3(fragMixinColor), fogFactor);
+					gl_FragColor = vec4(color, v_Color.a);
 				}
 			}
 		}
@@ -820,7 +883,7 @@ function drawCanvas1(containerElement) {
 
 	gl.useProgram(program)
 
-	gl.clearColor(0.0, 0.0, 0.0, 1.0)
+	gl.clearColor(Program1.profile.clearColor.r / 255, Program1.profile.clearColor.g / 255, Program1.profile.clearColor.b / 255, 1.0)
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 	gl.enable(gl.CULL_FACE)
 	gl.enable(gl.DEPTH_TEST)
@@ -838,6 +901,9 @@ function drawCanvas1(containerElement) {
 	const u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix')
 	const u_ProjMatrix = gl.getUniformLocation(program, 'u_ProjMatrix')
 	const u_Clicked = gl.getUniformLocation(program, 'u_Clicked')
+	const u_Eye = gl.getUniformLocation(program, 'u_Eye')
+	const u_FogColor = gl.getUniformLocation(program, 'u_FogColor')
+	const u_FogDist = gl.getUniformLocation(program, 'u_FogDist')
 	const a_Normal = gl.getAttribLocation(program, 'a_Normal')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 	const a_Color = gl.getAttribLocation(program, 'a_Color')
@@ -897,7 +963,7 @@ function drawCanvas1(containerElement) {
 	}
 	Program1.glControl.setWebGLRenderClickedStatus = () => {
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		gl.clearColor(0.0, 0.0, 0.0, 1.0)
+		gl.clearColor(Program1.profile.clearColor.r / 255, Program1.profile.clearColor.g / 255, Program1.profile.clearColor.b / 255, 1.0)
 		gl.uniform1i(u_Clicked, 1)
 		Program1.modelInstances.forEach(modelInstanceItem => {
 			Program1.glControl.drawModelAction(modelInstanceItem, Program1.glControl.vertexFeatureSize)
@@ -905,7 +971,7 @@ function drawCanvas1(containerElement) {
 	}
 	Program1.glControl.setWebGLRenderNormalStatus = () => {
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		gl.clearColor(0.0, 0.0, 0.0, 1.0)
+		gl.clearColor(Program1.profile.clearColor.r / 255, Program1.profile.clearColor.g / 255, Program1.profile.clearColor.b / 255, 1.0)
 		gl.uniform1i(u_Clicked, 0)
 		Program1.modelInstances.forEach(modelInstanceItem => {
 			Program1.glControl.drawModelAction(modelInstanceItem, Program1.glControl.vertexFeatureSize)
@@ -919,22 +985,7 @@ function drawCanvas1(containerElement) {
 		Program1.isRender = false
 
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		gl.clearColor(0.0, 0.0, 0.0, 1.0)
-
-		/**
-		 * 创建点光坐标向量
-		 */
-		const lightPosition = new Ven$Vector3(Program1.profile.light.position.x, Program1.profile.light.position.y, Program1.profile.light.position.z)
-
-		/**
-		 * 创建平行光方向向量
-		 */
-		const lightDirection = new Ven$Vector3(
-			Program1.profile.light.direction.x,
-			Program1.profile.light.direction.y,
-			Program1.profile.light.direction.z
-		)
-		const lightNormalizeDirection = lightDirection.normalize()
+		gl.clearColor(Program1.profile.clearColor.r / 255, Program1.profile.clearColor.g / 255, Program1.profile.clearColor.b / 255, 1.0)
 
 		/**
 		 * 创建透视投影矩阵
@@ -956,14 +1007,38 @@ function drawCanvas1(containerElement) {
 
 		gl.uniform1f(u_illuType, Program1.profile.light.illuType)
 		if (Program1.profile.light.illuType === 1) {
+			/**
+			 * 平行光方
+			 */
+			const lightDirection = new Ven$Vector3(
+				Program1.profile.light.direction.x,
+				Program1.profile.light.direction.y,
+				Program1.profile.light.direction.z
+			)
+			const lightNormalizeDirection = lightDirection.normalize()
 			gl.uniform3fv(u_LightDirection, new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z]))
 		}
 		if (Program1.profile.light.illuType === 2) {
-			gl.uniform3fv(u_LightPosition, new Float32Array([lightPosition.x, lightPosition.y, lightPosition.z]))
+			/**
+			 * 点光
+			 */
+			gl.uniform3fv(
+				u_LightPosition,
+				new Float32Array([Program1.profile.light.position.x, Program1.profile.light.position.y, Program1.profile.light.position.z])
+			)
 		}
 		gl.uniform3f(u_LightColor, Program1.profile.light.color.r / 255, Program1.profile.light.color.g / 255, Program1.profile.light.color.b / 255)
 		gl.uniform1f(u_lightIntensityGain, Program1.profile.light.intensityGain)
 		gl.uniform3f(u_AmbientLightColor, Program1.profile.light.ambient.r, Program1.profile.light.ambient.g, Program1.profile.light.ambient.b)
+		gl.uniform3fv(
+			u_FogColor,
+			new Float32Array([Program1.profile.fog.color.r / 255, Program1.profile.fog.color.g / 255, Program1.profile.fog.color.b / 255])
+		)
+		gl.uniform2fv(u_FogDist, new Float32Array([Program1.profile.fog.dist.distOfStartAndEye, Program1.profile.fog.dist.distOfEndAndEye]))
+		gl.uniform3fv(
+			u_Eye,
+			new Float32Array([Program1.profile.lookAt.eyePosition.x, Program1.profile.lookAt.eyePosition.y, Program1.profile.lookAt.eyePosition.z])
+		)
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 
@@ -972,19 +1047,19 @@ function drawCanvas1(containerElement) {
 		})
 	}
 
-	const setpControl = new Ven$StepControl(0, 90, 360)
+	const stepControl = new Ven$StepControl(0, 90, 360)
 	let angle = 0
 
 	const exec = () => {
 		if (Program1.profile.autoTransition) {
-			angle = setpControl.getNextValue() % 360
+			angle = stepControl.getNextValue() % 360
 			Program1.getModelInstances().forEach(modelInstanceItem => {
 				modelInstanceItem.modelRatation.y = angle
 			})
 			Program1.isRender = true
 			Program1.renderModelInfomationView()
 		} else {
-			setpControl.updateLastStamp()
+			stepControl.updateLastStamp()
 		}
 		render()
 		requestAnimationFrame(exec)

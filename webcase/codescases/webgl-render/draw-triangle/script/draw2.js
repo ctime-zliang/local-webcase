@@ -68,13 +68,13 @@ function drawCanvas2(containerElement) {
 		gl.drawArrays(gl.TRIANGLES, 0, 3)
 	}
 
-	const setpControl = new Ven$StepControl(0, 45, 360)
+	const stepControl = new Ven$StepControl(0, 45, 360)
 	let angle = 0
 
 	const strat = performance.now()
 	const exec = () => {
 		render(angle)
-		angle = setpControl.getNextValue() % 360
+		angle = stepControl.getNextValue() % 360
 		if (angle >= 90) {
 			angle = 90
 			render(angle)

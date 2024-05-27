@@ -13,7 +13,7 @@
 		</style>
 	</head>
 
-	<body style="display: flex; justify-content: space-between; flex-wrap: wrap; background-color: grey">
+	<body style="display: flex; justify-content: space-between; flex-wrap: wrap; background-color: rgba(200, 200, 200, 1)">
 		<div
 			id="appContainer1"
 			class="app-container"
@@ -46,9 +46,9 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-EyePosition X: </label>
-					<span>-10</span>
-					<input type="range" name="lookAtMatrix4EyePositionX" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
-					<span>10</span>
+					<span>-100</span>
+					<input type="range" name="lookAtMatrix4EyePositionX" min="-100" max="100" step="0.1" style="width: 300px; cursor: pointer" />
+					<span>100</span>
 					<strong>&nbsp;(<span name="lookAtMatrix4EyePositionXShow">0</span>)</strong>
 				</div>
 				<div
@@ -63,9 +63,9 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-EyePosition Y: </label>
-					<span>-10</span>
-					<input type="range" name="lookAtMatrix4EyePositionY" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
-					<span>10</span>
+					<span>-100</span>
+					<input type="range" name="lookAtMatrix4EyePositionY" min="-100" max="100" step="0.1" style="width: 300px; cursor: pointer" />
+					<span>100</span>
 					<strong>&nbsp;(<span name="lookAtMatrix4EyePositionYShow">0</span>)</strong>
 				</div>
 				<div
@@ -80,9 +80,9 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-EyePosition Z: </label>
-					<span>-10</span>
-					<input type="range" name="lookAtMatrix4EyePositionZ" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
-					<span>10</span>
+					<span>-100</span>
+					<input type="range" name="lookAtMatrix4EyePositionZ" min="-100" max="100" step="0.1" style="width: 300px; cursor: pointer" />
+					<span>100</span>
 					<strong>&nbsp;(<span name="lookAtMatrix4EyePositionZShow">0</span>)</strong>
 				</div>
 				<div
@@ -352,6 +352,41 @@
 						padding: 3px 0;
 					"
 				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Fog Start Dist: </label>
+					<span>1</span>
+					<input type="range" value="0" name="fogStartDist" min="1" max="50" step="0.1" style="width: 300px; cursor: pointer" />
+					<span>50</span>
+					<strong>&nbsp;(<span name="fogStartDistShow">1</span>)</strong>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Fog End Dist: </label>
+					<span>1</span>
+					<input type="range" value="0" name="fogEndDist" min="1" max="200" step="0.1" style="width: 300px; cursor: pointer" />
+					<span>200</span>
+					<strong>&nbsp;(<span name="fogEndDistShow">1</span>)</strong>
+				</div>
+				<br />
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Projection Fovy: </label>
 					<span>1</span>
 					<input type="range" value="0" name="projectionFovy" min="1" max="180" step="1" style="width: 300px; cursor: pointer" />
@@ -388,8 +423,8 @@
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Projection Far: </label>
 					<span>1</span>
-					<input type="range" value="0" name="projectionFar" min="1" max="50" step="0.1" style="width: 300px; cursor: pointer" />
-					<span>50</span>
+					<input type="range" value="0" name="projectionFar" min="1" max="300" step="0.1" style="width: 300px; cursor: pointer" />
+					<span>300</span>
 					<strong>&nbsp;(<span name="projectionFarShow">0</span>)</strong>
 				</div>
 				<div
