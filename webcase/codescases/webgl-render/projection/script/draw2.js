@@ -208,17 +208,17 @@ function drawCanvas2(containerElement) {
 	const datasResult = {
 		vertexFeature: new Float32Array([
 			/* 绿色 */
-			0.0, 0.5, -0.4, 0.4, 1.0, 0.4, 1.0,
-			-0.5, -0.5, -0.4, 0.4, 1.0, 0.4, 1.0,
-			0.5, -0.5, -0.4, 1.0, 0.4, 0.4, 1.0,
+			0.0, 0.5, -0.4, 0.4, 1.0, 0.4, 0.65,
+			-0.5, -0.5, -0.4, 0.4, 1.0, 0.4, 0.65,
+			0.5, -0.5, -0.4, 1.0, 0.4, 0.4, 0.65,
 			/* 黄色 */
-			0.5, 0.4, -0.2, 1.0, 0.4, 0.4, 1.0,
-			-0.5, 0.4, -0.2, 1.0, 1.0, 0.4, 1.0,
-			0.0, -0.6, -0.2, 1.0, 1.0, 0.4, 1.0,
+			0.5, 0.4, -0.2, 1.0, 0.4, 0.4, 0.65,
+			-0.5, 0.4, -0.2, 1.0, 1.0, 0.4, 0.65,
+			0.0, -0.6, -0.2, 1.0, 1.0, 0.4, 0.65,
 			/* 蓝色 */
-			0.0, 0.5, 0.0, 0.4, 0.4, 1.0, 1.0,
-			-0.5, -0.5, 0.0, 0.4, 0.4, 1.0, 1.0,
-			0.5, -0.5, 0.0, 1.0, 0.4, 0.4, 1.0
+			0.0, 0.5, 0.0, 0.4, 0.4, 1.0, 0.65,
+			-0.5, -0.5, 0.0, 0.4, 0.4, 1.0, 0.65,
+			0.5, -0.5, 0.0, 1.0, 0.4, 0.4, 0.65
 		]),
 	}
 	console.log(datasResult)
@@ -234,6 +234,8 @@ function drawCanvas2(containerElement) {
 
 	gl.clearColor(0.0, 0.0, 0.0, 1.0)
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+	gl.enable(gl.BLEND)
+	gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 	// gl.enable(gl.CULL_FACE)
 	// gl.enable(gl.DEPTH_TEST)
 	// gl.enable(gl.POLYGON_OFFSET_FILL)

@@ -1,5 +1,6 @@
 class Model1 {
 	constructor() {
+		this._vertexDatas = null
 		this._modelParma = null
 		this._modelRatation = {
 			x: 0,
@@ -11,36 +12,57 @@ class Model1 {
 			y: 0,
 			z: 0,
 		}
-		this._vertexData = null
-		this._vertextBuffer = null
+		this._featureBuffer = null
 		this._normalBuffer = null
+		this._glAttributes = {}
+		this._glUniforms = {}
 	}
 
 	get modelParam() {
 		return this._modelParma
 	}
+
 	get modelRatation() {
 		return this._modelRatation
 	}
+
 	get modelOffset() {
 		return this._modelOffset
 	}
-	get vertexData() {
-		return this._vertexData
+
+	get vertexDatas() {
+		return this._vertexDatas
+	}
+	set vertexDatas(value) {
+		this._vertexDatas = value
 	}
 
-	get vertextBuffer() {
-		return this._vertextBuffer
+	get featureBuffer() {
+		return this._featureBuffer
 	}
+	set featureBuffer(value) {
+		this._featureBuffer = value
+	}
+
 	get normalBuffer() {
 		return this._normalBuffer
 	}
-
-	bindVertextBuffer(glBuffer) {
-		this._vertextBuffer = glBuffer
+	set normalBuffer(value) {
+		this._normalBuffer = value
 	}
-	bindNormalBuffer(glBuffer) {
-		this._normalBuffer = glBuffer
+
+	get glAttributes() {
+		return this._glAttributes
+	}
+	set glAttributes(value) {
+		this._glAttributes = value
+	}
+
+	get glUniforms() {
+		return this._glUniforms
+	}
+	set glUniforms(value) {
+		this._glUniforms = value
 	}
 }
 
@@ -56,7 +78,7 @@ class RectangularModel1 extends Model1 {
 			offsetY,
 			offsetZ,
 		}
-		this._vertexData = this._createVertexData()
+		this.vertexDatas = this._createVertexData()
 	}
 
 	_createVertexData() {
@@ -91,7 +113,7 @@ class ShereModel1 extends Model1 {
 			offsetY,
 			offsetZ,
 		}
-		this._vertexData = this._createVertexData()
+		this.vertexDatas = this._createVertexData()
 	}
 
 	_createVertexData() {
@@ -115,7 +137,6 @@ class ShereModel1 extends Model1 {
 class Program1 {
 	static isRender = true
 	static containerElement
-	static modelInstances = []
 	static downKeys = new Set()
 	static downNumberKeys = new Set()
 	static mouseInfo = {
@@ -387,12 +408,12 @@ class Program1 {
 				self.mouseInfo.hasLeftDownMove = true
 				const ratioDistX = 0.65 * distNativeX
 				const ratioDistY = 0.65 * distNativeY
-				self.getModelInstances().forEach(modelInstanceItem => {
+				self.getModelInstances(self.glControl.modelInstances).forEach(modelInstanceItem => {
 					modelInstanceItem.modelRatation.y += ratioDistX
 					modelInstanceItem.modelRatation.x += ratioDistY
 				})
 				self.isRender = true
-				self.renderModelInfomationView()
+				self.renderModelInfomationView(self.glControl.modelInstances)
 			}
 			if (self.mouseInfo.isRightDown) {
 				self.mouseInfo.hasRightDownMove = true
@@ -423,19 +444,19 @@ class Program1 {
 				// page-up
 				case 221: {
 					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
 							modelInstanceItem.modelOffset.z -= 0.05
 						})
 						self.isRender = true
-						self.renderModelInfomationView()
+						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
 							modelInstanceItem.modelRatation.z -= 1
 						})
 						self.isRender = true
-						self.renderModelInfomationView()
+						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					break
@@ -443,19 +464,19 @@ class Program1 {
 				// page-down
 				case 219: {
 					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
 							modelInstanceItem.modelOffset.z += 0.05
 						})
 						self.isRender = true
-						self.renderModelInfomationView()
+						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
 							modelInstanceItem.modelRatation.z += 1
 						})
 						self.isRender = true
-						self.renderModelInfomationView()
+						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					break
@@ -463,19 +484,19 @@ class Program1 {
 				// up
 				case 38: {
 					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
 							modelInstanceItem.modelOffset.y += 0.05
 						})
 						self.isRender = true
-						self.renderModelInfomationView()
+						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
 							modelInstanceItem.modelRatation.y += 1
 						})
 						self.isRender = true
-						self.renderModelInfomationView()
+						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					break
@@ -483,19 +504,19 @@ class Program1 {
 				// right
 				case 39: {
 					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
 							modelInstanceItem.modelOffset.x += 0.05
 						})
 						self.isRender = true
-						self.renderModelInfomationView()
+						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
 							modelInstanceItem.modelRatation.x += 1
 						})
 						self.isRender = true
-						self.renderModelInfomationView()
+						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					break
@@ -503,19 +524,19 @@ class Program1 {
 				// down
 				case 40: {
 					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
 							modelInstanceItem.modelOffset.y -= 0.05
 						})
 						self.isRender = true
-						self.renderModelInfomationView()
+						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
 							modelInstanceItem.modelRatation.y -= 1
 						})
 						self.isRender = true
-						self.renderModelInfomationView()
+						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					break
@@ -523,19 +544,19 @@ class Program1 {
 				// left
 				case 37: {
 					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
 							modelInstanceItem.modelOffset.x -= 0.05
 						})
 						self.isRender = true
-						self.renderModelInfomationView()
+						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.downNumberKeys).forEach(modelInstanceItem => {
+						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
 							modelInstanceItem.modelRatation.x -= 1
 						})
 						self.isRender = true
-						self.renderModelInfomationView()
+						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					break
@@ -677,24 +698,24 @@ class Program1 {
 		})
 	}
 
-	static getModelInstances(downNumberKeys) {
+	static getModelInstances(modelInstances = [], downNumberKeys = new Set()) {
 		if (!downNumberKeys || downNumberKeys.size <= 0) {
-			return [...this.modelInstances]
+			return [...modelInstances]
 		}
-		const modelInstances = []
+		const filterModelInstances = []
 		downNumberKeys.forEach(number => {
 			const idx = number - 1
-			if (this.modelInstances[idx]) {
-				modelInstances.push(this.modelInstances[idx])
+			if (modelInstances[idx]) {
+				filterModelInstances.push(modelInstances[idx])
 			}
 		})
-		return modelInstances
+		return filterModelInstances
 	}
 
-	static renderModelInfomationView() {
+	static renderModelInfomationView(modelInstances = []) {
 		const modelInfomationElement = this.containerElement.querySelector(`[data-tagitem="model-infomation"]`)
 		let htmlString = ``
-		this.modelInstances.forEach((modelInstanceItem, index) => {
+		modelInstances.forEach((modelInstanceItem, index) => {
 			htmlString += `
 				<div style="font-size: 14px;">
 					<div style="font-weight: 900;">MODEL ${index + 1}:</div> 
@@ -704,14 +725,6 @@ class Program1 {
 			`
 		})
 		modelInfomationElement.innerHTML = htmlString
-	}
-
-	static getvertexFeatureize() {
-		let len = 0
-		this.modelInstances.forEach((modelInstanceItem, index) => {
-			len += modelInstanceItem.vertexData.vertexFeature.length
-		})
-		return len
 	}
 
 	static toggleLightIlluTypeView() {
@@ -770,7 +783,7 @@ class Program1 {
 function drawCanvas1(containerElement) {
 	Program1.init(containerElement)
 
-	const VS = `
+	const COMMON_VERTEX_SHADER = `
 		precision mediump float;
 		varying vec4 v_Color;
 		varying vec3 v_Normal;
@@ -799,7 +812,7 @@ function drawCanvas1(containerElement) {
 			v_Dist = gl_Position.w;
 		}
 	`
-	const FS = `
+	const COMMON_FRAGMENT_SHADER = `
 		precision mediump float;
 		varying vec4 v_Color;
 		varying vec3 v_Normal;
@@ -836,10 +849,10 @@ function drawCanvas1(containerElement) {
 					// 计算漫反射光和环境光的色值
 					diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
 					ambient = u_AmbientLightColor * v_Color.rgb;
-					// gl_FragColor = vec4(diffuse + ambient, v_Color.a);
-					ambientMixinColor = diffuse + ambient;
-					fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
-					gl_FragColor = vec4(fogMixinColor, v_Color.a);
+					gl_FragColor = vec4(diffuse + ambient, v_Color.a);
+					// ambientMixinColor = diffuse + ambient;
+					// fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
+					// gl_FragColor = vec4(fogMixinColor, v_Color.a);
 				} else {  // 点光
 					normal = normalize(v_Normal);
 					// 计算光线方向并归一化
@@ -849,86 +862,91 @@ function drawCanvas1(containerElement) {
 					// 计算漫反射光和环境光的色值
 					diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
 					ambient = u_AmbientLightColor * v_Color.rgb;
-					// gl_FragColor = vec4(diffuse + ambient, v_Color.a);
-					ambientMixinColor = diffuse + ambient;
-					fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
-					gl_FragColor = vec4(fogMixinColor, v_Color.a);
+					gl_FragColor = vec4(diffuse + ambient, v_Color.a);
+					// ambientMixinColor = diffuse + ambient;
+					// fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
+					// gl_FragColor = vec4(fogMixinColor, v_Color.a);
 				}
 			}
 		}
 	`
 
-	console.time(`CreateModelDatas`)
-	const modelHead = new RectangularModel1(0.4, 0.35, 0.35, '#ffffff', 0, 1.2, 0)
-	const modelBody = new RectangularModel1(0.8, 1.0, 0.4, '#ffffff', 0, 0.5, 0)
-	const modelLeftArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', 0.55, 0.3, 0)
-	const modelRightArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', -0.55, 0.3, 0)
-	const modelLeftLeg = new RectangularModel1(0.25, 1.45, 0.25, '#ffffff', 0.25, -0.75, 0)
-	const modelRightLeg = new RectangularModel1(0.25, 1.45, 0.25, '#ffffff', -0.25, -0.75, 0)
-	const modelLeftFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', 0.25, -1.55, 0.05)
-	const modelRightFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', -0.25, -1.55, 0.05)
-	Program1.modelInstances.push(modelHead, modelBody, modelLeftArm, modelRightArm, modelLeftLeg, modelRightLeg, modelLeftFoot, modelRightFoot)
-	Program1.glControl.vertexFeatureSize = Program1.getvertexFeatureize()
-	console.log(Program1.modelInstances)
-	console.timeEnd(`CreateModelDatas`)
+	const initModelDatas = () => {
+		const modelInstances = []
+		const getVertexFeatureSize = modelInstances => {
+			let len = 0
+			modelInstances.forEach(modelInstanceItem => {
+				len += modelInstanceItem.vertexDatas.vertexFeature.length
+			})
+			return len
+		}
 
-	Program1.renderModelInfomationView()
+		const modelHead = new RectangularModel1(0.4, 0.35, 0.35, '#ffffff', 0, 1.2, 0)
+		const modelBody = new RectangularModel1(0.8, 1.0, 0.4, '#ffffff', 0, 0.5, 0)
+		const modelLeftArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', 0.55, 0.3, 0)
+		const modelRightArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', -0.55, 0.3, 0)
+		const modelLeftLeg = new RectangularModel1(0.25, 1.45, 0.25, '#ffffff', 0.25, -0.75, 0)
+		const modelRightLeg = new RectangularModel1(0.25, 1.45, 0.25, '#ffffff', -0.25, -0.75, 0)
+		const modelLeftFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', 0.25, -1.55, 0.05)
+		const modelRightFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', -0.25, -1.55, 0.05)
+		modelInstances.push(modelHead, modelBody, modelLeftArm, modelRightArm, modelLeftLeg, modelRightLeg, modelLeftFoot, modelRightFoot)
+
+		const vertexFeatureSize = getVertexFeatureSize(modelInstances)
+		return {
+			modelInstances,
+			vertexFeatureSize,
+		}
+	}
+	const modelDatas = initModelDatas()
+	Program1.glControl.modelInstances = modelDatas.modelInstances
+	Program1.glControl.vertexFeatureSize = modelDatas.vertexFeatureSize
+	Program1.renderModelInfomationView(Program1.glControl.modelInstances)
 
 	const canvasElement = containerElement.querySelector('canvas')
 	const gl = initWebGLContext(canvasElement)
 
-	Program1.glControl.gl = gl
-
-	const vertexShader = createShader(gl, gl.VERTEX_SHADER, VS)
-	const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, FS)
-	const program = createProgram(gl, vertexShader, fragmentShader)
-
-	gl.useProgram(program)
-
 	gl.clearColor(Program1.profile.clearColor.r / 255, Program1.profile.clearColor.g / 255, Program1.profile.clearColor.b / 255, 1.0)
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+	gl.enable(gl.BLEND)
+	gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 	gl.enable(gl.CULL_FACE)
 	gl.enable(gl.DEPTH_TEST)
 	gl.enable(gl.POLYGON_OFFSET_FILL)
 	gl.polygonOffset(1.0, 1.0)
 
-	const u_illuType = gl.getUniformLocation(program, 'u_illuType')
-	const u_LightColor = gl.getUniformLocation(program, 'u_LightColor')
-	const u_LightPosition = gl.getUniformLocation(program, 'u_LightPosition')
-	const u_LightDirection = gl.getUniformLocation(program, 'u_LightDirection')
-	const u_AmbientLightColor = gl.getUniformLocation(program, 'u_AmbientLightColor')
-	const u_lightIntensityGain = gl.getUniformLocation(program, 'u_lightIntensityGain')
-	const u_NormalMatrix = gl.getUniformLocation(program, 'u_NormalMatrix')
-	const u_ModelMatrix = gl.getUniformLocation(program, 'u_ModelMatrix')
-	const u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix')
-	const u_ProjMatrix = gl.getUniformLocation(program, 'u_ProjMatrix')
-	const u_Clicked = gl.getUniformLocation(program, 'u_Clicked')
-	const u_Eye = gl.getUniformLocation(program, 'u_Eye')
-	const u_FogColor = gl.getUniformLocation(program, 'u_FogColor')
-	const u_FogDist = gl.getUniformLocation(program, 'u_FogDist')
-	const a_Normal = gl.getAttribLocation(program, 'a_Normal')
-	const a_Position = gl.getAttribLocation(program, 'a_Position')
-	const a_Color = gl.getAttribLocation(program, 'a_Color')
+	Program1.glControl.gl = gl
+	Program1.glControl.glAttributes = {}
+	Program1.glControl.glUniforms = {}
 
-	gl.enableVertexAttribArray(a_Normal)
-	gl.enableVertexAttribArray(a_Position)
-	gl.enableVertexAttribArray(a_Color)
-
-	Program1.modelInstances.forEach(modelInstanceItem => {
-		modelInstanceItem.bindVertextBuffer(gl.createBuffer())
-		modelInstanceItem.bindNormalBuffer(gl.createBuffer())
+	Program1.glControl.commonLightProgram = ven$createProgram(gl, COMMON_VERTEX_SHADER, COMMON_FRAGMENT_SHADER)
+	Program1.glControl.modelInstances.forEach((modelInstanceItem, index) => {
+		modelInstanceItem.normalBuffer = ven$initArrayBufferForLaterUse(gl)
+		modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(gl)
 	})
 
-	Program1.glControl.writeBufferAction = modelInstance => {
-		gl.bindBuffer(gl.ARRAY_BUFFER, modelInstance.normalBuffer)
-		gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0)
-		gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(modelInstance.vertexData.vertexNormals), gl.STATIC_DRAW)
-		gl.bindBuffer(gl.ARRAY_BUFFER, modelInstance.vertextBuffer)
-		gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
-		gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
-		gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(modelInstance.vertexData.vertexFeature), gl.STATIC_DRAW)
+	const bindWebGLParams = (gl, program, control) => {
+		control.glUniforms.u_illuType = gl.getUniformLocation(program, 'u_illuType')
+		control.glUniforms.u_LightColor = gl.getUniformLocation(program, 'u_LightColor')
+		control.glUniforms.u_LightPosition = gl.getUniformLocation(program, 'u_LightPosition')
+		control.glUniforms.u_LightDirection = gl.getUniformLocation(program, 'u_LightDirection')
+		control.glUniforms.u_AmbientLightColor = gl.getUniformLocation(program, 'u_AmbientLightColor')
+		control.glUniforms.u_lightIntensityGain = gl.getUniformLocation(program, 'u_lightIntensityGain')
+		control.glUniforms.u_NormalMatrix = gl.getUniformLocation(program, 'u_NormalMatrix')
+		control.glUniforms.u_ModelMatrix = gl.getUniformLocation(program, 'u_ModelMatrix')
+		control.glUniforms.u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix')
+		control.glUniforms.u_ProjMatrix = gl.getUniformLocation(program, 'u_ProjMatrix')
+		control.glUniforms.u_Clicked = gl.getUniformLocation(program, 'u_Clicked')
+		control.glUniforms.u_Eye = gl.getUniformLocation(program, 'u_Eye')
+		control.glUniforms.u_FogColor = gl.getUniformLocation(program, 'u_FogColor')
+		control.glUniforms.u_FogDist = gl.getUniformLocation(program, 'u_FogDist')
+		control.glAttributes.a_Normal = gl.getAttribLocation(program, 'a_Normal')
+		control.glAttributes.a_Position = gl.getAttribLocation(program, 'a_Position')
+		control.glAttributes.a_Color = gl.getAttribLocation(program, 'a_Color')
 	}
-	Program1.glControl.applyTranslateMatrixAction = modelInstance => {
+	bindWebGLParams(gl, Program1.glControl.commonLightProgram, Program1.glControl)
+
+	const setModelMatrix = (modelInstance, control) => {
+		const { glUniforms } = control
 		/**
 		 * 创建旋转矩阵
 		 */
@@ -955,32 +973,27 @@ function drawCanvas1(containerElement) {
 		const modelEffectInverseTransposeMatrix4 = Ven$CanvasMatrix4.setTranspose(modelEffectInverseMatrix4)
 		const normalMatrix4 = modelEffectInverseTransposeMatrix4
 
-		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
-		gl.uniformMatrix4fv(u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
+		gl.uniformMatrix4fv(glUniforms.u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
+		gl.uniformMatrix4fv(glUniforms.u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
 	}
-	Program1.glControl.drawModelAction = (modelInstance, vertexFeatureSize) => {
-		Program1.glControl.writeBufferAction(modelInstance)
-		Program1.glControl.applyTranslateMatrixAction(modelInstance)
-		gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
-	}
-	Program1.glControl.setWebGLRenderClickedStatus = () => {
-		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		gl.clearColor(Program1.profile.clearColor.r / 255, Program1.profile.clearColor.g / 255, Program1.profile.clearColor.b / 255, 1.0)
-		gl.uniform1i(u_Clicked, 1)
-		Program1.modelInstances.forEach(modelInstanceItem => {
-			Program1.glControl.drawModelAction(modelInstanceItem, Program1.glControl.vertexFeatureSize)
-		})
-	}
-	Program1.glControl.setWebGLRenderNormalStatus = () => {
-		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		gl.clearColor(Program1.profile.clearColor.r / 255, Program1.profile.clearColor.g / 255, Program1.profile.clearColor.b / 255, 1.0)
-		gl.uniform1i(u_Clicked, 0)
-		Program1.modelInstances.forEach(modelInstanceItem => {
-			Program1.glControl.drawModelAction(modelInstanceItem, Program1.glControl.vertexFeatureSize)
+
+	const drawLightModel = control => {
+		const { commonLightProgram, modelInstances } = control
+
+		gl.useProgram(commonLightProgram)
+		setProfileMatrix(control)
+		modelInstances.forEach(modelInstanceItem => {
+			setModelMatrix(modelInstanceItem, control)
+			draw(modelInstanceItem, control)
 		})
 	}
 
-	const render = () => {
+	const setWebGLRenderClickedStatus = () => {}
+	const setWebGLRenderNormalStatus = () => {}
+	Program1.glControl.setWebGLRenderClickedStatus = setWebGLRenderClickedStatus
+	Program1.glControl.setWebGLRenderNormalStatus = setWebGLRenderNormalStatus
+
+	const render = control => {
 		if (!Program1.isRender) {
 			return
 		}
@@ -988,6 +1001,16 @@ function drawCanvas1(containerElement) {
 
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		gl.clearColor(Program1.profile.clearColor.r / 255, Program1.profile.clearColor.g / 255, Program1.profile.clearColor.b / 255, 1.0)
+
+		drawLightModel(control)
+	}
+
+	/****************************************************************************************************/
+	/****************************************************************************************************/
+	/****************************************************************************************************/
+
+	const setProfileMatrix = control => {
+		const { glUniforms } = control
 
 		/**
 		 * 创建透视投影矩阵
@@ -1007,7 +1030,7 @@ function drawCanvas1(containerElement) {
 			new Ven$Vector3(0, 1, 0)
 		)
 
-		gl.uniform1f(u_illuType, Program1.profile.light.illuType)
+		gl.uniform1f(glUniforms.u_illuType, Program1.profile.light.illuType)
 		if (Program1.profile.light.illuType === 1) {
 			/**
 			 * 平行光方
@@ -1018,54 +1041,90 @@ function drawCanvas1(containerElement) {
 				Program1.profile.light.direction.z
 			)
 			const lightNormalizeDirection = lightDirection.normalize()
-			gl.uniform3fv(u_LightDirection, new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z]))
+			gl.uniform3fv(
+				glUniforms.u_LightDirection,
+				new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z])
+			)
 		}
 		if (Program1.profile.light.illuType === 2) {
 			/**
 			 * 点光
 			 */
 			gl.uniform3fv(
-				u_LightPosition,
+				glUniforms.u_LightPosition,
 				new Float32Array([Program1.profile.light.position.x, Program1.profile.light.position.y, Program1.profile.light.position.z])
 			)
 		}
-		gl.uniform3f(u_LightColor, Program1.profile.light.color.r / 255, Program1.profile.light.color.g / 255, Program1.profile.light.color.b / 255)
-		gl.uniform1f(u_lightIntensityGain, Program1.profile.light.intensityGain)
-		gl.uniform3f(u_AmbientLightColor, Program1.profile.light.ambient.r, Program1.profile.light.ambient.g, Program1.profile.light.ambient.b)
+		gl.uniform3f(
+			glUniforms.u_LightColor,
+			Program1.profile.light.color.r / 255,
+			Program1.profile.light.color.g / 255,
+			Program1.profile.light.color.b / 255
+		)
+		gl.uniform1f(glUniforms.u_lightIntensityGain, Program1.profile.light.intensityGain)
+		gl.uniform3f(
+			glUniforms.u_AmbientLightColor,
+			Program1.profile.light.ambient.r,
+			Program1.profile.light.ambient.g,
+			Program1.profile.light.ambient.b
+		)
 		gl.uniform3fv(
-			u_FogColor,
+			glUniforms.u_FogColor,
 			new Float32Array([Program1.profile.fog.color.r / 255, Program1.profile.fog.color.g / 255, Program1.profile.fog.color.b / 255])
 		)
-		gl.uniform2fv(u_FogDist, new Float32Array([Program1.profile.fog.dist.distOfStartAndEye, Program1.profile.fog.dist.distOfEndAndEye]))
+		gl.uniform2fv(
+			glUniforms.u_FogDist,
+			new Float32Array([Program1.profile.fog.dist.distOfStartAndEye, Program1.profile.fog.dist.distOfEndAndEye])
+		)
 		gl.uniform3fv(
-			u_Eye,
+			glUniforms.u_Eye,
 			new Float32Array([Program1.profile.lookAt.eyePosition.x, Program1.profile.lookAt.eyePosition.y, Program1.profile.lookAt.eyePosition.z])
 		)
-		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
-		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
+		gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
+		gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
+	}
 
-		Program1.modelInstances.forEach(modelInstanceItem => {
-			Program1.glControl.drawModelAction(modelInstanceItem, Program1.glControl.vertexFeatureSize)
+	const draw = (modelInstanceItem, control) => {
+		const { normalBuffer, featureBuffer, vertexDatas } = modelInstanceItem
+		const { glAttributes, vertexFeatureSize } = control
+		const normalData = vertexDatas.vertexNormals
+		const featureData = vertexDatas.vertexFeature
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer)
+		gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(normalData), gl.STATIC_DRAW)
+		ven$initAttributeVariable(gl, glAttributes.a_Normal, normalBuffer, {
+			size: 3,
 		})
+		gl.bindBuffer(gl.ARRAY_BUFFER, featureBuffer)
+		gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(featureData), gl.STATIC_DRAW)
+		ven$initAttributeVariable(gl, glAttributes.a_Position, featureBuffer, {
+			size: 3,
+			stride: 28,
+		})
+		ven$initAttributeVariable(gl, glAttributes.a_Color, featureBuffer, {
+			size: 4,
+			stride: 28,
+			offset: 12,
+		})
+
+		gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
 	}
 
 	const stepControl = new Ven$StepControl(0, 90, 360)
 	let angle = 0
-
 	const exec = () => {
 		if (Program1.profile.autoTransition) {
 			angle = stepControl.getNextValue() % 360
-			Program1.getModelInstances().forEach(modelInstanceItem => {
+			Program1.getModelInstances(Program1.glControl.modelInstances).forEach(modelInstanceItem => {
 				modelInstanceItem.modelRatation.y = angle
 			})
 			Program1.isRender = true
-			Program1.renderModelInfomationView()
+			Program1.renderModelInfomationView(Program1.glControl.modelInstances)
 		} else {
 			stepControl.updateLastStamp()
 		}
-		render()
+		render(Program1.glControl)
 		requestAnimationFrame(exec)
 	}
-
 	exec()
 }
