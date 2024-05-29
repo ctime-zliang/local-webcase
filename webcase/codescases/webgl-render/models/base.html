@@ -406,62 +406,96 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Projection Type: </label>
-					<input type="radio" name="projectionTypeCheck" value="1" disabled="disabled" style="width: 20px; height: 20px; cursor: pointer" />
+					<input type="radio" name="projectionType" value="1" style="width: 20px; height: 20px; cursor: pointer" />
 					<span>Perspective Projection</span>
 					<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-					<input type="radio" name="projectionTypeCheck" value="2" disabled="disabled" style="width: 20px; height: 20px; cursor: pointer" />
+					<input type="radio" name="projectionType" value="2" style="width: 20px; height: 20px; cursor: pointer" />
 					<span>Orthographic Projection</span>
 				</div>
 				<div
 					style="
 						width: fit-content;
 						font-size: 12px;
-						display: flex;
+						display: none;
 						flex-wrap: nowrap;
 						align-items: center;
 						align-content: center;
 						padding: 3px 0;
 					"
 				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Projection Fovy: </label>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Perspective Projection Fovy: </label>
 					<span>1</span>
-					<input type="range" value="0" name="projectionFovy" min="1" max="180" step="1" style="width: 300px; cursor: pointer" />
+					<input type="range" value="0" name="persProjectionFovy" min="1" max="180" step="1" style="width: 300px; cursor: pointer" />
 					<span>180</span>
-					<strong>&nbsp;(<span name="projectionFovyShow">0</span>)</strong>
+					<strong>&nbsp;(<span name="persProjectionFovyShow">0</span>)</strong>
 				</div>
 				<div
 					style="
 						width: fit-content;
 						font-size: 12px;
-						display: flex;
+						display: none;
 						flex-wrap: nowrap;
 						align-items: center;
 						align-content: center;
 						padding: 3px 0;
 					"
 				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Projection Near: </label>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Perspective Projection Near: </label>
 					<span>1</span>
-					<input type="range" value="0" name="projectionNear" min="1" max="50" step="0.1" style="width: 300px; cursor: pointer" />
+					<input type="range" value="0" name="persProjectionNear" min="1" max="50" step="0.1" style="width: 300px; cursor: pointer" />
 					<span>50</span>
-					<strong>&nbsp;(<span name="projectionNearShow">0</span>)</strong>
+					<strong>&nbsp;(<span name="persProjectionNearShow">0</span>)</strong>
 				</div>
 				<div
 					style="
 						width: fit-content;
 						font-size: 12px;
-						display: flex;
+						display: none;
 						flex-wrap: nowrap;
 						align-items: center;
 						align-content: center;
 						padding: 3px 0;
 					"
 				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Projection Far: </label>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Perspective Projection Far: </label>
 					<span>1</span>
-					<input type="range" value="0" name="projectionFar" min="1" max="300" step="0.1" style="width: 300px; cursor: pointer" />
+					<input type="range" value="0" name="persProjectionFar" min="1" max="300" step="0.1" style="width: 300px; cursor: pointer" />
 					<span>300</span>
-					<strong>&nbsp;(<span name="projectionFarShow">0</span>)</strong>
+					<strong>&nbsp;(<span name="persProjectionFarShow">0</span>)</strong>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: none;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ortho Projection Near: </label>
+					<span>-50</span>
+					<input type="range" value="0" name="orthoProjectionNear" min="-50" max="50" step="0.1" style="width: 300px; cursor: pointer" />
+					<span>50</span>
+					<strong>&nbsp;(<span name="orthoProjectionNearShow">0</span>)</strong>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: none;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ortho Projection Far: </label>
+					<span>-50</span>
+					<input type="range" value="0" name="orthoProjectionFar" min="-50" max="50" step="0.1" style="width: 300px; cursor: pointer" />
+					<span>50</span>
+					<strong>&nbsp;(<span name="orthoProjectionFarShow">0</span>)</strong>
 				</div>
 				<br />
 				<div

@@ -187,6 +187,7 @@ class Program1 {
 				z: 0,
 			},
 		},
+		projectionType: 1,
 		/**
 		 * 透视投影矩阵参数
 		 */
@@ -195,6 +196,17 @@ class Program1 {
 			aspect: 1,
 			near: 1,
 			far: 300,
+		},
+		/**
+		 * 正交投影矩阵参数
+		 */
+		orthoProjection: {
+			left: -1,
+			right: 1,
+			bottom: -1,
+			top: 1,
+			near: -10,
+			far: 10,
 		},
 		/**
 		 * 光照参数
@@ -255,12 +267,17 @@ class Program1 {
 
 	static initFormView() {
 		const self = this
-		const projectionFovyRangeElement = this.containerElement.querySelector(`[name="projectionFovy"]`)
-		const projectionFovyShowSpanElement = this.containerElement.querySelector(`[name="projectionFovyShow"]`)
-		const projectionNearRangeElement = this.containerElement.querySelector(`[name="projectionNear"]`)
-		const projectionNearShowSpanElement = this.containerElement.querySelector(`[name="projectionNearShow"]`)
-		const projectionFarRangeElement = this.containerElement.querySelector(`[name="projectionFar"]`)
-		const projectionFarShowSpanElement = this.containerElement.querySelector(`[name="projectionFarShow"]`)
+		const projectionTypeRadioElements = this.containerElement.querySelectorAll(`[name="projectionType"]`)
+		const persProjectionFovyRangeElement = this.containerElement.querySelector(`[name="persProjectionFovy"]`)
+		const persProjectionFovyShowSpanElement = this.containerElement.querySelector(`[name="persProjectionFovyShow"]`)
+		const persProjectionNearRangeElement = this.containerElement.querySelector(`[name="persProjectionNear"]`)
+		const persProjectionNearShowSpanElement = this.containerElement.querySelector(`[name="persProjectionNearShow"]`)
+		const persProjectionFarRangeElement = this.containerElement.querySelector(`[name="persProjectionFar"]`)
+		const persProjectionFarShowSpanElement = this.containerElement.querySelector(`[name="persProjectionFarShow"]`)
+		const orthoProjectionNearRangeElement = this.containerElement.querySelector(`[name="orthoProjectionNear"]`)
+		const orthoProjectionNearShowSpanElement = this.containerElement.querySelector(`[name="orthoProjectionNearShow"]`)
+		const orthoProjectionFarRangeElement = this.containerElement.querySelector(`[name="orthoProjectionFar"]`)
+		const orthoProjectionFarShowSpanElement = this.containerElement.querySelector(`[name="orthoProjectionFarShow"]`)
 		const lookAtMatrix4EyePositionXRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionX"]`)
 		const lookAtMatrix4EyePositionXShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionXShow"]`)
 		const lookAtMatrix4EyePositionYRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionY"]`)
@@ -275,7 +292,7 @@ class Program1 {
 		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZShow"]`)
 		const lightColorPickElement = this.containerElement.querySelector(`[name="lightColor"]`)
 		const lightColorShowSpanElement = this.containerElement.querySelector(`[name="lightColorShow"]`)
-		const lightIlluTypeCheckRadioElements = this.containerElement.querySelectorAll(`[name="lightIlluTypeCheck"]`)
+		const lightIlluTypeRadioElements = this.containerElement.querySelectorAll(`[name="lightIlluType"]`)
 		const lightPositionRangeXRangeElement = this.containerElement.querySelector(`[name="lightPositionRangeX"]`)
 		const lightPositionRangeXShowElement = this.containerElement.querySelector(`[name="lightPositionRangeXShow"]`)
 		const lightPositionRangeYRangeElement = this.containerElement.querySelector(`[name="lightPositionRangeY"]`)
@@ -303,9 +320,14 @@ class Program1 {
 		const fogEndDistRangeElement = this.containerElement.querySelector(`[name="fogEndDist"]`)
 		const fogEndDistShowShowSpanElement = this.containerElement.querySelector(`[name="fogEndDistShow"]`)
 
-		projectionFovyShowSpanElement.textContent = projectionFovyRangeElement.value = self.profile.persProjection.fovy
-		projectionNearShowSpanElement.textContent = projectionNearRangeElement.value = self.profile.persProjection.near
-		projectionFarShowSpanElement.textContent = projectionFarRangeElement.value = self.profile.persProjection.far
+		projectionTypeRadioElements.forEach(itemElement => {
+			itemElement.checked = itemElement.value === String(self.profile.projectionType)
+		})
+		persProjectionFovyShowSpanElement.textContent = persProjectionFovyRangeElement.value = self.profile.persProjection.fovy
+		persProjectionNearShowSpanElement.textContent = persProjectionNearRangeElement.value = self.profile.persProjection.near
+		persProjectionFarShowSpanElement.textContent = persProjectionFarRangeElement.value = self.profile.persProjection.far
+		orthoProjectionNearShowSpanElement.textContent = orthoProjectionNearRangeElement.value = self.profile.orthoProjection.near
+		orthoProjectionFarShowSpanElement.textContent = orthoProjectionFarRangeElement.value = self.profile.orthoProjection.far
 		lookAtMatrix4EyePositionXShowSpanElement.textContent = lookAtMatrix4EyePositionXRangeElement.value = self.profile.lookAt.eyePosition.x
 		lookAtMatrix4EyePositionYShowSpanElement.textContent = lookAtMatrix4EyePositionYRangeElement.value = self.profile.lookAt.eyePosition.y
 		lookAtMatrix4EyePositionZShowSpanElement.textContent = lookAtMatrix4EyePositionZRangeElement.value = self.profile.lookAt.eyePosition.z
@@ -313,7 +335,7 @@ class Program1 {
 		lookAtMatrix4AtPositionYShowSpanElement.textContent = lookAtMatrix4AtPositionYRangeElement.value = self.profile.lookAt.atPosition.y
 		lookAtMatrix4AtPositionZShowSpanElement.textContent = lookAtMatrix4AtPositionZRangeElement.value = self.profile.lookAt.atPosition.z
 		lightColorShowSpanElement.textContent = lightColorPickElement.value = ven$rgba2Hex(self.profile.light.color)
-		lightIlluTypeCheckRadioElements.forEach(itemElement => {
+		lightIlluTypeRadioElements.forEach(itemElement => {
 			itemElement.checked = itemElement.value === String(self.profile.light.illuType)
 		})
 		lightPositionRangeXShowElement.textContent = lightPositionRangeXRangeElement.value = self.profile.light.position.x
@@ -332,17 +354,23 @@ class Program1 {
 		fogEndDistShowShowSpanElement.textContent = fogEndDistRangeElement.value = self.profile.fog.dist.distOfEndAndEye
 
 		this.toggleLightIlluTypeView()
+		this.toggleProjectionTypeView()
 	}
 
 	static eventHandle() {
 		const self = this
 		const canvasElement = this.containerElement.querySelector(`canvas`)
-		const projectionFovyRangeElement = this.containerElement.querySelector(`[name="projectionFovy"]`)
-		const projectionFovyShowSpanElement = this.containerElement.querySelector(`[name="projectionFovyShow"]`)
-		const projectionNearRangeElement = this.containerElement.querySelector(`[name="projectionNear"]`)
-		const projectionNearShowSpanElement = this.containerElement.querySelector(`[name="projectionNearShow"]`)
-		const projectionFarRangeElement = this.containerElement.querySelector(`[name="projectionFar"]`)
-		const projectionFarShowSpanElement = this.containerElement.querySelector(`[name="projectionFarShow"]`)
+		const projectionTypeRadioElements = this.containerElement.querySelectorAll(`[name="projectionType"]`)
+		const persProjectionFovyRangeElement = this.containerElement.querySelector(`[name="persProjectionFovy"]`)
+		const persProjectionFovyShowSpanElement = this.containerElement.querySelector(`[name="persProjectionFovyShow"]`)
+		const persProjectionNearRangeElement = this.containerElement.querySelector(`[name="persProjectionNear"]`)
+		const persProjectionNearShowSpanElement = this.containerElement.querySelector(`[name="persProjectionNearShow"]`)
+		const persProjectionFarRangeElement = this.containerElement.querySelector(`[name="persProjectionFar"]`)
+		const persProjectionFarShowSpanElement = this.containerElement.querySelector(`[name="persProjectionFarShow"]`)
+		const orthoProjectionNearRangeElement = this.containerElement.querySelector(`[name="orthoProjectionNear"]`)
+		const orthoProjectionNearShowSpanElement = this.containerElement.querySelector(`[name="orthoProjectionNearShow"]`)
+		const orthoProjectionFarRangeElement = this.containerElement.querySelector(`[name="orthoProjectionFar"]`)
+		const orthoProjectionFarShowSpanElement = this.containerElement.querySelector(`[name="orthoProjectionFarShow"]`)
 		const lookAtMatrix4EyePositionXRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionX"]`)
 		const lookAtMatrix4EyePositionXShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionXShow"]`)
 		const lookAtMatrix4EyePositionYRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionY"]`)
@@ -357,7 +385,7 @@ class Program1 {
 		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZShow"]`)
 		const lightColorPickElement = this.containerElement.querySelector(`[name="lightColor"]`)
 		const lightColorShowSpanElement = this.containerElement.querySelector(`[name="lightColorShow"]`)
-		const lightIlluTypeCheckRadioElements = this.containerElement.querySelectorAll(`[name="lightIlluTypeCheck"]`)
+		const lightIlluTypeRadioElements = this.containerElement.querySelectorAll(`[name="lightIlluType"]`)
 		const lightPositionRangeXRangeElement = this.containerElement.querySelector(`[name="lightPositionRangeX"]`)
 		const lightPositionRangeXShowElement = this.containerElement.querySelector(`[name="lightPositionRangeXShow"]`)
 		const lightPositionRangeYRangeElement = this.containerElement.querySelector(`[name="lightPositionRangeY"]`)
@@ -583,19 +611,37 @@ class Program1 {
 				self.downNumberKeys.delete(+e.key)
 			}
 		})
-		projectionFovyRangeElement.addEventListener('input', function (e) {
-			projectionFovyShowSpanElement.textContent = self.profile.persProjection.fovy = +this.value
+		projectionTypeRadioElements.forEach(itemElement => {
+			itemElement.addEventListener('change', function (e) {
+				self.profile.projectionType = +this.value
+				self.toggleProjectionTypeView()
+				console.log('projectionType:', self.profile.projectionType)
+				self.isRender = true
+			})
+		})
+		persProjectionFovyRangeElement.addEventListener('input', function (e) {
+			persProjectionFovyShowSpanElement.textContent = self.profile.persProjection.fovy = +this.value
 			console.log('persProjection:', JSON.stringify(self.profile.persProjection))
 			self.isRender = true
 		})
-		projectionNearRangeElement.addEventListener('input', function (e) {
-			projectionNearShowSpanElement.textContent = self.profile.persProjection.near = +this.value
+		persProjectionNearRangeElement.addEventListener('input', function (e) {
+			persProjectionNearShowSpanElement.textContent = self.profile.persProjection.near = +this.value
 			console.log('persProjection:', JSON.stringify(self.profile.persProjection))
 			self.isRender = true
 		})
-		projectionFarRangeElement.addEventListener('input', function (e) {
-			projectionFarShowSpanElement.textContent = self.profile.persProjection.far = +this.value
+		persProjectionFarRangeElement.addEventListener('input', function (e) {
+			persProjectionFarShowSpanElement.textContent = self.profile.persProjection.far = +this.value
 			console.log('persProjection:', JSON.stringify(self.profile.persProjection))
+			self.isRender = true
+		})
+		orthoProjectionNearRangeElement.addEventListener('input', function (e) {
+			orthoProjectionNearShowSpanElement.textContent = self.profile.orthoProjection.near = +this.value
+			console.log('orthoProjection:', JSON.stringify(self.profile.orthoProjection))
+			self.isRender = true
+		})
+		orthoProjectionFarRangeElement.addEventListener('input', function (e) {
+			orthoProjectionFarShowSpanElement.textContent = self.profile.orthoProjection.far = +this.value
+			console.log('orthoProjection:', JSON.stringify(self.profile.orthoProjection))
 			self.isRender = true
 		})
 		lookAtMatrix4EyePositionXRangeElement.addEventListener('input', function (e) {
@@ -637,7 +683,7 @@ class Program1 {
 			console.log('light.color:', JSON.stringify(self.profile.light.color))
 			self.isRender = true
 		})
-		lightIlluTypeCheckRadioElements.forEach(itemElement => {
+		lightIlluTypeRadioElements.forEach(itemElement => {
 			itemElement.addEventListener('change', function (e) {
 				self.profile.light.illuType = +this.value
 				self.toggleLightIlluTypeView()
@@ -766,6 +812,28 @@ class Program1 {
 			lightPositionRangeXRangeElement.parentElement.style.display = 'flex'
 			lightPositionRangeYRangeElement.parentElement.style.display = 'flex'
 			lightPositionRangeZRangeElement.parentElement.style.display = 'flex'
+		}
+	}
+
+	static toggleProjectionTypeView() {
+		const persProjectionFovyRangeElement = this.containerElement.querySelector(`[name="persProjectionFovy"]`)
+		const persProjectionNearRangeElement = this.containerElement.querySelector(`[name="persProjectionNear"]`)
+		const persProjectionFarRangeElement = this.containerElement.querySelector(`[name="persProjectionFar"]`)
+		const orthoProjectionNearRangeElement = this.containerElement.querySelector(`[name="orthoProjectionNear"]`)
+		const orthoProjectionFarRangeElement = this.containerElement.querySelector(`[name="orthoProjectionFar"]`)
+		if (this.profile.projectionType === 1) {
+			orthoProjectionNearRangeElement.parentElement.style.display = 'none'
+			orthoProjectionFarRangeElement.parentElement.style.display = 'none'
+			persProjectionFovyRangeElement.parentElement.style.display = 'flex'
+			persProjectionNearRangeElement.parentElement.style.display = 'flex'
+			persProjectionFarRangeElement.parentElement.style.display = 'flex'
+		}
+		if (this.profile.projectionType === 2) {
+			persProjectionFovyRangeElement.parentElement.style.display = 'none'
+			persProjectionNearRangeElement.parentElement.style.display = 'none'
+			persProjectionFarRangeElement.parentElement.style.display = 'none'
+			orthoProjectionNearRangeElement.parentElement.style.display = 'flex'
+			orthoProjectionFarRangeElement.parentElement.style.display = 'flex'
 		}
 	}
 
@@ -1202,7 +1270,12 @@ function drawCanvas1(containerElement) {
 			new Float32Array([Program1.profile.lookAt.eyePosition.x, Program1.profile.lookAt.eyePosition.y, Program1.profile.lookAt.eyePosition.z])
 		)
 		gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
-		gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
+		if (Program1.profile.projectionType === 1) {
+			gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
+		}
+		if (Program1.profile.projectionType === 2) {
+			gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(orthoMatrix4.data))
+		}
 	}
 
 	const drawBuffer = (gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture) => {
