@@ -12,6 +12,11 @@ class Model1 {
 			y: 0,
 			z: 0,
 		}
+		this._modelScale = {
+			x: 1,
+			y: 1,
+			z: 1,
+		}
 		this._featureBuffer = null
 		this._normalBuffer = null
 		this._texCoordBuffer = null
@@ -29,6 +34,10 @@ class Model1 {
 
 	get modelOffset() {
 		return this._modelOffset
+	}
+
+	get modelScale() {
+		return this._modelScale
 	}
 
 	get vertexDatas() {
@@ -481,7 +490,35 @@ class Program1 {
 				self.downNumberKeys.add(+e.key)
 			}
 			switch (e.keyCode) {
-				// page-up
+				// =
+				case 187: {
+					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
+						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+							modelInstanceItem.modelScale.x -= 0.025
+							modelInstanceItem.modelScale.y -= 0.025
+							modelInstanceItem.modelScale.z -= 0.025
+						})
+						self.isRender = true
+						self.renderModelInfomationView(self.glControl.modelInstances)
+						break
+					}
+					break
+				}
+				// -
+				case 189: {
+					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
+						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+							modelInstanceItem.modelScale.x += 0.025
+							modelInstanceItem.modelScale.y += 0.025
+							modelInstanceItem.modelScale.z += 0.025
+						})
+						self.isRender = true
+						self.renderModelInfomationView(self.glControl.modelInstances)
+						break
+					}
+					break
+				}
+				// ]
 				case 221: {
 					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
 						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
@@ -501,7 +538,7 @@ class Program1 {
 					}
 					break
 				}
-				// page-down
+				// [
 				case 219: {
 					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
 						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
@@ -783,6 +820,7 @@ class Program1 {
 				<div style="font-size: 14px;">
 					<div style="font-weight: 900;">MODEL ${index + 1}:</div> 
 					<div style="padding: 2px 2px 2px 10px;">Model Offset: ${JSON.stringify(modelInstanceItem.modelOffset)}</div>
+					<div style="padding: 2px 2px 2px 10px;">Model Scale: ${JSON.stringify(modelInstanceItem.modelScale)}</div>
 					<div style="padding: 2px 2px 2px 10px;">Model Ratation: ${JSON.stringify(modelInstanceItem.modelRatation)}</div>
 				</div>
 			`
@@ -1040,40 +1078,37 @@ function drawCanvas1(containerElement) {
 		}
 	`
 
-	const initModelDatas = () => {
+	const initModelDatas = (offsetX = 0, offsetY = 0, offsetZ = 0) => {
 		const modelInstances = []
-		const getVertexFeatureSize = modelInstances => {
-			let len = 0
-			modelInstances.forEach(modelInstanceItem => {
-				len += modelInstanceItem.vertexDatas.vertexFeature.length
-			})
-			return len
-		}
-
-		const modelHead = new RectangularModel1(0.4, 0.35, 0.35, '#ffffff', 0, 1.2, 0)
-		const modelBody = new RectangularModel1(0.8, 1.0, 0.4, '#ffffff', 0, 0.5, 0)
-		const modelLeftArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', 0.55, 0.3, 0)
-		const modelRightArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', -0.55, 0.3, 0)
-		const modelLeftLeg = new RectangularModel1(0.25, 1.45, 0.25, '#ffffff', 0.25, -0.75, 0)
-		const modelRightLeg = new RectangularModel1(0.25, 1.45, 0.25, '#ffffff', -0.25, -0.75, 0)
-		const modelLeftFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', 0.25, -1.55, 0.05)
-		const modelRightFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', -0.25, -1.55, 0.05)
+		const modelHead = new RectangularModel1(0.4, 0.35, 0.35, '#ffffff', 0 + offsetX, 1.2 + offsetY, 0 + offsetZ)
+		const modelBody = new RectangularModel1(0.8, 1.0, 0.4, '#ffffff', 0 + offsetX, 0.5 + offsetY, 0 + offsetZ)
+		const modelLeftArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', 0.55 + offsetX, 0.3 + offsetY, 0 + offsetZ)
+		const modelRightArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', -0.55 + offsetX, 0.3 + offsetY, 0 + offsetZ)
+		const modelLeftLeg = new RectangularModel1(0.25, 1.45, 0.25, '#ffffff', 0.25 + offsetX, -0.75 + offsetY, 0 + offsetZ)
+		const modelRightLeg = new RectangularModel1(0.25, 1.45, 0.25, '#ffffff', -0.25 + offsetX, -0.75 + offsetY, 0 + offsetZ)
+		const modelLeftFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', 0.25 + offsetX, -1.55 + offsetY, 0.05 + offsetZ)
+		const modelRightFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', -0.25 + offsetX, -1.55 + offsetY, 0.05 + offsetZ)
 		modelInstances.push(modelHead, modelBody, modelLeftArm, modelRightArm, modelLeftLeg, modelRightLeg, modelLeftFoot, modelRightFoot)
-
-		const vertexFeatureSize = getVertexFeatureSize(modelInstances)
 		return {
 			modelInstances,
-			vertexFeatureSize,
 		}
 	}
-	const modelDatas = initModelDatas()
-	Program1.glControl.modelInstances = modelDatas.modelInstances
+	const getVertexFeatureSize = modelInstances => {
+		let len = 0
+		modelInstances.forEach(modelInstanceItem => {
+			len += modelInstanceItem.vertexDatas.vertexFeature.length
+		})
+		return len
+	}
+	const modelDatas1 = initModelDatas()
+	const modelDatas2 = initModelDatas(1.0, 0, -1.0)
+	Program1.glControl.modelInstances = [...modelDatas1.modelInstances, ...modelDatas2.modelInstances]
 	Program1.glControl.modelInstances.forEach(modelInstanceItem => {
 		modelInstanceItem.normalBuffer = ven$initArrayBufferForLaterUse(Program1.glControl.gl)
 		modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(Program1.glControl.gl)
 		modelInstanceItem.texCoordBuffer = ven$initArrayBufferForLaterUse(Program1.glControl.gl)
 	})
-	Program1.glControl.vertexFeatureSize = modelDatas.vertexFeatureSize
+	Program1.glControl.vertexFeatureSize = getVertexFeatureSize(Program1.glControl.modelInstances)
 	Program1.renderModelInfomationView(Program1.glControl.modelInstances)
 
 	Program1.glControl.gl.clearColor(
@@ -1151,7 +1186,7 @@ function drawCanvas1(containerElement) {
 		/**
 		 * 创建旋转矩阵
 		 */
-		const modelXRotationMatrix4 = Ven$CanvasMatrix4.setRotate(Ven$Angles.degreeToRadian(modelInstance.modelRatation.x), new Ven$Vector3(1, 0, 0))
+		const modelRotationXMatrix4 = Ven$CanvasMatrix4.setRotate(Ven$Angles.degreeToRadian(modelInstance.modelRatation.x), new Ven$Vector3(1, 0, 0))
 		const modelRotationYMatrix4 = Ven$CanvasMatrix4.setRotate(Ven$Angles.degreeToRadian(modelInstance.modelRatation.y), new Ven$Vector3(0, 1, 0))
 		const modelRotationZMatrix4 = Ven$CanvasMatrix4.setRotate(Ven$Angles.degreeToRadian(modelInstance.modelRatation.z), new Ven$Vector3(0, 0, 1))
 		/**
@@ -1161,11 +1196,18 @@ function drawCanvas1(containerElement) {
 			new Ven$Vector3(modelInstance.modelOffset.x, modelInstance.modelOffset.y, modelInstance.modelOffset.z)
 		)
 		/**
+		 * 创建缩放矩阵
+		 */
+		const modelScaleMatrix4 = Ven$CanvasMatrix4.setScale(
+			new Ven$Vector3(modelInstance.modelScale.x, modelInstance.modelScale.y, modelInstance.modelScale.z)
+		)
+		/**
 		 * 生成模型变换矩阵
 		 */
-		const modelEffectMatrix4 = modelXRotationMatrix4
+		const modelEffectMatrix4 = modelRotationXMatrix4
 			.multiply4(modelRotationYMatrix4)
 			.multiply4(modelRotationZMatrix4)
+			.multiply4(modelScaleMatrix4)
 			.multiply4(modelOffsetMatrix4)
 		/**
 		 * 创建法线变换矩阵
@@ -1205,10 +1247,13 @@ function drawCanvas1(containerElement) {
 		/**
 		 * 创建正交投影矩阵
 		 */
-		const orthoMatrix4 = Ven$CanvasMatrix4.setOrthoRectView(
-			Program1.profile.persProjection.aspect,
-			Program1.profile.persProjection.near,
-			Program1.profile.persProjection.far
+		const orthoMatrix4 = Ven$CanvasMatrix4.setOrtho(
+			Program1.profile.orthoProjection.left,
+			Program1.profile.orthoProjection.right,
+			Program1.profile.orthoProjection.bottom,
+			Program1.profile.orthoProjection.top,
+			Program1.profile.orthoProjection.near,
+			Program1.profile.orthoProjection.far
 		)
 		/**
 		 * 创建视图矩阵
