@@ -1135,6 +1135,14 @@ function drawCanvas1(containerElement) {
 			Program1.profile.persProjection.far
 		)
 		/**
+		 * 创建正交投影矩阵
+		 */
+		const orthoMatrix4 = Ven$CanvasMatrix4.setOrthoRectView(
+			Program1.profile.persProjection.aspect,
+			Program1.profile.persProjection.near,
+			Program1.profile.persProjection.far
+		)
+		/**
 		 * 创建视图矩阵
 		 */
 		const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
