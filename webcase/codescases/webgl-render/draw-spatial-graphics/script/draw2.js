@@ -311,7 +311,7 @@ function drawCanvas2(containerElement) {
 	gl.vertexAttribPointer(a_TexCoord, 2, gl.FLOAT, false, 0, 0)
 	gl.bufferData(gl.ARRAY_BUFFER, modelDatasResult.vertexCoordinate, gl.STATIC_DRAW)
 
-	loadTexture(gl, '../common/images/demo-1024x1024.jpg', u_Sampler, 0, textureUnitIndex => {
+	loadTexture(gl, '../common/images/demo-1024x1024.jpg', u_Sampler, 0, (gl, textureUnitIndex) => {
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		gl.clearColor(0.0, 0.0, 0.0, 1.0)
 		gl.drawArrays(gl.TRIANGLES, 0, modelDatasResult.vertexFeature.length / 7)

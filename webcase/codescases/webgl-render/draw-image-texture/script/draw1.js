@@ -74,7 +74,7 @@ function drawCanvas1(containerElement) {
 	gl.vertexAttribPointer(a_Uv, 2, gl.FLOAT, false, 16, 8)
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.STATIC_DRAW)
 
-	loadTexture(gl, '../common/images/demo-1024x1024.jpg', u_Sampler, 0, textureUnitIndex => {
+	loadTexture(gl, '../common/images/demo-1024x1024.jpg', u_Sampler, 0, (gl, textureUnitIndex) => {
 		gl.drawArrays(gl.TRIANGLES, 0, datas.length / 4)
 	})
 }

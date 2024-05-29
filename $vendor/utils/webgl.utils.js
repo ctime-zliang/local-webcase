@@ -69,3 +69,24 @@ function ven$initElementArrayBufferForLaterUse(gl, data) {
 	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, data, gl.STATIC_DRAW)
 	return buffer
 }
+
+function ven$getWebGLVariableLocation(
+	gl,
+	program,
+	cfg = {
+		glAttributes: [],
+		glUniforms: [],
+	}
+) {
+	const { glAttributes = [], glUniforms = [] } = cfg
+	const result = { glUniforms: {}, glAttributes: {} }
+	for (let i = 0; i < glAttributes.length; i++) {
+		const item = glAttributes[i]
+		result.glAttributes[item] = gl.getAttribLocation(program, item)
+	}
+	for (let i = 0; i < glUniforms.length; i++) {
+		const item = glUniforms[i]
+		result.glUniforms[item] = gl.getUniformLocation(program, item)
+	}
+	return result
+}
