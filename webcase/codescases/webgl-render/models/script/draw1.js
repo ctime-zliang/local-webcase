@@ -1122,23 +1122,6 @@ function drawCanvas1(containerElement) {
 		})
 	}
 
-	const render = (gl, vertexFeatureSize, modelInstances, itemProgramControl, enableTexture) => {
-		if (!Program1.isRender) {
-			return
-		}
-		Program1.isRender = false
-
-		gl.useProgram(itemProgramControl.program)
-		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		gl.clearColor(Program1.profile.clearColor.r / 255, Program1.profile.clearColor.g / 255, Program1.profile.clearColor.b / 255, 1.0)
-
-		setProfileMatrix(gl, itemProgramControl)
-		modelInstances.forEach(modelInstanceItem => {
-			setModelMatrix(gl, modelInstanceItem, itemProgramControl)
-			draw(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture)
-		})
-	}
-
 	const setProfileMatrix = (gl, itemProgramControl) => {
 		const { glUniforms } = itemProgramControl
 
@@ -1214,7 +1197,7 @@ function drawCanvas1(containerElement) {
 		gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 	}
 
-	const draw = (gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture) => {
+	const drawBuffer = (gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture) => {
 		const { normalBuffer, featureBuffer, texCoordBuffer, vertexDatas } = modelInstanceItem
 		const { vertexNormals: normalData, vertexFeature: featureData, vertexCoordinate: texCoordData } = vertexDatas
 		const { glAttributes } = itemProgramControl
@@ -1244,6 +1227,23 @@ function drawCanvas1(containerElement) {
 		}
 
 		gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
+	}
+
+	const render = (gl, vertexFeatureSize, modelInstances, itemProgramControl, enableTexture) => {
+		if (!Program1.isRender) {
+			return
+		}
+		Program1.isRender = false
+
+		gl.useProgram(itemProgramControl.program)
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+		gl.clearColor(Program1.profile.clearColor.r / 255, Program1.profile.clearColor.g / 255, Program1.profile.clearColor.b / 255, 1.0)
+
+		setProfileMatrix(gl, itemProgramControl)
+		modelInstances.forEach(modelInstanceItem => {
+			setModelMatrix(gl, modelInstanceItem, itemProgramControl)
+			drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture)
+		})
 	}
 
 	const stepControl = new Ven$StepControl(0, 90, 360)
