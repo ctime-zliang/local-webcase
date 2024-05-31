@@ -337,18 +337,23 @@ function drawCanvas3(containerElement) {
 	/**
 	 * 创建帧缓冲区对象
 	 */
-	const frameBufferResult = ven$initFramebufferObject(gl, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT)
-	const frameBuffer = frameBufferResult.framebuffer
-	const frameTexture = frameBufferResult.texture
+	const { framebuffer: frameBuffer, texture: frameTexture } = ven$initFramebufferObject(gl, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT)
 
 	/**
 	 * 初始化方体纹理
 	 * 		载入纹理
 	 */
-	const cubeTexture = loadImageResourceTexture(gl, '../common/images/demo-1024x1024.jpg', u_Sampler, 0, (gl, textureUnitIndex) => {
-		gl.bindTexture(gl.TEXTURE_2D, null)
-		Program3.isRender = true
-	})
+	const cubeTexture = loadImageResourceTexture(
+		gl,
+		'../common/images/demo-1024x1024.jpg',
+		u_Sampler,
+		0,
+		(gl, textureUnitIndex, textureUnitLable) => {
+			gl.activeTexture(gl[textureUnitLable])
+			gl.bindTexture(gl.TEXTURE_2D, null)
+			Program3.isRender = true
+		}
+	)
 
 	const render = () => {
 		if (!Program3.isRender) {
@@ -433,7 +438,11 @@ function drawCanvas3(containerElement) {
 		 * 创建视图矩阵
 		 */
 		const fboLookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
-			new Ven$Vector3(Program3.profile.lookAt.eyePosition.x, Program3.profile.lookAt.eyePosition.y, Program3.profile.lookAt.eyePosition.z),
+			new Ven$Vector3(
+				Program3.profile.lookAt.eyePosition.x + 0.5,
+				Program3.profile.lookAt.eyePosition.y + 0.5,
+				Program3.profile.lookAt.eyePosition.z + 0.5
+			),
 			new Ven$Vector3(Program3.profile.lookAt.atPosition.x, Program3.profile.lookAt.atPosition.y, Program3.profile.lookAt.atPosition.z),
 			new Ven$Vector3(0, 1, 0)
 		)
