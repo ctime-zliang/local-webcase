@@ -9,6 +9,9 @@ function main() {
 
 	const appContainer3Element = document.getElementById('appContainer3')
 	drawCanvas3(appContainer3Element)
+
+	const appContainer4Element = document.getElementById('appContainer4')
+	drawCanvas4(appContainer4Element)
 }
 
 window.onload = function () {

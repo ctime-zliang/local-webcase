@@ -1,5 +1,6 @@
 /**
- * 绘制球体
+ * 混合绘制
+ * 		将渲染作为纹理
  */
 
 class Program3 {
@@ -34,9 +35,7 @@ class Program3 {
 		 * 模型参数
 		 */
 		modelSize: {
-			radius: 1.0,
-			meridianCount: 30,
-			latitudeCount: 30,
+			cubeLength: 1.5,
 		},
 		/**
 		 * 模型旋转角度
@@ -229,9 +228,11 @@ function drawCanvas3(containerElement) {
 	const VS = `
 		precision mediump float;
 		varying vec4 v_Color;
+		varying vec2 v_TexCoord;
 		// 顶点配置(组)
 		attribute vec3 a_Position;
 		attribute vec4 a_Color;
+		attribute vec2 a_TexCoord;
 		// 变换矩阵(组)
 		uniform mat4 u_ModelMatrix;
 		uniform mat4 u_ViewMatrix;
@@ -240,37 +241,70 @@ function drawCanvas3(containerElement) {
 			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
 			v_Color = a_Color;
 			gl_PointSize = 5.0;
+			v_TexCoord = a_TexCoord;
 		}
 	`
 	const FS = `
 		precision mediump float;
 		varying vec4 v_Color;
+		varying vec2 v_TexCoord;
+		// 纹理数据(内容)(组)
+		uniform sampler2D u_Sampler;
 		void main() {
-			gl_FragColor = v_Color;
+			// gl_FragColor = v_Color;
+			gl_FragColor = texture2D(u_Sampler, v_TexCoord);
 		}
 	`
 
+	const OFFSCREEN_WIDTH = 256
+	const OFFSCREEN_HEIGHT = 256
+
 	console.time(`CreateModelDatas`)
-	const modelDatasResult = createShereDatas(
-		Program3.profile.modelSize.radius,
-		Program3.profile.modelSize.meridianCount,
-		Program3.profile.modelSize.latitudeCount,
+	/**
+	 * 创建方体顶点数据
+	 */
+	const cubeVertexDatasResult = createCubeDatas(
+		Program3.profile.modelSize.cubeLength,
+		Program3.profile.modelSize.cubeLength,
+		Program3.profile.modelSize.cubeLength,
 		{
-			redRange: [80, 200],
-			greenRange: [80, 200],
-			blueRange: [80, 200],
-			alphaRange: [1, 1],
+			up: [255, 0, 0, 1],
+			bottom: [0, 255, 0, 1],
+			front: [0, 0, 255, 1],
+			back: [255, 255, 0, 1],
+			right: [0, 255, 255, 1],
+			left: [255, 0, 255, 1],
 		}
 	)
-	console.log(modelDatasResult)
+	console.log(cubeVertexDatasResult)
+	/**
+	 * 创建平面顶点数据
+	 */
+	// prettier-ignore
+	const planeVertexDatasResult = {
+		// prettier-ignore
+		vertexFeature: new Float32Array([
+			-1.25, 1.25, 0.0, 1.0, 0.0, 0.0, 1.0,
+			-1.25, -1.25, 0.0, 1.0, 0.0, 0.0, 1.0,
+			1.25, -1.25, 0.0, 1.0, 0.0, 0.0, 1.0,
+			/* ... */
+			-1.25, 1.25, 0.0, 1.0, 0.0, 0.0, 1.0,
+			1.25, -1.25, 0.0, 1.0, 0.0, 0.0, 1.0,
+			1.25, 1.25, 0.0, 1.0, 0.0, 0.0, 1.0,
+		]),
+		// prettier-ignore
+		vertexCoordinate: new Float32Array([
+			0.0, 0.0, 0.0, 1.0, 1.0, 1.0,
+			0.0, 0.0, 1.0, 1.0, 1.0, 0.0
+		]),
+	}
+	console.log(planeVertexDatasResult)
 	console.timeEnd(`CreateModelDatas`)
 
 	const canvasElement = containerElement.querySelector('canvas')
-	const gl = initWebGLContext(canvasElement)
+	const gl = ven$initWebGLContext(canvasElement)
 
-	const vertexShader = createShader(gl, gl.VERTEX_SHADER, VS)
-	const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, FS)
-	const program = createProgram(gl, vertexShader, fragmentShader)
+	const program = ven$createProgram(gl, VS, FS)
 
 	gl.useProgram(program)
 
@@ -284,17 +318,37 @@ function drawCanvas3(containerElement) {
 	const u_ModelMatrix = gl.getUniformLocation(program, 'u_ModelMatrix')
 	const u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix')
 	const u_ProjMatrix = gl.getUniformLocation(program, 'u_ProjMatrix')
+	const u_Sampler = gl.getUniformLocation(program, 'u_Sampler')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 	const a_Color = gl.getAttribLocation(program, 'a_Color')
+	const a_TexCoord = gl.getAttribLocation(program, 'a_TexCoord')
 
-	gl.enableVertexAttribArray(a_Position)
-	gl.enableVertexAttribArray(a_Color)
+	/**
+	 * 创建方体 buffer
+	 */
+	const cubeVertextBuffer = gl.createBuffer()
+	const cubeTexCoordBuffer = gl.createBuffer()
+	/**
+	 * 创建平面 buffer
+	 */
+	const planeVertexBuffer = gl.createBuffer()
+	const planeTexCoordBuffer = gl.createBuffer()
 
-	const vertextBuffer = gl.createBuffer()
-	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
-	gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
-	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
-	gl.bufferData(gl.ARRAY_BUFFER, modelDatasResult.vertexFeature, gl.STATIC_DRAW)
+	/**
+	 * 创建帧缓冲区对象
+	 */
+	const frameBufferResult = ven$initFramebufferObject(gl, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT)
+	const frameBuffer = frameBufferResult.framebuffer
+	const frameTexture = frameBufferResult.texture
+
+	/**
+	 * 初始化方体纹理
+	 * 		载入纹理
+	 */
+	const cubeTexture = loadImageResourceTexture(gl, '../common/images/demo-1024x1024.jpg', u_Sampler, 0, (gl, textureUnitIndex) => {
+		gl.bindTexture(gl.TEXTURE_2D, null)
+		Program3.isRender = true
+	})
 
 	const render = () => {
 		if (!Program3.isRender) {
@@ -351,11 +405,61 @@ function drawCanvas3(containerElement) {
 			.multiply4(modelRotationZMatrix4)
 			.multiply4(modelOffsetMatrix4)
 
+		gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer)
+		gl.viewport(0, 0, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT)
+		gl.clearColor(0.0, 0.0, 0.0, 1.0)
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
+		/* ... */
+		gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertextBuffer)
+		gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
+		gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
+		gl.bufferData(gl.ARRAY_BUFFER, cubeVertexDatasResult.vertexFeature, gl.STATIC_DRAW)
+		gl.bindBuffer(gl.ARRAY_BUFFER, cubeTexCoordBuffer)
+		gl.vertexAttribPointer(a_TexCoord, 2, gl.FLOAT, false, 0, 0)
+		gl.bufferData(gl.ARRAY_BUFFER, cubeVertexDatasResult.vertexCoordinate, gl.STATIC_DRAW)
+		/* ... */
+		gl.activeTexture(gl.TEXTURE0)
+		gl.bindTexture(gl.TEXTURE_2D, cubeTexture)
+		gl.drawArrays(gl.TRIANGLES, 0, cubeVertexDatasResult.vertexFeature.length / 7)
 
-		gl.drawArrays(gl.TRIANGLES, 0, modelDatasResult.vertexFeature.length / 7)
+		/**
+		 * 创建透视投影矩阵
+		 */
+		const fboProjectionMatrix4 = Ven$CanvasMatrix4.copyMatrix(projectionMatrix4)
+		/**
+		 * 创建视图矩阵
+		 */
+		const fboLookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
+			new Ven$Vector3(Program3.profile.lookAt.eyePosition.x, Program3.profile.lookAt.eyePosition.y, Program3.profile.lookAt.eyePosition.z),
+			new Ven$Vector3(Program3.profile.lookAt.atPosition.x, Program3.profile.lookAt.atPosition.y, Program3.profile.lookAt.atPosition.z),
+			new Ven$Vector3(0, 1, 0)
+		)
+
+		gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+		gl.viewport(0, 0, canvasElement.width, canvasElement.height)
+		gl.clearColor(0.0, 0.0, 0.0, 1.0)
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
+		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(fboLookAtMatrix4.data))
+		gl.uniformMatrix4fv(u_ProjMatrix, false, new Float32Array(fboProjectionMatrix4.data))
+		/* ... */
+		gl.bindBuffer(gl.ARRAY_BUFFER, planeVertexBuffer)
+		gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 28, 0)
+		gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
+		gl.bufferData(gl.ARRAY_BUFFER, planeVertexDatasResult.vertexFeature, gl.STATIC_DRAW)
+		gl.enableVertexAttribArray(a_Position)
+		gl.enableVertexAttribArray(a_Color)
+		gl.bindBuffer(gl.ARRAY_BUFFER, planeTexCoordBuffer)
+		gl.vertexAttribPointer(a_TexCoord, 2, gl.FLOAT, false, 0, 0)
+		gl.bufferData(gl.ARRAY_BUFFER, planeVertexDatasResult.vertexCoordinate, gl.STATIC_DRAW)
+		gl.enableVertexAttribArray(a_TexCoord)
+		/* ... */
+		gl.activeTexture(gl.TEXTURE0)
+		gl.bindTexture(gl.TEXTURE_2D, frameTexture)
+		gl.drawArrays(gl.TRIANGLES, 0, planeVertexDatasResult.vertexFeature.length / 7)
 	}
 
 	const exec = () => {

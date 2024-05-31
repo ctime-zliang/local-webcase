@@ -8,7 +8,7 @@ class Program2 {
 		return new Promise((_, reject) => {
 			const len = srcs.length
 			for (let i = 0; i < len; i++) {
-				loadTexture(gl, srcs[i], u_Samplers[i], i, (gl, textureUnitIndex) => {
+				loadImageResourceTexture(gl, srcs[i], u_Samplers[i], i, (gl, textureUnitIndex) => {
 					hasDones.push(textureUnitIndex)
 					if (hasDones.length >= len) {
 						_()

@@ -1,8 +1,8 @@
 /**
- * 绘制方体
+ * 绘制球体
  */
 
-class Program2 {
+class Program4 {
 	static isRender = true
 	static containerElement
 	static profile = {
@@ -34,7 +34,9 @@ class Program2 {
 		 * 模型参数
 		 */
 		modelSize: {
-			cubeLength: 1.0,
+			radius: 1.0,
+			meridianCount: 30,
+			latitudeCount: 30,
 		},
 		/**
 		 * 模型旋转角度
@@ -221,17 +223,15 @@ class Program2 {
 	}
 }
 
-function drawCanvas2(containerElement) {
-	Program2.init(containerElement)
+function drawCanvas4(containerElement) {
+	Program4.init(containerElement)
 
 	const VS = `
 		precision mediump float;
 		varying vec4 v_Color;
-		varying vec2 v_TexCoord;
 		// 顶点配置(组)
 		attribute vec3 a_Position;
 		attribute vec4 a_Color;
-		attribute vec2 a_TexCoord;
 		// 变换矩阵(组)
 		uniform mat4 u_ModelMatrix;
 		uniform mat4 u_ViewMatrix;
@@ -240,33 +240,26 @@ function drawCanvas2(containerElement) {
 			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
 			v_Color = a_Color;
 			gl_PointSize = 5.0;
-			v_TexCoord = a_TexCoord;
 		}
 	`
 	const FS = `
 		precision mediump float;
 		varying vec4 v_Color;
-		varying vec2 v_TexCoord;
-		// 纹理数据(内容)(组)
-		uniform sampler2D u_Sampler;
 		void main() {
-			// gl_FragColor = v_Color;
-			gl_FragColor = texture2D(u_Sampler, v_TexCoord);
+			gl_FragColor = v_Color;
 		}
 	`
 
 	console.time(`CreateModelDatas`)
-	const modelDatasResult = createCubeDatas(
-		Program2.profile.modelSize.cubeLength,
-		Program2.profile.modelSize.cubeLength,
-		Program2.profile.modelSize.cubeLength,
+	const modelDatasResult = createShereDatas(
+		Program4.profile.modelSize.radius,
+		Program4.profile.modelSize.meridianCount,
+		Program4.profile.modelSize.latitudeCount,
 		{
-			up: [255, 0, 0, 1],
-			bottom: [0, 255, 0, 1],
-			front: [0, 0, 255, 1],
-			back: [255, 255, 0, 1],
-			right: [0, 255, 255, 1],
-			left: [255, 0, 255, 1],
+			redRange: [80, 200],
+			greenRange: [80, 200],
+			blueRange: [80, 200],
+			alphaRange: [1, 1],
 		}
 	)
 	console.log(modelDatasResult)
@@ -291,14 +284,11 @@ function drawCanvas2(containerElement) {
 	const u_ModelMatrix = gl.getUniformLocation(program, 'u_ModelMatrix')
 	const u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix')
 	const u_ProjMatrix = gl.getUniformLocation(program, 'u_ProjMatrix')
-	const u_Sampler = gl.getUniformLocation(program, 'u_Sampler')
 	const a_Position = gl.getAttribLocation(program, 'a_Position')
 	const a_Color = gl.getAttribLocation(program, 'a_Color')
-	const a_TexCoord = gl.getAttribLocation(program, 'a_TexCoord')
 
 	gl.enableVertexAttribArray(a_Position)
 	gl.enableVertexAttribArray(a_Color)
-	gl.enableVertexAttribArray(a_TexCoord)
 
 	const vertextBuffer = gl.createBuffer()
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertextBuffer)
@@ -306,20 +296,11 @@ function drawCanvas2(containerElement) {
 	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 28, 12)
 	gl.bufferData(gl.ARRAY_BUFFER, modelDatasResult.vertexFeature, gl.STATIC_DRAW)
 
-	const texCoordBuffer = gl.createBuffer()
-	gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer)
-	gl.vertexAttribPointer(a_TexCoord, 2, gl.FLOAT, false, 0, 0)
-	gl.bufferData(gl.ARRAY_BUFFER, modelDatasResult.vertexCoordinate, gl.STATIC_DRAW)
-
-	loadImageResourceTexture(gl, '../common/images/demo-1024x1024.jpg', u_Sampler, 0, (gl, textureUnitIndex) => {
-		Program2.isRender = true
-	})
-
 	const render = () => {
-		if (!Program2.isRender) {
+		if (!Program4.isRender) {
 			return
 		}
-		// Program2.isRender = false
+		// Program4.isRender = false
 
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		gl.clearColor(0.0, 0.0, 0.0, 1.0)
@@ -328,39 +309,39 @@ function drawCanvas2(containerElement) {
 		 * 创建透视投影矩阵
 		 */
 		const projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
-			Program2.profile.persProjection.fovy,
-			Program2.profile.persProjection.aspect,
-			Program2.profile.persProjection.near,
-			Program2.profile.persProjection.far
+			Program4.profile.persProjection.fovy,
+			Program4.profile.persProjection.aspect,
+			Program4.profile.persProjection.near,
+			Program4.profile.persProjection.far
 		)
 		/**
 		 * 创建视图矩阵
 		 */
 		const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
-			new Ven$Vector3(Program2.profile.lookAt.eyePosition.x, Program2.profile.lookAt.eyePosition.y, Program2.profile.lookAt.eyePosition.z),
-			new Ven$Vector3(Program2.profile.lookAt.atPosition.x, Program2.profile.lookAt.atPosition.y, Program2.profile.lookAt.atPosition.z),
+			new Ven$Vector3(Program4.profile.lookAt.eyePosition.x, Program4.profile.lookAt.eyePosition.y, Program4.profile.lookAt.eyePosition.z),
+			new Ven$Vector3(Program4.profile.lookAt.atPosition.x, Program4.profile.lookAt.atPosition.y, Program4.profile.lookAt.atPosition.z),
 			new Ven$Vector3(0, 1, 0)
 		)
 		/**
 		 * 创建旋转矩阵
 		 */
 		const modelXRotationMatrix4 = Ven$CanvasMatrix4.setRotate(
-			Ven$Angles.degreeToRadian(Program2.profile.modelRatation.x),
+			Ven$Angles.degreeToRadian(Program4.profile.modelRatation.x),
 			new Ven$Vector3(1, 0, 0)
 		)
 		const modelRotationYMatrix4 = Ven$CanvasMatrix4.setRotate(
-			Ven$Angles.degreeToRadian(Program2.profile.modelRatation.y),
+			Ven$Angles.degreeToRadian(Program4.profile.modelRatation.y),
 			new Ven$Vector3(0, 1, 0)
 		)
 		const modelRotationZMatrix4 = Ven$CanvasMatrix4.setRotate(
-			Ven$Angles.degreeToRadian(Program2.profile.modelRatation.z),
+			Ven$Angles.degreeToRadian(Program4.profile.modelRatation.z),
 			new Ven$Vector3(0, 0, 1)
 		)
 		/**
 		 * 创建平移矩阵
 		 */
 		const modelOffsetMatrix4 = Ven$CanvasMatrix4.setTranslate(
-			new Ven$Vector3(Program2.profile.modelOffset.x, Program2.profile.modelOffset.y, Program2.profile.modelOffset.z)
+			new Ven$Vector3(Program4.profile.modelOffset.x, Program4.profile.modelOffset.y, Program4.profile.modelOffset.z)
 		)
 		/**
 		 * 生成模型变换矩阵

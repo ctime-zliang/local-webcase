@@ -151,7 +151,7 @@ class ShereModel1 extends Model1 {
 	}
 }
 
-class Program1 {
+class Program {
 	static isRender = true
 	static containerElement
 	static downKeys = new Set()
@@ -903,16 +903,16 @@ class Program1 {
 	}
 }
 
-function drawCanvas1(containerElement) {
-	Program1.init(containerElement)
-	Program1.glControl = {
+function drawCanvas(containerElement) {
+	Program.init(containerElement)
+	Program.glControl = {
 		gl: null,
 		modelInstances: [],
 		vertexFeatureSize: 0,
 	}
 
 	const canvasElement = containerElement.querySelector('canvas')
-	Program1.glControl.gl = ven$initWebGLContext(canvasElement)
+	Program.glControl.gl = ven$initWebGLContext(canvasElement)
 
 	const COMMON_VERTEX_SHADER = `
 		precision mediump float;
@@ -1102,43 +1102,38 @@ function drawCanvas1(containerElement) {
 	}
 	const modelDatas1 = initModelDatas()
 	const modelDatas2 = initModelDatas(1.0, 0, -1.0)
-	Program1.glControl.modelInstances = [...modelDatas1.modelInstances, ...modelDatas2.modelInstances]
-	Program1.glControl.modelInstances.forEach(modelInstanceItem => {
-		modelInstanceItem.normalBuffer = ven$initArrayBufferForLaterUse(Program1.glControl.gl)
-		modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(Program1.glControl.gl)
-		modelInstanceItem.texCoordBuffer = ven$initArrayBufferForLaterUse(Program1.glControl.gl)
+	Program.glControl.modelInstances = [...modelDatas1.modelInstances, ...modelDatas2.modelInstances]
+	Program.glControl.modelInstances.forEach(modelInstanceItem => {
+		modelInstanceItem.normalBuffer = ven$initArrayBufferForLaterUse(Program.glControl.gl)
+		modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(Program.glControl.gl)
+		modelInstanceItem.texCoordBuffer = ven$initArrayBufferForLaterUse(Program.glControl.gl)
 	})
-	Program1.glControl.vertexFeatureSize = getVertexFeatureSize(Program1.glControl.modelInstances)
-	Program1.renderModelInfomationView(Program1.glControl.modelInstances)
+	Program.glControl.vertexFeatureSize = getVertexFeatureSize(Program.glControl.modelInstances)
+	Program.renderModelInfomationView(Program.glControl.modelInstances)
 
-	Program1.glControl.gl.clearColor(
-		Program1.profile.clearColor.r / 255,
-		Program1.profile.clearColor.g / 255,
-		Program1.profile.clearColor.b / 255,
-		1.0
-	)
-	Program1.glControl.gl.clear(Program1.glControl.gl.COLOR_BUFFER_BIT | Program1.glControl.gl.DEPTH_BUFFER_BIT)
-	Program1.glControl.gl.enable(Program1.glControl.gl.BLEND)
-	Program1.glControl.gl.blendFunc(Program1.glControl.gl.SRC_ALPHA, Program1.glControl.gl.ONE_MINUS_SRC_ALPHA)
-	Program1.glControl.gl.enable(Program1.glControl.gl.CULL_FACE)
-	Program1.glControl.gl.enable(Program1.glControl.gl.DEPTH_TEST)
-	Program1.glControl.gl.enable(Program1.glControl.gl.POLYGON_OFFSET_FILL)
-	Program1.glControl.gl.polygonOffset(1.0, 1.0)
+	Program.glControl.gl.clearColor(Program.profile.clearColor.r / 255, Program.profile.clearColor.g / 255, Program.profile.clearColor.b / 255, 1.0)
+	Program.glControl.gl.clear(Program.glControl.gl.COLOR_BUFFER_BIT | Program.glControl.gl.DEPTH_BUFFER_BIT)
+	Program.glControl.gl.enable(Program.glControl.gl.BLEND)
+	Program.glControl.gl.blendFunc(Program.glControl.gl.SRC_ALPHA, Program.glControl.gl.ONE_MINUS_SRC_ALPHA)
+	Program.glControl.gl.enable(Program.glControl.gl.CULL_FACE)
+	Program.glControl.gl.enable(Program.glControl.gl.DEPTH_TEST)
+	Program.glControl.gl.enable(Program.glControl.gl.POLYGON_OFFSET_FILL)
+	Program.glControl.gl.polygonOffset(1.0, 1.0)
 
-	Program1.glControl.commonLight = {
+	Program.glControl.commonLight = {
 		glAttributes: {},
 		glUniforms: {},
 		program: null,
 	}
-	Program1.glControl.textureLight = {
+	Program.glControl.textureLight = {
 		isLoadTexture: false,
 		glAttributes: {},
 		glUniforms: {},
 		program: null,
 	}
 
-	Program1.glControl.commonLight.program = ven$createProgram(Program1.glControl.gl, COMMON_VERTEX_SHADER, COMMON_FRAGMENT_SHADER)
-	const commonWebGLVariableLocation = ven$getWebGLVariableLocation(Program1.glControl.gl, Program1.glControl.commonLight.program, {
+	Program.glControl.commonLight.program = ven$createProgram(Program.glControl.gl, COMMON_VERTEX_SHADER, COMMON_FRAGMENT_SHADER)
+	const commonWebGLVariableLocation = ven$getWebGLVariableLocation(Program.glControl.gl, Program.glControl.commonLight.program, {
 		glAttributes: ['a_Normal', 'a_Position', 'a_Color'],
 		glUniforms: [
 			'u_illuType',
@@ -1157,11 +1152,11 @@ function drawCanvas1(containerElement) {
 			'u_FogDist',
 		],
 	})
-	Program1.glControl.commonLight.glAttributes = commonWebGLVariableLocation.glAttributes
-	Program1.glControl.commonLight.glUniforms = commonWebGLVariableLocation.glUniforms
+	Program.glControl.commonLight.glAttributes = commonWebGLVariableLocation.glAttributes
+	Program.glControl.commonLight.glUniforms = commonWebGLVariableLocation.glUniforms
 
-	Program1.glControl.textureLight.program = ven$createProgram(Program1.glControl.gl, TEXTURE_VERTEX_SHADER, TEXTURE_FRAGMENT_SHADER)
-	const textureWebGLVariableLocation = ven$getWebGLVariableLocation(Program1.glControl.gl, Program1.glControl.textureLight.program, {
+	Program.glControl.textureLight.program = ven$createProgram(Program.glControl.gl, TEXTURE_VERTEX_SHADER, TEXTURE_FRAGMENT_SHADER)
+	const textureWebGLVariableLocation = ven$getWebGLVariableLocation(Program.glControl.gl, Program.glControl.textureLight.program, {
 		glAttributes: ['a_Normal', 'a_Position', 'a_Color', 'a_TexCoord'],
 		glUniforms: [
 			'u_illuType',
@@ -1178,8 +1173,8 @@ function drawCanvas1(containerElement) {
 			'u_Sampler',
 		],
 	})
-	Program1.glControl.textureLight.glAttributes = textureWebGLVariableLocation.glAttributes
-	Program1.glControl.textureLight.glUniforms = textureWebGLVariableLocation.glUniforms
+	Program.glControl.textureLight.glAttributes = textureWebGLVariableLocation.glAttributes
+	Program.glControl.textureLight.glUniforms = textureWebGLVariableLocation.glUniforms
 
 	const setModelMatrix = (gl, modelInstance, itemProgramControl) => {
 		const { glUniforms } = itemProgramControl
@@ -1222,12 +1217,12 @@ function drawCanvas1(containerElement) {
 
 	const setWebGLRenderClickedStatus = () => {}
 	const setWebGLRenderNormalStatus = () => {}
-	Program1.glControl.setWebGLRenderClickedStatus = setWebGLRenderClickedStatus
-	Program1.glControl.setWebGLRenderNormalStatus = setWebGLRenderNormalStatus
+	Program.glControl.setWebGLRenderClickedStatus = setWebGLRenderClickedStatus
+	Program.glControl.setWebGLRenderNormalStatus = setWebGLRenderNormalStatus
 
 	const loadTextureAction = (gl, itemProgramControl, callback) => {
 		const { glUniforms } = itemProgramControl
-		loadTexture(gl, '../common/images/demo-1024x1024.jpg', glUniforms.u_Sampler, 0, (gl, textureUnitIndex) => {
+		loadImageResourceTexture(gl, '../common/images/demo-1024x1024.jpg', glUniforms.u_Sampler, 0, (gl, textureUnitIndex) => {
 			callback && callback()
 		})
 	}
@@ -1239,40 +1234,40 @@ function drawCanvas1(containerElement) {
 		 * 创建透视投影矩阵
 		 */
 		const projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
-			Program1.profile.persProjection.fovy,
-			Program1.profile.persProjection.aspect,
-			Program1.profile.persProjection.near,
-			Program1.profile.persProjection.far
+			Program.profile.persProjection.fovy,
+			Program.profile.persProjection.aspect,
+			Program.profile.persProjection.near,
+			Program.profile.persProjection.far
 		)
 		/**
 		 * 创建正交投影矩阵
 		 */
 		const orthoMatrix4 = Ven$CanvasMatrix4.setOrtho(
-			Program1.profile.orthoProjection.left,
-			Program1.profile.orthoProjection.right,
-			Program1.profile.orthoProjection.bottom,
-			Program1.profile.orthoProjection.top,
-			Program1.profile.orthoProjection.near,
-			Program1.profile.orthoProjection.far
+			Program.profile.orthoProjection.left,
+			Program.profile.orthoProjection.right,
+			Program.profile.orthoProjection.bottom,
+			Program.profile.orthoProjection.top,
+			Program.profile.orthoProjection.near,
+			Program.profile.orthoProjection.far
 		)
 		/**
 		 * 创建视图矩阵
 		 */
 		const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
-			new Ven$Vector3(Program1.profile.lookAt.eyePosition.x, Program1.profile.lookAt.eyePosition.y, Program1.profile.lookAt.eyePosition.z),
-			new Ven$Vector3(Program1.profile.lookAt.atPosition.x, Program1.profile.lookAt.atPosition.y, Program1.profile.lookAt.atPosition.z),
+			new Ven$Vector3(Program.profile.lookAt.eyePosition.x, Program.profile.lookAt.eyePosition.y, Program.profile.lookAt.eyePosition.z),
+			new Ven$Vector3(Program.profile.lookAt.atPosition.x, Program.profile.lookAt.atPosition.y, Program.profile.lookAt.atPosition.z),
 			new Ven$Vector3(0, 1, 0)
 		)
 
-		gl.uniform1f(glUniforms.u_illuType, Program1.profile.light.illuType)
-		if (Program1.profile.light.illuType === 1) {
+		gl.uniform1f(glUniforms.u_illuType, Program.profile.light.illuType)
+		if (Program.profile.light.illuType === 1) {
 			/**
 			 * 平行光方
 			 */
 			const lightDirection = new Ven$Vector3(
-				Program1.profile.light.direction.x,
-				Program1.profile.light.direction.y,
-				Program1.profile.light.direction.z
+				Program.profile.light.direction.x,
+				Program.profile.light.direction.y,
+				Program.profile.light.direction.z
 			)
 			const lightNormalizeDirection = lightDirection.normalize()
 			gl.uniform3fv(
@@ -1280,45 +1275,42 @@ function drawCanvas1(containerElement) {
 				new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z])
 			)
 		}
-		if (Program1.profile.light.illuType === 2) {
+		if (Program.profile.light.illuType === 2) {
 			/**
 			 * 点光
 			 */
 			gl.uniform3fv(
 				glUniforms.u_LightPosition,
-				new Float32Array([Program1.profile.light.position.x, Program1.profile.light.position.y, Program1.profile.light.position.z])
+				new Float32Array([Program.profile.light.position.x, Program.profile.light.position.y, Program.profile.light.position.z])
 			)
 		}
 		gl.uniform3f(
 			glUniforms.u_LightColor,
-			Program1.profile.light.color.r / 255,
-			Program1.profile.light.color.g / 255,
-			Program1.profile.light.color.b / 255
+			Program.profile.light.color.r / 255,
+			Program.profile.light.color.g / 255,
+			Program.profile.light.color.b / 255
 		)
-		gl.uniform1f(glUniforms.u_lightIntensityGain, Program1.profile.light.intensityGain)
+		gl.uniform1f(glUniforms.u_lightIntensityGain, Program.profile.light.intensityGain)
 		gl.uniform3f(
 			glUniforms.u_AmbientLightColor,
-			Program1.profile.light.ambient.r,
-			Program1.profile.light.ambient.g,
-			Program1.profile.light.ambient.b
+			Program.profile.light.ambient.r,
+			Program.profile.light.ambient.g,
+			Program.profile.light.ambient.b
 		)
 		gl.uniform3fv(
 			glUniforms.u_FogColor,
-			new Float32Array([Program1.profile.fog.color.r / 255, Program1.profile.fog.color.g / 255, Program1.profile.fog.color.b / 255])
+			new Float32Array([Program.profile.fog.color.r / 255, Program.profile.fog.color.g / 255, Program.profile.fog.color.b / 255])
 		)
-		gl.uniform2fv(
-			glUniforms.u_FogDist,
-			new Float32Array([Program1.profile.fog.dist.distOfStartAndEye, Program1.profile.fog.dist.distOfEndAndEye])
-		)
+		gl.uniform2fv(glUniforms.u_FogDist, new Float32Array([Program.profile.fog.dist.distOfStartAndEye, Program.profile.fog.dist.distOfEndAndEye]))
 		gl.uniform3fv(
 			glUniforms.u_Eye,
-			new Float32Array([Program1.profile.lookAt.eyePosition.x, Program1.profile.lookAt.eyePosition.y, Program1.profile.lookAt.eyePosition.z])
+			new Float32Array([Program.profile.lookAt.eyePosition.x, Program.profile.lookAt.eyePosition.y, Program.profile.lookAt.eyePosition.z])
 		)
 		gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
-		if (Program1.profile.projectionType === 1) {
+		if (Program.profile.projectionType === 1) {
 			gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 		}
-		if (Program1.profile.projectionType === 2) {
+		if (Program.profile.projectionType === 2) {
 			gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(orthoMatrix4.data))
 		}
 	}
@@ -1356,14 +1348,14 @@ function drawCanvas1(containerElement) {
 	}
 
 	const render = (gl, vertexFeatureSize, modelInstances, itemProgramControl, enableTexture) => {
-		if (!Program1.isRender) {
+		if (!Program.isRender) {
 			return
 		}
-		Program1.isRender = false
+		Program.isRender = false
 
 		gl.useProgram(itemProgramControl.program)
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		gl.clearColor(Program1.profile.clearColor.r / 255, Program1.profile.clearColor.g / 255, Program1.profile.clearColor.b / 255, 1.0)
+		gl.clearColor(Program.profile.clearColor.r / 255, Program.profile.clearColor.g / 255, Program.profile.clearColor.b / 255, 1.0)
 
 		setProfileMatrix(gl, itemProgramControl)
 		modelInstances.forEach(modelInstanceItem => {
@@ -1375,37 +1367,31 @@ function drawCanvas1(containerElement) {
 	const stepControl = new Ven$StepControl(0, 90, 360)
 	let angle = 0
 	const exec = () => {
-		if (Program1.profile.autoTransformation) {
+		if (Program.profile.autoTransformation) {
 			angle = stepControl.getNextValue() % 360
-			Program1.getModelInstances(Program1.glControl.modelInstances).forEach(modelInstanceItem => {
+			Program.getModelInstances(Program.glControl.modelInstances).forEach(modelInstanceItem => {
 				modelInstanceItem.modelRatation.y = angle
 			})
-			Program1.isRender = true
-			Program1.renderModelInfomationView(Program1.glControl.modelInstances)
+			Program.isRender = true
+			Program.renderModelInfomationView(Program.glControl.modelInstances)
 		} else {
 			stepControl.updateLastStamp()
 		}
-		if (Program1.profile.enableTexture) {
-			if (!Program1.glControl.textureLight.isLoadTexture) {
-				Program1.glControl.textureLight.isLoadTexture = true
-				loadTextureAction(Program1.glControl.gl, Program1.glControl.textureLight, () => {
-					Program1.isRender = true
+		if (Program.profile.enableTexture) {
+			if (!Program.glControl.textureLight.isLoadTexture) {
+				Program.glControl.textureLight.isLoadTexture = true
+				loadTextureAction(Program.glControl.gl, Program.glControl.textureLight, () => {
+					Program.isRender = true
 				})
 			}
-			render(
-				Program1.glControl.gl,
-				Program1.glControl.vertexFeatureSize,
-				Program1.glControl.modelInstances,
-				Program1.glControl.textureLight,
-				true
-			)
+			render(Program.glControl.gl, Program.glControl.vertexFeatureSize, Program.glControl.modelInstances, Program.glControl.textureLight, true)
 			requestAnimationFrame(exec)
 			return
 		}
-		render(Program1.glControl.gl, Program1.glControl.vertexFeatureSize, Program1.glControl.modelInstances, Program1.glControl.commonLight, false)
+		render(Program.glControl.gl, Program.glControl.vertexFeatureSize, Program.glControl.modelInstances, Program.glControl.commonLight, false)
 		requestAnimationFrame(exec)
 	}
 	exec()
 
-	console.log(Program1.glControl)
+	console.log(Program.glControl)
 }

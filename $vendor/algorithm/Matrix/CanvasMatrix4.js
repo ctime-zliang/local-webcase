@@ -1,6 +1,14 @@
 class Ven$CanvasMatrix4 {
-	static setMatrix4() {
+	static setMatrix() {
 		return new Ven$Matrix4()
+	}
+
+	static copyMatrix(refMatrix4) {
+		const matrix4 = new Ven$Matrix4()
+		for (let i = 0; i < refMatrix4.data.length; i++) {
+			matrix4.data[i] = refMatrix4.data[i]
+		}
+		return matrix4
 	}
 
 	/**
