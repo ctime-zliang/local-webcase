@@ -94,7 +94,7 @@ function ven$getWebGLVariableLocation(
 function ven$initFramebufferObject(gl, offScreenWidth, offScreenHeight) {
 	let frameBuffer
 	let texture
-	let depthBuffer
+	let renderBuffer
 	const error = () => {
 		if (frameBuffer) {
 			gl.deleteFramebuffer(frameBuffer)
@@ -102,8 +102,8 @@ function ven$initFramebufferObject(gl, offScreenWidth, offScreenHeight) {
 		if (texture) {
 			gl.deleteTexture(texture)
 		}
-		if (depthBuffer) {
-			gl.deleteRenderbuffer(depthBuffer)
+		if (renderBuffer) {
+			gl.deleteRenderbuffer(renderBuffer)
 		}
 		return null
 	}
@@ -114,6 +114,12 @@ function ven$initFramebufferObject(gl, offScreenWidth, offScreenHeight) {
 		return error()
 	}
 
+	/**
+	 * 创建纹理对象
+	 * 绑定纹理对象
+	 * 设置纹理对象处理参数
+	 *      texImage2D: 为纹理对象分配一个可以存储纹理图像的区域
+	 */
 	texture = gl.createTexture()
 	if (!texture) {
 		console.log('failed to create texture object')
@@ -122,25 +128,31 @@ function ven$initFramebufferObject(gl, offScreenWidth, offScreenHeight) {
 	gl.bindTexture(gl.TEXTURE_2D, texture)
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, offScreenWidth, offScreenHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null)
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
-	frameBuffer.texture = texture
 
 	/**
-	 * 初始化渲染缓冲区
+	 * 创建渲染缓冲区
+	 * 绑定渲染缓冲区
+	 * 设置渲染缓冲区尺寸
 	 */
-	depthBuffer = gl.createRenderbuffer()
-	if (!depthBuffer) {
+	renderBuffer = gl.createRenderbuffer()
+	if (!renderBuffer) {
 		console.error('failed to create renderbuffer object')
 		return error()
 	}
-	gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer)
+	gl.bindRenderbuffer(gl.RENDERBUFFER, renderBuffer)
 	gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, offScreenWidth, offScreenHeight)
 
 	/**
-	 * 将纹理对象和渲染缓冲区关联到帧缓冲区
+	 * 绑定帧缓冲区
 	 */
 	gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer)
+
+	/**
+	 * 将纹理对象关联到帧缓冲区中的颜色关联对象, 作为颜色缓冲区的替代
+	 * 将渲染缓冲区关联到帧缓冲区中的深度关联对象, 作为深度缓冲区的替代
+	 */
 	gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0)
-	gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer)
+	gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, renderBuffer)
 
 	const code = gl.checkFramebufferStatus(gl.FRAMEBUFFER)
 	if (gl.FRAMEBUFFER_COMPLETE !== code) {
@@ -154,6 +166,8 @@ function ven$initFramebufferObject(gl, offScreenWidth, offScreenHeight) {
 
 	return {
 		frameBuffer,
+		/* ... */
 		texture,
+		renderBuffer,
 	}
 }
