@@ -326,18 +326,18 @@ function drawCanvas3(containerElement) {
 	/**
 	 * 创建方体 buffer
 	 */
-	const cubeVertextBuffer = gl.createBuffer()
-	const cubeTexCoordBuffer = gl.createBuffer()
+	const cubeVertextBuffer = ven$initArrayBufferForLaterUse(gl)
+	const cubeTexCoordBuffer = ven$initArrayBufferForLaterUse(gl)
 	/**
 	 * 创建平面 buffer
 	 */
-	const planeVertexBuffer = gl.createBuffer()
-	const planeTexCoordBuffer = gl.createBuffer()
+	const planeVertexBuffer = ven$initArrayBufferForLaterUse(gl)
+	const planeTexCoordBuffer = ven$initArrayBufferForLaterUse(gl)
 
 	/**
 	 * 创建帧缓冲区对象
 	 */
-	const { framebuffer: frameBuffer, texture: frameTexture } = ven$initFramebufferObject(gl, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT)
+	const { frameBuffer: frameBuffer, texture: frameTexture } = ven$initFramebufferObject(gl, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT)
 
 	/**
 	 * 初始化方体纹理
@@ -349,7 +349,7 @@ function drawCanvas3(containerElement) {
 		u_Sampler,
 		0,
 		(gl, textureUnitIndex, textureUnitLable) => {
-			gl.activeTexture(gl[textureUnitLable])
+			// gl.activeTexture(gl[textureUnitLable])
 			gl.bindTexture(gl.TEXTURE_2D, null)
 			Program3.isRender = true
 		}
@@ -412,7 +412,7 @@ function drawCanvas3(containerElement) {
 
 		gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer)
 		gl.viewport(0, 0, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT)
-		gl.clearColor(0.0, 0.0, 0.0, 1.0)
+		gl.clearColor(0.2, 0.2, 0.4, 1.0)
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		gl.uniformMatrix4fv(u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
 		gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))

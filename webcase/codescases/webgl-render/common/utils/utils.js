@@ -13,7 +13,7 @@ function loadImageResourceTexture(gl, src, u_Sampler, textureUnitIndex, callback
 		/**
 		 * 使用 Image 对象实例填充纹理内容
 		 */
-		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, this)
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img)
 		/**
 		 * 通过唯一的 gl.uniform1i 采样器编号赋值方法给着色器采样器赋值纹理编号
 		 */

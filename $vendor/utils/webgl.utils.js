@@ -92,12 +92,12 @@ function ven$getWebGLVariableLocation(
 }
 
 function ven$initFramebufferObject(gl, offScreenWidth, offScreenHeight) {
-	let framebuffer
+	let frameBuffer
 	let texture
 	let depthBuffer
 	const error = () => {
-		if (framebuffer) {
-			gl.deleteFramebuffer(framebuffer)
+		if (frameBuffer) {
+			gl.deleteFramebuffer(frameBuffer)
 		}
 		if (texture) {
 			gl.deleteTexture(texture)
@@ -108,8 +108,8 @@ function ven$initFramebufferObject(gl, offScreenWidth, offScreenHeight) {
 		return null
 	}
 
-	framebuffer = gl.createFramebuffer()
-	if (!framebuffer) {
+	frameBuffer = gl.createFramebuffer()
+	if (!frameBuffer) {
 		console.error('failed to create frame buffer object.')
 		return error()
 	}
@@ -122,6 +122,7 @@ function ven$initFramebufferObject(gl, offScreenWidth, offScreenHeight) {
 	gl.bindTexture(gl.TEXTURE_2D, texture)
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, offScreenWidth, offScreenHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null)
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+	frameBuffer.texture = texture
 
 	/**
 	 * 初始化渲染缓冲区
@@ -137,7 +138,7 @@ function ven$initFramebufferObject(gl, offScreenWidth, offScreenHeight) {
 	/**
 	 * 将纹理对象和渲染缓冲区关联到帧缓冲区
 	 */
-	gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer)
+	gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer)
 	gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0)
 	gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer)
 
@@ -152,7 +153,7 @@ function ven$initFramebufferObject(gl, offScreenWidth, offScreenHeight) {
 	gl.bindRenderbuffer(gl.RENDERBUFFER, null)
 
 	return {
-		framebuffer,
+		frameBuffer,
 		texture,
 	}
 }
