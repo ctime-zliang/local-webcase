@@ -46,6 +46,126 @@
 						padding: 3px 0;
 					"
 				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Rotation X: </label>
+					<span>-360</span>
+					<input type="range" value="0" name="modelRotationRangeX" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
+					<span>360</span>
+					<strong>&nbsp;(<span name="modelRotationRangeXShow">0</span>)</strong>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Rotation Y: </label>
+					<span>-360</span>
+					<input type="range" value="0" name="modelRotationRangeY" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
+					<span>360</span>
+					<strong>&nbsp;(<span name="modelRotationRangeYShow">0</span>)</strong>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Rotation Z: </label>
+					<span>-360</span>
+					<input type="range" value="0" name="modelRotationRangeZ" min="-360" max="360" step="1" style="width: 300px; cursor: pointer" />
+					<span>360</span>
+					<strong>&nbsp;(<span name="modelRotationRangeZShow">0</span>)</strong>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Offset X: </label>
+					<span>-10</span>
+					<input type="range" value="0" name="modelOffsetRangeX" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>10</span>
+					<strong>&nbsp;(<span name="modelOffsetRangeXShow">0</span>)</strong>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Offset Y: </label>
+					<span>-10</span>
+					<input type="range" value="0" name="modelOffsetRangeY" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>10</span>
+					<strong>&nbsp;(<span name="modelOffsetRangeYShow">0</span>)</strong>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Offset Z: </label>
+					<span>-10</span>
+					<input type="range" value="0" name="modelOffsetRangeZ" min="-10" max="10" step="0.01" style="width: 300px; cursor: pointer" />
+					<span>10</span>
+					<strong>&nbsp;(<span name="modelOffsetRangeZShow">0</span>)</strong>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Scale: </label>
+					<span>0.01</span>
+					<input type="range" value="0" name="modelScaleRange" min="0.01" max="5" step="0.1" style="width: 300px; cursor: pointer" />
+					<span>5</span>
+					<strong>&nbsp;(<span name="modelScaleRangeShow">0</span>)</strong>
+				</div>
+				<br />
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-EyePosition X: </label>
 					<span>-100</span>
 					<input type="range" name="lookAtMatrix4EyePositionX" min="-100" max="100" step="0.1" style="width: 300px; cursor: pointer" />
@@ -182,10 +302,10 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Illu Type: </label>
-					<input type="radio" name="lightIlluTypeCheck" value="1" style="width: 20px; height: 20px; cursor: pointer" />
+					<input type="radio" name="lightIlluType" value="1" style="width: 20px; height: 20px; cursor: pointer" />
 					<span>Parallel Light</span>
 					<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-					<input type="radio" name="lightIlluTypeCheck" value="2" style="width: 20px; height: 20px; cursor: pointer" />
+					<input type="radio" name="lightIlluType" value="2" style="width: 20px; height: 20px; cursor: pointer" />
 					<span>Spot Light</span>
 				</div>
 				<div
@@ -476,9 +596,9 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ortho Projection Near: </label>
-					<span>-50</span>
-					<input type="range" value="0" name="orthoProjectionNear" min="-50" max="50" step="0.1" style="width: 300px; cursor: pointer" />
-					<span>50</span>
+					<span>-120</span>
+					<input type="range" value="0" name="orthoProjectionNear" min="-120" max="120" step="0.1" style="width: 300px; cursor: pointer" />
+					<span>120</span>
 					<strong>&nbsp;(<span name="orthoProjectionNearShow">0</span>)</strong>
 				</div>
 				<div
@@ -493,9 +613,9 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ortho Projection Far: </label>
-					<span>-50</span>
-					<input type="range" value="0" name="orthoProjectionFar" min="-50" max="50" step="0.1" style="width: 300px; cursor: pointer" />
-					<span>50</span>
+					<span>-120</span>
+					<input type="range" value="0" name="orthoProjectionFar" min="-120" max="120" step="0.1" style="width: 300px; cursor: pointer" />
+					<span>120</span>
 					<strong>&nbsp;(<span name="orthoProjectionFarShow">0</span>)</strong>
 				</div>
 				<br />
@@ -551,13 +671,10 @@
 	<script type="text/javascript" src="../../../../$vendor/algorithm/Vector/Vector.js"></script>
 	<script type="text/javascript" src="../../../../$vendor/algorithm/Vector/Vector3.js"></script>
 	<!-- ... -->
-	<script type="text/javascript" src="../common/gVars.js"></script>
 	<script type="text/javascript" src="../common/constant.js"></script>
-	<!-- ... -->
 	<script type="text/javascript" src="../common/utils/webgl-matrix.js"></script>
 	<script type="text/javascript" src="../common/utils/createCubeDatas.js"></script>
 	<script type="text/javascript" src="../common/utils/createShereDatas.js"></script>
-	<script type="text/javascript" src="../common/utils/utils.js"></script>
 	<!-- ... -->
 	<script type="text/javascript" src="./script/draw.js"></script>
 	<script type="text/javascript" src="./script/base.js"></script>

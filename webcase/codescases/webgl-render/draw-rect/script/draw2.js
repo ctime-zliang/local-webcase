@@ -36,40 +36,35 @@ function drawCanvas2(containerElement) {
 	const indices = [0, 1, 2, 0, 2, 3]
 
 	const canvasElement = containerElement.querySelector('canvas')
-	const gl = initWebGLContext(canvasElement)
-
-	const vertexShader = createShader(gl, gl.VERTEX_SHADER, VS)
-	const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, FS)
-	const program = createProgram(gl, vertexShader, fragmentShader)
+	const gl = ven$initWebGLContext(canvasElement)
+	const program = ven$createProgram(gl, VS, FS)
 
 	gl.useProgram(program)
 
 	gl.clearColor(0.0, 0.0, 0.0, 1.0)
 	gl.clear(gl.COLOR_BUFFER_BIT)
 
-	const a_Position = gl.getAttribLocation(program, 'a_Position')
-	const a_CanvasSize = gl.getAttribLocation(program, 'a_CanvasSize')
-	const a_Color = gl.getAttribLocation(program, 'a_Color')
+	const { glAttributes, glUniforms } = ven$getWebGLVariableLocation(gl, program, {
+		glAttributes: ['a_CanvasSize', 'a_Position', 'a_Color'],
+		glUniforms: [],
+	})
 
-	gl.enableVertexAttribArray(a_Position)
-	gl.enableVertexAttribArray(a_Color)
+	gl.vertexAttrib2f(glAttributes.a_CanvasSize, canvasElement.width, canvasElement.height)
 
-	/**
-	 * 向顶点着色器变量 attribute vec2 a_CanvasSize 传递匹配数据
-	 */
-	gl.vertexAttrib2f(a_CanvasSize, canvasElement.width, canvasElement.height)
+	const datasBuffer = ven$initArrayBufferForLaterUse(gl)
+	ven$initAttributeVariable(gl, glAttributes.a_Position, datasBuffer, {
+		size: 2,
+		stride: 24,
+	})
+	ven$initAttributeVariable(gl, glAttributes.a_Color, datasBuffer, {
+		size: 4,
+		stride: 24,
+		offset: 8,
+	})
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.STATIC_DRAW)
 
-	const datasBuffer = gl.createBuffer()
-	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
-	gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 24, 0)
-	gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 24, 8)
-
-	const indicesBuffer = gl.createBuffer()
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesBuffer)
+	const indicesBuffer = ven$initElementArrayBufferForLaterUse(gl)
 	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW)
-
-	gl.bindBuffer(gl.ARRAY_BUFFER, datasBuffer)
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.DYNAMIC_DRAW)
 
 	console.time(`draw-webgl`)
 	gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0)

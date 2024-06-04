@@ -276,6 +276,20 @@ class Program {
 
 	static initFormView() {
 		const self = this
+		const modelRotationRangeXElement = this.containerElement.querySelector(`[name="modelRotationRangeX"]`)
+		const modelRotationXShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeXShow"]`)
+		const modelRotationRangeYElement = this.containerElement.querySelector(`[name="modelRotationRangeY"]`)
+		const modelRotationYShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeYShow"]`)
+		const modelRotationRangeZElement = this.containerElement.querySelector(`[name="modelRotationRangeZ"]`)
+		const modelRotationZShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeZShow"]`)
+		const modelOffsetRangeXElement = this.containerElement.querySelector(`[name="modelOffsetRangeX"]`)
+		const modelOffsetXShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeXShow"]`)
+		const modelOffsetRangeYElement = this.containerElement.querySelector(`[name="modelOffsetRangeY"]`)
+		const modelOffsetYShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeYShow"]`)
+		const modelOffsetRangeZElement = this.containerElement.querySelector(`[name="modelOffsetRangeZ"]`)
+		const modelOffsetZShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeZShow"]`)
+		const modelScaleRangeElement = this.containerElement.querySelector(`[name="modelScaleRange"]`)
+		const modelScaleRangeShowSpanElement = this.containerElement.querySelector(`[name="modelScaleRangeShow"]`)
 		const projectionTypeRadioElements = this.containerElement.querySelectorAll(`[name="projectionType"]`)
 		const persProjectionFovyRangeElement = this.containerElement.querySelector(`[name="persProjectionFovy"]`)
 		const persProjectionFovyShowSpanElement = this.containerElement.querySelector(`[name="persProjectionFovyShow"]`)
@@ -329,6 +343,13 @@ class Program {
 		const fogEndDistRangeElement = this.containerElement.querySelector(`[name="fogEndDist"]`)
 		const fogEndDistShowShowSpanElement = this.containerElement.querySelector(`[name="fogEndDistShow"]`)
 
+		modelRotationXShowSpanElement.textContent = modelRotationRangeXElement.value = 0
+		modelRotationYShowSpanElement.textContent = modelRotationRangeYElement.value = 0
+		modelRotationZShowSpanElement.textContent = modelRotationRangeZElement.value = 0
+		modelOffsetXShowSpanElement.textContent = modelOffsetRangeXElement.value = 0
+		modelOffsetYShowSpanElement.textContent = modelOffsetRangeYElement.value = 0
+		modelOffsetZShowSpanElement.textContent = modelOffsetRangeZElement.value = 0
+		modelScaleRangeShowSpanElement.textContent = modelScaleRangeElement.value = 1
 		projectionTypeRadioElements.forEach(itemElement => {
 			itemElement.checked = itemElement.value === String(self.profile.projectionType)
 		})
@@ -369,6 +390,20 @@ class Program {
 	static eventHandle() {
 		const self = this
 		const canvasElement = this.containerElement.querySelector(`canvas`)
+		const modelRotationRangeXElement = this.containerElement.querySelector(`[name="modelRotationRangeX"]`)
+		const modelRotationRangeXShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeXShow"]`)
+		const modelRotationRangeYElement = this.containerElement.querySelector(`[name="modelRotationRangeY"]`)
+		const modelRotationRangeYShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeYShow"]`)
+		const modelRotationRangeZElement = this.containerElement.querySelector(`[name="modelRotationRangeZ"]`)
+		const modelRotationRangeZShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeZShow"]`)
+		const modelOffsetRangeXElement = this.containerElement.querySelector(`[name="modelOffsetRangeX"]`)
+		const modelOffsetRangeXShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeXShow"]`)
+		const modelOffsetRangeYElement = this.containerElement.querySelector(`[name="modelOffsetRangeY"]`)
+		const modelOffsetRangeYShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeYShow"]`)
+		const modelOffsetRangeZElement = this.containerElement.querySelector(`[name="modelOffsetRangeZ"]`)
+		const modelOffsetRangeZShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeZShow"]`)
+		const modelScaleRangeElement = this.containerElement.querySelector(`[name="modelScaleRange"]`)
+		const modelScaleRangeShowSpanElement = this.containerElement.querySelector(`[name="modelScaleRangeShow"]`)
 		const projectionTypeRadioElements = this.containerElement.querySelectorAll(`[name="projectionType"]`)
 		const persProjectionFovyRangeElement = this.containerElement.querySelector(`[name="persProjectionFovy"]`)
 		const persProjectionFovyShowSpanElement = this.containerElement.querySelector(`[name="persProjectionFovyShow"]`)
@@ -655,6 +690,64 @@ class Program {
 				console.log('projectionType:', self.profile.projectionType)
 				self.isRender = true
 			})
+		})
+		modelRotationRangeXElement.addEventListener('input', function (e) {
+			modelRotationRangeXShowSpanElement.textContent = +this.value
+			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+				modelInstanceItem.modelRatation.x = +this.value
+			})
+			self.isRender = true
+			self.renderModelInfomationView(self.glControl.modelInstances)
+		})
+		modelRotationRangeYElement.addEventListener('input', function (e) {
+			modelRotationRangeYShowSpanElement.textContent = +this.value
+			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+				modelInstanceItem.modelRatation.y = +this.value
+			})
+			self.isRender = true
+			self.renderModelInfomationView(self.glControl.modelInstances)
+		})
+		modelRotationRangeZElement.addEventListener('input', function (e) {
+			modelRotationRangeZShowSpanElement.textContent = +this.value
+			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+				modelInstanceItem.modelRatation.z = +this.value
+			})
+			self.isRender = true
+			self.renderModelInfomationView(self.glControl.modelInstances)
+		})
+		modelOffsetRangeXElement.addEventListener('input', function (e) {
+			modelOffsetRangeXShowSpanElement.textContent = +this.value
+			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+				modelInstanceItem.modelOffset.x = +this.value
+			})
+			self.isRender = true
+			self.renderModelInfomationView(self.glControl.modelInstances)
+		})
+		modelOffsetRangeYElement.addEventListener('input', function (e) {
+			modelOffsetRangeYShowSpanElement.textContent = +this.value
+			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+				modelInstanceItem.modelOffset.y = +this.value
+			})
+			self.isRender = true
+			self.renderModelInfomationView(self.glControl.modelInstances)
+		})
+		modelOffsetRangeZElement.addEventListener('input', function (e) {
+			modelOffsetRangeZShowSpanElement.textContent = +this.value
+			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+				modelInstanceItem.modelOffset.z = +this.value
+			})
+			self.isRender = true
+			self.renderModelInfomationView(self.glControl.modelInstances)
+		})
+		modelScaleRangeElement.addEventListener('input', function (e) {
+			modelScaleRangeShowSpanElement.textContent = +this.value
+			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+				modelInstanceItem.modelScale.x = +this.value
+				modelInstanceItem.modelScale.y = +this.value
+				modelInstanceItem.modelScale.z = +this.value
+			})
+			self.isRender = true
+			self.renderModelInfomationView(self.glControl.modelInstances)
 		})
 		persProjectionFovyRangeElement.addEventListener('input', function (e) {
 			persProjectionFovyShowSpanElement.textContent = self.profile.persProjection.fovy = +this.value
@@ -1078,7 +1171,7 @@ function drawCanvas(containerElement) {
 		}
 	`
 
-	const initModelDatas = (offsetX = 0, offsetY = 0, offsetZ = 0) => {
+	const initHumanoidModelDatas = (offsetX = 0, offsetY = 0, offsetZ = 0) => {
 		const modelInstances = []
 		const modelHead = new RectangularModel1(0.4, 0.35, 0.35, '#ffffff', 0 + offsetX, 1.2 + offsetY, 0 + offsetZ)
 		const modelBody = new RectangularModel1(0.8, 1.0, 0.4, '#ffffff', 0 + offsetX, 0.5 + offsetY, 0 + offsetZ)
@@ -1093,6 +1186,14 @@ function drawCanvas(containerElement) {
 			modelInstances,
 		}
 	}
+	const initShereModelDatas = (offsetX = 0, offsetY = 0, offsetZ = 0) => {
+		const modelInstances = []
+		const model1 = new ShereModel1(0.5, 30, 30, '#ffffff', 0 + offsetX, 0 + offsetY, 0 + offsetZ)
+		modelInstances.push(model1)
+		return {
+			modelInstances,
+		}
+	}
 	const getVertexFeatureSize = modelInstances => {
 		let len = 0
 		modelInstances.forEach(modelInstanceItem => {
@@ -1100,9 +1201,14 @@ function drawCanvas(containerElement) {
 		})
 		return len
 	}
-	const modelDatas1 = initModelDatas()
-	const modelDatas2 = initModelDatas(1.0, 0, -1.0)
-	Program.glControl.modelInstances = [...modelDatas1.modelInstances, ...modelDatas2.modelInstances]
+	const humanoidModelDatas1 = initHumanoidModelDatas()
+	const humanoidModelDatas2 = initHumanoidModelDatas(1.5, 0, -1.0)
+	const shereModelDatas1 = initShereModelDatas(-1.0, 0, 1.0)
+	Program.glControl.modelInstances = [
+		...humanoidModelDatas1.modelInstances,
+		...humanoidModelDatas2.modelInstances,
+		...shereModelDatas1.modelInstances,
+	]
 	Program.glControl.modelInstances.forEach(modelInstanceItem => {
 		modelInstanceItem.normalBuffer = ven$initArrayBufferForLaterUse(Program.glControl.gl)
 		modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(Program.glControl.gl)
@@ -1222,7 +1328,7 @@ function drawCanvas(containerElement) {
 
 	const loadTextureAction = (gl, itemProgramControl, callback) => {
 		const { glUniforms } = itemProgramControl
-		loadImageResourceTexture(gl, '../common/images/demo-1024x1024.jpg', glUniforms.u_Sampler, 0, (gl, textureUnitIndex) => {
+		ven$loadImageResourceTexture(gl, '../common/images/demo-1024x1024.jpg', glUniforms.u_Sampler, 0, (gl, textureUnitIndex) => {
 			callback && callback()
 		})
 	}

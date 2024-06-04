@@ -1,5 +1,4 @@
 function ven$initWebGLContext(canvasElement) {
-	gVars.canvasElement = canvasElement
 	return canvasElement.getContext('webgl')
 }
 
@@ -41,11 +40,15 @@ function ven$createProgram(gl, vertexShaderSource, fragmentShaderSource) {
 	return null
 }
 
-function ven$initAttributeVariable(gl, a_attribute, buffer, optional) {
+function ven$initAttributeVariable(gl, a_attribute, buffer, optional, bufferData = {}) {
 	const { size, type = gl.FLOAT, normalize = false, stride = 0, offset = 0 } = optional
+	const { target = gl.ARRAY_BUFFER, data, usage = gl.STATIC_DRAW } = bufferData || {}
 	gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
 	gl.vertexAttribPointer(a_attribute, size, type, normalize, stride, offset)
 	gl.enableVertexAttribArray(a_attribute)
+	if (data) {
+		gl.bufferData(target, data, usage)
+	}
 }
 
 function ven$initArrayBufferForLaterUse(gl, data = new Float32Array([])) {
@@ -170,4 +173,30 @@ function ven$initFramebufferObject(gl, offScreenWidth, offScreenHeight) {
 		texture,
 		renderBuffer,
 	}
+}
+
+function ven$loadImageResourceTexture(gl, src, u_Sampler, textureUnitIndex, callback) {
+	const texture = gl.createTexture()
+	const img = new Image()
+	img.crossOrigin = 'anonymous'
+	img.onload = function (e) {
+		// gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1)
+		gl.bindTexture(gl.TEXTURE_2D, texture)
+		/**
+		 * 纹理参数设置
+		 */
+		gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+		/**
+		 * 使用 Image 对象实例填充纹理内容
+		 */
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img)
+		/**
+		 * 通过唯一的 gl.uniform1i 采样器编号赋值方法给着色器采样器赋值纹理编号
+		 */
+		gl.uniform1i(u_Sampler, textureUnitIndex)
+		callback && callback(gl, textureUnitIndex, `TEXTURE${textureUnitIndex}`)
+	}
+	img.src = src
+	return texture
 }
