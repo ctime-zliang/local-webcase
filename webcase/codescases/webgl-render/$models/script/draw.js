@@ -214,8 +214,8 @@ class Program {
 			right: 1,
 			bottom: -1,
 			top: 1,
-			near: -10,
-			far: 10,
+			near: -100,
+			far: 100,
 		},
 		/**
 		 * 光照参数
@@ -269,6 +269,11 @@ class Program {
 
 	static init(containerElement) {
 		this.containerElement = containerElement
+		this.glControl = {
+			gl: this.glControl.gl || null,
+			modelInstances: [],
+			vertexFeatureSize: 0,
+		}
 		this.syncFogColor2ClearColor()
 		this.initFormView()
 		this.eventHandle()
@@ -276,6 +281,7 @@ class Program {
 
 	static initFormView() {
 		const self = this
+		const modelSelectorSelectElement = this.containerElement.querySelector(`[name="modelSelector"]`)
 		const modelRotationRangeXElement = this.containerElement.querySelector(`[name="modelRotationRangeX"]`)
 		const modelRotationXShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeXShow"]`)
 		const modelRotationRangeYElement = this.containerElement.querySelector(`[name="modelRotationRangeY"]`)
@@ -385,11 +391,13 @@ class Program {
 
 		this.toggleLightIlluTypeView()
 		this.toggleProjectionTypeView()
+		this.toggleModelModelDatas(modelSelectorSelectElement.value)
 	}
 
 	static eventHandle() {
 		const self = this
 		const canvasElement = this.containerElement.querySelector(`canvas`)
+		const modelSelectorSelectElement = this.containerElement.querySelector(`[name="modelSelector"]`)
 		const modelRotationRangeXElement = this.containerElement.querySelector(`[name="modelRotationRangeX"]`)
 		const modelRotationRangeXShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeXShow"]`)
 		const modelRotationRangeYElement = this.containerElement.querySelector(`[name="modelRotationRangeY"]`)
@@ -683,6 +691,10 @@ class Program {
 				self.downNumberKeys.delete(+e.key)
 			}
 		})
+		modelSelectorSelectElement.addEventListener('change', function (e) {
+			self.toggleModelModelDatas(this.value)
+			self.isRender = true
+		})
 		projectionTypeRadioElements.forEach(itemElement => {
 			itemElement.addEventListener('change', function (e) {
 				self.profile.projectionType = +this.value
@@ -968,6 +980,49 @@ class Program {
 		}
 	}
 
+	static toggleModelModelDatas(modelType) {
+		console.time(`CreateModelData`)
+		this.glControl.modelInstances = []
+		switch (modelType) {
+			case 'model1': {
+				const humanoidModelDatas1 = this.createHumanoidModelDatas()
+				const humanoidModelDatas2 = this.createHumanoidModelDatas(1.5, 0, -4.0)
+				const shereModelDatas1 = this.createShereModelDatas(0.65, 30, 30, -1.0, 0, 2.0)
+				this.glControl.modelInstances = [
+					...humanoidModelDatas1.modelInstances,
+					...humanoidModelDatas2.modelInstances,
+					...shereModelDatas1.modelInstances,
+				]
+				break
+			}
+			case 'model2': {
+				const cubeModelDatas1 = this.createtCubeModelDatas(1.5, 1.5, 1.5)
+				this.glControl.modelInstances = [...cubeModelDatas1.modelInstances]
+				break
+			}
+			case 'model3': {
+				const shereModelDatas1 = this.createShereModelDatas(1.0, 50, 50)
+				this.glControl.modelInstances = [...shereModelDatas1.modelInstances]
+				this.glControl.modelInstances.forEach(modelInstanceItem => {
+					modelInstanceItem.normalBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
+					modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
+					modelInstanceItem.texCoordBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
+				})
+				this.glControl.vertexFeatureSize = this.getVertexFeatureSize(this.glControl.modelInstances)
+				this.renderModelInfomationView(this.glControl.modelInstances)
+				break
+			}
+		}
+		this.glControl.modelInstances.forEach(modelInstanceItem => {
+			modelInstanceItem.normalBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
+			modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
+			modelInstanceItem.texCoordBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
+		})
+		this.glControl.vertexFeatureSize = this.getVertexFeatureSize(this.glControl.modelInstances)
+		console.timeEnd(`CreateModelData`)
+		this.renderModelInfomationView(this.glControl.modelInstances)
+	}
+
 	static canvasElementClickedAction(e) {
 		const isPickedModelObject = this.isPickedModelObject(this.mouseInfo.nativeLeftDownX, this.mouseInfo.nativeLeftDownY)
 		if (isPickedModelObject) {
@@ -994,18 +1049,54 @@ class Program {
 		this.profile.clearColor.g = this.profile.fog.color.g
 		this.profile.clearColor.b = this.profile.fog.color.b
 	}
+
+	static createHumanoidModelDatas(offsetX = 0, offsetY = 0, offsetZ = 0) {
+		const modelInstances = []
+		const modelHead = new RectangularModel1(0.4, 0.35, 0.35, '#ffffff', 0 + offsetX, 1.2 + offsetY, 0 + offsetZ)
+		const modelBody = new RectangularModel1(0.8, 1.0, 0.4, '#ffffff', 0 + offsetX, 0.5 + offsetY, 0 + offsetZ)
+		const modelLeftArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', 0.55 + offsetX, 0.3 + offsetY, 0 + offsetZ)
+		const modelRightArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', -0.55 + offsetX, 0.3 + offsetY, 0 + offsetZ)
+		const modelLeftLeg = new RectangularModel1(0.25, 1.45, 0.25, '#ffffff', 0.25 + offsetX, -0.75 + offsetY, 0 + offsetZ)
+		const modelRightLeg = new RectangularModel1(0.25, 1.45, 0.25, '#ffffff', -0.25 + offsetX, -0.75 + offsetY, 0 + offsetZ)
+		const modelLeftFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', 0.25 + offsetX, -1.55 + offsetY, 0.05 + offsetZ)
+		const modelRightFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', -0.25 + offsetX, -1.55 + offsetY, 0.05 + offsetZ)
+		modelInstances.push(modelHead, modelBody, modelLeftArm, modelRightArm, modelLeftLeg, modelRightLeg, modelLeftFoot, modelRightFoot)
+		return {
+			modelInstances,
+		}
+	}
+
+	static createtCubeModelDatas(width, length, depth, offsetX = 0, offsetY = 0, offsetZ = 0) {
+		const modelInstances = []
+		const model1 = new RectangularModel1(width, length, depth, '#ffffff', 0 + offsetX, 0 + offsetY, 0 + offsetZ)
+		modelInstances.push(model1)
+		return {
+			modelInstances,
+		}
+	}
+
+	static createShereModelDatas(radius, meridianCount, latitudeCount, offsetX = 0, offsetY = 0, offsetZ = 0) {
+		const modelInstances = []
+		const model1 = new ShereModel1(radius, meridianCount, latitudeCount, '#ffffff', 0 + offsetX, 0 + offsetY, 0 + offsetZ)
+		modelInstances.push(model1)
+		return {
+			modelInstances,
+		}
+	}
+
+	static getVertexFeatureSize(modelInstances) {
+		let len = 0
+		modelInstances.forEach(modelInstanceItem => {
+			len += modelInstanceItem.vertexDatas.vertexFeature.length
+		})
+		return len
+	}
 }
 
 function drawCanvas(containerElement) {
-	Program.init(containerElement)
-	Program.glControl = {
-		gl: null,
-		modelInstances: [],
-		vertexFeatureSize: 0,
-	}
-
 	const canvasElement = containerElement.querySelector('canvas')
 	Program.glControl.gl = ven$initWebGLContext(canvasElement)
+	Program.init(containerElement)
 
 	const COMMON_VERTEX_SHADER = `
 		precision mediump float;
@@ -1170,52 +1261,6 @@ function drawCanvas(containerElement) {
 			}
 		}
 	`
-
-	const initHumanoidModelDatas = (offsetX = 0, offsetY = 0, offsetZ = 0) => {
-		const modelInstances = []
-		const modelHead = new RectangularModel1(0.4, 0.35, 0.35, '#ffffff', 0 + offsetX, 1.2 + offsetY, 0 + offsetZ)
-		const modelBody = new RectangularModel1(0.8, 1.0, 0.4, '#ffffff', 0 + offsetX, 0.5 + offsetY, 0 + offsetZ)
-		const modelLeftArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', 0.55 + offsetX, 0.3 + offsetY, 0 + offsetZ)
-		const modelRightArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', -0.55 + offsetX, 0.3 + offsetY, 0 + offsetZ)
-		const modelLeftLeg = new RectangularModel1(0.25, 1.45, 0.25, '#ffffff', 0.25 + offsetX, -0.75 + offsetY, 0 + offsetZ)
-		const modelRightLeg = new RectangularModel1(0.25, 1.45, 0.25, '#ffffff', -0.25 + offsetX, -0.75 + offsetY, 0 + offsetZ)
-		const modelLeftFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', 0.25 + offsetX, -1.55 + offsetY, 0.05 + offsetZ)
-		const modelRightFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', -0.25 + offsetX, -1.55 + offsetY, 0.05 + offsetZ)
-		modelInstances.push(modelHead, modelBody, modelLeftArm, modelRightArm, modelLeftLeg, modelRightLeg, modelLeftFoot, modelRightFoot)
-		return {
-			modelInstances,
-		}
-	}
-	const initShereModelDatas = (offsetX = 0, offsetY = 0, offsetZ = 0) => {
-		const modelInstances = []
-		const model1 = new ShereModel1(0.5, 30, 30, '#ffffff', 0 + offsetX, 0 + offsetY, 0 + offsetZ)
-		modelInstances.push(model1)
-		return {
-			modelInstances,
-		}
-	}
-	const getVertexFeatureSize = modelInstances => {
-		let len = 0
-		modelInstances.forEach(modelInstanceItem => {
-			len += modelInstanceItem.vertexDatas.vertexFeature.length
-		})
-		return len
-	}
-	const humanoidModelDatas1 = initHumanoidModelDatas()
-	const humanoidModelDatas2 = initHumanoidModelDatas(1.5, 0, -1.0)
-	const shereModelDatas1 = initShereModelDatas(-1.0, 0, 1.0)
-	Program.glControl.modelInstances = [
-		...humanoidModelDatas1.modelInstances,
-		...humanoidModelDatas2.modelInstances,
-		...shereModelDatas1.modelInstances,
-	]
-	Program.glControl.modelInstances.forEach(modelInstanceItem => {
-		modelInstanceItem.normalBuffer = ven$initArrayBufferForLaterUse(Program.glControl.gl)
-		modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(Program.glControl.gl)
-		modelInstanceItem.texCoordBuffer = ven$initArrayBufferForLaterUse(Program.glControl.gl)
-	})
-	Program.glControl.vertexFeatureSize = getVertexFeatureSize(Program.glControl.modelInstances)
-	Program.renderModelInfomationView(Program.glControl.modelInstances)
 
 	Program.glControl.gl.clearColor(Program.profile.clearColor.r / 255, Program.profile.clearColor.g / 255, Program.profile.clearColor.b / 255, 1.0)
 	Program.glControl.gl.clear(Program.glControl.gl.COLOR_BUFFER_BIT | Program.glControl.gl.DEPTH_BUFFER_BIT)
