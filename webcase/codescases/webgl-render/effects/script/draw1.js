@@ -1124,6 +1124,7 @@ function drawCanvas1(containerElement) {
 	const exec = () => {
 		if (!Program1.isRender) {
 			window.requestAnimationFrame(exec)
+			stepControl.updateLastStamp()
 			return
 		}
 		Program1.isRender = false
@@ -1133,8 +1134,6 @@ function drawCanvas1(containerElement) {
 				modelInstanceItem.modelRatation.y = angle
 			})
 			Program1.isRender = true
-		} else {
-			stepControl.updateLastStamp()
 		}
 		if (Program1.profile.enableTexture) {
 			if (!Program1.glControl.textureLight.isLoadTexture) {
@@ -1154,6 +1153,7 @@ function drawCanvas1(containerElement) {
 			return
 		}
 		render(Program1.glControl.gl, Program1.glControl.vertexFeatureSize, Program1.glControl.modelInstances, Program1.glControl.commonLight, false)
+		stepControl.updateLastStamp()
 		window.requestAnimationFrame(exec)
 	}
 	exec()

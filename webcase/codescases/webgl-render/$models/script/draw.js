@@ -1508,6 +1508,7 @@ function drawCanvas(containerElement) {
 	const exec = () => {
 		if (!Program.isRender) {
 			window.requestAnimationFrame(exec)
+			stepControl.updateLastStamp()
 			return
 		}
 		Program.isRender = false
@@ -1518,8 +1519,6 @@ function drawCanvas(containerElement) {
 			})
 			Program.isRender = true
 			Program.renderModelInfomationView(Program.glControl.modelInstances)
-		} else {
-			stepControl.updateLastStamp()
 		}
 		if (Program.profile.enableTexture) {
 			if (!Program.glControl.textureLight.isLoadTexture) {
@@ -1533,6 +1532,7 @@ function drawCanvas(containerElement) {
 			return
 		}
 		render(Program.glControl.gl, Program.glControl.vertexFeatureSize, Program.glControl.modelInstances, Program.glControl.commonLight, false)
+		stepControl.updateLastStamp()
 		window.requestAnimationFrame(exec)
 	}
 	exec()
