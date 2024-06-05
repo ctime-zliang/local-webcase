@@ -125,7 +125,7 @@ class ShereModel1 extends Model1 {
 			radius,
 			meridianCount,
 			latitudeCount,
-			rgba: ven$hex2Rgba(color),
+			rgba: color === null ? null : ven$hex2Rgba(color),
 			offsetX,
 			offsetY,
 			offsetZ,
@@ -134,16 +134,20 @@ class ShereModel1 extends Model1 {
 	}
 
 	_createVertexData() {
+		this._modelParam
+		const colorSetting = this._modelParam.rgba
+			? {
+					redRange: [this._modelParam.rgba.r, this._modelParam.rgba.r],
+					greenRange: [this._modelParam.rgba.g, this._modelParam.rgba.g],
+					blueRange: [this._modelParam.rgba.b, this._modelParam.rgba.b],
+					alphaRange: [1, 1],
+			  }
+			: undefined
 		return createShereDatas(
 			this._modelParam.radius,
 			this._modelParam.meridianCount,
 			this._modelParam.latitudeCount,
-			{
-				redRange: [this._modelParam.rgba.r, this._modelParam.rgba.r],
-				greenRange: [this._modelParam.rgba.g, this._modelParam.rgba.g],
-				blueRange: [this._modelParam.rgba.b, this._modelParam.rgba.b],
-				alphaRange: [1, 1],
-			},
+			colorSetting,
 			this._modelParam.offsetX,
 			this._modelParam.offsetY,
 			this._modelParam.offsetZ
@@ -151,33 +155,9 @@ class ShereModel1 extends Model1 {
 	}
 }
 
-class Program {
+class Program1 {
 	static isRender = true
 	static containerElement
-	static downKeys = new Set()
-	static downNumberKeys = new Set()
-	static mouseInfo = {
-		isRightDown: false,
-		hasRightDownMove: false,
-		isLeftDown: false,
-		hasLeftDownMove: false,
-		isMiddleDown: false,
-		hasMiddleDownMove: false,
-		moveLastNativeX: 0,
-		moveLastNativeY: 0,
-		nativeRightDownX: -1,
-		nativeRightDownY: -1,
-		nativeMiddleDownX: -1,
-		nativeMiddleDownY: -1,
-		nativeLeftDownX: -1,
-		nativeLeftDownY: -1,
-		sceneRightDownX: -1,
-		sceneRightDownY: -1,
-		sceneMiddleDownX: -1,
-		sceneMiddleDownY: -1,
-		sceneLeftDownX: -1,
-		sceneLeftDownY: -1,
-	}
 	static profile = {
 		enableTexture: false,
 		autoTransformation: false,
@@ -244,20 +224,6 @@ class Program {
 				b: 0.1,
 			},
 		},
-		/**
-		 * 雾化参数
-		 */
-		fog: {
-			color: {
-				r: 0,
-				g: 0,
-				b: 0,
-			},
-			dist: {
-				distOfStartAndEye: 10,
-				distOfEndAndEye: 100,
-			},
-		},
 		clearColor: {
 			r: 0,
 			g: 0,
@@ -274,7 +240,6 @@ class Program {
 			modelInstances: [],
 			vertexFeatureSize: 0,
 		}
-		this.syncFogColor2ClearColor()
 		this.initFormView()
 		this.eventHandle()
 	}
@@ -344,10 +309,6 @@ class Program {
 		const lightIntensityGainRangeShowSpanElement = this.containerElement.querySelector(`[name="lightIntensityGainRangeShow"]`)
 		const autoTransformationCheckboxElement = this.containerElement.querySelector(`[name="autoTransformation"]`)
 		const enableTextureCheckboxElement = this.containerElement.querySelector(`[name="enableTexture"]`)
-		const fogStartDistRangeElement = this.containerElement.querySelector(`[name="fogStartDist"]`)
-		const fogStartDistShowShowSpanElement = this.containerElement.querySelector(`[name="fogStartDistShow"]`)
-		const fogEndDistRangeElement = this.containerElement.querySelector(`[name="fogEndDist"]`)
-		const fogEndDistShowShowSpanElement = this.containerElement.querySelector(`[name="fogEndDistShow"]`)
 
 		modelRotationXShowSpanElement.textContent = modelRotationRangeXElement.value = 0
 		modelRotationYShowSpanElement.textContent = modelRotationRangeYElement.value = 0
@@ -386,8 +347,6 @@ class Program {
 		lightIntensityGainRangeShowSpanElement.textContent = lightIntensityGainRangeRangeElement.value = self.profile.light.intensityGain
 		autoTransformationCheckboxElement.checked = self.profile.autoTransformation
 		enableTextureCheckboxElement.checked = self.profile.enableTexture
-		fogStartDistShowShowSpanElement.textContent = fogStartDistRangeElement.value = self.profile.fog.dist.distOfStartAndEye
-		fogEndDistShowShowSpanElement.textContent = fogEndDistRangeElement.value = self.profile.fog.dist.distOfEndAndEye
 
 		this.toggleLightIlluTypeView()
 		this.toggleProjectionTypeView()
@@ -460,236 +419,10 @@ class Program {
 		const lightIntensityGainRangeShowSpanElement = this.containerElement.querySelector(`[name="lightIntensityGainRangeShow"]`)
 		const autoTransformationCheckboxElement = this.containerElement.querySelector(`[name="autoTransformation"]`)
 		const enableTextureCheckboxElement = this.containerElement.querySelector(`[name="enableTexture"]`)
-		const fogStartDistRangeElement = this.containerElement.querySelector(`[name="fogStartDist"]`)
-		const fogStartDistShowShowSpanElement = this.containerElement.querySelector(`[name="fogStartDistShow"]`)
-		const fogEndDistRangeElement = this.containerElement.querySelector(`[name="fogEndDist"]`)
-		const fogEndDistShowShowSpanElement = this.containerElement.querySelector(`[name="fogEndDistShow"]`)
 
 		canvasElement.addEventListener('contextmenu', function (e) {
 			e.preventDefault()
 			e.stopPropagation()
-		})
-		canvasElement.addEventListener('mousedown', function (e) {
-			const canvasRect = this.getBoundingClientRect().toJSON()
-			self.mouseInfo.isLeftDown = self.mouseInfo.isMiddleDown = self.mouseInfo.isRightDown = false
-			self.mouseInfo.nativeLeftDownX = self.mouseInfo.nativeMiddleDownX = self.mouseInfo.nativeRightDownX = -1
-			self.mouseInfo.nativeLeftDownY = self.mouseInfo.nativeMiddleDownY = self.mouseInfo.nativeRightDownY = -1
-			self.mouseInfo.hasMoved = false
-			if (e.button === 0) {
-				self.mouseInfo.isLeftDown = true
-				self.mouseInfo.nativeLeftDownX = e.clientX - canvasRect.left
-				self.mouseInfo.nativeLeftDownY = e.clientY - canvasRect.top
-			}
-			if (e.button === 1) {
-				self.mouseInfo.isMiddleDown = true
-				self.mouseInfo.nativeMiddleDownX = e.clientX - canvasRect.left
-				self.mouseInfo.nativeMiddleDownY = e.clientY - canvasRect.top
-			}
-			if (e.button === 2) {
-				self.mouseInfo.isRightDown = true
-				self.mouseInfo.nativeRightDownX = e.clientX - canvasRect.left
-				self.mouseInfo.nativeRightDownY = e.clientY - canvasRect.top
-			}
-		})
-		document.addEventListener('mousemove', function (e) {
-			const nowX = e.clientX
-			const nowY = e.clientY
-			const distNativeX = nowX - self.mouseInfo.moveLastNativeX
-			const distNativeY = nowY - self.mouseInfo.moveLastNativeY
-			if (self.mouseInfo.isLeftDown) {
-				self.mouseInfo.hasLeftDownMove = true
-				const ratioDistX = 0.65 * distNativeX
-				const ratioDistY = 0.65 * distNativeY
-				self.getModelInstances(self.glControl.modelInstances).forEach(modelInstanceItem => {
-					modelInstanceItem.modelRatation.y += ratioDistX
-					modelInstanceItem.modelRatation.x += ratioDistY
-				})
-				self.isRender = true
-				self.renderModelInfomationView(self.glControl.modelInstances)
-			}
-			if (self.mouseInfo.isRightDown) {
-				self.mouseInfo.hasRightDownMove = true
-			}
-			if (self.mouseInfo.isMiddleDown) {
-				self.mouseInfo.hasMiddleDownMove = true
-			}
-			self.mouseInfo.moveLastNativeX = nowX
-			self.mouseInfo.moveLastNativeY = nowY
-		})
-		document.addEventListener('mouseup', function (e) {
-			if (self.mouseInfo.isLeftDown && !self.mouseInfo.hasLeftDownMove) {
-				self.canvasElementClickedAction.call(self, e)
-			}
-			self.mouseInfo.hasLeftDownMove = self.mouseInfo.hasRightDownMove = self.mouseInfo.hasMiddleDownMove = false
-			self.mouseInfo.isLeftDown = self.mouseInfo.isMiddleDown = self.mouseInfo.isRightDown = false
-			self.mouseInfo.nativeLeftDownX = self.mouseInfo.nativeMiddleDownX = self.mouseInfo.nativeRightDownX = -1
-			self.mouseInfo.nativeLeftDownY = self.mouseInfo.nativeMiddleDownY = self.mouseInfo.nativeRightDownY = -1
-		})
-		document.addEventListener('keydown', function (e) {
-			e.preventDefault()
-			e.stopPropagation()
-			self.downKeys.add(e.keyCode)
-			if (!Number.isNaN(+e.key)) {
-				self.downNumberKeys.add(+e.key)
-			}
-			switch (e.keyCode) {
-				// =
-				case 187: {
-					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
-							modelInstanceItem.modelScale.x -= 0.025
-							modelInstanceItem.modelScale.y -= 0.025
-							modelInstanceItem.modelScale.z -= 0.025
-						})
-						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
-						break
-					}
-					break
-				}
-				// -
-				case 189: {
-					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
-							modelInstanceItem.modelScale.x += 0.025
-							modelInstanceItem.modelScale.y += 0.025
-							modelInstanceItem.modelScale.z += 0.025
-						})
-						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
-						break
-					}
-					break
-				}
-				// ]
-				case 221: {
-					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
-							modelInstanceItem.modelOffset.z -= 0.05
-						})
-						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
-						break
-					}
-					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
-							modelInstanceItem.modelRatation.z -= 1
-						})
-						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
-						break
-					}
-					break
-				}
-				// [
-				case 219: {
-					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
-							modelInstanceItem.modelOffset.z += 0.05
-						})
-						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
-						break
-					}
-					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
-							modelInstanceItem.modelRatation.z += 1
-						})
-						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
-						break
-					}
-					break
-				}
-				// up
-				case 38: {
-					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
-							modelInstanceItem.modelOffset.y += 0.05
-						})
-						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
-						break
-					}
-					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
-							modelInstanceItem.modelRatation.y += 1
-						})
-						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
-						break
-					}
-					break
-				}
-				// right
-				case 39: {
-					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
-							modelInstanceItem.modelOffset.x += 0.05
-						})
-						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
-						break
-					}
-					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
-							modelInstanceItem.modelRatation.x += 1
-						})
-						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
-						break
-					}
-					break
-				}
-				// down
-				case 40: {
-					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
-							modelInstanceItem.modelOffset.y -= 0.05
-						})
-						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
-						break
-					}
-					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
-							modelInstanceItem.modelRatation.y -= 1
-						})
-						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
-						break
-					}
-					break
-				}
-				// left
-				case 37: {
-					if (e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
-							modelInstanceItem.modelOffset.x -= 0.05
-						})
-						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
-						break
-					}
-					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
-						self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
-							modelInstanceItem.modelRatation.x -= 1
-						})
-						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
-						break
-					}
-					break
-				}
-			}
-		})
-		document.addEventListener('keyup', function (e) {
-			e.preventDefault()
-			e.stopPropagation()
-			self.downKeys.delete(e.keyCode)
-			if (self.downNumberKeys.has(+e.key)) {
-				self.downNumberKeys.delete(+e.key)
-			}
 		})
 		modelSelectorSelectElement.addEventListener('change', function (e) {
 			self.toggleModelModelDatas(this.value)
@@ -705,61 +438,54 @@ class Program {
 		})
 		modelRotationRangeXElement.addEventListener('input', function (e) {
 			modelRotationRangeXShowSpanElement.textContent = +this.value
-			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+			self.glControl.modelInstances.forEach(modelInstanceItem => {
 				modelInstanceItem.modelRatation.x = +this.value
 			})
 			self.isRender = true
-			self.renderModelInfomationView(self.glControl.modelInstances)
 		})
 		modelRotationRangeYElement.addEventListener('input', function (e) {
 			modelRotationRangeYShowSpanElement.textContent = +this.value
-			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+			self.glControl.modelInstances.forEach(modelInstanceItem => {
 				modelInstanceItem.modelRatation.y = +this.value
 			})
 			self.isRender = true
-			self.renderModelInfomationView(self.glControl.modelInstances)
 		})
 		modelRotationRangeZElement.addEventListener('input', function (e) {
 			modelRotationRangeZShowSpanElement.textContent = +this.value
-			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+			self.glControl.modelInstances.forEach(modelInstanceItem => {
 				modelInstanceItem.modelRatation.z = +this.value
 			})
 			self.isRender = true
-			self.renderModelInfomationView(self.glControl.modelInstances)
 		})
 		modelOffsetRangeXElement.addEventListener('input', function (e) {
 			modelOffsetRangeXShowSpanElement.textContent = +this.value
-			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+			self.glControl.modelInstances.forEach(modelInstanceItem => {
 				modelInstanceItem.modelOffset.x = +this.value
 			})
 			self.isRender = true
-			self.renderModelInfomationView(self.glControl.modelInstances)
 		})
 		modelOffsetRangeYElement.addEventListener('input', function (e) {
 			modelOffsetRangeYShowSpanElement.textContent = +this.value
-			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+			self.glControl.modelInstances.forEach(modelInstanceItem => {
 				modelInstanceItem.modelOffset.y = +this.value
 			})
 			self.isRender = true
-			self.renderModelInfomationView(self.glControl.modelInstances)
 		})
 		modelOffsetRangeZElement.addEventListener('input', function (e) {
 			modelOffsetRangeZShowSpanElement.textContent = +this.value
-			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+			self.glControl.modelInstances.forEach(modelInstanceItem => {
 				modelInstanceItem.modelOffset.z = +this.value
 			})
 			self.isRender = true
-			self.renderModelInfomationView(self.glControl.modelInstances)
 		})
 		modelScaleRangeElement.addEventListener('input', function (e) {
 			modelScaleRangeShowSpanElement.textContent = +this.value
-			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+			self.glControl.modelInstances.forEach(modelInstanceItem => {
 				modelInstanceItem.modelScale.x = +this.value
 				modelInstanceItem.modelScale.y = +this.value
 				modelInstanceItem.modelScale.z = +this.value
 			})
 			self.isRender = true
-			self.renderModelInfomationView(self.glControl.modelInstances)
 		})
 		persProjectionFovyRangeElement.addEventListener('input', function (e) {
 			persProjectionFovyShowSpanElement.textContent = self.profile.persProjection.fovy = +this.value
@@ -891,46 +617,6 @@ class Program {
 			self.profile.enableTexture = this.checked
 			self.isRender = true
 		})
-		fogStartDistRangeElement.addEventListener('input', function (e) {
-			fogStartDistShowShowSpanElement.textContent = self.profile.fog.dist.distOfStartAndEye = +this.value
-			console.log('light.fog.dist:', self.profile.light.intensityGain)
-			self.isRender = true
-		})
-		fogEndDistRangeElement.addEventListener('input', function (e) {
-			fogEndDistShowShowSpanElement.textContent = self.profile.fog.dist.distOfEndAndEye = +this.value
-			console.log('light.fog.dist:', self.profile.light.intensityGain)
-			self.isRender = true
-		})
-	}
-
-	static getModelInstances(modelInstances = [], downNumberKeys = new Set()) {
-		if (!downNumberKeys || downNumberKeys.size <= 0) {
-			return [...modelInstances]
-		}
-		const filterModelInstances = []
-		downNumberKeys.forEach(number => {
-			const idx = number - 1
-			if (modelInstances[idx]) {
-				filterModelInstances.push(modelInstances[idx])
-			}
-		})
-		return filterModelInstances
-	}
-
-	static renderModelInfomationView(modelInstances = []) {
-		const modelInfomationElement = this.containerElement.querySelector(`[data-tagitem="model-infomation"]`)
-		let htmlString = ``
-		modelInstances.forEach((modelInstanceItem, index) => {
-			htmlString += `
-				<div style="font-size: 14px;">
-					<div style="font-weight: 900;">MODEL ${index + 1}:</div> 
-					<div style="padding: 2px 2px 2px 10px;">Model Offset: ${JSON.stringify(modelInstanceItem.modelOffset)}</div>
-					<div style="padding: 2px 2px 2px 10px;">Model Scale: ${JSON.stringify(modelInstanceItem.modelScale)}</div>
-					<div style="padding: 2px 2px 2px 10px;">Model Ratation: ${JSON.stringify(modelInstanceItem.modelRatation)}</div>
-				</div>
-			`
-		})
-		modelInfomationElement.innerHTML = htmlString
 	}
 
 	static toggleLightIlluTypeView() {
@@ -985,23 +671,17 @@ class Program {
 		this.glControl.modelInstances = []
 		switch (modelType) {
 			case 'model1': {
-				const humanoidModelDatas1 = this.createHumanoidModelDatas()
-				const humanoidModelDatas2 = this.createHumanoidModelDatas(1.5, 0, -4.0)
-				const shereModelDatas1 = this.createShereModelDatas(0.65, 30, 30, -1.0, 0, 2.0)
-				this.glControl.modelInstances = [
-					...humanoidModelDatas1.modelInstances,
-					...humanoidModelDatas2.modelInstances,
-					...shereModelDatas1.modelInstances,
-				]
-				break
-			}
-			case 'model2': {
 				const cubeModelDatas1 = this.createtCubeModelDatas(1.5, 1.5, 1.5)
 				this.glControl.modelInstances = [...cubeModelDatas1.modelInstances]
 				break
 			}
-			case 'model3': {
+			case 'model2': {
 				const shereModelDatas1 = this.createShereModelDatas(1.0, 50, 50)
+				this.glControl.modelInstances = [...shereModelDatas1.modelInstances]
+				break
+			}
+			case 'model3': {
+				const shereModelDatas1 = this.createShereModelDatas(1.0, 50, 50, 0, 0, 0, null)
 				this.glControl.modelInstances = [...shereModelDatas1.modelInstances]
 				break
 			}
@@ -1013,50 +693,6 @@ class Program {
 		})
 		this.glControl.vertexFeatureSize = this.getVertexFeatureSize(this.glControl.modelInstances)
 		console.timeEnd(`CreateModelData`)
-		this.renderModelInfomationView(this.glControl.modelInstances)
-	}
-
-	static canvasElementClickedAction(e) {
-		const isPickedModelObject = this.isPickedModelObject(this.mouseInfo.nativeLeftDownX, this.mouseInfo.nativeLeftDownY)
-		if (isPickedModelObject) {
-			console.log(`has selected model body.`)
-		} else {
-			console.log(`click blank section.`)
-		}
-	}
-
-	static isPickedModelObject(x, y) {
-		this.glControl.setWebGLRenderClickedStatus()
-		const pixels = new Uint8Array(4)
-		let isPicked = false
-		this.glControl.gl.readPixels(x, y, 1, 1, this.glControl.gl.RGBA, this.glControl.gl.UNSIGNED_BYTE, pixels)
-		if (pixels[0] == 255) {
-			isPicked = true
-		}
-		this.glControl.setWebGLRenderNormalStatus()
-		return isPicked
-	}
-
-	static syncFogColor2ClearColor() {
-		this.profile.clearColor.r = this.profile.fog.color.r
-		this.profile.clearColor.g = this.profile.fog.color.g
-		this.profile.clearColor.b = this.profile.fog.color.b
-	}
-
-	static createHumanoidModelDatas(offsetX = 0, offsetY = 0, offsetZ = 0) {
-		const modelInstances = []
-		const modelHead = new RectangularModel1(0.4, 0.35, 0.35, '#ffffff', 0 + offsetX, 1.2 + offsetY, 0 + offsetZ)
-		const modelBody = new RectangularModel1(0.8, 1.0, 0.4, '#ffffff', 0 + offsetX, 0.5 + offsetY, 0 + offsetZ)
-		const modelLeftArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', 0.55 + offsetX, 0.3 + offsetY, 0 + offsetZ)
-		const modelRightArm = new RectangularModel1(0.2, 1.35, 0.2, '#ffffff', -0.55 + offsetX, 0.3 + offsetY, 0 + offsetZ)
-		const modelLeftLeg = new RectangularModel1(0.25, 1.45, 0.25, '#ffffff', 0.25 + offsetX, -0.75 + offsetY, 0 + offsetZ)
-		const modelRightLeg = new RectangularModel1(0.25, 1.45, 0.25, '#ffffff', -0.25 + offsetX, -0.75 + offsetY, 0 + offsetZ)
-		const modelLeftFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', 0.25 + offsetX, -1.55 + offsetY, 0.05 + offsetZ)
-		const modelRightFoot = new RectangularModel1(0.25, 0.25, 0.35, '#ffffff', -0.25 + offsetX, -1.55 + offsetY, 0.05 + offsetZ)
-		modelInstances.push(modelHead, modelBody, modelLeftArm, modelRightArm, modelLeftLeg, modelRightLeg, modelLeftFoot, modelRightFoot)
-		return {
-			modelInstances,
-		}
 	}
 
 	static createtCubeModelDatas(width, length, depth, offsetX = 0, offsetY = 0, offsetZ = 0, color = '#ffffff') {
@@ -1086,10 +722,10 @@ class Program {
 	}
 }
 
-function drawCanvas(containerElement) {
+function drawCanvas1(containerElement) {
 	const canvasElement = containerElement.querySelector('canvas')
-	Program.glControl.gl = ven$initWebGLContext(canvasElement)
-	Program.init(containerElement)
+	Program1.glControl.gl = ven$initWebGLContext(canvasElement)
+	Program1.init(containerElement)
 
 	const COMMON_VERTEX_SHADER = `
 		precision mediump float;
@@ -1125,13 +761,9 @@ function drawCanvas(containerElement) {
 		varying vec4 v_Color;
 		varying vec3 v_Normal;
 		varying vec3 v_Position;
-		varying float v_Dist;
 		// 参数(组)
 		uniform float u_lightIntensityGain;
 		uniform float u_illuType;
-		uniform bool u_Clicked;
-		uniform vec3 u_FogColor;
-		uniform vec2 u_FogDist;
 		// 点光配置(组)
 		uniform vec3 u_LightPosition;
 		uniform vec3 u_LightDirection;
@@ -1139,39 +771,32 @@ function drawCanvas(containerElement) {
 		uniform vec3 u_AmbientLightColor;
 		void main() {
 			float nDotL;
-			float fogFactor;
 			vec3 normal;
 			vec3 diffuse;
 			vec3 lightDirection;
 			vec3 ambientMixinColor;
-			vec3 fogMixinColor;
-			if (u_Clicked) {
-				gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-			} else {
-				fogFactor = clamp((u_FogDist.y - v_Dist) / (u_FogDist.y - u_FogDist.x), 0.0, 1.0);
-				if (u_illuType == 1.0) {  // 平行光
-					normal = normalize(v_Normal);
-					// 计算光线方向与法线的点积
-					nDotL = max(dot(u_LightDirection, normal), 0.0);
-					// 计算漫反射光和环境光的色值
-					diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
-					gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
-					// ambientMixinColor = diffuse + u_AmbientLightColor * v_Color.rgb;;
-					// fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
-					// gl_FragColor = vec4(fogMixinColor, v_Color.a);
-				} else {  // 点光
-					normal = normalize(v_Normal);
-					// 计算光线方向并归一化
-					lightDirection = normalize(u_LightPosition - v_Position);
-					// 计算光线方向与法线的点积
-					nDotL = max(dot(lightDirection, normal), 0.0);
-					// 计算漫反射光和环境光的色值
-					diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
-					gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
-					// ambientMixinColor = diffuse + u_AmbientLightColor * v_Color.rgb;
-					// fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
-					// gl_FragColor = vec4(fogMixinColor, v_Color.a);
-				}
+			if (u_illuType == 1.0) {  // 平行光
+				normal = normalize(v_Normal);
+				// 计算光线方向与法线的点积
+				nDotL = max(dot(u_LightDirection, normal), 0.0);
+				// 计算漫反射光和环境光的色值
+				diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
+				gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
+				// ambientMixinColor = diffuse + u_AmbientLightColor * v_Color.rgb;;
+				// fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
+				// gl_FragColor = vec4(fogMixinColor, v_Color.a);
+			} else {  // 点光
+				normal = normalize(v_Normal);
+				// 计算光线方向并归一化
+				lightDirection = normalize(u_LightPosition - v_Position);
+				// 计算光线方向与法线的点积
+				nDotL = max(dot(lightDirection, normal), 0.0);
+				// 计算漫反射光和环境光的色值
+				diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
+				gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
+				// ambientMixinColor = diffuse + u_AmbientLightColor * v_Color.rgb;
+				// fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
+				// gl_FragColor = vec4(fogMixinColor, v_Color.a);
 			}
 		}
 	`
@@ -1255,29 +880,34 @@ function drawCanvas(containerElement) {
 		}
 	`
 
-	Program.glControl.gl.clearColor(Program.profile.clearColor.r / 255, Program.profile.clearColor.g / 255, Program.profile.clearColor.b / 255, 1.0)
-	Program.glControl.gl.clear(Program.glControl.gl.COLOR_BUFFER_BIT | Program.glControl.gl.DEPTH_BUFFER_BIT)
-	Program.glControl.gl.enable(Program.glControl.gl.BLEND)
-	Program.glControl.gl.blendFunc(Program.glControl.gl.SRC_ALPHA, Program.glControl.gl.ONE_MINUS_SRC_ALPHA)
-	Program.glControl.gl.enable(Program.glControl.gl.CULL_FACE)
-	Program.glControl.gl.enable(Program.glControl.gl.DEPTH_TEST)
-	Program.glControl.gl.enable(Program.glControl.gl.POLYGON_OFFSET_FILL)
-	Program.glControl.gl.polygonOffset(1.0, 1.0)
+	Program1.glControl.gl.clearColor(
+		Program1.profile.clearColor.r / 255,
+		Program1.profile.clearColor.g / 255,
+		Program1.profile.clearColor.b / 255,
+		1.0
+	)
+	Program1.glControl.gl.clear(Program1.glControl.gl.COLOR_BUFFER_BIT | Program1.glControl.gl.DEPTH_BUFFER_BIT)
+	Program1.glControl.gl.enable(Program1.glControl.gl.BLEND)
+	Program1.glControl.gl.blendFunc(Program1.glControl.gl.SRC_ALPHA, Program1.glControl.gl.ONE_MINUS_SRC_ALPHA)
+	Program1.glControl.gl.enable(Program1.glControl.gl.CULL_FACE)
+	Program1.glControl.gl.enable(Program1.glControl.gl.DEPTH_TEST)
+	Program1.glControl.gl.enable(Program1.glControl.gl.POLYGON_OFFSET_FILL)
+	Program1.glControl.gl.polygonOffset(1.0, 1.0)
 
-	Program.glControl.commonLight = {
+	Program1.glControl.commonLight = {
 		glAttributes: {},
 		glUniforms: {},
 		program: null,
 	}
-	Program.glControl.textureLight = {
+	Program1.glControl.textureLight = {
 		isLoadTexture: false,
 		glAttributes: {},
 		glUniforms: {},
 		program: null,
 	}
 
-	Program.glControl.commonLight.program = ven$createProgram(Program.glControl.gl, COMMON_VERTEX_SHADER, COMMON_FRAGMENT_SHADER)
-	const commonWebGLVariableLocation = ven$getWebGLVariableLocation(Program.glControl.gl, Program.glControl.commonLight.program, {
+	Program1.glControl.commonLight.program = ven$createProgram(Program1.glControl.gl, COMMON_VERTEX_SHADER, COMMON_FRAGMENT_SHADER)
+	const commonWebGLVariableLocation = ven$getWebGLVariableLocation(Program1.glControl.gl, Program1.glControl.commonLight.program, {
 		glAttributes: ['a_Normal', 'a_Position', 'a_Color'],
 		glUniforms: [
 			'u_illuType',
@@ -1290,17 +920,13 @@ function drawCanvas(containerElement) {
 			'u_ModelMatrix',
 			'u_ViewMatrix',
 			'u_ProjMatrix',
-			'u_Clicked',
-			'u_Eye',
-			'u_FogColor',
-			'u_FogDist',
 		],
 	})
-	Program.glControl.commonLight.glAttributes = commonWebGLVariableLocation.glAttributes
-	Program.glControl.commonLight.glUniforms = commonWebGLVariableLocation.glUniforms
+	Program1.glControl.commonLight.glAttributes = commonWebGLVariableLocation.glAttributes
+	Program1.glControl.commonLight.glUniforms = commonWebGLVariableLocation.glUniforms
 
-	Program.glControl.textureLight.program = ven$createProgram(Program.glControl.gl, TEXTURE_VERTEX_SHADER, TEXTURE_FRAGMENT_SHADER)
-	const textureWebGLVariableLocation = ven$getWebGLVariableLocation(Program.glControl.gl, Program.glControl.textureLight.program, {
+	Program1.glControl.textureLight.program = ven$createProgram(Program1.glControl.gl, TEXTURE_VERTEX_SHADER, TEXTURE_FRAGMENT_SHADER)
+	const textureWebGLVariableLocation = ven$getWebGLVariableLocation(Program1.glControl.gl, Program1.glControl.textureLight.program, {
 		glAttributes: ['a_Normal', 'a_Position', 'a_Color', 'a_TexCoord'],
 		glUniforms: [
 			'u_illuType',
@@ -1313,17 +939,16 @@ function drawCanvas(containerElement) {
 			'u_ModelMatrix',
 			'u_ViewMatrix',
 			'u_ProjMatrix',
-			'u_Clicked',
 			'u_Sampler',
 		],
 	})
-	Program.glControl.textureLight.glAttributes = textureWebGLVariableLocation.glAttributes
-	Program.glControl.textureLight.glUniforms = textureWebGLVariableLocation.glUniforms
+	Program1.glControl.textureLight.glAttributes = textureWebGLVariableLocation.glAttributes
+	Program1.glControl.textureLight.glUniforms = textureWebGLVariableLocation.glUniforms
 
 	const setWebGLRenderClickedStatus = () => {}
 	const setWebGLRenderNormalStatus = () => {}
-	Program.glControl.setWebGLRenderClickedStatus = setWebGLRenderClickedStatus
-	Program.glControl.setWebGLRenderNormalStatus = setWebGLRenderNormalStatus
+	Program1.glControl.setWebGLRenderClickedStatus = setWebGLRenderClickedStatus
+	Program1.glControl.setWebGLRenderNormalStatus = setWebGLRenderNormalStatus
 
 	const loadTextureAction = (gl, itemProgramControl, callback) => {
 		const { glUniforms } = itemProgramControl
@@ -1339,40 +964,40 @@ function drawCanvas(containerElement) {
 		 * 创建透视投影矩阵
 		 */
 		const projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
-			Program.profile.persProjection.fovy,
-			Program.profile.persProjection.aspect,
-			Program.profile.persProjection.near,
-			Program.profile.persProjection.far
+			Program1.profile.persProjection.fovy,
+			Program1.profile.persProjection.aspect,
+			Program1.profile.persProjection.near,
+			Program1.profile.persProjection.far
 		)
 		/**
 		 * 创建正交投影矩阵
 		 */
 		const orthoMatrix4 = Ven$CanvasMatrix4.setOrtho(
-			Program.profile.orthoProjection.left,
-			Program.profile.orthoProjection.right,
-			Program.profile.orthoProjection.bottom,
-			Program.profile.orthoProjection.top,
-			Program.profile.orthoProjection.near,
-			Program.profile.orthoProjection.far
+			Program1.profile.orthoProjection.left,
+			Program1.profile.orthoProjection.right,
+			Program1.profile.orthoProjection.bottom,
+			Program1.profile.orthoProjection.top,
+			Program1.profile.orthoProjection.near,
+			Program1.profile.orthoProjection.far
 		)
 		/**
 		 * 创建视图矩阵
 		 */
 		const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
-			new Ven$Vector3(Program.profile.lookAt.eyePosition.x, Program.profile.lookAt.eyePosition.y, Program.profile.lookAt.eyePosition.z),
-			new Ven$Vector3(Program.profile.lookAt.atPosition.x, Program.profile.lookAt.atPosition.y, Program.profile.lookAt.atPosition.z),
+			new Ven$Vector3(Program1.profile.lookAt.eyePosition.x, Program1.profile.lookAt.eyePosition.y, Program1.profile.lookAt.eyePosition.z),
+			new Ven$Vector3(Program1.profile.lookAt.atPosition.x, Program1.profile.lookAt.atPosition.y, Program1.profile.lookAt.atPosition.z),
 			new Ven$Vector3(0, 1, 0)
 		)
 
-		gl.uniform1f(glUniforms.u_illuType, Program.profile.light.illuType)
-		if (Program.profile.light.illuType === 1) {
+		gl.uniform1f(glUniforms.u_illuType, Program1.profile.light.illuType)
+		if (Program1.profile.light.illuType === 1) {
 			/**
 			 * 平行光方
 			 */
 			const lightDirection = new Ven$Vector3(
-				Program.profile.light.direction.x,
-				Program.profile.light.direction.y,
-				Program.profile.light.direction.z
+				Program1.profile.light.direction.x,
+				Program1.profile.light.direction.y,
+				Program1.profile.light.direction.z
 			)
 			const lightNormalizeDirection = lightDirection.normalize()
 			gl.uniform3fv(
@@ -1380,42 +1005,33 @@ function drawCanvas(containerElement) {
 				new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z])
 			)
 		}
-		if (Program.profile.light.illuType === 2) {
+		if (Program1.profile.light.illuType === 2) {
 			/**
 			 * 点光
 			 */
 			gl.uniform3fv(
 				glUniforms.u_LightPosition,
-				new Float32Array([Program.profile.light.position.x, Program.profile.light.position.y, Program.profile.light.position.z])
+				new Float32Array([Program1.profile.light.position.x, Program1.profile.light.position.y, Program1.profile.light.position.z])
 			)
 		}
 		gl.uniform3f(
 			glUniforms.u_LightColor,
-			Program.profile.light.color.r / 255,
-			Program.profile.light.color.g / 255,
-			Program.profile.light.color.b / 255
+			Program1.profile.light.color.r / 255,
+			Program1.profile.light.color.g / 255,
+			Program1.profile.light.color.b / 255
 		)
-		gl.uniform1f(glUniforms.u_lightIntensityGain, Program.profile.light.intensityGain)
+		gl.uniform1f(glUniforms.u_lightIntensityGain, Program1.profile.light.intensityGain)
 		gl.uniform3f(
 			glUniforms.u_AmbientLightColor,
-			Program.profile.light.ambient.r,
-			Program.profile.light.ambient.g,
-			Program.profile.light.ambient.b
-		)
-		gl.uniform3fv(
-			glUniforms.u_FogColor,
-			new Float32Array([Program.profile.fog.color.r / 255, Program.profile.fog.color.g / 255, Program.profile.fog.color.b / 255])
-		)
-		gl.uniform2fv(glUniforms.u_FogDist, new Float32Array([Program.profile.fog.dist.distOfStartAndEye, Program.profile.fog.dist.distOfEndAndEye]))
-		gl.uniform3fv(
-			glUniforms.u_Eye,
-			new Float32Array([Program.profile.lookAt.eyePosition.x, Program.profile.lookAt.eyePosition.y, Program.profile.lookAt.eyePosition.z])
+			Program1.profile.light.ambient.r,
+			Program1.profile.light.ambient.g,
+			Program1.profile.light.ambient.b
 		)
 		gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
-		if (Program.profile.projectionType === 1) {
+		if (Program1.profile.projectionType === 1) {
 			gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 		}
-		if (Program.profile.projectionType === 2) {
+		if (Program1.profile.projectionType === 2) {
 			gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(orthoMatrix4.data))
 		}
 	}
@@ -1494,7 +1110,7 @@ function drawCanvas(containerElement) {
 	const render = (gl, vertexFeatureSize, modelInstances, itemProgramControl, enableTexture) => {
 		gl.useProgram(itemProgramControl.program)
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		gl.clearColor(Program.profile.clearColor.r / 255, Program.profile.clearColor.g / 255, Program.profile.clearColor.b / 255, 1.0)
+		gl.clearColor(Program1.profile.clearColor.r / 255, Program1.profile.clearColor.g / 255, Program1.profile.clearColor.b / 255, 1.0)
 
 		setProfileMatrix(gl, itemProgramControl)
 		modelInstances.forEach(modelInstanceItem => {
@@ -1503,39 +1119,44 @@ function drawCanvas(containerElement) {
 		})
 	}
 
-	const stepControl = new Ven$StepControl(0, 90, 360)
+	const stepControl = new Ven$StepControl(0, 45, 360)
 	let angle = 0
 	const exec = () => {
-		if (!Program.isRender) {
+		if (!Program1.isRender) {
 			window.requestAnimationFrame(exec)
 			return
 		}
-		Program.isRender = false
-		if (Program.profile.autoTransformation) {
+		Program1.isRender = false
+		if (Program1.profile.autoTransformation) {
 			angle = stepControl.getNextValue() % 360
-			Program.getModelInstances(Program.glControl.modelInstances).forEach(modelInstanceItem => {
+			Program1.glControl.modelInstances.forEach(modelInstanceItem => {
 				modelInstanceItem.modelRatation.y = angle
 			})
-			Program.isRender = true
-			Program.renderModelInfomationView(Program.glControl.modelInstances)
+			Program1.isRender = true
 		} else {
 			stepControl.updateLastStamp()
 		}
-		if (Program.profile.enableTexture) {
-			if (!Program.glControl.textureLight.isLoadTexture) {
-				Program.glControl.textureLight.isLoadTexture = true
-				loadTextureAction(Program.glControl.gl, Program.glControl.textureLight, () => {
-					Program.isRender = true
+		if (Program1.profile.enableTexture) {
+			if (!Program1.glControl.textureLight.isLoadTexture) {
+				Program1.glControl.textureLight.isLoadTexture = true
+				loadTextureAction(Program1.glControl.gl, Program1.glControl.textureLight, () => {
+					Program1.isRender = true
 				})
 			}
-			render(Program.glControl.gl, Program.glControl.vertexFeatureSize, Program.glControl.modelInstances, Program.glControl.textureLight, true)
+			render(
+				Program1.glControl.gl,
+				Program1.glControl.vertexFeatureSize,
+				Program1.glControl.modelInstances,
+				Program1.glControl.textureLight,
+				true
+			)
 			window.requestAnimationFrame(exec)
 			return
 		}
-		render(Program.glControl.gl, Program.glControl.vertexFeatureSize, Program.glControl.modelInstances, Program.glControl.commonLight, false)
+		render(Program1.glControl.gl, Program1.glControl.vertexFeatureSize, Program1.glControl.modelInstances, Program1.glControl.commonLight, false)
 		window.requestAnimationFrame(exec)
 	}
 	exec()
 
-	console.log(Program.glControl)
+	console.log(Program1.glControl)
 }

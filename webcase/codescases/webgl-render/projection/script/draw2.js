@@ -93,13 +93,11 @@ class TriangleModel2 extends Model2 {
 				/* 绿色 */
 				0.75, 1.0, -4.0, 0.4, 1.0, 0.4, 1.0, 0.25, -1.0, -4.0, 0.4, 1.0, 0.4, 1.0, 1.25, -1.0, -4.0, 1.0, 0.4, 0.4, 1.0 /* 黄色 */, 0.75, 1.0,
 				-2.0, 1.0, 1.0, 0.4, 1.0, 0.25, -1.0, -2.0, 1.0, 1.0, 0.4, 1.0, 1.25, -1.0, -2.0, 1.0, 0.4, 0.4, 1.0 /* 蓝色 */, 0.75, 1.0, 0.0, 0.4,
-				0.4, 1.0, 1.0, 0.25, -1.0, 0.0, 0.4, 0.4, 1.0, 1.0, 1.25, -1.0, 0.0, 1.0, 0.4, 0.4, 1.0
-				/**
+				0.4, 1.0, 1.0, 0.25, -1.0, 0.0, 0.4, 0.4, 1.0, 1.0, 1.25, -1.0, 0.0, 1.0, 0.4, 0.4, 1.0 /* 绿色 */, /**
 				 * 左侧三角
-				 */, /* 绿色 */
-				-0.75, 1.0, -4.0, 0.4, 1.0, 0.4, 1.0, -1.25, -1.0, -4.0, 0.4, 1.0, 0.4, 1.0, -0.25, -1.0, -4.0, 1.0, 0.4, 0.4, 1.0 /* 黄色 */, -0.75,
-				1.0, -2.0, 1.0, 1.0, 0.4, 1.0, -1.25, -1.0, -2.0, 1.0, 1.0, 0.4, 1.0, -0.25, -1.0, -2.0, 1.0, 0.4, 0.4, 1.0 /* 蓝色 */, -0.75, 1.0,
-				0.0, 0.4, 0.4, 1.0, 1.0, -1.25, -1.0, 0.0, 0.4, 0.4, 1.0, 1.0, -0.25, -1.0, 0.0, 1.0, 0.4, 0.4, 1.0,
+				 */ -0.75, 1.0, -4.0, 0.4, 1.0, 0.4, 1.0, -1.25, -1.0, -4.0, 0.4, 1.0, 0.4, 1.0, -0.25, -1.0, -4.0, 1.0, 0.4, 0.4, 1.0 /* 黄色 */,
+				-0.75, 1.0, -2.0, 1.0, 1.0, 0.4, 1.0, -1.25, -1.0, -2.0, 1.0, 1.0, 0.4, 1.0, -0.25, -1.0, -2.0, 1.0, 0.4, 0.4, 1.0 /* 蓝色 */, -0.75,
+				1.0, 0.0, 0.4, 0.4, 1.0, 1.0, -1.25, -1.0, 0.0, 0.4, 0.4, 1.0, 1.0, -0.25, -1.0, 0.0, 1.0, 0.4, 0.4, 1.0,
 			]),
 		}
 	}
@@ -410,16 +408,41 @@ function drawCanvas2(containerElement) {
 	Program2.glControl.commonLight = {
 		glAttributes: {},
 		glUniforms: {},
-		Program2: null,
+		program: null,
 	}
 
-	Program2.glControl.commonLight.Program2 = ven$createProgram(Program2.glControl.gl, COMMON_VERTEX_SHADER, COMMON_FRAGMENT_SHADER)
-	const commonWebGLVariableLocation = ven$getWebGLVariableLocation(Program2.glControl.gl, Program2.glControl.commonLight.Program2, {
+	Program2.glControl.commonLight.program = ven$createProgram(Program2.glControl.gl, COMMON_VERTEX_SHADER, COMMON_FRAGMENT_SHADER)
+	const commonWebGLVariableLocation = ven$getWebGLVariableLocation(Program2.glControl.gl, Program2.glControl.commonLight.program, {
 		glAttributes: ['a_Position', 'a_Color'],
 		glUniforms: ['u_ModelMatrix', 'u_ViewMatrix', 'u_ProjMatrix'],
 	})
 	Program2.glControl.commonLight.glAttributes = commonWebGLVariableLocation.glAttributes
 	Program2.glControl.commonLight.glUniforms = commonWebGLVariableLocation.glUniforms
+
+	const setProfileMatrix = (gl, itemProgramControl) => {
+		const { glUniforms } = itemProgramControl
+
+		/**
+		 * 创建透视投影矩阵
+		 */
+		const projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
+			Program2.profile.persProjection.fovy,
+			Program2.profile.persProjection.aspect,
+			Program2.profile.persProjection.near,
+			Program2.profile.persProjection.far
+		)
+		/**
+		 * 创建视图矩阵
+		 */
+		const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
+			new Ven$Vector3(Program2.profile.lookAt.eyePosition.x, Program2.profile.lookAt.eyePosition.y, Program2.profile.lookAt.eyePosition.z),
+			new Ven$Vector3(Program2.profile.lookAt.atPosition.x, Program2.profile.lookAt.atPosition.y, Program2.profile.lookAt.atPosition.z),
+			new Ven$Vector3(0, 1, 0)
+		)
+
+		gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
+		gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
+	}
 
 	const setModelMatrix = (gl, modelInstance, itemProgramControl) => {
 		const { glUniforms } = itemProgramControl
@@ -460,31 +483,6 @@ function drawCanvas2(containerElement) {
 		gl.uniformMatrix4fv(glUniforms.u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
 	}
 
-	const setProfileMatrix = (gl, itemProgramControl) => {
-		const { glUniforms } = itemProgramControl
-
-		/**
-		 * 创建透视投影矩阵
-		 */
-		const projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
-			Program2.profile.persProjection.fovy,
-			Program2.profile.persProjection.aspect,
-			Program2.profile.persProjection.near,
-			Program2.profile.persProjection.far
-		)
-		/**
-		 * 创建视图矩阵
-		 */
-		const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
-			new Ven$Vector3(Program2.profile.lookAt.eyePosition.x, Program2.profile.lookAt.eyePosition.y, Program2.profile.lookAt.eyePosition.z),
-			new Ven$Vector3(Program2.profile.lookAt.atPosition.x, Program2.profile.lookAt.atPosition.y, Program2.profile.lookAt.atPosition.z),
-			new Ven$Vector3(0, 1, 0)
-		)
-
-		gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
-		gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
-	}
-
 	const drawBuffer = (gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture) => {
 		const { normalBuffer, featureBuffer, texCoordBuffer, vertexDatas } = modelInstanceItem
 		const { vertexNormals: normalData, vertexFeature: featureData, vertexCoordinate: texCoordData } = vertexDatas
@@ -518,12 +516,7 @@ function drawCanvas2(containerElement) {
 	}
 
 	const render = (gl, vertexFeatureSize, modelInstances, itemProgramControl, enableTexture) => {
-		if (!Program2.isRender) {
-			return
-		}
-		Program2.isRender = false
-
-		gl.useProgram(itemProgramControl.Program2)
+		gl.useProgram(itemProgramControl.program)
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		gl.clearColor(Program2.profile.clearColor.r / 255, Program2.profile.clearColor.g / 255, Program2.profile.clearColor.b / 255, 1.0)
 
@@ -535,8 +528,13 @@ function drawCanvas2(containerElement) {
 	}
 
 	const exec = () => {
+		if (!Program2.isRender) {
+			window.requestAnimationFrame(exec)
+			return
+		}
+		Program2.isRender = false
 		render(Program2.glControl.gl, Program2.glControl.vertexFeatureSize, Program2.glControl.modelInstances, Program2.glControl.commonLight, false)
-		requestAnimationFrame(exec)
+		window.requestAnimationFrame(exec)
 	}
 	exec()
 

@@ -1,4 +1,4 @@
-class Model1 {
+class Model2 {
 	constructor() {
 		this._vertexDatas = null
 		this._modelRatation = {
@@ -78,25 +78,70 @@ class Model1 {
 	}
 }
 
-class TriangleModel1 extends Model1 {
+class RectangularModel2 extends Model2 {
+	constructor(width, length, depth, color = '#ffffff', offsetX = 0, offsetY = 0, offsetZ = 0) {
+		super()
+		this._modelParam = {
+			width,
+			length,
+			depth,
+			rgba: ven$hex2Rgba(color),
+			offsetX,
+			offsetY,
+			offsetZ,
+		}
+		this.vertexDatas = this._createVertexData()
+	}
+
+	_createVertexData() {
+		return createCubeDatas(
+			this._modelParam.width,
+			this._modelParam.length,
+			this._modelParam.depth,
+			{
+				up: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
+				bottom: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
+				front: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
+				back: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
+				right: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
+				left: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
+			},
+			this._modelParam.offsetX,
+			this._modelParam.offsetY,
+			this._modelParam.offsetZ
+		)
+	}
+}
+
+class PlaneModel2 extends Model2 {
 	constructor() {
 		super()
+		this._modelParam = {}
 		this.vertexDatas = this._createVertexData()
 	}
 
 	_createVertexData() {
 		return {
+			// prettier-ignore
 			vertexFeature: new Float32Array([
-				/* 绿色 */
-				0.0, 0.5, -0.4, 0.4, 1.0, 0.4, 1.0, -0.5, -0.5, -0.4, 0.4, 1.0, 0.4, 1.0, 0.5, -0.5, -0.4, 1.0, 0.4, 0.4, 1.0 /* 黄色 */, 0.5, 0.4,
-				-0.2, 1.0, 0.4, 0.4, 1.0, -0.5, 0.4, -0.2, 1.0, 1.0, 0.4, 1.0, 0.0, -0.6, -0.2, 1.0, 1.0, 0.4, 1.0 /* 蓝色 */, 0.0, 0.5, 0.0, 0.4,
-				0.4, 1.0, 1.0, -0.5, -0.5, 0.0, 0.4, 0.4, 1.0, 1.0, 0.5, -0.5, 0.0, 1.0, 0.4, 0.4, 1.0,
+				-1.25, 1.25, 0.0, 1.0, 0.0, 0.0, 1.0,
+				-1.25, -1.25, 0.0, 1.0, 0.0, 0.0, 1.0,
+				1.25, -1.25, 0.0, 1.0, 0.0, 0.0, 1.0,
+				/* ... */
+				-1.25, 1.25, 0.0, 1.0, 0.0, 0.0, 1.0,
+				1.25, -1.25, 0.0, 1.0, 0.0, 0.0, 1.0,
+				1.25, 1.25, 0.0, 1.0, 0.0, 0.0, 1.0,
+			]),
+			// prettier-ignore
+			vertexCoordinate: new Float32Array([
+				0.0, 0.0, 0.0, 1.0, 1.0, 1.0,
+				0.0, 0.0, 1.0, 1.0, 1.0, 0.0
 			]),
 		}
 	}
 }
 
-class Program1 {
+class Program2 {
 	static isRender = true
 	static containerElement
 	static profile = {
@@ -105,25 +150,23 @@ class Program1 {
 		 */
 		lookAt: {
 			eyePosition: {
-				x: 0,
-				y: 0,
-				z: 5,
+				x: 4,
+				y: 5,
+				z: 6,
 			},
 			atPosition: {
 				x: 0,
 				y: 0,
-				z: -10,
+				z: 0,
 			},
 		},
 		/**
-		 * 正交投影矩阵参数
+		 * 透视投影矩阵参数
 		 */
-		orthoProjection: {
-			left: -1,
-			right: 1,
-			bottom: -1,
-			top: 1,
-			near: -50,
+		persProjection: {
+			fovy: 30,
+			aspect: 1,
+			near: 1,
 			far: 50,
 		},
 		clearColor: {
@@ -141,6 +184,8 @@ class Program1 {
 			gl: this.glControl.gl || null,
 			modelInstances: [],
 			vertexFeatureSize: 0,
+			frameBufferModelInstances: [],
+			frameBufferVertexFeatureSize: 0,
 		}
 		this.initFormView()
 		this.eventHandle()
@@ -163,10 +208,12 @@ class Program1 {
 		const modelOffsetZShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeZShow"]`)
 		const modelScaleRangeElement = this.containerElement.querySelector(`[name="modelScaleRange"]`)
 		const modelScaleRangeShowSpanElement = this.containerElement.querySelector(`[name="modelScaleRangeShow"]`)
-		const orthoProjectionNearRangeElement = this.containerElement.querySelector(`[name="orthoProjectionNear"]`)
-		const orthoProjectionNearShowSpanElement = this.containerElement.querySelector(`[name="orthoProjectionNearShow"]`)
-		const orthoProjectionFarRangeElement = this.containerElement.querySelector(`[name="orthoProjectionFar"]`)
-		const orthoProjectionFarShowSpanElement = this.containerElement.querySelector(`[name="orthoProjectionFarShow"]`)
+		const persProjectionFovyRangeElement = this.containerElement.querySelector(`[name="persProjectionFovy"]`)
+		const persProjectionFovyShowSpanElement = this.containerElement.querySelector(`[name="persProjectionFovyShow"]`)
+		const persProjectionNearRangeElement = this.containerElement.querySelector(`[name="persProjectionNear"]`)
+		const persProjectionNearShowSpanElement = this.containerElement.querySelector(`[name="persProjectionNearShow"]`)
+		const persProjectionFarRangeElement = this.containerElement.querySelector(`[name="persProjectionFar"]`)
+		const persProjectionFarShowSpanElement = this.containerElement.querySelector(`[name="persProjectionFarShow"]`)
 		const lookAtMatrix4EyePositionXRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionX"]`)
 		const lookAtMatrix4EyePositionXShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionXShow"]`)
 		const lookAtMatrix4EyePositionYRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionY"]`)
@@ -187,8 +234,9 @@ class Program1 {
 		modelOffsetYShowSpanElement.textContent = modelOffsetRangeYElement.value = 0
 		modelOffsetZShowSpanElement.textContent = modelOffsetRangeZElement.value = 0
 		modelScaleRangeShowSpanElement.textContent = modelScaleRangeElement.value = 1
-		orthoProjectionNearShowSpanElement.textContent = orthoProjectionNearRangeElement.value = self.profile.orthoProjection.near
-		orthoProjectionFarShowSpanElement.textContent = orthoProjectionFarRangeElement.value = self.profile.orthoProjection.far
+		persProjectionFovyShowSpanElement.textContent = persProjectionFovyRangeElement.value = self.profile.persProjection.fovy
+		persProjectionNearShowSpanElement.textContent = persProjectionNearRangeElement.value = self.profile.persProjection.near
+		persProjectionFarShowSpanElement.textContent = persProjectionFarRangeElement.value = self.profile.persProjection.far
 		lookAtMatrix4EyePositionXShowSpanElement.textContent = lookAtMatrix4EyePositionXRangeElement.value = self.profile.lookAt.eyePosition.x
 		lookAtMatrix4EyePositionYShowSpanElement.textContent = lookAtMatrix4EyePositionYRangeElement.value = self.profile.lookAt.eyePosition.y
 		lookAtMatrix4EyePositionZShowSpanElement.textContent = lookAtMatrix4EyePositionZRangeElement.value = self.profile.lookAt.eyePosition.z
@@ -214,10 +262,12 @@ class Program1 {
 		const modelOffsetRangeZShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeZShow"]`)
 		const modelScaleRangeElement = this.containerElement.querySelector(`[name="modelScaleRange"]`)
 		const modelScaleRangeShowSpanElement = this.containerElement.querySelector(`[name="modelScaleRangeShow"]`)
-		const orthoProjectionNearRangeElement = this.containerElement.querySelector(`[name="orthoProjectionNear"]`)
-		const orthoProjectionNearShowSpanElement = this.containerElement.querySelector(`[name="orthoProjectionNearShow"]`)
-		const orthoProjectionFarRangeElement = this.containerElement.querySelector(`[name="orthoProjectionFar"]`)
-		const orthoProjectionFarShowSpanElement = this.containerElement.querySelector(`[name="orthoProjectionFarShow"]`)
+		const persProjectionFovyRangeElement = this.containerElement.querySelector(`[name="persProjectionFovy"]`)
+		const persProjectionFovyShowSpanElement = this.containerElement.querySelector(`[name="persProjectionFovyShow"]`)
+		const persProjectionNearRangeElement = this.containerElement.querySelector(`[name="persProjectionNear"]`)
+		const persProjectionNearShowSpanElement = this.containerElement.querySelector(`[name="persProjectionNearShow"]`)
+		const persProjectionFarRangeElement = this.containerElement.querySelector(`[name="persProjectionFar"]`)
+		const persProjectionFarShowSpanElement = this.containerElement.querySelector(`[name="persProjectionFarShow"]`)
 		const lookAtMatrix4EyePositionXRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionX"]`)
 		const lookAtMatrix4EyePositionXShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionXShow"]`)
 		const lookAtMatrix4EyePositionYRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionY"]`)
@@ -286,14 +336,19 @@ class Program1 {
 			})
 			self.isRender = true
 		})
-		orthoProjectionNearRangeElement.addEventListener('input', function (e) {
-			orthoProjectionNearShowSpanElement.textContent = self.profile.orthoProjection.near = +this.value
-			console.log('orthoProjection:', JSON.stringify(self.profile.orthoProjection))
+		persProjectionFovyRangeElement.addEventListener('input', function (e) {
+			persProjectionFovyShowSpanElement.textContent = self.profile.persProjection.fovy = +this.value
+			console.log('persProjection:', JSON.stringify(self.profile.persProjection))
 			self.isRender = true
 		})
-		orthoProjectionFarRangeElement.addEventListener('input', function (e) {
-			orthoProjectionFarShowSpanElement.textContent = self.profile.orthoProjection.far = +this.value
-			console.log('orthoProjection:', JSON.stringify(self.profile.orthoProjection))
+		persProjectionNearRangeElement.addEventListener('input', function (e) {
+			persProjectionNearShowSpanElement.textContent = self.profile.persProjection.near = +this.value
+			console.log('persProjection:', JSON.stringify(self.profile.persProjection))
+			self.isRender = true
+		})
+		persProjectionFarRangeElement.addEventListener('input', function (e) {
+			persProjectionFarShowSpanElement.textContent = self.profile.persProjection.far = +this.value
+			console.log('persProjection:', JSON.stringify(self.profile.persProjection))
 			self.isRender = true
 		})
 		lookAtMatrix4EyePositionXRangeElement.addEventListener('input', function (e) {
@@ -329,9 +384,15 @@ class Program1 {
 	}
 
 	static initModelModelDatas() {
-		this.glControl.modelInstances = [new TriangleModel1()]
+		this.glControl.frameBufferModelInstances = [new RectangularModel2(1.0, 1.0, 1.0)]
+		this.glControl.frameBufferModelInstances.forEach(modelInstanceItem => {
+			modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
+			modelInstanceItem.texCoordBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
+		})
+		this.glControl.frameBufferVertexFeatureSize = this.getVertexFeatureSize(this.glControl.frameBufferModelInstances)
+		/* ... */
+		this.glControl.modelInstances = [new PlaneModel2()]
 		this.glControl.modelInstances.forEach(modelInstanceItem => {
-			modelInstanceItem.normalBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
 			modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
 			modelInstanceItem.texCoordBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
 		})
@@ -347,17 +408,19 @@ class Program1 {
 	}
 }
 
-function drawCanvas1(containerElement) {
+function drawCanvas2(containerElement) {
 	const canvasElement = containerElement.querySelector('canvas')
-	Program1.glControl.gl = ven$initWebGLContext(canvasElement)
-	Program1.init(containerElement)
+	Program2.glControl.gl = ven$initWebGLContext(canvasElement)
+	Program2.init(containerElement)
 
 	const COMMON_VERTEX_SHADER = `
 		precision mediump float;
 		varying vec4 v_Color;
+		varying vec2 v_TexCoord;
 		// 顶点配置(组)
 		attribute vec3 a_Position;
 		attribute vec4 a_Color;
+		attribute vec2 a_TexCoord;
 		// 变换矩阵(组)
 		uniform mat4 u_ModelMatrix;
 		uniform mat4 u_ViewMatrix;
@@ -366,71 +429,152 @@ function drawCanvas1(containerElement) {
 			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
 			v_Color = a_Color;
 			gl_PointSize = 5.0;
+			v_TexCoord = a_TexCoord;
 		}
 	`
 	const COMMON_FRAGMENT_SHADER = `
 		precision mediump float;
 		varying vec4 v_Color;
+		varying vec2 v_TexCoord;
+		// 纹理数据(内容)(组)
+		uniform sampler2D u_Sampler;
 		void main() {
-			gl_FragColor = v_Color;
+			// gl_FragColor = v_Color;
+			gl_FragColor = texture2D(u_Sampler, v_TexCoord);
 		}
 	`
 
-	Program1.glControl.gl.clearColor(
-		Program1.profile.clearColor.r / 255,
-		Program1.profile.clearColor.g / 255,
-		Program1.profile.clearColor.b / 255,
+	const OFFSCREEN_WIDTH = 256
+	const OFFSCREEN_HEIGHT = 256
+
+	Program2.glControl.gl.clearColor(
+		Program2.profile.clearColor.r / 255,
+		Program2.profile.clearColor.g / 255,
+		Program2.profile.clearColor.b / 255,
 		1.0
 	)
-	Program1.glControl.gl.clear(Program1.glControl.gl.COLOR_BUFFER_BIT | Program1.glControl.gl.DEPTH_BUFFER_BIT)
-	Program1.glControl.gl.enable(Program1.glControl.gl.BLEND)
-	Program1.glControl.gl.blendFunc(Program1.glControl.gl.SRC_ALPHA, Program1.glControl.gl.ONE_MINUS_SRC_ALPHA)
-	Program1.glControl.gl.enable(Program1.glControl.gl.CULL_FACE)
-	Program1.glControl.gl.enable(Program1.glControl.gl.DEPTH_TEST)
-	Program1.glControl.gl.enable(Program1.glControl.gl.POLYGON_OFFSET_FILL)
-	Program1.glControl.gl.polygonOffset(1.0, 1.0)
+	Program2.glControl.gl.clear(Program2.glControl.gl.COLOR_BUFFER_BIT | Program2.glControl.gl.DEPTH_BUFFER_BIT)
+	Program2.glControl.gl.enable(Program2.glControl.gl.BLEND)
+	Program2.glControl.gl.blendFunc(Program2.glControl.gl.SRC_ALPHA, Program2.glControl.gl.ONE_MINUS_SRC_ALPHA)
+	Program2.glControl.gl.enable(Program2.glControl.gl.CULL_FACE)
+	Program2.glControl.gl.enable(Program2.glControl.gl.DEPTH_TEST)
+	Program2.glControl.gl.enable(Program2.glControl.gl.POLYGON_OFFSET_FILL)
+	Program2.glControl.gl.polygonOffset(1.0, 1.0)
 
-	Program1.glControl.commonLight = {
+	Program2.glControl.commonLight = {
 		glAttributes: {},
 		glUniforms: {},
 		program: null,
+		frameBuffer: null,
+		frameTexture: null,
+		cubeTexture: null,
 	}
 
-	Program1.glControl.commonLight.program = ven$createProgram(Program1.glControl.gl, COMMON_VERTEX_SHADER, COMMON_FRAGMENT_SHADER)
-	const commonWebGLVariableLocation = ven$getWebGLVariableLocation(Program1.glControl.gl, Program1.glControl.commonLight.program, {
-		glAttributes: ['a_Position', 'a_Color'],
-		glUniforms: ['u_ModelMatrix', 'u_ViewMatrix', 'u_ProjMatrix'],
+	Program2.glControl.commonLight.program = ven$createProgram(Program2.glControl.gl, COMMON_VERTEX_SHADER, COMMON_FRAGMENT_SHADER)
+	const commonWebGLVariableLocation = ven$getWebGLVariableLocation(Program2.glControl.gl, Program2.glControl.commonLight.program, {
+		glAttributes: ['a_Position', 'a_Color', 'a_TexCoord'],
+		glUniforms: ['u_ModelMatrix', 'u_ViewMatrix', 'u_ProjMatrix', 'u_Sampler'],
 	})
-	Program1.glControl.commonLight.glAttributes = commonWebGLVariableLocation.glAttributes
-	Program1.glControl.commonLight.glUniforms = commonWebGLVariableLocation.glUniforms
+	Program2.glControl.commonLight.glAttributes = commonWebGLVariableLocation.glAttributes
+	Program2.glControl.commonLight.glUniforms = commonWebGLVariableLocation.glUniforms
 
-	const setProfileMatrix = (gl, itemProgramControl) => {
+	const { frameBuffer: frameBuffer, texture: frameTexture } = ven$initFramebufferObject(Program2.glControl.gl, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT)
+	Program2.glControl.commonLight.frameBuffer = frameBuffer
+	Program2.glControl.commonLight.frameTexture = frameTexture
+
+	const cubeTexture = ven$loadImageResourceTexture(
+		Program2.glControl.gl,
+		'../common/images/demo-1024x1024.jpg',
+		Program2.glControl.commonLight.glUniforms.u_Sampler,
+		0,
+		(gl, textureUnitIndex, textureUnitLable) => {
+			// gl.activeTexture(gl[textureUnitLable])
+			gl.bindTexture(gl.TEXTURE_2D, null)
+			Program2.isRender = true
+		}
+	)
+	Program2.glControl.commonLight.cubeTexture = cubeTexture
+
+	const setFrameBufferProfileMatrix = (gl, itemProgramControl) => {
 		const { glUniforms } = itemProgramControl
 
 		/**
-		 * 创建正交投影矩阵
+		 * 创建透视投影矩阵
 		 */
-		const orthoMatrix4 = Ven$CanvasMatrix4.setOrtho(
-			Program1.profile.orthoProjection.left,
-			Program1.profile.orthoProjection.right,
-			Program1.profile.orthoProjection.bottom,
-			Program1.profile.orthoProjection.top,
-			Program1.profile.orthoProjection.near,
-			Program1.profile.orthoProjection.far
+		const projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
+			Program2.profile.persProjection.fovy,
+			Program2.profile.persProjection.aspect,
+			Program2.profile.persProjection.near,
+			Program2.profile.persProjection.far
 		)
 		/**
 		 * 创建视图矩阵
 		 */
 		const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
-			new Ven$Vector3(Program1.profile.lookAt.eyePosition.x, Program1.profile.lookAt.eyePosition.y, Program1.profile.lookAt.eyePosition.z),
-			new Ven$Vector3(Program1.profile.lookAt.atPosition.x, Program1.profile.lookAt.atPosition.y, Program1.profile.lookAt.atPosition.z),
+			new Ven$Vector3(Program2.profile.lookAt.eyePosition.x, Program2.profile.lookAt.eyePosition.y, Program2.profile.lookAt.eyePosition.z),
+			new Ven$Vector3(Program2.profile.lookAt.atPosition.x, Program2.profile.lookAt.atPosition.y, Program2.profile.lookAt.atPosition.z),
 			new Ven$Vector3(0, 1, 0)
 		)
 
 		gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
-		gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(orthoMatrix4.data))
+		gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
+	}
+	const setProfileMatrix = (gl, itemProgramControl) => {
+		const { glUniforms } = itemProgramControl
+
+		/**
+		 * 创建透视投影矩阵
+		 */
+		const projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
+			Program2.profile.persProjection.fovy,
+			Program2.profile.persProjection.aspect,
+			Program2.profile.persProjection.near,
+			Program2.profile.persProjection.far
+		)
+		/**
+		 * 创建视图矩阵
+		 */
+		const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
+			new Ven$Vector3(Program2.profile.lookAt.eyePosition.x, Program2.profile.lookAt.eyePosition.y, Program2.profile.lookAt.eyePosition.z),
+			new Ven$Vector3(Program2.profile.lookAt.atPosition.x, Program2.profile.lookAt.atPosition.y, Program2.profile.lookAt.atPosition.z),
+			new Ven$Vector3(0, 1, 0)
+		)
+
+		gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
+		gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 	}
 
+	const setFrameBufferModelMatrix = (gl, modelInstance, itemProgramControl) => {
+		const { glUniforms } = itemProgramControl
+		/**
+		 * 创建旋转矩阵
+		 */
+		const modelRotationXMatrix4 = Ven$CanvasMatrix4.setRotate(Ven$Angles.degreeToRadian(modelInstance.modelRatation.x), new Ven$Vector3(1, 0, 0))
+		const modelRotationYMatrix4 = Ven$CanvasMatrix4.setRotate(Ven$Angles.degreeToRadian(modelInstance.modelRatation.y), new Ven$Vector3(0, 1, 0))
+		const modelRotationZMatrix4 = Ven$CanvasMatrix4.setRotate(Ven$Angles.degreeToRadian(modelInstance.modelRatation.z), new Ven$Vector3(0, 0, 1))
+		/**
+		 * 创建平移矩阵
+		 */
+		const modelOffsetMatrix4 = Ven$CanvasMatrix4.setTranslate(
+			new Ven$Vector3(modelInstance.modelOffset.x, modelInstance.modelOffset.y, modelInstance.modelOffset.z)
+		)
+		/**
+		 * 创建缩放矩阵
+		 */
+		const modelScaleMatrix4 = Ven$CanvasMatrix4.setScale(
+			new Ven$Vector3(modelInstance.modelScale.x, modelInstance.modelScale.y, modelInstance.modelScale.z)
+		)
+		/**
+		 * 生成模型变换矩阵
+		 */
+		const modelEffectMatrix4 = modelRotationXMatrix4
+			.multiply4(modelRotationYMatrix4)
+			.multiply4(modelRotationZMatrix4)
+			.multiply4(modelScaleMatrix4)
+			.multiply4(modelOffsetMatrix4)
+
+		gl.uniformMatrix4fv(glUniforms.u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
+	}
 	const setModelMatrix = (gl, modelInstance, itemProgramControl) => {
 		const { glUniforms } = itemProgramControl
 		/**
@@ -459,27 +603,15 @@ function drawCanvas1(containerElement) {
 			.multiply4(modelRotationZMatrix4)
 			.multiply4(modelScaleMatrix4)
 			.multiply4(modelOffsetMatrix4)
-		/**
-		 * 创建法线变换矩阵
-		 */
-		const modelEffectInverseMatrix4 = Ven$CanvasMatrix4.setInverse(modelEffectMatrix4)
-		const modelEffectInverseTransposeMatrix4 = Ven$CanvasMatrix4.setTranspose(modelEffectInverseMatrix4)
-		const normalMatrix4 = modelEffectInverseTransposeMatrix4
 
 		gl.uniformMatrix4fv(glUniforms.u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
-		gl.uniformMatrix4fv(glUniforms.u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
 	}
 
-	const drawBuffer = (gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture) => {
-		const { normalBuffer, featureBuffer, texCoordBuffer, vertexDatas } = modelInstanceItem
-		const { vertexNormals: normalData, vertexFeature: featureData, vertexCoordinate: texCoordData } = vertexDatas
-		const { glAttributes } = itemProgramControl
+	const drawFrameBufferBuffer = (gl, vertexFeatureSize, modelInstanceItem, itemProgramControl) => {
+		const { featureBuffer, texCoordBuffer, vertexDatas } = modelInstanceItem
+		const { vertexFeature: featureData, vertexCoordinate: texCoordData } = vertexDatas
+		const { glAttributes, cubeTexture } = itemProgramControl
 
-		gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer)
-		gl.bufferData(gl.ARRAY_BUFFER, normalData, gl.STATIC_DRAW)
-		ven$initAttributeVariable(gl, glAttributes.a_Normal, normalBuffer, {
-			size: 3,
-		})
 		gl.bindBuffer(gl.ARRAY_BUFFER, featureBuffer)
 		gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
 		ven$initAttributeVariable(gl, glAttributes.a_Position, featureBuffer, {
@@ -491,39 +623,91 @@ function drawCanvas1(containerElement) {
 			stride: 28,
 			offset: 12,
 		})
-		if (enableTexture) {
-			gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, texCoordData, gl.STATIC_DRAW)
-			ven$initAttributeVariable(gl, glAttributes.a_TexCoord, texCoordBuffer, {
-				size: 2,
-			})
-		}
+		gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer)
+		gl.bufferData(gl.ARRAY_BUFFER, texCoordData, gl.STATIC_DRAW)
+		ven$initAttributeVariable(gl, glAttributes.a_TexCoord, texCoordBuffer, {
+			size: 2,
+		})
 
+		gl.activeTexture(gl.TEXTURE0)
+		gl.bindTexture(gl.TEXTURE_2D, cubeTexture)
+		gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
+	}
+	const drawBuffer = (gl, vertexFeatureSize, modelInstanceItem, itemProgramControl) => {
+		const { featureBuffer, texCoordBuffer, vertexDatas } = modelInstanceItem
+		const { vertexFeature: featureData, vertexCoordinate: texCoordData } = vertexDatas
+		const { glAttributes, frameTexture } = itemProgramControl
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, featureBuffer)
+		gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
+		ven$initAttributeVariable(gl, glAttributes.a_Position, featureBuffer, {
+			size: 3,
+			stride: 28,
+		})
+		ven$initAttributeVariable(gl, glAttributes.a_Color, featureBuffer, {
+			size: 4,
+			stride: 28,
+			offset: 12,
+		})
+		gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer)
+		gl.bufferData(gl.ARRAY_BUFFER, texCoordData, gl.STATIC_DRAW)
+		ven$initAttributeVariable(gl, glAttributes.a_TexCoord, texCoordBuffer, {
+			size: 2,
+		})
+
+		gl.activeTexture(gl.TEXTURE0)
+		gl.bindTexture(gl.TEXTURE_2D, frameTexture)
 		gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
 	}
 
-	const render = (gl, vertexFeatureSize, modelInstances, itemProgramControl, enableTexture) => {
-		gl.useProgram(itemProgramControl.program)
+	const renderFrameBuffer = (gl, vertexFeatureSize, modelInstances, itemProgramControl) => {
+		const { frameBuffer } = itemProgramControl
+		/**
+		 * 绑定创建的帧缓冲区
+		 * 		使绘图结果生成在帧缓冲区
+		 */
+		gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer)
+		gl.viewport(0, 0, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT)
+		gl.clearColor(0.2, 0.2, 0.4, 1.0)
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		gl.clearColor(Program1.profile.clearColor.r / 255, Program1.profile.clearColor.g / 255, Program1.profile.clearColor.b / 255, 1.0)
-
+		setFrameBufferProfileMatrix(gl, itemProgramControl)
+		modelInstances.forEach(modelInstanceItem => {
+			setFrameBufferModelMatrix(gl, modelInstanceItem, itemProgramControl)
+			drawFrameBufferBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl)
+		})
+	}
+	const render = (gl, vertexFeatureSize, modelInstances, itemProgramControl) => {
+		/**
+		 * 解除帧缓冲区的绑定
+		 */
+		gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+		gl.viewport(0, 0, canvasElement.width, canvasElement.height)
+		gl.clearColor(0.0, 0.0, 0.0, 1.0)
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		setProfileMatrix(gl, itemProgramControl)
 		modelInstances.forEach(modelInstanceItem => {
 			setModelMatrix(gl, modelInstanceItem, itemProgramControl)
-			drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture)
+			drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl)
 		})
 	}
 
 	const exec = () => {
-		if (!Program1.isRender) {
+		if (!Program2.isRender) {
 			window.requestAnimationFrame(exec)
 			return
 		}
-		Program1.isRender = false
-		render(Program1.glControl.gl, Program1.glControl.vertexFeatureSize, Program1.glControl.modelInstances, Program1.glControl.commonLight, false)
+		Program2.isRender = false
+		Program2.glControl.gl.useProgram(Program2.glControl.commonLight.program)
+		renderFrameBuffer(
+			Program2.glControl.gl,
+			Program2.glControl.frameBufferVertexFeatureSize,
+			Program2.glControl.frameBufferModelInstances,
+			Program2.glControl.commonLight
+		)
+		render(Program2.glControl.gl, Program2.glControl.vertexFeatureSize, Program2.glControl.modelInstances, Program2.glControl.commonLight)
 		window.requestAnimationFrame(exec)
 	}
 	exec()
 
-	console.log(Program1.glControl)
+	console.log(Program2.glControl)
 }
