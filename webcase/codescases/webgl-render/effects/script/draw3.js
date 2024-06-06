@@ -636,7 +636,7 @@ function drawCanvas3(containerElement) {
 	Program3.init(containerElement)
 
 	const SHADOW_VERTEX_SHADER = `
-		precision mediump float;
+		precision highp float;
 		// 顶点配置(组)
 		attribute vec3 a_Position;
 		// 变换矩阵(组)
@@ -648,7 +648,7 @@ function drawCanvas3(containerElement) {
 		}
 	`
 	const SHADOW_FRAGMENT_SHADER = `
-		precision mediump float;
+		precision highp float;
 		void main() {
 			const vec4 bitShift = vec4(1.0, 256.0, 256.0 * 256.0, 256.0 * 256.0 * 256.0);
 			const vec4 bitMask = vec4(1.0 / 256.0, 1.0 / 256.0, 1.0 / 256.0, 0.0);
@@ -660,7 +660,7 @@ function drawCanvas3(containerElement) {
 	const MAIN_VERTEX_SHADER = `
 		precision highp float;
 		varying vec4 v_Color;
-		varying vec3 v_PositionFromLight;
+		varying vec4 v_PositionFromLight;
 		// 顶点配置(组)
 		attribute vec3 a_Position;
 		attribute vec4 a_Color;
