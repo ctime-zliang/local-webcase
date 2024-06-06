@@ -154,38 +154,38 @@ class Program2 {
 
 	static initFormView() {
 		const self = this
-		const modelRotationRangeXElement = this.containerElement.querySelector(`[name="modelRotationRangeX"]`)
-		const modelRotationXShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeXShow"]`)
-		const modelRotationRangeYElement = this.containerElement.querySelector(`[name="modelRotationRangeY"]`)
-		const modelRotationYShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeYShow"]`)
-		const modelRotationRangeZElement = this.containerElement.querySelector(`[name="modelRotationRangeZ"]`)
-		const modelRotationZShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeZShow"]`)
-		const modelOffsetRangeXElement = this.containerElement.querySelector(`[name="modelOffsetRangeX"]`)
-		const modelOffsetXShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeXShow"]`)
-		const modelOffsetRangeYElement = this.containerElement.querySelector(`[name="modelOffsetRangeY"]`)
-		const modelOffsetYShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeYShow"]`)
-		const modelOffsetRangeZElement = this.containerElement.querySelector(`[name="modelOffsetRangeZ"]`)
-		const modelOffsetZShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeZShow"]`)
-		const modelScaleRangeElement = this.containerElement.querySelector(`[name="modelScaleRange"]`)
-		const modelScaleRangeShowSpanElement = this.containerElement.querySelector(`[name="modelScaleRangeShow"]`)
-		const persProjectionFovyRangeElement = this.containerElement.querySelector(`[name="persProjectionFovy"]`)
-		const persProjectionFovyShowSpanElement = this.containerElement.querySelector(`[name="persProjectionFovyShow"]`)
-		const persProjectionNearRangeElement = this.containerElement.querySelector(`[name="persProjectionNear"]`)
-		const persProjectionNearShowSpanElement = this.containerElement.querySelector(`[name="persProjectionNearShow"]`)
-		const persProjectionFarRangeElement = this.containerElement.querySelector(`[name="persProjectionFar"]`)
-		const persProjectionFarShowSpanElement = this.containerElement.querySelector(`[name="persProjectionFarShow"]`)
-		const lookAtMatrix4EyePositionXRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionX"]`)
-		const lookAtMatrix4EyePositionXShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionXShow"]`)
-		const lookAtMatrix4EyePositionYRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionY"]`)
-		const lookAtMatrix4EyePositionYShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionYShow"]`)
-		const lookAtMatrix4EyePositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionZ"]`)
-		const lookAtMatrix4EyePositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionZShow"]`)
-		const lookAtMatrix4AtPositionXRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionX"]`)
-		const lookAtMatrix4AtPositionXShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionXShow"]`)
-		const lookAtMatrix4AtPositionYRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionY"]`)
-		const lookAtMatrix4AtPositionYShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionYShow"]`)
-		const lookAtMatrix4AtPositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZ"]`)
-		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZShow"]`)
+		const modelRotationRangeXElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeX"]`)
+		const modelRotationXShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeXShow"]`)
+		const modelRotationRangeYElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeY"]`)
+		const modelRotationYShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeYShow"]`)
+		const modelRotationRangeZElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeZ"]`)
+		const modelRotationZShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeZShow"]`)
+		const modelOffsetRangeXElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeX"]`)
+		const modelOffsetXShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeXShow"]`)
+		const modelOffsetRangeYElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeY"]`)
+		const modelOffsetYShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeYShow"]`)
+		const modelOffsetRangeZElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeZ"]`)
+		const modelOffsetZShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeZShow"]`)
+		const modelScaleRangeElement = this.containerElement.querySelector(`[data-tag-name="modelScaleRange"]`)
+		const modelScaleRangeShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelScaleRangeShow"]`)
+		const persProjectionFovyRangeElement = this.containerElement.querySelector(`[data-tag-name="persProjectionFovy"]`)
+		const persProjectionFovyShowSpanElement = this.containerElement.querySelector(`[data-tag-name="persProjectionFovyShow"]`)
+		const persProjectionNearRangeElement = this.containerElement.querySelector(`[data-tag-name="persProjectionNear"]`)
+		const persProjectionNearShowSpanElement = this.containerElement.querySelector(`[data-tag-name="persProjectionNearShow"]`)
+		const persProjectionFarRangeElement = this.containerElement.querySelector(`[data-tag-name="persProjectionFar"]`)
+		const persProjectionFarShowSpanElement = this.containerElement.querySelector(`[data-tag-name="persProjectionFarShow"]`)
+		const lookAtMatrix4EyePositionXRangeElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4EyePositionX"]`)
+		const lookAtMatrix4EyePositionXShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4EyePositionXShow"]`)
+		const lookAtMatrix4EyePositionYRangeElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4EyePositionY"]`)
+		const lookAtMatrix4EyePositionYShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4EyePositionYShow"]`)
+		const lookAtMatrix4EyePositionZRangeElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4EyePositionZ"]`)
+		const lookAtMatrix4EyePositionZShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4EyePositionZShow"]`)
+		const lookAtMatrix4AtPositionXRangeElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4AtPositionX"]`)
+		const lookAtMatrix4AtPositionXShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4AtPositionXShow"]`)
+		const lookAtMatrix4AtPositionYRangeElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4AtPositionY"]`)
+		const lookAtMatrix4AtPositionYShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4AtPositionYShow"]`)
+		const lookAtMatrix4AtPositionZRangeElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4AtPositionZ"]`)
+		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4AtPositionZShow"]`)
 
 		modelRotationXShowSpanElement.textContent = modelRotationRangeXElement.value = 0
 		modelRotationYShowSpanElement.textContent = modelRotationRangeYElement.value = 0
@@ -208,38 +208,38 @@ class Program2 {
 	static eventHandle() {
 		const self = this
 		const canvasElement = this.containerElement.querySelector(`canvas`)
-		const modelRotationRangeXElement = this.containerElement.querySelector(`[name="modelRotationRangeX"]`)
-		const modelRotationRangeXShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeXShow"]`)
-		const modelRotationRangeYElement = this.containerElement.querySelector(`[name="modelRotationRangeY"]`)
-		const modelRotationRangeYShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeYShow"]`)
-		const modelRotationRangeZElement = this.containerElement.querySelector(`[name="modelRotationRangeZ"]`)
-		const modelRotationRangeZShowSpanElement = this.containerElement.querySelector(`[name="modelRotationRangeZShow"]`)
-		const modelOffsetRangeXElement = this.containerElement.querySelector(`[name="modelOffsetRangeX"]`)
-		const modelOffsetRangeXShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeXShow"]`)
-		const modelOffsetRangeYElement = this.containerElement.querySelector(`[name="modelOffsetRangeY"]`)
-		const modelOffsetRangeYShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeYShow"]`)
-		const modelOffsetRangeZElement = this.containerElement.querySelector(`[name="modelOffsetRangeZ"]`)
-		const modelOffsetRangeZShowSpanElement = this.containerElement.querySelector(`[name="modelOffsetRangeZShow"]`)
-		const modelScaleRangeElement = this.containerElement.querySelector(`[name="modelScaleRange"]`)
-		const modelScaleRangeShowSpanElement = this.containerElement.querySelector(`[name="modelScaleRangeShow"]`)
-		const persProjectionFovyRangeElement = this.containerElement.querySelector(`[name="persProjectionFovy"]`)
-		const persProjectionFovyShowSpanElement = this.containerElement.querySelector(`[name="persProjectionFovyShow"]`)
-		const persProjectionNearRangeElement = this.containerElement.querySelector(`[name="persProjectionNear"]`)
-		const persProjectionNearShowSpanElement = this.containerElement.querySelector(`[name="persProjectionNearShow"]`)
-		const persProjectionFarRangeElement = this.containerElement.querySelector(`[name="persProjectionFar"]`)
-		const persProjectionFarShowSpanElement = this.containerElement.querySelector(`[name="persProjectionFarShow"]`)
-		const lookAtMatrix4EyePositionXRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionX"]`)
-		const lookAtMatrix4EyePositionXShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionXShow"]`)
-		const lookAtMatrix4EyePositionYRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionY"]`)
-		const lookAtMatrix4EyePositionYShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionYShow"]`)
-		const lookAtMatrix4EyePositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionZ"]`)
-		const lookAtMatrix4EyePositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4EyePositionZShow"]`)
-		const lookAtMatrix4AtPositionXRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionX"]`)
-		const lookAtMatrix4AtPositionXShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionXShow"]`)
-		const lookAtMatrix4AtPositionYRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionY"]`)
-		const lookAtMatrix4AtPositionYShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionYShow"]`)
-		const lookAtMatrix4AtPositionZRangeElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZ"]`)
-		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[name="lookAtMatrix4AtPositionZShow"]`)
+		const modelRotationRangeXElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeX"]`)
+		const modelRotationRangeXShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeXShow"]`)
+		const modelRotationRangeYElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeY"]`)
+		const modelRotationRangeYShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeYShow"]`)
+		const modelRotationRangeZElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeZ"]`)
+		const modelRotationRangeZShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeZShow"]`)
+		const modelOffsetRangeXElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeX"]`)
+		const modelOffsetRangeXShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeXShow"]`)
+		const modelOffsetRangeYElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeY"]`)
+		const modelOffsetRangeYShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeYShow"]`)
+		const modelOffsetRangeZElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeZ"]`)
+		const modelOffsetRangeZShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeZShow"]`)
+		const modelScaleRangeElement = this.containerElement.querySelector(`[data-tag-name="modelScaleRange"]`)
+		const modelScaleRangeShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelScaleRangeShow"]`)
+		const persProjectionFovyRangeElement = this.containerElement.querySelector(`[data-tag-name="persProjectionFovy"]`)
+		const persProjectionFovyShowSpanElement = this.containerElement.querySelector(`[data-tag-name="persProjectionFovyShow"]`)
+		const persProjectionNearRangeElement = this.containerElement.querySelector(`[data-tag-name="persProjectionNear"]`)
+		const persProjectionNearShowSpanElement = this.containerElement.querySelector(`[data-tag-name="persProjectionNearShow"]`)
+		const persProjectionFarRangeElement = this.containerElement.querySelector(`[data-tag-name="persProjectionFar"]`)
+		const persProjectionFarShowSpanElement = this.containerElement.querySelector(`[data-tag-name="persProjectionFarShow"]`)
+		const lookAtMatrix4EyePositionXRangeElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4EyePositionX"]`)
+		const lookAtMatrix4EyePositionXShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4EyePositionXShow"]`)
+		const lookAtMatrix4EyePositionYRangeElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4EyePositionY"]`)
+		const lookAtMatrix4EyePositionYShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4EyePositionYShow"]`)
+		const lookAtMatrix4EyePositionZRangeElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4EyePositionZ"]`)
+		const lookAtMatrix4EyePositionZShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4EyePositionZShow"]`)
+		const lookAtMatrix4AtPositionXRangeElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4AtPositionX"]`)
+		const lookAtMatrix4AtPositionXShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4AtPositionXShow"]`)
+		const lookAtMatrix4AtPositionYRangeElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4AtPositionY"]`)
+		const lookAtMatrix4AtPositionYShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4AtPositionYShow"]`)
+		const lookAtMatrix4AtPositionZRangeElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4AtPositionZ"]`)
+		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4AtPositionZShow"]`)
 
 		canvasElement.addEventListener('contextmenu', function (e) {
 			e.preventDefault()
@@ -419,112 +419,116 @@ function drawCanvas2(containerElement) {
 	Program2.glControl.commonLight.glAttributes = commonWebGLVariableLocation.glAttributes
 	Program2.glControl.commonLight.glUniforms = commonWebGLVariableLocation.glUniforms
 
-	const setProfileMatrix = (gl, itemProgramControl) => {
-		const { glUniforms } = itemProgramControl
-
-		/**
-		 * 创建透视投影矩阵
-		 */
-		const projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
-			Program2.profile.persProjection.fovy,
-			Program2.profile.persProjection.aspect,
-			Program2.profile.persProjection.near,
-			Program2.profile.persProjection.far
-		)
-		/**
-		 * 创建视图矩阵
-		 */
-		const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
-			new Ven$Vector3(Program2.profile.lookAt.eyePosition.x, Program2.profile.lookAt.eyePosition.y, Program2.profile.lookAt.eyePosition.z),
-			new Ven$Vector3(Program2.profile.lookAt.atPosition.x, Program2.profile.lookAt.atPosition.y, Program2.profile.lookAt.atPosition.z),
-			new Ven$Vector3(0, 1, 0)
-		)
-
-		gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
-		gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
-	}
-
-	const setModelMatrix = (gl, modelInstance, itemProgramControl) => {
-		const { glUniforms } = itemProgramControl
-		/**
-		 * 创建旋转矩阵
-		 */
-		const modelRotationXMatrix4 = Ven$CanvasMatrix4.setRotate(Ven$Angles.degreeToRadian(modelInstance.modelRatation.x), new Ven$Vector3(1, 0, 0))
-		const modelRotationYMatrix4 = Ven$CanvasMatrix4.setRotate(Ven$Angles.degreeToRadian(modelInstance.modelRatation.y), new Ven$Vector3(0, 1, 0))
-		const modelRotationZMatrix4 = Ven$CanvasMatrix4.setRotate(Ven$Angles.degreeToRadian(modelInstance.modelRatation.z), new Ven$Vector3(0, 0, 1))
-		/**
-		 * 创建平移矩阵
-		 */
-		const modelOffsetMatrix4 = Ven$CanvasMatrix4.setTranslate(
-			new Ven$Vector3(modelInstance.modelOffset.x, modelInstance.modelOffset.y, modelInstance.modelOffset.z)
-		)
-		/**
-		 * 创建缩放矩阵
-		 */
-		const modelScaleMatrix4 = Ven$CanvasMatrix4.setScale(
-			new Ven$Vector3(modelInstance.modelScale.x, modelInstance.modelScale.y, modelInstance.modelScale.z)
-		)
-		/**
-		 * 生成模型变换矩阵
-		 */
-		const modelEffectMatrix4 = modelRotationXMatrix4
-			.multiply4(modelRotationYMatrix4)
-			.multiply4(modelRotationZMatrix4)
-			.multiply4(modelScaleMatrix4)
-			.multiply4(modelOffsetMatrix4)
-		/**
-		 * 创建法线变换矩阵
-		 */
-		const modelEffectInverseMatrix4 = Ven$CanvasMatrix4.setInverse(modelEffectMatrix4)
-		const modelEffectInverseTransposeMatrix4 = Ven$CanvasMatrix4.setTranspose(modelEffectInverseMatrix4)
-		const normalMatrix4 = modelEffectInverseTransposeMatrix4
-
-		gl.uniformMatrix4fv(glUniforms.u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
-		gl.uniformMatrix4fv(glUniforms.u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
-	}
-
-	const drawBuffer = (gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture) => {
-		const { normalBuffer, featureBuffer, texCoordBuffer, vertexDatas } = modelInstanceItem
-		const { vertexNormals: normalData, vertexFeature: featureData, vertexCoordinate: texCoordData } = vertexDatas
-		const { glAttributes } = itemProgramControl
-
-		gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer)
-		gl.bufferData(gl.ARRAY_BUFFER, normalData, gl.STATIC_DRAW)
-		ven$initAttributeVariable(gl, glAttributes.a_Normal, normalBuffer, {
-			size: 3,
-		})
-		gl.bindBuffer(gl.ARRAY_BUFFER, featureBuffer)
-		gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
-		ven$initAttributeVariable(gl, glAttributes.a_Position, featureBuffer, {
-			size: 3,
-			stride: 28,
-		})
-		ven$initAttributeVariable(gl, glAttributes.a_Color, featureBuffer, {
-			size: 4,
-			stride: 28,
-			offset: 12,
-		})
-		if (enableTexture) {
-			gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, texCoordData, gl.STATIC_DRAW)
-			ven$initAttributeVariable(gl, glAttributes.a_TexCoord, texCoordBuffer, {
-				size: 2,
+	const canvas = {
+		status: null,
+		init(status, gl, frameBuffer) {
+			this.status = status
+			/**
+			 * 绑定创建的帧缓冲区
+			 * 		使绘图结果生成在帧缓冲区
+			 */
+			gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer)
+		},
+		render(gl, vertexFeatureSize, modelInstances, itemProgramControl, enableTexture) {
+			gl.viewport(0, 0, canvasElement.width, canvasElement.height)
+			gl.clearColor(0.0, 0.0, 0.0, 1.0)
+			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+			this.setProfileMatrix(gl, itemProgramControl)
+			modelInstances.forEach(modelInstanceItem => {
+				this.setModelMatrix(gl, modelInstanceItem, itemProgramControl)
+				this.drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture)
 			})
-		}
+		},
+		drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl) {
+			const { featureBuffer, vertexDatas } = modelInstanceItem
+			const { vertexFeature: featureData } = vertexDatas
+			const { glAttributes } = itemProgramControl
 
-		gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
-	}
+			gl.bindBuffer(gl.ARRAY_BUFFER, featureBuffer)
+			gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
+			ven$initAttributeVariable(gl, glAttributes.a_Position, featureBuffer, {
+				size: 3,
+				stride: 28,
+			})
+			ven$initAttributeVariable(gl, glAttributes.a_Color, featureBuffer, {
+				size: 4,
+				stride: 28,
+				offset: 12,
+			})
 
-	const render = (gl, vertexFeatureSize, modelInstances, itemProgramControl, enableTexture) => {
-		gl.useProgram(itemProgramControl.program)
-		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		gl.clearColor(Program2.profile.clearColor.r / 255, Program2.profile.clearColor.g / 255, Program2.profile.clearColor.b / 255, 1.0)
+			gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
+		},
+		setModelMatrix(gl, modelInstance, itemProgramControl) {
+			const { glUniforms } = itemProgramControl
+			/**
+			 * 创建旋转矩阵
+			 */
+			const modelRotationXMatrix4 = Ven$CanvasMatrix4.setRotate(
+				Ven$Angles.degreeToRadian(modelInstance.modelRatation.x),
+				new Ven$Vector3(1, 0, 0)
+			)
+			const modelRotationYMatrix4 = Ven$CanvasMatrix4.setRotate(
+				Ven$Angles.degreeToRadian(modelInstance.modelRatation.y),
+				new Ven$Vector3(0, 1, 0)
+			)
+			const modelRotationZMatrix4 = Ven$CanvasMatrix4.setRotate(
+				Ven$Angles.degreeToRadian(modelInstance.modelRatation.z),
+				new Ven$Vector3(0, 0, 1)
+			)
+			/**
+			 * 创建平移矩阵
+			 */
+			const modelOffsetMatrix4 = Ven$CanvasMatrix4.setTranslate(
+				new Ven$Vector3(modelInstance.modelOffset.x, modelInstance.modelOffset.y, modelInstance.modelOffset.z)
+			)
+			/**
+			 * 创建缩放矩阵
+			 */
+			const modelScaleMatrix4 = Ven$CanvasMatrix4.setScale(
+				new Ven$Vector3(modelInstance.modelScale.x, modelInstance.modelScale.y, modelInstance.modelScale.z)
+			)
+			/**
+			 * 生成模型变换矩阵
+			 */
+			const modelEffectMatrix4 = modelRotationXMatrix4
+				.multiply4(modelRotationYMatrix4)
+				.multiply4(modelRotationZMatrix4)
+				.multiply4(modelScaleMatrix4)
+				.multiply4(modelOffsetMatrix4)
+			/**
+			 * 创建法线变换矩阵
+			 */
+			const modelEffectInverseMatrix4 = Ven$CanvasMatrix4.setInverse(modelEffectMatrix4)
+			const modelEffectInverseTransposeMatrix4 = Ven$CanvasMatrix4.setTranspose(modelEffectInverseMatrix4)
+			const normalMatrix4 = modelEffectInverseTransposeMatrix4
 
-		setProfileMatrix(gl, itemProgramControl)
-		modelInstances.forEach(modelInstanceItem => {
-			setModelMatrix(gl, modelInstanceItem, itemProgramControl)
-			drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture)
-		})
+			gl.uniformMatrix4fv(glUniforms.u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
+			gl.uniformMatrix4fv(glUniforms.u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
+		},
+		setProfileMatrix(gl, itemProgramControl) {
+			const { glUniforms } = itemProgramControl
+
+			/**
+			 * 创建透视投影矩阵
+			 */
+			const projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
+				Program2.profile.persProjection.fovy,
+				Program2.profile.persProjection.aspect,
+				Program2.profile.persProjection.near,
+				Program2.profile.persProjection.far
+			)
+			/**
+			 * 创建视图矩阵
+			 */
+			const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
+				new Ven$Vector3(Program2.profile.lookAt.eyePosition.x, Program2.profile.lookAt.eyePosition.y, Program2.profile.lookAt.eyePosition.z),
+				new Ven$Vector3(Program2.profile.lookAt.atPosition.x, Program2.profile.lookAt.atPosition.y, Program2.profile.lookAt.atPosition.z),
+				new Ven$Vector3(0, 1, 0)
+			)
+
+			gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
+			gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
+		},
 	}
 
 	const exec = () => {
@@ -533,7 +537,15 @@ function drawCanvas2(containerElement) {
 			return
 		}
 		Program2.isRender = false
-		render(Program2.glControl.gl, Program2.glControl.vertexFeatureSize, Program2.glControl.modelInstances, Program2.glControl.commonLight, false)
+		canvas.init('CANVAS', Program2.glControl.gl, null)
+		Program2.glControl.gl.useProgram(Program2.glControl.commonLight.program)
+		canvas.render(
+			Program2.glControl.gl,
+			Program2.glControl.vertexFeatureSize,
+			Program2.glControl.modelInstances,
+			Program2.glControl.commonLight,
+			false
+		)
 		window.requestAnimationFrame(exec)
 	}
 	exec()
