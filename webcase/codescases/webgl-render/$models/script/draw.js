@@ -357,6 +357,8 @@ class Program {
 		modelOffsetZShowSpanElement.textContent = modelOffsetRangeZElement.value = 0
 		modelScaleRangeShowSpanElement.textContent = modelScaleRangeElement.value = 1
 		projectionTypeRadioElements.forEach(itemElement => {
+			const name = this.containerElement.id + '_' + itemElement.getAttribute('data-tag-name')
+			itemElement.setAttribute('name', name)
 			itemElement.checked = itemElement.value === String(self.profile.projectionType)
 		})
 		persProjectionFovyShowSpanElement.textContent = persProjectionFovyRangeElement.value = self.profile.persProjection.fovy
@@ -372,6 +374,8 @@ class Program {
 		lookAtMatrix4AtPositionZShowSpanElement.textContent = lookAtMatrix4AtPositionZRangeElement.value = self.profile.lookAt.atPosition.z
 		lightColorShowSpanElement.textContent = lightColorPickElement.value = ven$rgba2Hex(self.profile.light.color)
 		lightIlluTypeRadioElements.forEach(itemElement => {
+			const name = this.containerElement.id + '_' + itemElement.getAttribute('data-tag-name')
+			itemElement.setAttribute('name', name)
 			itemElement.checked = itemElement.value === String(self.profile.light.illuType)
 		})
 		lightPositionRangeXShowElement.textContent = lightPositionRangeXRangeElement.value = self.profile.light.position.x

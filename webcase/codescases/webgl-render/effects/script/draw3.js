@@ -166,9 +166,9 @@ class Triangle3 extends Model3 {
 		return {
 			// prettier-ignore
 			vertexFeature: new Float32Array([
-				-1.25, 1.25, 0.0, 1.0, 0.0, 0.0, 1.0,
-				-1.25, -1.25, 0.0, 1.0, 0.0, 0.0, 1.0,
-				1.25, -1.25, 0.0, 1.0, 0.0, 0.0, 1.0
+				0.0, 1.5, -0.75, 1.0, 0.0, 0.0, 1.0,
+				-0.75, 1.5, 0.0, 1.0, 0.0, 0.0, 1.0,
+				0.75, 1.5, 0.0, 1.0, 0.0, 0.0, 1.0
 			]),
 		}
 	}
@@ -332,6 +332,8 @@ class Program3 {
 		lookAtMatrix4AtPositionZShowSpanElement.textContent = lookAtMatrix4AtPositionZRangeElement.value = self.profile.lookAt.atPosition.z
 		lightColorShowSpanElement.textContent = lightColorPickElement.value = ven$rgba2Hex(self.profile.light.color)
 		lightIlluTypeRadioElements.forEach(itemElement => {
+			const name = this.containerElement.id + '_' + itemElement.getAttribute('data-tag-name')
+			itemElement.setAttribute('name', name)
 			itemElement.checked = itemElement.value === String(self.profile.light.illuType)
 		})
 		lightPositionRangeXShowElement.textContent = lightPositionRangeXRangeElement.value = self.profile.light.position.x
@@ -614,7 +616,7 @@ class Program3 {
 		})
 		this.glControl.vertexFeatureSize1 = this.getVertexFeatureSize(this.glControl.modelInstances1)
 		/* ... */
-		this.glControl.modelInstances2 = [new ShereModel3(1.0, 30, 30)]
+		this.glControl.modelInstances2 = [new ShereModel3(1.0, 30, 30, null)]
 		this.glControl.modelInstances2.forEach(modelInstanceItem => {
 			modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
 		})
@@ -755,117 +757,6 @@ function drawCanvas3(containerElement) {
 	Program3.glControl.main.frameBuffer = frameBuffer
 	Program3.glControl.main.frameTexture = frameTexture
 
-	const frameBufferRender = {
-		init(itemProgramControl) {
-			const { frameBuffer } = itemProgramControl
-			/**
-			 * 绑定创建的帧缓冲区
-			 * 		使绘图结果生成在帧缓冲区
-			 */
-			gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer)
-		},
-		render(gl, vertexFeatureSize, modelInstances, itemProgramControl) {
-			gl.viewport(0, 0, Program3.profile.offscreenWidth, Program3.profile.offscreenHeight)
-			gl.clearColor(0.2, 0.2, 0.4, 1.0)
-			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-			this.setProfileMatrix(gl, itemProgramControl)
-			modelInstances.forEach(modelInstanceItem => {
-				this.setModelMatrix(gl, modelInstanceItem, itemProgramControl)
-				this.drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl)
-			})
-		},
-		drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl) {
-			const { featureBuffer, texCoordBuffer, vertexDatas } = modelInstanceItem
-			const { vertexFeature: featureData, vertexCoordinate: texCoordData } = vertexDatas
-			const { glAttributes, cubeTexture } = itemProgramControl
-
-			gl.bindBuffer(gl.ARRAY_BUFFER, featureBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
-			ven$initAttributeVariable(gl, glAttributes.a_Position, featureBuffer, {
-				size: 3,
-				stride: 28,
-			})
-			ven$initAttributeVariable(gl, glAttributes.a_Color, featureBuffer, {
-				size: 4,
-				stride: 28,
-				offset: 12,
-			})
-			gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, texCoordData, gl.STATIC_DRAW)
-			ven$initAttributeVariable(gl, glAttributes.a_TexCoord, texCoordBuffer, {
-				size: 2,
-			})
-
-			gl.activeTexture(gl.TEXTURE0)
-			gl.bindTexture(gl.TEXTURE_2D, cubeTexture)
-			gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
-		},
-		setModelMatrix(gl, modelInstance, itemProgramControl) {
-			const { glUniforms } = itemProgramControl
-			/**
-			 * 创建旋转矩阵
-			 */
-			const modelRotationXMatrix4 = Ven$CanvasMatrix4.setRotate(
-				Ven$Angles.degreeToRadian(modelInstance.modelRatation.x),
-				new Ven$Vector3(1, 0, 0)
-			)
-			const modelRotationYMatrix4 = Ven$CanvasMatrix4.setRotate(
-				Ven$Angles.degreeToRadian(modelInstance.modelRatation.y),
-				new Ven$Vector3(0, 1, 0)
-			)
-			const modelRotationZMatrix4 = Ven$CanvasMatrix4.setRotate(
-				Ven$Angles.degreeToRadian(modelInstance.modelRatation.z),
-				new Ven$Vector3(0, 0, 1)
-			)
-			/**
-			 * 创建平移矩阵
-			 */
-			const modelOffsetMatrix4 = Ven$CanvasMatrix4.setTranslate(
-				new Ven$Vector3(modelInstance.modelOffset.x, modelInstance.modelOffset.y, modelInstance.modelOffset.z)
-			)
-			/**
-			 * 创建缩放矩阵
-			 */
-			const modelScaleMatrix4 = Ven$CanvasMatrix4.setScale(
-				new Ven$Vector3(modelInstance.modelScale.x, modelInstance.modelScale.y, modelInstance.modelScale.z)
-			)
-			/**
-			 * 生成模型变换矩阵
-			 */
-			const modelEffectMatrix4 = modelRotationXMatrix4
-				.multiply4(modelRotationYMatrix4)
-				.multiply4(modelRotationZMatrix4)
-				.multiply4(modelScaleMatrix4)
-				.multiply4(modelOffsetMatrix4)
-
-			gl.uniformMatrix4fv(glUniforms.u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
-		},
-		setProfileMatrix(gl, itemProgramControl) {
-			const { glUniforms } = itemProgramControl
-
-			/**
-			 * 创建透视投影矩阵
-			 */
-			const projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
-				Program3.profile.persProjection.fovy,
-				Program3.profile.persProjection.aspect,
-				Program3.profile.persProjection.near,
-				Program3.profile.persProjection.far
-			)
-			/**
-			 * 创建视图矩阵
-			 */
-			const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
-				new Ven$Vector3(Program3.profile.lookAt.eyePosition.x, Program3.profile.lookAt.eyePosition.y, Program3.profile.lookAt.eyePosition.z),
-				new Ven$Vector3(Program3.profile.lookAt.atPosition.x, Program3.profile.lookAt.atPosition.y, Program3.profile.lookAt.atPosition.z),
-				new Ven$Vector3(0, 1, 0)
-			)
-
-			gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
-			gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
-		},
-	}
-
 	const canvas = {
 		status: null,
 		init(status, gl, frameBuffer) {
@@ -876,7 +767,7 @@ function drawCanvas3(containerElement) {
 			 */
 			gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer)
 		},
-		render(gl, vertexFeatureSize, modelInstances, itemProgramControl) {
+		clear(gl) {
 			if (this.status === 'FRAME_BUFFER') {
 				gl.viewport(0, 0, Program3.profile.offscreenWidth, Program3.profile.offscreenHeight)
 				gl.clearColor(0.2, 0.2, 0.4, 1.0)
@@ -886,6 +777,8 @@ function drawCanvas3(containerElement) {
 				gl.clearColor(0.0, 0.0, 0.0, 1.0)
 				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 			}
+		},
+		render(gl, vertexFeatureSize, modelInstances, itemProgramControl) {
 			this.setProfileMatrix(gl, itemProgramControl)
 			modelInstances.forEach(modelInstanceItem => {
 				this.setModelMatrix(gl, modelInstanceItem, itemProgramControl)
@@ -893,9 +786,9 @@ function drawCanvas3(containerElement) {
 			})
 		},
 		drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl) {
-			const { featureBuffer, texCoordBuffer, vertexDatas } = modelInstanceItem
-			const { vertexFeature: featureData, vertexCoordinate: texCoordData } = vertexDatas
-			const { glAttributes, frameTexture, cubeTexture } = itemProgramControl
+			const { featureBuffer, vertexDatas } = modelInstanceItem
+			const { vertexFeature: featureData } = vertexDatas
+			const { glAttributes, frameTexture } = itemProgramControl
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, featureBuffer)
 			gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
@@ -908,18 +801,7 @@ function drawCanvas3(containerElement) {
 				stride: 28,
 				offset: 12,
 			})
-			gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, texCoordData, gl.STATIC_DRAW)
-			ven$initAttributeVariable(gl, glAttributes.a_TexCoord, texCoordBuffer, {
-				size: 2,
-			})
 
-			if (this.status === 'FRAME_BUFFER') {
-				gl.activeTexture(gl.TEXTURE0)
-				gl.bindTexture(gl.TEXTURE_2D, cubeTexture)
-				gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
-				return
-			}
 			gl.activeTexture(gl.TEXTURE0)
 			gl.bindTexture(gl.TEXTURE_2D, frameTexture)
 			gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
@@ -1001,10 +883,12 @@ function drawCanvas3(containerElement) {
 		Program3.isRender = false
 		canvas.init('FRAME_BUFFER', Program3.glControl.gl, Program3.glControl.main.frameBuffer)
 		Program3.glControl.gl.useProgram(Program3.glControl.shadow.program)
+		canvas.clear(Program3.glControl.gl)
 		canvas.render(Program3.glControl.gl, Program3.glControl.vertexFeatureSize1, Program3.glControl.modelInstances1, Program3.glControl.shadow)
 		canvas.render(Program3.glControl.gl, Program3.glControl.vertexFeatureSize2, Program3.glControl.modelInstances2, Program3.glControl.shadow)
 		canvas.init('CANVAS', Program3.glControl.gl, null)
 		Program3.glControl.gl.useProgram(Program3.glControl.main.program)
+		canvas.clear(Program3.glControl.gl)
 		canvas.render(Program3.glControl.gl, Program3.glControl.vertexFeatureSize1, Program3.glControl.modelInstances1, Program3.glControl.main)
 		canvas.render(Program3.glControl.gl, Program3.glControl.vertexFeatureSize2, Program3.glControl.modelInstances2, Program3.glControl.main)
 		stepControl.updateLastStamp()

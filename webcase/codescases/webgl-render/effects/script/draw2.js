@@ -508,7 +508,7 @@ function drawCanvas2(containerElement) {
 			 */
 			gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer)
 		},
-		render(gl, vertexFeatureSize, modelInstances, itemProgramControl) {
+		clear(gl) {
 			if (this.status === 'FRAME_BUFFER') {
 				gl.viewport(0, 0, Program2.profile.offscreenWidth, Program2.profile.offscreenHeight)
 				gl.clearColor(0.2, 0.2, 0.4, 1.0)
@@ -518,6 +518,8 @@ function drawCanvas2(containerElement) {
 				gl.clearColor(0.0, 0.0, 0.0, 1.0)
 				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 			}
+		},
+		render(gl, vertexFeatureSize, modelInstances, itemProgramControl) {
 			this.setProfileMatrix(gl, itemProgramControl)
 			modelInstances.forEach(modelInstanceItem => {
 				this.setModelMatrix(gl, modelInstanceItem, itemProgramControl)
@@ -630,6 +632,7 @@ function drawCanvas2(containerElement) {
 		Program2.isRender = false
 		canvas.init('FRAME_BUFFER', Program2.glControl.gl, Program2.glControl.commonLight.frameBuffer)
 		Program2.glControl.gl.useProgram(Program2.glControl.commonLight.program)
+		canvas.clear(Program2.glControl.gl)
 		canvas.render(
 			Program2.glControl.gl,
 			Program2.glControl.frameBufferVertexFeatureSize,
@@ -638,6 +641,7 @@ function drawCanvas2(containerElement) {
 		)
 		canvas.init('CANVAS', Program2.glControl.gl, null)
 		Program2.glControl.gl.useProgram(Program2.glControl.commonLight.program)
+		canvas.clear(Program2.glControl.gl)
 		canvas.render(Program2.glControl.gl, Program2.glControl.vertexFeatureSize, Program2.glControl.modelInstances, Program2.glControl.commonLight)
 		window.requestAnimationFrame(exec)
 	}
