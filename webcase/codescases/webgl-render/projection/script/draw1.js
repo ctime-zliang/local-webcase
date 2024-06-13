@@ -19,8 +19,7 @@ class Model1 {
 		this._featureBuffer = null
 		this._normalBuffer = null
 		this._texCoordBuffer = null
-		this._glAttributes = {}
-		this._glUniforms = {}
+		this._modelMatrix = null
 	}
 
 	get modelRatation() {
@@ -63,18 +62,11 @@ class Model1 {
 		this._texCoordBuffer = value
 	}
 
-	get glAttributes() {
-		return this._glAttributes
+	get modelMatrix() {
+		return this._modelMatrix
 	}
-	set glAttributes(value) {
-		this._glAttributes = value
-	}
-
-	get glUniforms() {
-		return this._glUniforms
-	}
-	set glUniforms(value) {
-		this._glUniforms = value
+	set modelMatrix(value) {
+		this._modelMatrix = value
 	}
 }
 
@@ -414,14 +406,41 @@ function drawCanvas1(containerElement) {
 			 */
 			gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer)
 		},
-		render(gl, vertexFeatureSize, modelInstances, itemProgramControl, enableTexture) {
+		clear(gl) {
 			gl.viewport(0, 0, canvasElement.width, canvasElement.height)
 			gl.clearColor(0.0, 0.0, 0.0, 1.0)
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-			this.setProfileMatrix(gl, itemProgramControl)
+		},
+		setProfile(gl, itemProgramControl) {
+			const { glUniforms } = itemProgramControl
+
+			/**
+			 * 创建正交投影矩阵
+			 */
+			const orthoMatrix4 = Ven$CanvasMatrix4.setOrtho(
+				Program1.profile.orthoProjection.left,
+				Program1.profile.orthoProjection.right,
+				Program1.profile.orthoProjection.bottom,
+				Program1.profile.orthoProjection.top,
+				Program1.profile.orthoProjection.near,
+				Program1.profile.orthoProjection.far
+			)
+			/**
+			 * 创建视图矩阵
+			 */
+			const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
+				new Ven$Vector3(Program1.profile.lookAt.eyePosition.x, Program1.profile.lookAt.eyePosition.y, Program1.profile.lookAt.eyePosition.z),
+				new Ven$Vector3(Program1.profile.lookAt.atPosition.x, Program1.profile.lookAt.atPosition.y, Program1.profile.lookAt.atPosition.z),
+				new Ven$Vector3(0, 1, 0)
+			)
+
+			gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
+			gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(orthoMatrix4.data))
+		},
+		render(gl, vertexFeatureSize, modelInstances, itemProgramControl) {
 			modelInstances.forEach(modelInstanceItem => {
-				this.setModelMatrix(gl, modelInstanceItem, itemProgramControl)
-				this.drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture)
+				this.applyModelMatrix(gl, modelInstanceItem, itemProgramControl)
+				this.drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl)
 			})
 		},
 		drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl) {
@@ -443,7 +462,7 @@ function drawCanvas1(containerElement) {
 
 			gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
 		},
-		setModelMatrix(gl, modelInstance, itemProgramControl) {
+		applyModelMatrix(gl, modelInstance, itemProgramControl) {
 			const { glUniforms } = itemProgramControl
 			/**
 			 * 创建旋转矩阵
@@ -490,32 +509,6 @@ function drawCanvas1(containerElement) {
 			gl.uniformMatrix4fv(glUniforms.u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
 			gl.uniformMatrix4fv(glUniforms.u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
 		},
-		setProfileMatrix(gl, itemProgramControl) {
-			const { glUniforms } = itemProgramControl
-
-			/**
-			 * 创建正交投影矩阵
-			 */
-			const orthoMatrix4 = Ven$CanvasMatrix4.setOrtho(
-				Program1.profile.orthoProjection.left,
-				Program1.profile.orthoProjection.right,
-				Program1.profile.orthoProjection.bottom,
-				Program1.profile.orthoProjection.top,
-				Program1.profile.orthoProjection.near,
-				Program1.profile.orthoProjection.far
-			)
-			/**
-			 * 创建视图矩阵
-			 */
-			const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
-				new Ven$Vector3(Program1.profile.lookAt.eyePosition.x, Program1.profile.lookAt.eyePosition.y, Program1.profile.lookAt.eyePosition.z),
-				new Ven$Vector3(Program1.profile.lookAt.atPosition.x, Program1.profile.lookAt.atPosition.y, Program1.profile.lookAt.atPosition.z),
-				new Ven$Vector3(0, 1, 0)
-			)
-
-			gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
-			gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(orthoMatrix4.data))
-		},
 	}
 
 	const exec = () => {
@@ -526,13 +519,9 @@ function drawCanvas1(containerElement) {
 		Program1.isRender = false
 		canvas.init('CANVAS', Program1.glControl.gl, null)
 		Program1.glControl.gl.useProgram(Program1.glControl.commonLight.program)
-		canvas.render(
-			Program1.glControl.gl,
-			Program1.glControl.vertexFeatureSize,
-			Program1.glControl.modelInstances,
-			Program1.glControl.commonLight,
-			false
-		)
+		canvas.clear()
+		canvas.setProfile(Program1.glControl.gl, Program1.glControl.commonLight)
+		canvas.render(Program1.glControl.gl, Program1.glControl.vertexFeatureSize, Program1.glControl.modelInstances, Program1.glControl.commonLight)
 		window.requestAnimationFrame(exec)
 	}
 	exec()

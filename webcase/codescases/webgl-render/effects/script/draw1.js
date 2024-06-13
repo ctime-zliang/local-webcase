@@ -20,8 +20,7 @@ class Model1 {
 		this._featureBuffer = null
 		this._normalBuffer = null
 		this._texCoordBuffer = null
-		this._glAttributes = {}
-		this._glUniforms = {}
+		this._modelMatrix = null
 	}
 
 	get modelParam() {
@@ -68,18 +67,11 @@ class Model1 {
 		this._texCoordBuffer = value
 	}
 
-	get glAttributes() {
-		return this._glAttributes
+	get modelMatrix() {
+		return this._modelMatrix
 	}
-	set glAttributes(value) {
-		this._glAttributes = value
-	}
-
-	get glUniforms() {
-		return this._glUniforms
-	}
-	set glUniforms(value) {
-		this._glUniforms = value
+	set modelMatrix(value) {
+		this._modelMatrix = value
 	}
 }
 
@@ -971,10 +963,72 @@ function drawCanvas1(containerElement) {
 			gl.clearColor(0.0, 0.0, 0.0, 1.0)
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		},
+		setProfile(gl, itemProgramControl) {
+			const { glUniforms } = itemProgramControl
+
+			const projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
+				Program1.profile.persProjection.fovy,
+				Program1.profile.persProjection.aspect,
+				Program1.profile.persProjection.near,
+				Program1.profile.persProjection.far
+			)
+			const orthoMatrix4 = Ven$CanvasMatrix4.setOrtho(
+				Program1.profile.orthoProjection.left,
+				Program1.profile.orthoProjection.right,
+				Program1.profile.orthoProjection.bottom,
+				Program1.profile.orthoProjection.top,
+				Program1.profile.orthoProjection.near,
+				Program1.profile.orthoProjection.far
+			)
+			const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
+				new Ven$Vector3(Program1.profile.lookAt.eyePosition.x, Program1.profile.lookAt.eyePosition.y, Program1.profile.lookAt.eyePosition.z),
+				new Ven$Vector3(Program1.profile.lookAt.atPosition.x, Program1.profile.lookAt.atPosition.y, Program1.profile.lookAt.atPosition.z),
+				new Ven$Vector3(0, 1, 0)
+			)
+
+			gl.uniform1f(glUniforms.u_illuType, Program1.profile.light.illuType)
+			if (Program1.profile.light.illuType === 1) {
+				const lightDirection = new Ven$Vector3(
+					Program1.profile.light.direction.x,
+					Program1.profile.light.direction.y,
+					Program1.profile.light.direction.z
+				)
+				const lightNormalizeDirection = lightDirection.normalize()
+				gl.uniform3fv(
+					glUniforms.u_LightDirection,
+					new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z])
+				)
+			}
+			if (Program1.profile.light.illuType === 2) {
+				gl.uniform3fv(
+					glUniforms.u_LightPosition,
+					new Float32Array([Program1.profile.light.position.x, Program1.profile.light.position.y, Program1.profile.light.position.z])
+				)
+			}
+			gl.uniform3f(
+				glUniforms.u_LightColor,
+				Program1.profile.light.color.r / 255,
+				Program1.profile.light.color.g / 255,
+				Program1.profile.light.color.b / 255
+			)
+			gl.uniform1f(glUniforms.u_lightIntensityGain, Program1.profile.light.intensityGain)
+			gl.uniform3f(
+				glUniforms.u_AmbientLightColor,
+				Program1.profile.light.ambient.r,
+				Program1.profile.light.ambient.g,
+				Program1.profile.light.ambient.b
+			)
+			gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
+			if (Program1.profile.projectionType === 1) {
+				gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
+			}
+			if (Program1.profile.projectionType === 2) {
+				gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(orthoMatrix4.data))
+			}
+		},
 		render(gl, vertexFeatureSize, modelInstances, itemProgramControl, enableTexture) {
-			this.setProfileMatrix(gl, itemProgramControl)
 			modelInstances.forEach(modelInstanceItem => {
-				this.setModelMatrix(gl, modelInstanceItem, itemProgramControl)
+				this.applyModelMatrix(gl, modelInstanceItem, itemProgramControl)
 				this.drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture)
 			})
 		},
@@ -1008,11 +1062,9 @@ function drawCanvas1(containerElement) {
 			}
 			gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
 		},
-		setModelMatrix(gl, modelInstance, itemProgramControl) {
+		applyModelMatrix(gl, modelInstance, itemProgramControl) {
 			const { glUniforms } = itemProgramControl
-			/**
-			 * 创建旋转矩阵
-			 */
+
 			const modelRotationXMatrix4 = Ven$CanvasMatrix4.setRotate(
 				Ven$Angles.degreeToRadian(modelInstance.modelRatation.x),
 				new Ven$Vector3(1, 0, 0)
@@ -1025,113 +1077,24 @@ function drawCanvas1(containerElement) {
 				Ven$Angles.degreeToRadian(modelInstance.modelRatation.z),
 				new Ven$Vector3(0, 0, 1)
 			)
-			/**
-			 * 创建平移矩阵
-			 */
 			const modelOffsetMatrix4 = Ven$CanvasMatrix4.setTranslate(
 				new Ven$Vector3(modelInstance.modelOffset.x, modelInstance.modelOffset.y, modelInstance.modelOffset.z)
 			)
-			/**
-			 * 创建缩放矩阵
-			 */
 			const modelScaleMatrix4 = Ven$CanvasMatrix4.setScale(
 				new Ven$Vector3(modelInstance.modelScale.x, modelInstance.modelScale.y, modelInstance.modelScale.z)
 			)
-			/**
-			 * 生成模型变换矩阵
-			 */
+
 			const modelEffectMatrix4 = modelRotationXMatrix4
 				.multiply4(modelRotationYMatrix4)
 				.multiply4(modelRotationZMatrix4)
 				.multiply4(modelScaleMatrix4)
 				.multiply4(modelOffsetMatrix4)
-			/**
-			 * 创建法线变换矩阵
-			 */
 			const modelEffectInverseMatrix4 = Ven$CanvasMatrix4.setInverse(modelEffectMatrix4)
 			const modelEffectInverseTransposeMatrix4 = Ven$CanvasMatrix4.setTranspose(modelEffectInverseMatrix4)
 			const normalMatrix4 = modelEffectInverseTransposeMatrix4
 
 			gl.uniformMatrix4fv(glUniforms.u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
 			gl.uniformMatrix4fv(glUniforms.u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
-		},
-		setProfileMatrix(gl, itemProgramControl) {
-			const { glUniforms } = itemProgramControl
-
-			/**
-			 * 创建透视投影矩阵
-			 */
-			const projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
-				Program1.profile.persProjection.fovy,
-				Program1.profile.persProjection.aspect,
-				Program1.profile.persProjection.near,
-				Program1.profile.persProjection.far
-			)
-			/**
-			 * 创建正交投影矩阵
-			 */
-			const orthoMatrix4 = Ven$CanvasMatrix4.setOrtho(
-				Program1.profile.orthoProjection.left,
-				Program1.profile.orthoProjection.right,
-				Program1.profile.orthoProjection.bottom,
-				Program1.profile.orthoProjection.top,
-				Program1.profile.orthoProjection.near,
-				Program1.profile.orthoProjection.far
-			)
-			/**
-			 * 创建视图矩阵
-			 */
-			const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
-				new Ven$Vector3(Program1.profile.lookAt.eyePosition.x, Program1.profile.lookAt.eyePosition.y, Program1.profile.lookAt.eyePosition.z),
-				new Ven$Vector3(Program1.profile.lookAt.atPosition.x, Program1.profile.lookAt.atPosition.y, Program1.profile.lookAt.atPosition.z),
-				new Ven$Vector3(0, 1, 0)
-			)
-
-			gl.uniform1f(glUniforms.u_illuType, Program1.profile.light.illuType)
-			if (Program1.profile.light.illuType === 1) {
-				/**
-				 * 平行光方
-				 */
-				const lightDirection = new Ven$Vector3(
-					Program1.profile.light.direction.x,
-					Program1.profile.light.direction.y,
-					Program1.profile.light.direction.z
-				)
-				const lightNormalizeDirection = lightDirection.normalize()
-				gl.uniform3fv(
-					glUniforms.u_LightDirection,
-					new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z])
-				)
-			}
-			if (Program1.profile.light.illuType === 2) {
-				/**
-				 * 点光
-				 */
-				gl.uniform3fv(
-					glUniforms.u_LightPosition,
-					new Float32Array([Program1.profile.light.position.x, Program1.profile.light.position.y, Program1.profile.light.position.z])
-				)
-			}
-			gl.uniform3f(
-				glUniforms.u_LightColor,
-				Program1.profile.light.color.r / 255,
-				Program1.profile.light.color.g / 255,
-				Program1.profile.light.color.b / 255
-			)
-			gl.uniform1f(glUniforms.u_lightIntensityGain, Program1.profile.light.intensityGain)
-			gl.uniform3f(
-				glUniforms.u_AmbientLightColor,
-				Program1.profile.light.ambient.r,
-				Program1.profile.light.ambient.g,
-				Program1.profile.light.ambient.b
-			)
-			gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
-			if (Program1.profile.projectionType === 1) {
-				gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
-			}
-			if (Program1.profile.projectionType === 2) {
-				gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(orthoMatrix4.data))
-			}
 		},
 	}
 
@@ -1152,8 +1115,8 @@ function drawCanvas1(containerElement) {
 			Program1.isRender = true
 		}
 		canvas.init('CANVAS', Program1.glControl.gl, null)
-		Program1.glControl.gl.useProgram(Program1.glControl.commonLight.program)
 		if (Program1.profile.enableTexture) {
+			Program1.glControl.gl.useProgram(Program1.glControl.textureLight.program)
 			if (!Program1.glControl.textureLight.isLoadTexture) {
 				Program1.glControl.textureLight.isLoadTexture = true
 				loadTextureAction(Program1.glControl.gl, Program1.glControl.textureLight, () => {
@@ -1161,6 +1124,7 @@ function drawCanvas1(containerElement) {
 				})
 			}
 			canvas.clear(Program1.glControl.gl)
+			canvas.setProfile(Program1.glControl.gl, Program1.glControl.textureLight)
 			canvas.render(
 				Program1.glControl.gl,
 				Program1.glControl.vertexFeatureSize,
@@ -1172,7 +1136,9 @@ function drawCanvas1(containerElement) {
 			window.requestAnimationFrame(exec)
 			return
 		}
+		Program1.glControl.gl.useProgram(Program1.glControl.commonLight.program)
 		canvas.clear(Program1.glControl.gl)
+		canvas.setProfile(Program1.glControl.gl, Program1.glControl.commonLight)
 		canvas.render(
 			Program1.glControl.gl,
 			Program1.glControl.vertexFeatureSize,

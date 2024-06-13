@@ -1,5 +1,5 @@
 class Ven$CanvasMatrix4 {
-	static setMatrix() {
+	static initMatrix() {
 		return new Ven$Matrix4()
 	}
 

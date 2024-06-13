@@ -20,8 +20,7 @@ class Model3 {
 		this._featureBuffer = null
 		this._normalBuffer = null
 		this._texCoordBuffer = null
-		this._glAttributes = {}
-		this._glUniforms = {}
+		this._modelMatrix = null
 	}
 
 	get modelParam() {
@@ -68,18 +67,11 @@ class Model3 {
 		this._texCoordBuffer = value
 	}
 
-	get glAttributes() {
-		return this._glAttributes
+	get modelMatrix() {
+		return this._modelMatrix
 	}
-	set glAttributes(value) {
-		this._glAttributes = value
-	}
-
-	get glUniforms() {
-		return this._glUniforms
-	}
-	set glUniforms(value) {
-		this._glUniforms = value
+	set modelMatrix(value) {
+		this._modelMatrix = value
 	}
 }
 
@@ -417,49 +409,49 @@ class Program3 {
 		})
 		modelRotationRangeXElement.addEventListener('input', function (e) {
 			modelRotationRangeXShowSpanElement.textContent = +this.value
-			self.glControl.modelInstances.forEach(modelInstanceItem => {
+			;[...self.glControl.modelInstances1, ...self.glControl.modelInstances2].forEach(modelInstanceItem => {
 				modelInstanceItem.modelRatation.x = +this.value
 			})
 			self.isRender = true
 		})
 		modelRotationRangeYElement.addEventListener('input', function (e) {
 			modelRotationRangeYShowSpanElement.textContent = +this.value
-			self.glControl.modelInstances.forEach(modelInstanceItem => {
+			;[...self.glControl.modelInstances1, ...self.glControl.modelInstances2].forEach(modelInstanceItem => {
 				modelInstanceItem.modelRatation.y = +this.value
 			})
 			self.isRender = true
 		})
 		modelRotationRangeZElement.addEventListener('input', function (e) {
 			modelRotationRangeZShowSpanElement.textContent = +this.value
-			self.glControl.modelInstances.forEach(modelInstanceItem => {
+			;[...self.glControl.modelInstances1, ...self.glControl.modelInstances2].forEach(modelInstanceItem => {
 				modelInstanceItem.modelRatation.z = +this.value
 			})
 			self.isRender = true
 		})
 		modelOffsetRangeXElement.addEventListener('input', function (e) {
 			modelOffsetRangeXShowSpanElement.textContent = +this.value
-			self.glControl.modelInstances.forEach(modelInstanceItem => {
+			;[...self.glControl.modelInstances1, ...self.glControl.modelInstances2].forEach(modelInstanceItem => {
 				modelInstanceItem.modelOffset.x = +this.value
 			})
 			self.isRender = true
 		})
 		modelOffsetRangeYElement.addEventListener('input', function (e) {
 			modelOffsetRangeYShowSpanElement.textContent = +this.value
-			self.glControl.modelInstances.forEach(modelInstanceItem => {
+			;[...self.glControl.modelInstances1, ...self.glControl.modelInstances2].forEach(modelInstanceItem => {
 				modelInstanceItem.modelOffset.y = +this.value
 			})
 			self.isRender = true
 		})
 		modelOffsetRangeZElement.addEventListener('input', function (e) {
 			modelOffsetRangeZShowSpanElement.textContent = +this.value
-			self.glControl.modelInstances.forEach(modelInstanceItem => {
+			;[...self.glControl.modelInstances1, ...self.glControl.modelInstances2].forEach(modelInstanceItem => {
 				modelInstanceItem.modelOffset.z = +this.value
 			})
 			self.isRender = true
 		})
 		modelScaleRangeElement.addEventListener('input', function (e) {
 			modelScaleRangeShowSpanElement.textContent = +this.value
-			self.glControl.modelInstances.forEach(modelInstanceItem => {
+			;[...self.glControl.modelInstances1, ...self.glControl.modelInstances2].forEach(modelInstanceItem => {
 				modelInstanceItem.modelScale.x = +this.value
 				modelInstanceItem.modelScale.y = +this.value
 				modelInstanceItem.modelScale.z = +this.value
@@ -756,6 +748,8 @@ function drawCanvas3(containerElement) {
 	)
 	Program3.glControl.main.frameBuffer = frameBuffer
 	Program3.glControl.main.frameTexture = frameTexture
+	Program3.glControl.gl.activeTexture(Program3.glControl.gl.TEXTURE0)
+	Program3.glControl.gl.bindTexture(Program3.glControl.gl.TEXTURE_2D, Program3.glControl.main.frameTexture)
 
 	const canvas = {
 		status: null,
@@ -770,7 +764,7 @@ function drawCanvas3(containerElement) {
 		clear(gl) {
 			if (this.status === 'FRAME_BUFFER') {
 				gl.viewport(0, 0, Program3.profile.offscreenWidth, Program3.profile.offscreenHeight)
-				gl.clearColor(0.2, 0.2, 0.4, 1.0)
+				gl.clearColor(0.0, 0.0, 0.0, 1.0)
 				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 			} else {
 				gl.viewport(0, 0, canvasElement.width, canvasElement.height)
@@ -778,10 +772,57 @@ function drawCanvas3(containerElement) {
 				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 			}
 		},
+		setProfile(gl, itemProgramControl) {
+			const { glUniforms } = itemProgramControl
+
+			let projectionMatrix4 = Ven$CanvasMatrix4.initMatrix()
+			let lookAtMatrix4 = Ven$CanvasMatrix4.initMatrix()
+			if (this.status === 'FRAME_BUFFER') {
+				projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
+					Program3.profile.persProjection.fovy * 2,
+					Program3.profile.offscreenWidth / Program3.profile.offscreenHeight,
+					Program3.profile.persProjection.near,
+					Program3.profile.persProjection.far
+				)
+				lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
+					new Ven$Vector3(Program3.profile.light.position.x, Program3.profile.light.position.y, Program3.profile.light.position.z),
+					new Ven$Vector3(Program3.profile.lookAt.atPosition.x, Program3.profile.lookAt.atPosition.y, Program3.profile.lookAt.atPosition.z),
+					new Ven$Vector3(0, 1, 0)
+				)
+			} else {
+				projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
+					Program3.profile.persProjection.fovy,
+					canvasElement.width / canvasElement.height,
+					Program3.profile.persProjection.near,
+					Program3.profile.persProjection.far
+				)
+				lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
+					new Ven$Vector3(
+						Program3.profile.lookAt.eyePosition.x,
+						Program3.profile.lookAt.eyePosition.y,
+						Program3.profile.lookAt.eyePosition.z
+					),
+					new Ven$Vector3(Program3.profile.lookAt.atPosition.x, Program3.profile.lookAt.atPosition.y, Program3.profile.lookAt.atPosition.z),
+					new Ven$Vector3(0, 1, 0)
+				)
+			}
+
+			gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
+			gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
+			return {
+				projectionMatrix4,
+				lookAtMatrix4,
+			}
+		},
 		render(gl, vertexFeatureSize, modelInstances, itemProgramControl) {
-			this.setProfileMatrix(gl, itemProgramControl)
+			const { glUniforms } = itemProgramControl
+
+			if (this.status === 'CANVAS') {
+				gl.uniform1i(glUniforms.u_ShadowMap, 0)
+			}
 			modelInstances.forEach(modelInstanceItem => {
-				this.setModelMatrix(gl, modelInstanceItem, itemProgramControl)
+				const modelEffectMatrix4 = this.applyModelMatrix(gl, modelInstanceItem, itemProgramControl)
+				modelInstanceItem.modelMatrix = modelEffectMatrix4
 				this.drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl)
 			})
 		},
@@ -802,15 +843,11 @@ function drawCanvas3(containerElement) {
 				offset: 12,
 			})
 
-			gl.activeTexture(gl.TEXTURE0)
-			gl.bindTexture(gl.TEXTURE_2D, frameTexture)
 			gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
 		},
-		setModelMatrix(gl, modelInstance, itemProgramControl) {
+		applyModelMatrix(gl, modelInstance, itemProgramControl) {
 			const { glUniforms } = itemProgramControl
-			/**
-			 * 创建旋转矩阵
-			 */
+
 			const modelRotationXMatrix4 = Ven$CanvasMatrix4.setRotate(
 				Ven$Angles.degreeToRadian(modelInstance.modelRatation.x),
 				new Ven$Vector3(1, 0, 0)
@@ -823,52 +860,24 @@ function drawCanvas3(containerElement) {
 				Ven$Angles.degreeToRadian(modelInstance.modelRatation.z),
 				new Ven$Vector3(0, 0, 1)
 			)
-			/**
-			 * 创建平移矩阵
-			 */
 			const modelOffsetMatrix4 = Ven$CanvasMatrix4.setTranslate(
 				new Ven$Vector3(modelInstance.modelOffset.x, modelInstance.modelOffset.y, modelInstance.modelOffset.z)
 			)
-			/**
-			 * 创建缩放矩阵
-			 */
 			const modelScaleMatrix4 = Ven$CanvasMatrix4.setScale(
 				new Ven$Vector3(modelInstance.modelScale.x, modelInstance.modelScale.y, modelInstance.modelScale.z)
 			)
-			/**
-			 * 生成模型变换矩阵
-			 */
+
 			const modelEffectMatrix4 = modelRotationXMatrix4
 				.multiply4(modelRotationYMatrix4)
 				.multiply4(modelRotationZMatrix4)
 				.multiply4(modelScaleMatrix4)
 				.multiply4(modelOffsetMatrix4)
 
+			if (this.status === 'CANVAS') {
+				gl.uniformMatrix4fv(glUniforms.u_ModelMatrixFromLight, false, new Float32Array(modelInstance.modelMatrix.data))
+			}
 			gl.uniformMatrix4fv(glUniforms.u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
-		},
-		setProfileMatrix(gl, itemProgramControl) {
-			const { glUniforms } = itemProgramControl
-
-			/**
-			 * 创建透视投影矩阵
-			 */
-			const projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
-				Program3.profile.persProjection.fovy,
-				Program3.profile.persProjection.aspect,
-				Program3.profile.persProjection.near,
-				Program3.profile.persProjection.far
-			)
-			/**
-			 * 创建视图矩阵
-			 */
-			const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
-				new Ven$Vector3(Program3.profile.lookAt.eyePosition.x, Program3.profile.lookAt.eyePosition.y, Program3.profile.lookAt.eyePosition.z),
-				new Ven$Vector3(Program3.profile.lookAt.atPosition.x, Program3.profile.lookAt.atPosition.y, Program3.profile.lookAt.atPosition.z),
-				new Ven$Vector3(0, 1, 0)
-			)
-
-			gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
-			gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
+			return modelEffectMatrix4
 		},
 	}
 
@@ -881,16 +890,47 @@ function drawCanvas3(containerElement) {
 			return
 		}
 		Program3.isRender = false
+
 		canvas.init('FRAME_BUFFER', Program3.glControl.gl, Program3.glControl.main.frameBuffer)
-		Program3.glControl.gl.useProgram(Program3.glControl.shadow.program)
 		canvas.clear(Program3.glControl.gl)
+		Program3.glControl.gl.useProgram(Program3.glControl.shadow.program)
+		const { projectionMatrix4: s1_projectionMatrix4, lookAtMatrix4: s1_lookAtMatrix4 } = canvas.setProfile(
+			Program3.glControl.gl,
+			Program3.glControl.shadow
+		)
 		canvas.render(Program3.glControl.gl, Program3.glControl.vertexFeatureSize1, Program3.glControl.modelInstances1, Program3.glControl.shadow)
 		canvas.render(Program3.glControl.gl, Program3.glControl.vertexFeatureSize2, Program3.glControl.modelInstances2, Program3.glControl.shadow)
+
 		canvas.init('CANVAS', Program3.glControl.gl, null)
-		Program3.glControl.gl.useProgram(Program3.glControl.main.program)
 		canvas.clear(Program3.glControl.gl)
+		Program3.glControl.gl.useProgram(Program3.glControl.main.program)
+		const { projectionMatrix4: s2_projectionMatrix4, lookAtMatrix4: s2_lookAtMatrix4 } = canvas.setProfile(
+			Program3.glControl.gl,
+			Program3.glControl.main
+		)
+		Program3.glControl.gl.uniformMatrix4fv(
+			Program3.glControl.main.glUniforms.u_ViewMatrixFromLight,
+			false,
+			new Float32Array(s1_lookAtMatrix4.data)
+		)
+		Program3.glControl.gl.uniformMatrix4fv(
+			Program3.glControl.main.glUniforms.u_ProjMatrixFromLight,
+			false,
+			new Float32Array(s1_projectionMatrix4.data)
+		)
 		canvas.render(Program3.glControl.gl, Program3.glControl.vertexFeatureSize1, Program3.glControl.modelInstances1, Program3.glControl.main)
+		Program3.glControl.gl.uniformMatrix4fv(
+			Program3.glControl.main.glUniforms.u_ViewMatrixFromLight,
+			false,
+			new Float32Array(s1_lookAtMatrix4.data)
+		)
+		Program3.glControl.gl.uniformMatrix4fv(
+			Program3.glControl.main.glUniforms.u_ProjMatrixFromLight,
+			false,
+			new Float32Array(s1_projectionMatrix4.data)
+		)
 		canvas.render(Program3.glControl.gl, Program3.glControl.vertexFeatureSize2, Program3.glControl.modelInstances2, Program3.glControl.main)
+
 		stepControl.updateLastStamp()
 		window.requestAnimationFrame(exec)
 	}

@@ -20,8 +20,7 @@ class Model1 {
 		this._featureBuffer = null
 		this._normalBuffer = null
 		this._texCoordBuffer = null
-		this._glAttributes = {}
-		this._glUniforms = {}
+		this._modelMatrix = null
 	}
 
 	get modelParam() {
@@ -68,18 +67,11 @@ class Model1 {
 		this._texCoordBuffer = value
 	}
 
-	get glAttributes() {
-		return this._glAttributes
+	get modelMatrix() {
+		return this._modelMatrix
 	}
-	set glAttributes(value) {
-		this._glAttributes = value
-	}
-
-	get glUniforms() {
-		return this._glUniforms
-	}
-	set glUniforms(value) {
-		this._glUniforms = value
+	set modelMatrix(value) {
+		this._modelMatrix = value
 	}
 }
 
@@ -1346,94 +1338,12 @@ function drawCanvas(containerElement) {
 			 */
 			gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer)
 		},
-		render(gl, vertexFeatureSize, modelInstances, itemProgramControl, enableTexture) {
+		clear(gl) {
 			gl.viewport(0, 0, canvasElement.width, canvasElement.height)
 			gl.clearColor(0.0, 0.0, 0.0, 1.0)
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-			this.setProfileMatrix(gl, itemProgramControl)
-			modelInstances.forEach(modelInstanceItem => {
-				this.setModelMatrix(gl, modelInstanceItem, itemProgramControl)
-				this.drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture)
-			})
 		},
-		drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture) {
-			const { normalBuffer, featureBuffer, texCoordBuffer, vertexDatas } = modelInstanceItem
-			const { vertexNormals: normalData, vertexFeature: featureData, vertexCoordinate: texCoordData } = vertexDatas
-			const { glAttributes } = itemProgramControl
-
-			gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, normalData, gl.STATIC_DRAW)
-			ven$initAttributeVariable(gl, glAttributes.a_Normal, normalBuffer, {
-				size: 3,
-			})
-			gl.bindBuffer(gl.ARRAY_BUFFER, featureBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
-			ven$initAttributeVariable(gl, glAttributes.a_Position, featureBuffer, {
-				size: 3,
-				stride: 28,
-			})
-			ven$initAttributeVariable(gl, glAttributes.a_Color, featureBuffer, {
-				size: 4,
-				stride: 28,
-				offset: 12,
-			})
-			if (enableTexture) {
-				gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer)
-				gl.bufferData(gl.ARRAY_BUFFER, texCoordData, gl.STATIC_DRAW)
-				ven$initAttributeVariable(gl, glAttributes.a_TexCoord, texCoordBuffer, {
-					size: 2,
-				})
-			}
-			gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
-		},
-		setModelMatrix(gl, modelInstance, itemProgramControl) {
-			const { glUniforms } = itemProgramControl
-			/**
-			 * 创建旋转矩阵
-			 */
-			const modelRotationXMatrix4 = Ven$CanvasMatrix4.setRotate(
-				Ven$Angles.degreeToRadian(modelInstance.modelRatation.x),
-				new Ven$Vector3(1, 0, 0)
-			)
-			const modelRotationYMatrix4 = Ven$CanvasMatrix4.setRotate(
-				Ven$Angles.degreeToRadian(modelInstance.modelRatation.y),
-				new Ven$Vector3(0, 1, 0)
-			)
-			const modelRotationZMatrix4 = Ven$CanvasMatrix4.setRotate(
-				Ven$Angles.degreeToRadian(modelInstance.modelRatation.z),
-				new Ven$Vector3(0, 0, 1)
-			)
-			/**
-			 * 创建平移矩阵
-			 */
-			const modelOffsetMatrix4 = Ven$CanvasMatrix4.setTranslate(
-				new Ven$Vector3(modelInstance.modelOffset.x, modelInstance.modelOffset.y, modelInstance.modelOffset.z)
-			)
-			/**
-			 * 创建缩放矩阵
-			 */
-			const modelScaleMatrix4 = Ven$CanvasMatrix4.setScale(
-				new Ven$Vector3(modelInstance.modelScale.x, modelInstance.modelScale.y, modelInstance.modelScale.z)
-			)
-			/**
-			 * 生成模型变换矩阵
-			 */
-			const modelEffectMatrix4 = modelRotationXMatrix4
-				.multiply4(modelRotationYMatrix4)
-				.multiply4(modelRotationZMatrix4)
-				.multiply4(modelScaleMatrix4)
-				.multiply4(modelOffsetMatrix4)
-			/**
-			 * 创建法线变换矩阵
-			 */
-			const modelEffectInverseMatrix4 = Ven$CanvasMatrix4.setInverse(modelEffectMatrix4)
-			const modelEffectInverseTransposeMatrix4 = Ven$CanvasMatrix4.setTranspose(modelEffectInverseMatrix4)
-			const normalMatrix4 = modelEffectInverseTransposeMatrix4
-
-			gl.uniformMatrix4fv(glUniforms.u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
-			gl.uniformMatrix4fv(glUniforms.u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
-		},
-		setProfileMatrix(gl, itemProgramControl) {
+		setProfile(gl, itemProgramControl) {
 			const { glUniforms } = itemProgramControl
 
 			/**
@@ -1511,6 +1421,89 @@ function drawCanvas(containerElement) {
 				gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(orthoMatrix4.data))
 			}
 		},
+		render(gl, vertexFeatureSize, modelInstances, itemProgramControl, enableTexture) {
+			modelInstances.forEach(modelInstanceItem => {
+				this.applyModelMatrix(gl, modelInstanceItem, itemProgramControl)
+				this.drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture)
+			})
+		},
+		drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture) {
+			const { normalBuffer, featureBuffer, texCoordBuffer, vertexDatas } = modelInstanceItem
+			const { vertexNormals: normalData, vertexFeature: featureData, vertexCoordinate: texCoordData } = vertexDatas
+			const { glAttributes } = itemProgramControl
+
+			gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer)
+			gl.bufferData(gl.ARRAY_BUFFER, normalData, gl.STATIC_DRAW)
+			ven$initAttributeVariable(gl, glAttributes.a_Normal, normalBuffer, {
+				size: 3,
+			})
+			gl.bindBuffer(gl.ARRAY_BUFFER, featureBuffer)
+			gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
+			ven$initAttributeVariable(gl, glAttributes.a_Position, featureBuffer, {
+				size: 3,
+				stride: 28,
+			})
+			ven$initAttributeVariable(gl, glAttributes.a_Color, featureBuffer, {
+				size: 4,
+				stride: 28,
+				offset: 12,
+			})
+			if (enableTexture) {
+				gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer)
+				gl.bufferData(gl.ARRAY_BUFFER, texCoordData, gl.STATIC_DRAW)
+				ven$initAttributeVariable(gl, glAttributes.a_TexCoord, texCoordBuffer, {
+					size: 2,
+				})
+			}
+			gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
+		},
+		applyModelMatrix(gl, modelInstance, itemProgramControl) {
+			const { glUniforms } = itemProgramControl
+			/**
+			 * 创建旋转矩阵
+			 */
+			const modelRotationXMatrix4 = Ven$CanvasMatrix4.setRotate(
+				Ven$Angles.degreeToRadian(modelInstance.modelRatation.x),
+				new Ven$Vector3(1, 0, 0)
+			)
+			const modelRotationYMatrix4 = Ven$CanvasMatrix4.setRotate(
+				Ven$Angles.degreeToRadian(modelInstance.modelRatation.y),
+				new Ven$Vector3(0, 1, 0)
+			)
+			const modelRotationZMatrix4 = Ven$CanvasMatrix4.setRotate(
+				Ven$Angles.degreeToRadian(modelInstance.modelRatation.z),
+				new Ven$Vector3(0, 0, 1)
+			)
+			/**
+			 * 创建平移矩阵
+			 */
+			const modelOffsetMatrix4 = Ven$CanvasMatrix4.setTranslate(
+				new Ven$Vector3(modelInstance.modelOffset.x, modelInstance.modelOffset.y, modelInstance.modelOffset.z)
+			)
+			/**
+			 * 创建缩放矩阵
+			 */
+			const modelScaleMatrix4 = Ven$CanvasMatrix4.setScale(
+				new Ven$Vector3(modelInstance.modelScale.x, modelInstance.modelScale.y, modelInstance.modelScale.z)
+			)
+			/**
+			 * 生成模型变换矩阵
+			 */
+			const modelEffectMatrix4 = modelRotationXMatrix4
+				.multiply4(modelRotationYMatrix4)
+				.multiply4(modelRotationZMatrix4)
+				.multiply4(modelScaleMatrix4)
+				.multiply4(modelOffsetMatrix4)
+			/**
+			 * 创建法线变换矩阵
+			 */
+			const modelEffectInverseMatrix4 = Ven$CanvasMatrix4.setInverse(modelEffectMatrix4)
+			const modelEffectInverseTransposeMatrix4 = Ven$CanvasMatrix4.setTranspose(modelEffectInverseMatrix4)
+			const normalMatrix4 = modelEffectInverseTransposeMatrix4
+
+			gl.uniformMatrix4fv(glUniforms.u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
+			gl.uniformMatrix4fv(glUniforms.u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
+		},
 	}
 
 	const stepControl = new Ven$StepControl(0, 90, 360)
@@ -1539,6 +1532,8 @@ function drawCanvas(containerElement) {
 					Program.isRender = true
 				})
 			}
+			canvas.clear()
+			canvas.setProfile(Program.glControl.gl, Program.glControl.textureLight)
 			canvas.render(
 				Program.glControl.gl,
 				Program.glControl.vertexFeatureSize,
@@ -1550,6 +1545,8 @@ function drawCanvas(containerElement) {
 			window.requestAnimationFrame(exec)
 			return
 		}
+		canvas.clear()
+		canvas.setProfile(Program.glControl.gl, Program.glControl.commonLight)
 		canvas.render(
 			Program.glControl.gl,
 			Program.glControl.vertexFeatureSize,
