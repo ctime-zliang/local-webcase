@@ -605,12 +605,15 @@ class Program3 {
 		this.glControl.modelInstances1 = [new Triangle3()]
 		this.glControl.modelInstances1.forEach(modelInstanceItem => {
 			modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
+			modelInstanceItem.modelMatrix = Ven$CanvasMatrix4.initMatrix()
 		})
 		this.glControl.vertexFeatureSize1 = this.getVertexFeatureSize(this.glControl.modelInstances1)
 		/* ... */
 		this.glControl.modelInstances2 = [new ShereModel3(1.0, 30, 30, null)]
+		// this.glControl.modelInstances2 = [new CubeModel3(1.0, 1.0, 1.0)]
 		this.glControl.modelInstances2.forEach(modelInstanceItem => {
 			modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
+			modelInstanceItem.modelMatrix = Ven$CanvasMatrix4.initMatrix()
 		})
 		this.glControl.vertexFeatureSize2 = this.getVertexFeatureSize(this.glControl.modelInstances2)
 	}
@@ -631,14 +634,17 @@ function drawCanvas3(containerElement) {
 
 	const SHADOW_VERTEX_SHADER = `
 		precision highp float;
+		varying vec4 v_Color;
 		// 顶点配置(组)
 		attribute vec3 a_Position;
+		attribute vec4 a_Color;
 		// 变换矩阵(组)
 		uniform mat4 u_ModelMatrix;
 		uniform mat4 u_ViewMatrix;
 		uniform mat4 u_ProjMatrix;
 		void main() {
 			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
+			v_Color = a_Color;
 		}
 	`
 	const SHADOW_FRAGMENT_SHADER = `
@@ -691,6 +697,8 @@ function drawCanvas3(containerElement) {
 		}
 	`
 
+	const LIGHT = [0, 7, 2]
+
 	Program3.glControl.gl.clearColor(
 		Program3.profile.clearColor.r / 255,
 		Program3.profile.clearColor.g / 255,
@@ -719,7 +727,7 @@ function drawCanvas3(containerElement) {
 
 	Program3.glControl.shadow.program = ven$createProgram(Program3.glControl.gl, SHADOW_VERTEX_SHADER, SHADOW_FRAGMENT_SHADER)
 	const commonWebGLVariableLocation = ven$getWebGLVariableLocation(Program3.glControl.gl, Program3.glControl.shadow.program, {
-		glAttributes: ['a_Position'],
+		glAttributes: ['a_Position', 'a_Color'],
 		glUniforms: ['u_ModelMatrix', 'u_ViewMatrix', 'u_ProjMatrix'],
 	})
 	Program3.glControl.shadow.glAttributes = commonWebGLVariableLocation.glAttributes
@@ -785,7 +793,7 @@ function drawCanvas3(containerElement) {
 					Program3.profile.persProjection.far
 				)
 				lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
-					new Ven$Vector3(Program3.profile.light.position.x, Program3.profile.light.position.y, Program3.profile.light.position.z),
+					new Ven$Vector3(LIGHT[0], LIGHT[1], LIGHT[2]),
 					new Ven$Vector3(Program3.profile.lookAt.atPosition.x, Program3.profile.lookAt.atPosition.y, Program3.profile.lookAt.atPosition.z),
 					new Ven$Vector3(0, 1, 0)
 				)
@@ -873,9 +881,6 @@ function drawCanvas3(containerElement) {
 				.multiply4(modelScaleMatrix4)
 				.multiply4(modelOffsetMatrix4)
 
-			if (this.status === 'CANVAS') {
-				gl.uniformMatrix4fv(glUniforms.u_ModelMatrixFromLight, false, new Float32Array(modelInstance.modelMatrix.data))
-			}
 			gl.uniformMatrix4fv(glUniforms.u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
 			return modelEffectMatrix4
 		},
@@ -891,44 +896,33 @@ function drawCanvas3(containerElement) {
 		}
 		Program3.isRender = false
 
+		const { glUniforms: shadowGlUniforms } = Program3.glControl.shadow
+		const { glUniforms: mainGlUniforms } = Program3.glControl.main
+
 		canvas.init('FRAME_BUFFER', Program3.glControl.gl, Program3.glControl.main.frameBuffer)
 		canvas.clear(Program3.glControl.gl)
 		Program3.glControl.gl.useProgram(Program3.glControl.shadow.program)
-		const { projectionMatrix4: s1_projectionMatrix4, lookAtMatrix4: s1_lookAtMatrix4 } = canvas.setProfile(
+		const { projectionMatrix4: s1ProjectionMatrix4, lookAtMatrix4: s1LookAtMatrix4 } = canvas.setProfile(
 			Program3.glControl.gl,
 			Program3.glControl.shadow
 		)
 		canvas.render(Program3.glControl.gl, Program3.glControl.vertexFeatureSize1, Program3.glControl.modelInstances1, Program3.glControl.shadow)
+		const m1 = Ven$CanvasMatrix4.copyMatrix(Program3.glControl.modelInstances1[0].modelMatrix)
 		canvas.render(Program3.glControl.gl, Program3.glControl.vertexFeatureSize2, Program3.glControl.modelInstances2, Program3.glControl.shadow)
+		const m2 = Ven$CanvasMatrix4.copyMatrix(Program3.glControl.modelInstances2[0].modelMatrix)
 
 		canvas.init('CANVAS', Program3.glControl.gl, null)
 		canvas.clear(Program3.glControl.gl)
 		Program3.glControl.gl.useProgram(Program3.glControl.main.program)
-		const { projectionMatrix4: s2_projectionMatrix4, lookAtMatrix4: s2_lookAtMatrix4 } = canvas.setProfile(
+		Program3.glControl.gl.uniformMatrix4fv(mainGlUniforms.u_ViewMatrixFromLight, false, new Float32Array(s1LookAtMatrix4.data))
+		Program3.glControl.gl.uniformMatrix4fv(mainGlUniforms.u_ProjMatrixFromLight, false, new Float32Array(s1ProjectionMatrix4.data))
+		const { projectionMatrix4: s2ProjectionMatrix4, lookAtMatrix4: s2LookAtMatrix4 } = canvas.setProfile(
 			Program3.glControl.gl,
 			Program3.glControl.main
 		)
-		Program3.glControl.gl.uniformMatrix4fv(
-			Program3.glControl.main.glUniforms.u_ViewMatrixFromLight,
-			false,
-			new Float32Array(s1_lookAtMatrix4.data)
-		)
-		Program3.glControl.gl.uniformMatrix4fv(
-			Program3.glControl.main.glUniforms.u_ProjMatrixFromLight,
-			false,
-			new Float32Array(s1_projectionMatrix4.data)
-		)
+		Program3.glControl.gl.uniformMatrix4fv(mainGlUniforms.u_ModelMatrixFromLight, false, new Float32Array(m1.data))
 		canvas.render(Program3.glControl.gl, Program3.glControl.vertexFeatureSize1, Program3.glControl.modelInstances1, Program3.glControl.main)
-		Program3.glControl.gl.uniformMatrix4fv(
-			Program3.glControl.main.glUniforms.u_ViewMatrixFromLight,
-			false,
-			new Float32Array(s1_lookAtMatrix4.data)
-		)
-		Program3.glControl.gl.uniformMatrix4fv(
-			Program3.glControl.main.glUniforms.u_ProjMatrixFromLight,
-			false,
-			new Float32Array(s1_projectionMatrix4.data)
-		)
+		Program3.glControl.gl.uniformMatrix4fv(mainGlUniforms.u_ModelMatrixFromLight, false, new Float32Array(m2.data))
 		canvas.render(Program3.glControl.gl, Program3.glControl.vertexFeatureSize2, Program3.glControl.modelInstances2, Program3.glControl.main)
 
 		stepControl.updateLastStamp()

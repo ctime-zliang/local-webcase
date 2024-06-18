@@ -163,6 +163,7 @@ function ven$initFramebufferObject(gl, offScreenWidth, offScreenHeight) {
 		return error()
 	}
 
+	frameBuffer.texture = texture
 	gl.bindFramebuffer(gl.FRAMEBUFFER, null)
 	gl.bindTexture(gl.TEXTURE_2D, null)
 	gl.bindRenderbuffer(gl.RENDERBUFFER, null)
