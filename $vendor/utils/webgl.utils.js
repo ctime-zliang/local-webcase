@@ -176,7 +176,7 @@ function ven$initFramebufferObject(gl, offScreenWidth, offScreenHeight) {
 	}
 }
 
-function ven$loadImageResourceTexture(gl, src, u_Sampler, textureUnitIndex, callback) {
+function ven$loadImageResourceTexture(gl, src, callback) {
 	const texture = gl.createTexture()
 	const img = new Image()
 	img.crossOrigin = 'anonymous'
@@ -192,11 +192,7 @@ function ven$loadImageResourceTexture(gl, src, u_Sampler, textureUnitIndex, call
 		 * 使用 Image 对象实例填充纹理内容
 		 */
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img)
-		/**
-		 * 通过唯一的 gl.uniform1i 采样器编号赋值方法给着色器采样器赋值纹理编号
-		 */
-		gl.uniform1i(u_Sampler, textureUnitIndex)
-		callback && callback(gl, textureUnitIndex, `TEXTURE${textureUnitIndex}`)
+		callback && callback(gl, texture)
 	}
 	img.src = src
 	return texture

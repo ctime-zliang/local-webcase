@@ -8,12 +8,17 @@ class Program2 {
 		return new Promise((resolve, reject) => {
 			const len = srcs.length
 			for (let i = 0; i < len; i++) {
-				ven$loadImageResourceTexture(gl, srcs[i], u_Samplers[i], i, (gl, textureUnitIndex, textureUnit) => {
-					hasDones.push(textureUnitIndex)
-					if (hasDones.length >= len) {
-						resolve()
-					}
-				})
+				;(idx => {
+					ven$loadImageResourceTexture(gl, srcs[i], (gl, texture) => {
+						gl.uniform1i(u_Samplers[idx], idx)
+						gl.activeTexture(gl.TEXTURE0)
+						gl.bindTexture(gl.TEXTURE_2D, null)
+						hasDones.push(idx)
+						if (hasDones.length >= len) {
+							resolve()
+						}
+					})
+				})(i)
 			}
 		})
 	}

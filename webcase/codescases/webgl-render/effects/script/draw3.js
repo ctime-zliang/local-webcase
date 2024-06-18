@@ -158,8 +158,8 @@ class Triangle3 extends Model3 {
 		return {
 			// prettier-ignore
 			vertexFeature: new Float32Array([
-				0.0, 1.5, -0.75, 1.0, 0.0, 0.0, 1.0,
 				-0.75, 1.5, 0.0, 1.0, 0.0, 0.0, 1.0,
+				0.0, 1.5, 0.75, 1.0, 0.0, 0.0, 1.0,
 				0.75, 1.5, 0.0, 1.0, 0.0, 0.0, 1.0
 			]),
 		}
@@ -609,8 +609,7 @@ class Program3 {
 		})
 		this.glControl.vertexFeatureSize1 = this.getVertexFeatureSize(this.glControl.modelInstances1)
 		/* ... */
-		this.glControl.modelInstances2 = [new ShereModel3(1.0, 30, 30, null)]
-		// this.glControl.modelInstances2 = [new CubeModel3(1.0, 1.0, 1.0)]
+		this.glControl.modelInstances2 = [new ShereModel3(1.0, 30, 30)]
 		this.glControl.modelInstances2.forEach(modelInstanceItem => {
 			modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
 			modelInstanceItem.modelMatrix = Ven$CanvasMatrix4.initMatrix()
@@ -707,11 +706,11 @@ function drawCanvas3(containerElement) {
 	)
 	Program3.glControl.gl.clear(Program3.glControl.gl.COLOR_BUFFER_BIT | Program3.glControl.gl.DEPTH_BUFFER_BIT)
 	Program3.glControl.gl.enable(Program3.glControl.gl.BLEND)
-	Program3.glControl.gl.blendFunc(Program3.glControl.gl.SRC_ALPHA, Program3.glControl.gl.ONE_MINUS_SRC_ALPHA)
 	Program3.glControl.gl.enable(Program3.glControl.gl.CULL_FACE)
 	Program3.glControl.gl.enable(Program3.glControl.gl.DEPTH_TEST)
 	Program3.glControl.gl.enable(Program3.glControl.gl.POLYGON_OFFSET_FILL)
 	Program3.glControl.gl.polygonOffset(1.0, 1.0)
+	// Program3.glControl.gl.blendFunc(Program3.glControl.gl.SRC_ALPHA, Program3.glControl.gl.ONE_MINUS_SRC_ALPHA)
 
 	Program3.glControl.shadow = {
 		glAttributes: {},

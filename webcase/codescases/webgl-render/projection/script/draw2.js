@@ -391,11 +391,11 @@ function drawCanvas2(containerElement) {
 	)
 	Program2.glControl.gl.clear(Program2.glControl.gl.COLOR_BUFFER_BIT | Program2.glControl.gl.DEPTH_BUFFER_BIT)
 	Program2.glControl.gl.enable(Program2.glControl.gl.BLEND)
-	Program2.glControl.gl.blendFunc(Program2.glControl.gl.SRC_ALPHA, Program2.glControl.gl.ONE_MINUS_SRC_ALPHA)
 	Program2.glControl.gl.enable(Program2.glControl.gl.CULL_FACE)
 	Program2.glControl.gl.enable(Program2.glControl.gl.DEPTH_TEST)
 	Program2.glControl.gl.enable(Program2.glControl.gl.POLYGON_OFFSET_FILL)
 	Program2.glControl.gl.polygonOffset(1.0, 1.0)
+	Program2.glControl.gl.blendFunc(Program2.glControl.gl.SRC_ALPHA, Program2.glControl.gl.ONE_MINUS_SRC_ALPHA)
 
 	Program2.glControl.commonLight = {
 		glAttributes: {},

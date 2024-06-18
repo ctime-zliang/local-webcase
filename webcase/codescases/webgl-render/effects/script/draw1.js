@@ -884,11 +884,11 @@ function drawCanvas1(containerElement) {
 	)
 	Program1.glControl.gl.clear(Program1.glControl.gl.COLOR_BUFFER_BIT | Program1.glControl.gl.DEPTH_BUFFER_BIT)
 	Program1.glControl.gl.enable(Program1.glControl.gl.BLEND)
-	Program1.glControl.gl.blendFunc(Program1.glControl.gl.SRC_ALPHA, Program1.glControl.gl.ONE_MINUS_SRC_ALPHA)
 	Program1.glControl.gl.enable(Program1.glControl.gl.CULL_FACE)
 	Program1.glControl.gl.enable(Program1.glControl.gl.DEPTH_TEST)
 	Program1.glControl.gl.enable(Program1.glControl.gl.POLYGON_OFFSET_FILL)
 	Program1.glControl.gl.polygonOffset(1.0, 1.0)
+	// Program1.glControl.gl.blendFunc(Program1.glControl.gl.SRC_ALPHA, Program1.glControl.gl.ONE_MINUS_SRC_ALPHA)
 
 	Program1.glControl.commonLight = {
 		glAttributes: {},
@@ -943,7 +943,10 @@ function drawCanvas1(containerElement) {
 
 	const loadTextureAction = (gl, itemProgramControl, callback) => {
 		const { glUniforms } = itemProgramControl
-		ven$loadImageResourceTexture(gl, '../common/images/demo-1024x1024.jpg', glUniforms.u_Sampler, 0, (gl, textureUnitIndex, textureUnit) => {
+		ven$loadImageResourceTexture(gl, '../common/images/demo-1024x1024.jpg', (gl, texture) => {
+			gl.uniform1i(glUniforms.u_Sampler, 0)
+			gl.activeTexture(gl.TEXTURE0)
+			// gl.bindTexture(gl.TEXTURE_2D, null)
 			callback && callback()
 		})
 	}

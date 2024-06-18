@@ -74,7 +74,10 @@ function drawCanvas1(containerElement) {
 	})
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(datas), gl.STATIC_DRAW)
 
-	ven$loadImageResourceTexture(gl, '../common/images/demo-1024x1024.jpg', glUniforms.u_Sampler, 0, (gl, textureUnitIndex, textureUnit) => {
+	ven$loadImageResourceTexture(gl, '../common/images/demo-1024x1024.jpg', (gl, texture) => {
+		gl.uniform1i(glUniforms.u_Sampler, 0)
+		gl.activeTexture(gl.TEXTURE0)
+		gl.bindTexture(gl.TEXTURE_2D, null)
 		gl.drawArrays(gl.TRIANGLES, 0, datas.length / 4)
 	})
 

@@ -1254,11 +1254,11 @@ function drawCanvas(containerElement) {
 	Program.glControl.gl.clearColor(Program.profile.clearColor.r / 255, Program.profile.clearColor.g / 255, Program.profile.clearColor.b / 255, 1.0)
 	Program.glControl.gl.clear(Program.glControl.gl.COLOR_BUFFER_BIT | Program.glControl.gl.DEPTH_BUFFER_BIT)
 	Program.glControl.gl.enable(Program.glControl.gl.BLEND)
-	Program.glControl.gl.blendFunc(Program.glControl.gl.SRC_ALPHA, Program.glControl.gl.ONE_MINUS_SRC_ALPHA)
 	Program.glControl.gl.enable(Program.glControl.gl.CULL_FACE)
 	Program.glControl.gl.enable(Program.glControl.gl.DEPTH_TEST)
 	Program.glControl.gl.enable(Program.glControl.gl.POLYGON_OFFSET_FILL)
 	Program.glControl.gl.polygonOffset(1.0, 1.0)
+	Program.glControl.gl.blendFunc(Program.glControl.gl.SRC_ALPHA, Program.glControl.gl.ONE_MINUS_SRC_ALPHA)
 
 	Program.glControl.commonLight = {
 		glAttributes: {},
@@ -1323,7 +1323,10 @@ function drawCanvas(containerElement) {
 
 	const loadTextureAction = (gl, itemProgramControl, callback) => {
 		const { glUniforms } = itemProgramControl
-		ven$loadImageResourceTexture(gl, '../common/images/demo-1024x1024.jpg', glUniforms.u_Sampler, 0, (gl, textureUnitIndex, textureUnit) => {
+		ven$loadImageResourceTexture(gl, '../common/images/demo-1024x1024.jpg', (gl, texture) => {
+			gl.uniform1i(glUniforms.u_Sampler, 0)
+			gl.activeTexture(gl.TEXTURE0)
+			// gl.bindTexture(gl.TEXTURE_2D, null)
 			callback && callback()
 		})
 	}
