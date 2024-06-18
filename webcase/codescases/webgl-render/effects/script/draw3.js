@@ -609,7 +609,7 @@ class Program3 {
 		})
 		this.glControl.vertexFeatureSize1 = this.getVertexFeatureSize(this.glControl.modelInstances1)
 		/* ... */
-		this.glControl.modelInstances2 = [new ShereModel3(1.0, 30, 30)]
+		this.glControl.modelInstances2 = [new ShereModel3(1.0, 50, 50)]
 		this.glControl.modelInstances2.forEach(modelInstanceItem => {
 			modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
 			modelInstanceItem.modelMatrix = Ven$CanvasMatrix4.initMatrix()
