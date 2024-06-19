@@ -75,38 +75,44 @@ class Model3 {
 	}
 }
 
-class CubeModel3 extends Model3 {
-	constructor(width, length, depth, color = '#ffffff', offsetX = 0, offsetY = 0, offsetZ = 0) {
+class Triangle3 extends Model3 {
+	constructor() {
 		super()
-		this._modelParam = {
-			width,
-			length,
-			depth,
-			rgba: ven$hex2Rgba(color),
-			offsetX,
-			offsetY,
-			offsetZ,
-		}
+		this._modelParam = {}
 		this.vertexDatas = this._createVertexData()
 	}
 
 	_createVertexData() {
-		return createCubeDatas(
-			this._modelParam.width,
-			this._modelParam.length,
-			this._modelParam.depth,
-			{
-				up: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				bottom: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				front: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				back: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				right: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				left: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-			},
-			this._modelParam.offsetX,
-			this._modelParam.offsetY,
-			this._modelParam.offsetZ
-		)
+		return {
+			// prettier-ignore
+			vertexFeature: new Float32Array([
+				-0.75, 1.5, 0.0, 1.0, 0.0, 0.0, 1.0,
+				0.0, 1.5, 0.75, 1.0, 0.0, 0.0, 1.0,
+				0.75, 1.5, 0.0, 1.0, 0.0, 0.0, 1.0
+			]),
+		}
+	}
+}
+
+class Plane3 extends Model3 {
+	constructor() {
+		super()
+		this._modelParam = {}
+		this.vertexDatas = this._createVertexData()
+	}
+
+	_createVertexData() {
+		return {
+			// prettier-ignore
+			vertexFeature: new Float32Array([
+				-1.5, 0.0, -1.5, 1.0, 1.0, 1.0, 1.0,
+				-1.5, 0.0, 1.5, 1.0, 1.0, 1.0, 1.0,
+				1.5, -1.0, 1.5, 1.0, 1.0, 1.0, 1.0,
+				-1.5, 0.0, -1.5, 1.0, 1.0, 1.0, 1.0,
+				1.5, -1.0, 1.5, 1.0, 1.0, 1.0, 1.0,
+				1.5, -1.0, -1.5, 1.0, 1.0, 1.0, 1.0,
+			]),
+		}
 	}
 }
 
@@ -147,25 +153,6 @@ class ShereModel3 extends Model3 {
 	}
 }
 
-class Triangle3 extends Model3 {
-	constructor() {
-		super()
-		this._modelParam = {}
-		this.vertexDatas = this._createVertexData()
-	}
-
-	_createVertexData() {
-		return {
-			// prettier-ignore
-			vertexFeature: new Float32Array([
-				-0.75, 1.5, 0.0, 1.0, 0.0, 0.0, 1.0,
-				0.0, 1.5, 0.75, 1.0, 0.0, 0.0, 1.0,
-				0.75, 1.5, 0.0, 1.0, 0.0, 0.0, 1.0
-			]),
-		}
-	}
-}
-
 class Program3 {
 	static isRender = true
 	static containerElement
@@ -201,13 +188,7 @@ class Program3 {
 		 * 光照参数
 		 */
 		light: {
-			illuType: 2,
 			intensityGain: 1.0,
-			direction: {
-				x: 0.5,
-				y: 3.0,
-				z: 4.0,
-			},
 			position: {
 				x: 1.0,
 				y: 7.0,
@@ -283,25 +264,12 @@ class Program3 {
 		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4AtPositionZShow"]`)
 		const lightColorPickElement = this.containerElement.querySelector(`[data-tag-name="lightColor"]`)
 		const lightColorShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lightColorShow"]`)
-		const lightIlluTypeRadioElements = this.containerElement.querySelectorAll(`[data-tag-name="lightIlluType"]`)
 		const lightPositionRangeXRangeElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeX"]`)
 		const lightPositionRangeXShowElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeXShow"]`)
 		const lightPositionRangeYRangeElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeY"]`)
 		const lightPositionRangeYShowElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeYShow"]`)
 		const lightPositionRangeZRangeElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeZ"]`)
 		const lightPositionRangeZShowElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeZShow"]`)
-		const lightDirectionRangeXRangeElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeX"]`)
-		const lightDirectionRangeXShowElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeXShow"]`)
-		const lightDirectionRangeYRangeElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeY"]`)
-		const lightDirectionRangeYShowElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeYShow"]`)
-		const lightDirectionRangeZRangeElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeZ"]`)
-		const lightDirectionRangeZShowElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeZShow"]`)
-		const ambientLightRangeRRangeElement = this.containerElement.querySelector(`[data-tag-name="ambientLightRangeR"]`)
-		const ambientLightRShowSpanElement = this.containerElement.querySelector(`[data-tag-name="ambientLightRShow"]`)
-		const ambientLightRangeGRangeElement = this.containerElement.querySelector(`[data-tag-name="ambientLightRangeG"]`)
-		const ambientLightRangeGShowSpanElement = this.containerElement.querySelector(`[data-tag-name="ambientLightGShow"]`)
-		const ambientLightRangeBRangeElement = this.containerElement.querySelector(`[data-tag-name="ambientLightRangeB"]`)
-		const ambientLightRangeBShowSpanElement = this.containerElement.querySelector(`[data-tag-name="ambientLightBShow"]`)
 		const lightIntensityGainRangeRangeElement = this.containerElement.querySelector(`[data-tag-name="lightIntensityGainRange"]`)
 		const lightIntensityGainRangeShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lightIntensityGainRangeShow"]`)
 		const autoTransformationCheckboxElement = this.containerElement.querySelector(`[data-tag-name="autoTransformation"]`)
@@ -323,24 +291,11 @@ class Program3 {
 		lookAtMatrix4AtPositionYShowSpanElement.textContent = lookAtMatrix4AtPositionYRangeElement.value = self.profile.lookAt.atPosition.y
 		lookAtMatrix4AtPositionZShowSpanElement.textContent = lookAtMatrix4AtPositionZRangeElement.value = self.profile.lookAt.atPosition.z
 		lightColorShowSpanElement.textContent = lightColorPickElement.value = ven$rgba2Hex(self.profile.light.color)
-		lightIlluTypeRadioElements.forEach(itemElement => {
-			const name = this.containerElement.id + '_' + itemElement.getAttribute('data-tag-name')
-			itemElement.setAttribute('name', name)
-			itemElement.checked = itemElement.value === String(self.profile.light.illuType)
-		})
 		lightPositionRangeXShowElement.textContent = lightPositionRangeXRangeElement.value = self.profile.light.position.x
 		lightPositionRangeYShowElement.textContent = lightPositionRangeYRangeElement.value = self.profile.light.position.y
 		lightPositionRangeZShowElement.textContent = lightPositionRangeZRangeElement.value = self.profile.light.position.z
-		lightDirectionRangeXShowElement.textContent = lightDirectionRangeXRangeElement.value = self.profile.light.direction.x
-		lightDirectionRangeYShowElement.textContent = lightDirectionRangeYRangeElement.value = self.profile.light.direction.y
-		lightDirectionRangeZShowElement.textContent = lightDirectionRangeZRangeElement.value = self.profile.light.direction.z
-		ambientLightRShowSpanElement.textContent = ambientLightRangeRRangeElement.value = self.profile.light.ambient.r
-		ambientLightRangeGShowSpanElement.textContent = ambientLightRangeGRangeElement.value = self.profile.light.ambient.g
-		ambientLightRangeBShowSpanElement.textContent = ambientLightRangeBRangeElement.value = self.profile.light.ambient.b
 		lightIntensityGainRangeShowSpanElement.textContent = lightIntensityGainRangeRangeElement.value = self.profile.light.intensityGain
 		autoTransformationCheckboxElement.checked = self.profile.autoTransformation
-
-		this.toggleLightIlluTypeView()
 	}
 
 	static eventHandle() {
@@ -380,25 +335,12 @@ class Program3 {
 		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4AtPositionZShow"]`)
 		const lightColorPickElement = this.containerElement.querySelector(`[data-tag-name="lightColor"]`)
 		const lightColorShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lightColorShow"]`)
-		const lightIlluTypeRadioElements = this.containerElement.querySelectorAll(`[data-tag-name="lightIlluType"]`)
 		const lightPositionRangeXRangeElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeX"]`)
 		const lightPositionRangeXShowElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeXShow"]`)
 		const lightPositionRangeYRangeElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeY"]`)
 		const lightPositionRangeYShowElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeYShow"]`)
 		const lightPositionRangeZRangeElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeZ"]`)
 		const lightPositionRangeZShowElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeZShow"]`)
-		const lightDirectionRangeXRangeElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeX"]`)
-		const lightDirectionRangeXShowElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeXShow"]`)
-		const lightDirectionRangeYRangeElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeY"]`)
-		const lightDirectionRangeYShowElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeYShow"]`)
-		const lightDirectionRangeZRangeElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeZ"]`)
-		const lightDirectionRangeZShowElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeZShow"]`)
-		const ambientLightRangeRRangeElement = this.containerElement.querySelector(`[data-tag-name="ambientLightRangeR"]`)
-		const ambientLightRShowSpanElement = this.containerElement.querySelector(`[data-tag-name="ambientLightRShow"]`)
-		const ambientLightRangeGRangeElement = this.containerElement.querySelector(`[data-tag-name="ambientLightRangeG"]`)
-		const ambientLightRangeGShowSpanElement = this.containerElement.querySelector(`[data-tag-name="ambientLightGShow"]`)
-		const ambientLightRangeBRangeElement = this.containerElement.querySelector(`[data-tag-name="ambientLightRangeB"]`)
-		const ambientLightRangeBShowSpanElement = this.containerElement.querySelector(`[data-tag-name="ambientLightBShow"]`)
 		const lightIntensityGainRangeRangeElement = this.containerElement.querySelector(`[data-tag-name="lightIntensityGainRange"]`)
 		const lightIntensityGainRangeShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lightIntensityGainRangeShow"]`)
 		const autoTransformationCheckboxElement = this.containerElement.querySelector(`[data-tag-name="autoTransformation"]`)
@@ -512,14 +454,6 @@ class Program3 {
 			console.log('light.color:', JSON.stringify(self.profile.light.color))
 			self.isRender = true
 		})
-		lightIlluTypeRadioElements.forEach(itemElement => {
-			itemElement.addEventListener('change', function (e) {
-				self.profile.light.illuType = +this.value
-				self.toggleLightIlluTypeView()
-				console.log('light.illuType:', self.profile.light.illuType)
-				self.isRender = true
-			})
-		})
 		lightPositionRangeXRangeElement.addEventListener('input', function (e) {
 			lightPositionRangeXShowElement.textContent = self.profile.light.position.x = +this.value
 			console.log('light.position:', JSON.stringify(self.profile.light.position))
@@ -535,36 +469,6 @@ class Program3 {
 			console.log('light.position:', JSON.stringify(self.profile.light.position))
 			self.isRender = true
 		})
-		lightDirectionRangeXRangeElement.addEventListener('input', function (e) {
-			lightDirectionRangeXShowElement.textContent = self.profile.light.direction.x = +this.value
-			console.log('light.direction:', JSON.stringify(self.profile.light.direction))
-			self.isRender = true
-		})
-		lightDirectionRangeYRangeElement.addEventListener('input', function (e) {
-			lightDirectionRangeYShowElement.textContent = self.profile.light.direction.y = +this.value
-			console.log('light.direction:', JSON.stringify(self.profile.light.direction))
-			self.isRender = true
-		})
-		lightDirectionRangeZRangeElement.addEventListener('input', function (e) {
-			lightDirectionRangeZShowElement.textContent = self.profile.light.direction.z = +this.value
-			console.log('light.direction:', JSON.stringify(self.profile.light.direction))
-			self.isRender = true
-		})
-		ambientLightRangeRRangeElement.addEventListener('input', function (e) {
-			ambientLightRShowSpanElement.textContent = self.profile.light.ambient.r = +this.value
-			console.log('light.ambient:', JSON.stringify(self.profile.light.ambient))
-			self.isRender = true
-		})
-		ambientLightRangeGRangeElement.addEventListener('input', function (e) {
-			ambientLightRangeGShowSpanElement.textContent = self.profile.light.ambient.g = +this.value
-			console.log('light.ambient:', JSON.stringify(self.profile.light.ambient))
-			self.isRender = true
-		})
-		ambientLightRangeBRangeElement.addEventListener('input', function (e) {
-			ambientLightRangeBShowSpanElement.textContent = self.profile.light.ambient.b = +this.value
-			console.log('light.ambient:', JSON.stringify(self.profile.light.ambient))
-			self.isRender = true
-		})
 		lightIntensityGainRangeRangeElement.addEventListener('input', function (e) {
 			lightIntensityGainRangeShowSpanElement.textContent = self.profile.light.intensityGain = +this.value
 			console.log('light.intensityGain:', self.profile.light.intensityGain)
@@ -576,31 +480,6 @@ class Program3 {
 		})
 	}
 
-	static toggleLightIlluTypeView() {
-		const lightPositionRangeXRangeElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeX"]`)
-		const lightPositionRangeYRangeElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeY"]`)
-		const lightPositionRangeZRangeElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeZ"]`)
-		const lightDirectionRangeXRangeElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeX"]`)
-		const lightDirectionRangeYRangeElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeY"]`)
-		const lightDirectionRangeZRangeElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeZ"]`)
-		if (this.profile.light.illuType === 1) {
-			lightPositionRangeXRangeElement.parentElement.style.display = 'none'
-			lightPositionRangeYRangeElement.parentElement.style.display = 'none'
-			lightPositionRangeZRangeElement.parentElement.style.display = 'none'
-			lightDirectionRangeXRangeElement.parentElement.style.display = 'flex'
-			lightDirectionRangeYRangeElement.parentElement.style.display = 'flex'
-			lightDirectionRangeZRangeElement.parentElement.style.display = 'flex'
-		}
-		if (this.profile.light.illuType === 2) {
-			lightDirectionRangeXRangeElement.parentElement.style.display = 'none'
-			lightDirectionRangeYRangeElement.parentElement.style.display = 'none'
-			lightDirectionRangeZRangeElement.parentElement.style.display = 'none'
-			lightPositionRangeXRangeElement.parentElement.style.display = 'flex'
-			lightPositionRangeYRangeElement.parentElement.style.display = 'flex'
-			lightPositionRangeZRangeElement.parentElement.style.display = 'flex'
-		}
-	}
-
 	static initModelModelDatas() {
 		this.glControl.modelInstances1 = [new Triangle3()]
 		this.glControl.modelInstances1.forEach(modelInstanceItem => {
@@ -609,7 +488,8 @@ class Program3 {
 		})
 		this.glControl.vertexFeatureSize1 = this.getVertexFeatureSize(this.glControl.modelInstances1)
 		/* ... */
-		this.glControl.modelInstances2 = [new ShereModel3(1.0, 50, 50)]
+		// this.glControl.modelInstances2 = [new ShereModel3(1.0, 50, 50)]
+		this.glControl.modelInstances2 = [new Plane3()]
 		this.glControl.modelInstances2.forEach(modelInstanceItem => {
 			modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
 			modelInstanceItem.modelMatrix = Ven$CanvasMatrix4.initMatrix()
@@ -631,6 +511,11 @@ function drawCanvas3(containerElement) {
 	Program3.glControl.gl = ven$initWebGLContext(canvasElement)
 	Program3.init(containerElement)
 
+	/**
+	 * 阴影绘制着色器
+	 *
+	 * 		gl_FragCoord.z = (gl_Position.xyz / gl_Position.w) / 2.0 + 0.5 归一化至 [0.0, 1.0]
+	 */
 	const SHADOW_VERTEX_SHADER = `
 		precision highp float;
 		varying vec4 v_Color;
@@ -656,6 +541,9 @@ function drawCanvas3(containerElement) {
 			gl_FragColor = rgbaDepth;
 		}
 	`
+	/**
+	 * 正常绘制着色器
+	 */
 	const MAIN_VERTEX_SHADER = `
 		precision highp float;
 		varying vec4 v_Color;
@@ -695,8 +583,6 @@ function drawCanvas3(containerElement) {
 			gl_FragColor = vec4(v_Color.rgb * visibility, v_Color.a);
 		}
 	`
-
-	const LIGHT = [0, 7, 2]
 
 	Program3.glControl.gl.clearColor(
 		Program3.profile.clearColor.r / 255,
@@ -792,7 +678,7 @@ function drawCanvas3(containerElement) {
 					Program3.profile.persProjection.far
 				)
 				lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
-					new Ven$Vector3(LIGHT[0], LIGHT[1], LIGHT[2]),
+					new Ven$Vector3(Program3.profile.light.position.x, Program3.profile.light.position.y, Program3.profile.light.position.z),
 					new Ven$Vector3(Program3.profile.lookAt.atPosition.x, Program3.profile.lookAt.atPosition.y, Program3.profile.lookAt.atPosition.z),
 					new Ven$Vector3(0, 1, 0)
 				)
@@ -893,10 +779,18 @@ function drawCanvas3(containerElement) {
 			stepControl.updateLastStamp()
 			return
 		}
-		Program3.isRender = false
 
 		const { glUniforms: shadowGlUniforms } = Program3.glControl.shadow
 		const { glUniforms: mainGlUniforms } = Program3.glControl.main
+
+		if (Program3.profile.autoTransformation) {
+			angle = stepControl.getNextValue() % 360
+			Program3.glControl.modelInstances1.forEach(modelInstanceItem => {
+				modelInstanceItem.modelRatation.y = angle
+			})
+		} else {
+			Program3.isRender = false
+		}
 
 		canvas.init('FRAME_BUFFER', Program3.glControl.gl, Program3.glControl.main.frameBuffer)
 		canvas.clear(Program3.glControl.gl)

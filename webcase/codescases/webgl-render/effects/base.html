@@ -1629,36 +1629,6 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Illu Type: </label>
-					<input
-						type="radio"
-						data-tag-name="lightIlluType"
-						value="1"
-						disabled="disabled"
-						style="width: 20px; height: 20px; cursor: pointer"
-					/>
-					<span>Parallel Light</span>
-					<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-					<input
-						type="radio"
-						data-tag-name="lightIlluType"
-						value="2"
-						disabled="disabled"
-						style="width: 20px; height: 20px; cursor: pointer"
-					/>
-					<span>Spot Light</span>
-				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: none;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Position X: </label>
 					<span>-10</span>
 					<input
@@ -1677,7 +1647,7 @@
 					style="
 						width: fit-content;
 						font-size: 12px;
-						display: none;
+						display: flex;
 						flex-wrap: nowrap;
 						align-items: center;
 						align-content: center;
@@ -1685,24 +1655,24 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Position Y: </label>
-					<span>-10</span>
+					<span>2</span>
 					<input
 						type="range"
 						value="0"
 						data-tag-name="lightPositionRangeY"
-						min="-10"
-						max="10"
+						min="2"
+						max="30"
 						step="0.01"
 						style="width: 300px; cursor: pointer"
 					/>
-					<span>10</span>
+					<span>30</span>
 					<strong>&nbsp;(<span data-tag-name="lightPositionRangeYShow">0</span>)</strong>
 				</div>
 				<div
 					style="
 						width: fit-content;
 						font-size: 12px;
-						display: none;
+						display: flex;
 						flex-wrap: nowrap;
 						align-items: center;
 						align-content: center;
@@ -1722,156 +1692,6 @@
 					/>
 					<span>10</span>
 					<strong>&nbsp;(<span data-tag-name="lightPositionRangeZShow">0</span>)</strong>
-				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: none;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Direction X: </label>
-					<span>-10</span>
-					<input
-						type="range"
-						value="0"
-						data-tag-name="lightDirectionRangeX"
-						min="-10"
-						max="10"
-						step="0.01"
-						style="width: 300px; cursor: pointer"
-					/>
-					<span>10</span>
-					<strong>&nbsp;(<span data-tag-name="lightDirectionRangeXShow">0</span>)</strong>
-				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: none;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Direction Y: </label>
-					<span>-10</span>
-					<input
-						type="range"
-						value="0"
-						data-tag-name="lightDirectionRangeY"
-						min="-10"
-						max="10"
-						step="0.01"
-						style="width: 300px; cursor: pointer"
-					/>
-					<span>10</span>
-					<strong>&nbsp;(<span data-tag-name="lightDirectionRangeYShow">0</span>)</strong>
-				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: none;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Direction Z: </label>
-					<span>-10</span>
-					<input
-						type="range"
-						value="0"
-						data-tag-name="lightDirectionRangeZ"
-						min="-10"
-						max="10"
-						step="0.01"
-						style="width: 300px; cursor: pointer"
-					/>
-					<span>10</span>
-					<strong>&nbsp;(<span data-tag-name="lightDirectionRangeZShow">0</span>)</strong>
-				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ambient Light R: </label>
-					<span>0</span>
-					<input
-						type="range"
-						value="0"
-						data-tag-name="ambientLightRangeR"
-						min="0"
-						max="1"
-						step="0.01"
-						style="width: 300px; cursor: pointer"
-					/>
-					<span>1</span>
-					<strong>&nbsp;(<span data-tag-name="ambientLightRShow">0</span>)</strong>
-				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ambient Light G: </label>
-					<span>0</span>
-					<input
-						type="range"
-						value="0"
-						data-tag-name="ambientLightRangeG"
-						min="0"
-						max="1"
-						step="0.01"
-						style="width: 300px; cursor: pointer"
-					/>
-					<span>1</span>
-					<strong>&nbsp;(<span data-tag-name="ambientLightGShow">0</span>)</strong>
-				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ambient Light B: </label>
-					<span>0</span>
-					<input
-						type="range"
-						value="0"
-						data-tag-name="ambientLightRangeB"
-						min="0"
-						max="1"
-						step="0.01"
-						style="width: 300px; cursor: pointer"
-					/>
-					<span>1</span>
-					<strong>&nbsp;(<span data-tag-name="ambientLightBShow">0</span>)</strong>
 				</div>
 				<br />
 				<div
