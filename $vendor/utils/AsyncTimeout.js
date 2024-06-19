@@ -1,18 +1,29 @@
 class Ven$AsyncTimeout {
 	constructor(maxRetries = 3, timeout = 5000, delay = 500) {
-		this._listener = null
+		this._everyOperateListener = null
+		this._taskStartListener = null
+		this._taskFinishListener = null
 		this._maxRetries = maxRetries
 		this._timeout = timeout
 		this._delay = delay
 	}
 
-	setListener(fn) {
-		this._listener = fn
+	setEveryOperateListener(fn) {
+		this._everyOperateListener = fn
+		return this
+	}
+	setTaskStartListener(fn) {
+		this._taskStartListener = fn
+		return this
+	}
+	setTaskFinishListener(fn) {
+		this._taskFinishListener = fn
 		return this
 	}
 
 	async exec(fn) {
 		let attempt = 0
+		this._taskStartListener && this._taskStartListener(new Date().getTime(), this._maxRetries, this._timeout, this._delay)
 		while (attempt < this._maxRetries) {
 			try {
 				const result = await Promise.race([
@@ -21,9 +32,10 @@ class Ven$AsyncTimeout {
 						throw new Error('[delay controller] async task timeout...')
 					}),
 				])
+				this._taskFinishListener && this._taskFinishListener(new Date().getTime(), this._maxRetries, this._timeout, this._delay)
 				return result
 			} catch (error) {
-				this._listener && this._listener(attempt, error, this._maxRetries, this._timeout, this._delay)
+				this._everyOperateListener && this._everyOperateListener(attempt, error, this._maxRetries, this._timeout, this._delay)
 				attempt++
 				if (attempt === this._maxRetries) {
 					throw error
