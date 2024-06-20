@@ -792,6 +792,12 @@ function drawCanvas3(containerElement) {
 			Program3.isRender = false
 		}
 
+		/**
+		 * 使用帧缓冲区绘制纹理贴图
+		 * 		建立视点在光源处的综合变换矩阵(pvmMatrixFromLight)
+		 * 		利用片元着色器计算并保存各片元在光源坐标系下的 z 坐标值(深度值)
+		 * 		可以保存到颜色向量中的任意分量(例如 R 分量)中
+		 */
 		canvas.init('FRAME_BUFFER', Program3.glControl.gl, Program3.glControl.main.frameBuffer)
 		canvas.clear(Program3.glControl.gl)
 		Program3.glControl.gl.useProgram(Program3.glControl.shadow.program)
@@ -804,6 +810,17 @@ function drawCanvas3(containerElement) {
 		canvas.render(Program3.glControl.gl, Program3.glControl.vertexFeatureSize2, Program3.glControl.modelInstances2, Program3.glControl.shadow)
 		const m2 = Ven$CanvasMatrix4.copyMatrix(Program3.glControl.modelInstances2[0].modelMatrix)
 
+		/**
+		 * 使用颜色缓冲区绘制输出画面
+		 * 		读取上述纹理贴图对象(在光源坐标系场景下生成)的像素值(rgbaDepth)
+		 * 			通过内置的 texture2D 函数, 传入帧缓冲区中的纹理贴图对象和视点在光源处的综合变换矩阵(pvmMatrixFromLight)和各顶点坐标, 获取像素值(rgbaDepth)
+		 * 		在正常视角下, 使用片元着色器计算各片元的颜色值
+		 * 			判断阴影位置
+		 * 				需要获取当前片元在光源坐标系下的坐标值, 取 z 值(深度值)与 rgbaDepth 中 R 分量进行对比
+		 * 					依据传入的视点在光源处的综合变换矩阵(pvmMatrixFromLight)和当前片元所处的坐标, 计算出变换后的坐标
+		 * 					归一化至 [0.0, 1.0] 区间
+		 * 			设置阴影区颜色与照射区颜色
+		 */
 		canvas.init('CANVAS', Program3.glControl.gl, null)
 		canvas.clear(Program3.glControl.gl)
 		Program3.glControl.gl.useProgram(Program3.glControl.main.program)
