@@ -1,6 +1,5 @@
-class Model3 {
+class Model1 {
 	constructor() {
-		this._vertexDatas = null
 		this._modelParam = null
 		this._modelRatation = {
 			x: 0,
@@ -17,8 +16,10 @@ class Model3 {
 			y: 1,
 			z: 1,
 		}
-		this._featureBuffer = null
+		this._vertexBuffer = null
 		this._normalBuffer = null
+		this._colorBuffer = null
+		this._indexBuffer = null
 		this._texCoordBuffer = null
 		this._modelMatrix = null
 	}
@@ -39,18 +40,11 @@ class Model3 {
 		return this._modelScale
 	}
 
-	get vertexDatas() {
-		return this._vertexDatas
+	get vertexBuffer() {
+		return this._vertexBuffer
 	}
-	set vertexDatas(value) {
-		this._vertexDatas = value
-	}
-
-	get featureBuffer() {
-		return this._featureBuffer
-	}
-	set featureBuffer(value) {
-		this._featureBuffer = value
+	set vertexBuffer(value) {
+		this._vertexBuffer = value
 	}
 
 	get normalBuffer() {
@@ -58,6 +52,20 @@ class Model3 {
 	}
 	set normalBuffer(value) {
 		this._normalBuffer = value
+	}
+
+	get colorBuffer() {
+		return this._colorBuffer
+	}
+	set colorBuffer(value) {
+		this._colorBuffer = value
+	}
+
+	get indexBuffer() {
+		return this._indexBuffer
+	}
+	set indexBuffer(value) {
+		this._indexBuffer = value
 	}
 
 	get texCoordBuffer() {
@@ -75,91 +83,17 @@ class Model3 {
 	}
 }
 
-class Triangle3 extends Model3 {
+class ObjModel1 extends Model1 {
 	constructor() {
 		super()
-		this._modelParam = {}
-		this.vertexDatas = this._createVertexData()
-	}
-
-	_createVertexData() {
-		return {
-			// prettier-ignore
-			vertexFeature: new Float32Array([
-				-0.75, 1.5, 0.0, 1.0, 0.0, 0.0, 1.0,
-				0.0, 1.5, 0.75, 1.0, 0.0, 0.0, 1.0,
-				0.75, 1.5, 0.0, 1.0, 0.0, 0.0, 1.0
-			]),
-		}
 	}
 }
 
-class Plane3 extends Model3 {
-	constructor() {
-		super()
-		this._modelParam = {}
-		this.vertexDatas = this._createVertexData()
-	}
-
-	_createVertexData() {
-		return {
-			// prettier-ignore
-			vertexFeature: new Float32Array([
-				-1.5, 0.0, -1.5, 1.0, 1.0, 1.0, 1.0,
-				-1.5, 0.0, 1.5, 1.0, 1.0, 1.0, 1.0,
-				1.5, -1.0, 1.5, 1.0, 1.0, 1.0, 1.0,
-				-1.5, 0.0, -1.5, 1.0, 1.0, 1.0, 1.0,
-				1.5, -1.0, 1.5, 1.0, 1.0, 1.0, 1.0,
-				1.5, -1.0, -1.5, 1.0, 1.0, 1.0, 1.0,
-			]),
-		}
-	}
-}
-
-class ShereModel3 extends Model3 {
-	constructor(radius, meridianCount, latitudeCount, color = '#ffffff', offsetX = 0, offsetY = 0, offsetZ = 0) {
-		super()
-		this._modelParam = {
-			radius,
-			meridianCount,
-			latitudeCount,
-			rgba: color === null ? null : ven$hex2Rgba(color),
-			offsetX,
-			offsetY,
-			offsetZ,
-		}
-		this.vertexDatas = this._createVertexData()
-	}
-
-	_createVertexData() {
-		this._modelParam
-		const colorSetting = this._modelParam.rgba
-			? {
-					redRange: [this._modelParam.rgba.r, this._modelParam.rgba.r],
-					greenRange: [this._modelParam.rgba.g, this._modelParam.rgba.g],
-					blueRange: [this._modelParam.rgba.b, this._modelParam.rgba.b],
-					alphaRange: [1, 1],
-			  }
-			: undefined
-		return createShereDatas(
-			this._modelParam.radius,
-			this._modelParam.meridianCount,
-			this._modelParam.latitudeCount,
-			colorSetting,
-			this._modelParam.offsetX,
-			this._modelParam.offsetY,
-			this._modelParam.offsetZ
-		)
-	}
-}
-
-class Program3 {
+class Program1 {
 	static isRender = true
 	static containerElement
 	static profile = {
 		autoTransformation: false,
-		offscreenWidth: 2048,
-		offscreenHeight: 2048,
 		/**
 		 * 视图矩阵参数
 		 */
@@ -175,6 +109,7 @@ class Program3 {
 				z: 0,
 			},
 		},
+		projectionType: 1,
 		/**
 		 * 透视投影矩阵参数
 		 */
@@ -185,13 +120,31 @@ class Program3 {
 			far: 300,
 		},
 		/**
+		 * 正交投影矩阵参数
+		 */
+		orthoProjection: {
+			left: -1,
+			right: 1,
+			bottom: -1,
+			top: 1,
+			near: -100,
+			far: 100,
+		},
+		/**
 		 * 光照参数
 		 */
 		light: {
+			illuType: 1,
+			intensityGain: 1.0,
+			direction: {
+				x: 0.5,
+				y: 3.0,
+				z: 4.0,
+			},
 			position: {
 				x: 1.0,
-				y: 7.0,
-				z: 2.5,
+				y: 2.0,
+				z: 1.5,
 			},
 			color: {
 				r: 255,
@@ -217,18 +170,16 @@ class Program3 {
 		this.containerElement = containerElement
 		this.glControl = {
 			gl: this.glControl.gl || null,
-			modelInstances1: [],
-			vertexFeatureSize1: 0,
-			modelInstances2: [],
-			vertexFeatureSize2: 0,
+			modelInstances: [],
+			vertexFeatureSize: 0,
 		}
 		this.initFormView()
 		this.eventHandle()
-		this.initModelModelDatas()
 	}
 
 	static initFormView() {
 		const self = this
+		const modelSelectorSelectElement = this.containerElement.querySelector(`[data-tag-name="modelSelector"]`)
 		const modelRotationRangeXElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeX"]`)
 		const modelRotationXShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeXShow"]`)
 		const modelRotationRangeYElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeY"]`)
@@ -243,12 +194,17 @@ class Program3 {
 		const modelOffsetZShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeZShow"]`)
 		const modelScaleRangeElement = this.containerElement.querySelector(`[data-tag-name="modelScaleRange"]`)
 		const modelScaleRangeShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelScaleRangeShow"]`)
+		const projectionTypeRadioElements = this.containerElement.querySelectorAll(`[data-tag-name="projectionType"]`)
 		const persProjectionFovyRangeElement = this.containerElement.querySelector(`[data-tag-name="persProjectionFovy"]`)
 		const persProjectionFovyShowSpanElement = this.containerElement.querySelector(`[data-tag-name="persProjectionFovyShow"]`)
 		const persProjectionNearRangeElement = this.containerElement.querySelector(`[data-tag-name="persProjectionNear"]`)
 		const persProjectionNearShowSpanElement = this.containerElement.querySelector(`[data-tag-name="persProjectionNearShow"]`)
 		const persProjectionFarRangeElement = this.containerElement.querySelector(`[data-tag-name="persProjectionFar"]`)
 		const persProjectionFarShowSpanElement = this.containerElement.querySelector(`[data-tag-name="persProjectionFarShow"]`)
+		const orthoProjectionNearRangeElement = this.containerElement.querySelector(`[data-tag-name="orthoProjectionNear"]`)
+		const orthoProjectionNearShowSpanElement = this.containerElement.querySelector(`[data-tag-name="orthoProjectionNearShow"]`)
+		const orthoProjectionFarRangeElement = this.containerElement.querySelector(`[data-tag-name="orthoProjectionFar"]`)
+		const orthoProjectionFarShowSpanElement = this.containerElement.querySelector(`[data-tag-name="orthoProjectionFarShow"]`)
 		const lookAtMatrix4EyePositionXRangeElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4EyePositionX"]`)
 		const lookAtMatrix4EyePositionXShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4EyePositionXShow"]`)
 		const lookAtMatrix4EyePositionYRangeElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4EyePositionY"]`)
@@ -263,12 +219,27 @@ class Program3 {
 		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4AtPositionZShow"]`)
 		const lightColorPickElement = this.containerElement.querySelector(`[data-tag-name="lightColor"]`)
 		const lightColorShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lightColorShow"]`)
+		const lightIlluTypeRadioElements = this.containerElement.querySelectorAll(`[data-tag-name="lightIlluType"]`)
 		const lightPositionRangeXRangeElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeX"]`)
 		const lightPositionRangeXShowElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeXShow"]`)
 		const lightPositionRangeYRangeElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeY"]`)
 		const lightPositionRangeYShowElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeYShow"]`)
 		const lightPositionRangeZRangeElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeZ"]`)
 		const lightPositionRangeZShowElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeZShow"]`)
+		const lightDirectionRangeXRangeElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeX"]`)
+		const lightDirectionRangeXShowElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeXShow"]`)
+		const lightDirectionRangeYRangeElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeY"]`)
+		const lightDirectionRangeYShowElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeYShow"]`)
+		const lightDirectionRangeZRangeElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeZ"]`)
+		const lightDirectionRangeZShowElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeZShow"]`)
+		const ambientLightRangeRRangeElement = this.containerElement.querySelector(`[data-tag-name="ambientLightRangeR"]`)
+		const ambientLightRShowSpanElement = this.containerElement.querySelector(`[data-tag-name="ambientLightRShow"]`)
+		const ambientLightRangeGRangeElement = this.containerElement.querySelector(`[data-tag-name="ambientLightRangeG"]`)
+		const ambientLightRangeGShowSpanElement = this.containerElement.querySelector(`[data-tag-name="ambientLightGShow"]`)
+		const ambientLightRangeBRangeElement = this.containerElement.querySelector(`[data-tag-name="ambientLightRangeB"]`)
+		const ambientLightRangeBShowSpanElement = this.containerElement.querySelector(`[data-tag-name="ambientLightBShow"]`)
+		const lightIntensityGainRangeRangeElement = this.containerElement.querySelector(`[data-tag-name="lightIntensityGainRange"]`)
+		const lightIntensityGainRangeShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lightIntensityGainRangeShow"]`)
 		const autoTransformationCheckboxElement = this.containerElement.querySelector(`[data-tag-name="autoTransformation"]`)
 
 		modelRotationXShowSpanElement.textContent = modelRotationRangeXElement.value = 0
@@ -278,9 +249,16 @@ class Program3 {
 		modelOffsetYShowSpanElement.textContent = modelOffsetRangeYElement.value = 0
 		modelOffsetZShowSpanElement.textContent = modelOffsetRangeZElement.value = 0
 		modelScaleRangeShowSpanElement.textContent = modelScaleRangeElement.value = 1
+		projectionTypeRadioElements.forEach(itemElement => {
+			const name = this.containerElement.id + '_' + itemElement.getAttribute('data-tag-name')
+			itemElement.setAttribute('name', name)
+			itemElement.checked = itemElement.value === String(self.profile.projectionType)
+		})
 		persProjectionFovyShowSpanElement.textContent = persProjectionFovyRangeElement.value = self.profile.persProjection.fovy
 		persProjectionNearShowSpanElement.textContent = persProjectionNearRangeElement.value = self.profile.persProjection.near
 		persProjectionFarShowSpanElement.textContent = persProjectionFarRangeElement.value = self.profile.persProjection.far
+		orthoProjectionNearShowSpanElement.textContent = orthoProjectionNearRangeElement.value = self.profile.orthoProjection.near
+		orthoProjectionFarShowSpanElement.textContent = orthoProjectionFarRangeElement.value = self.profile.orthoProjection.far
 		lookAtMatrix4EyePositionXShowSpanElement.textContent = lookAtMatrix4EyePositionXRangeElement.value = self.profile.lookAt.eyePosition.x
 		lookAtMatrix4EyePositionYShowSpanElement.textContent = lookAtMatrix4EyePositionYRangeElement.value = self.profile.lookAt.eyePosition.y
 		lookAtMatrix4EyePositionZShowSpanElement.textContent = lookAtMatrix4EyePositionZRangeElement.value = self.profile.lookAt.eyePosition.z
@@ -288,15 +266,32 @@ class Program3 {
 		lookAtMatrix4AtPositionYShowSpanElement.textContent = lookAtMatrix4AtPositionYRangeElement.value = self.profile.lookAt.atPosition.y
 		lookAtMatrix4AtPositionZShowSpanElement.textContent = lookAtMatrix4AtPositionZRangeElement.value = self.profile.lookAt.atPosition.z
 		lightColorShowSpanElement.textContent = lightColorPickElement.value = ven$rgba2Hex(self.profile.light.color)
+		lightIlluTypeRadioElements.forEach(itemElement => {
+			const name = this.containerElement.id + '_' + itemElement.getAttribute('data-tag-name')
+			itemElement.setAttribute('name', name)
+			itemElement.checked = itemElement.value === String(self.profile.light.illuType)
+		})
 		lightPositionRangeXShowElement.textContent = lightPositionRangeXRangeElement.value = self.profile.light.position.x
 		lightPositionRangeYShowElement.textContent = lightPositionRangeYRangeElement.value = self.profile.light.position.y
 		lightPositionRangeZShowElement.textContent = lightPositionRangeZRangeElement.value = self.profile.light.position.z
+		lightDirectionRangeXShowElement.textContent = lightDirectionRangeXRangeElement.value = self.profile.light.direction.x
+		lightDirectionRangeYShowElement.textContent = lightDirectionRangeYRangeElement.value = self.profile.light.direction.y
+		lightDirectionRangeZShowElement.textContent = lightDirectionRangeZRangeElement.value = self.profile.light.direction.z
+		ambientLightRShowSpanElement.textContent = ambientLightRangeRRangeElement.value = self.profile.light.ambient.r
+		ambientLightRangeGShowSpanElement.textContent = ambientLightRangeGRangeElement.value = self.profile.light.ambient.g
+		ambientLightRangeBShowSpanElement.textContent = ambientLightRangeBRangeElement.value = self.profile.light.ambient.b
+		lightIntensityGainRangeShowSpanElement.textContent = lightIntensityGainRangeRangeElement.value = self.profile.light.intensityGain
 		autoTransformationCheckboxElement.checked = self.profile.autoTransformation
+
+		this.toggleLightIlluTypeView()
+		this.toggleProjectionTypeView()
+		this.toggleModelModelDatas(modelSelectorSelectElement.value)
 	}
 
 	static eventHandle() {
 		const self = this
 		const canvasElement = this.containerElement.querySelector(`canvas`)
+		const modelSelectorSelectElement = this.containerElement.querySelector(`[data-tag-name="modelSelector"]`)
 		const modelRotationRangeXElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeX"]`)
 		const modelRotationRangeXShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeXShow"]`)
 		const modelRotationRangeYElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeY"]`)
@@ -311,12 +306,17 @@ class Program3 {
 		const modelOffsetRangeZShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeZShow"]`)
 		const modelScaleRangeElement = this.containerElement.querySelector(`[data-tag-name="modelScaleRange"]`)
 		const modelScaleRangeShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelScaleRangeShow"]`)
+		const projectionTypeRadioElements = this.containerElement.querySelectorAll(`[data-tag-name="projectionType"]`)
 		const persProjectionFovyRangeElement = this.containerElement.querySelector(`[data-tag-name="persProjectionFovy"]`)
 		const persProjectionFovyShowSpanElement = this.containerElement.querySelector(`[data-tag-name="persProjectionFovyShow"]`)
 		const persProjectionNearRangeElement = this.containerElement.querySelector(`[data-tag-name="persProjectionNear"]`)
 		const persProjectionNearShowSpanElement = this.containerElement.querySelector(`[data-tag-name="persProjectionNearShow"]`)
 		const persProjectionFarRangeElement = this.containerElement.querySelector(`[data-tag-name="persProjectionFar"]`)
 		const persProjectionFarShowSpanElement = this.containerElement.querySelector(`[data-tag-name="persProjectionFarShow"]`)
+		const orthoProjectionNearRangeElement = this.containerElement.querySelector(`[data-tag-name="orthoProjectionNear"]`)
+		const orthoProjectionNearShowSpanElement = this.containerElement.querySelector(`[data-tag-name="orthoProjectionNearShow"]`)
+		const orthoProjectionFarRangeElement = this.containerElement.querySelector(`[data-tag-name="orthoProjectionFar"]`)
+		const orthoProjectionFarShowSpanElement = this.containerElement.querySelector(`[data-tag-name="orthoProjectionFarShow"]`)
 		const lookAtMatrix4EyePositionXRangeElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4EyePositionX"]`)
 		const lookAtMatrix4EyePositionXShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4EyePositionXShow"]`)
 		const lookAtMatrix4EyePositionYRangeElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4EyePositionY"]`)
@@ -331,63 +331,90 @@ class Program3 {
 		const lookAtMatrix4AtPositionZShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lookAtMatrix4AtPositionZShow"]`)
 		const lightColorPickElement = this.containerElement.querySelector(`[data-tag-name="lightColor"]`)
 		const lightColorShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lightColorShow"]`)
+		const lightIlluTypeRadioElements = this.containerElement.querySelectorAll(`[data-tag-name="lightIlluType"]`)
 		const lightPositionRangeXRangeElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeX"]`)
 		const lightPositionRangeXShowElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeXShow"]`)
 		const lightPositionRangeYRangeElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeY"]`)
 		const lightPositionRangeYShowElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeYShow"]`)
 		const lightPositionRangeZRangeElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeZ"]`)
 		const lightPositionRangeZShowElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeZShow"]`)
+		const lightDirectionRangeXRangeElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeX"]`)
+		const lightDirectionRangeXShowElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeXShow"]`)
+		const lightDirectionRangeYRangeElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeY"]`)
+		const lightDirectionRangeYShowElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeYShow"]`)
+		const lightDirectionRangeZRangeElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeZ"]`)
+		const lightDirectionRangeZShowElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeZShow"]`)
+		const ambientLightRangeRRangeElement = this.containerElement.querySelector(`[data-tag-name="ambientLightRangeR"]`)
+		const ambientLightRShowSpanElement = this.containerElement.querySelector(`[data-tag-name="ambientLightRShow"]`)
+		const ambientLightRangeGRangeElement = this.containerElement.querySelector(`[data-tag-name="ambientLightRangeG"]`)
+		const ambientLightRangeGShowSpanElement = this.containerElement.querySelector(`[data-tag-name="ambientLightGShow"]`)
+		const ambientLightRangeBRangeElement = this.containerElement.querySelector(`[data-tag-name="ambientLightRangeB"]`)
+		const ambientLightRangeBShowSpanElement = this.containerElement.querySelector(`[data-tag-name="ambientLightBShow"]`)
+		const lightIntensityGainRangeRangeElement = this.containerElement.querySelector(`[data-tag-name="lightIntensityGainRange"]`)
+		const lightIntensityGainRangeShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lightIntensityGainRangeShow"]`)
 		const autoTransformationCheckboxElement = this.containerElement.querySelector(`[data-tag-name="autoTransformation"]`)
 
 		canvasElement.addEventListener('contextmenu', function (e) {
 			e.preventDefault()
 			e.stopPropagation()
 		})
+		modelSelectorSelectElement.addEventListener('change', function (e) {
+			self.toggleModelModelDatas(this.value)
+			self.isRender = true
+		})
+		projectionTypeRadioElements.forEach(itemElement => {
+			itemElement.addEventListener('change', function (e) {
+				self.profile.projectionType = +this.value
+				self.toggleProjectionTypeView()
+				console.log('projectionType:', self.profile.projectionType)
+				self.isRender = true
+			})
+		})
 		modelRotationRangeXElement.addEventListener('input', function (e) {
 			modelRotationRangeXShowSpanElement.textContent = +this.value
-			;[...self.glControl.modelInstances1, ...self.glControl.modelInstances2].forEach(modelInstanceItem => {
+			self.glControl.modelInstances.forEach(modelInstanceItem => {
 				modelInstanceItem.modelRatation.x = +this.value
 			})
 			self.isRender = true
 		})
 		modelRotationRangeYElement.addEventListener('input', function (e) {
 			modelRotationRangeYShowSpanElement.textContent = +this.value
-			;[...self.glControl.modelInstances1, ...self.glControl.modelInstances2].forEach(modelInstanceItem => {
+			self.glControl.modelInstances.forEach(modelInstanceItem => {
 				modelInstanceItem.modelRatation.y = +this.value
 			})
 			self.isRender = true
 		})
 		modelRotationRangeZElement.addEventListener('input', function (e) {
 			modelRotationRangeZShowSpanElement.textContent = +this.value
-			;[...self.glControl.modelInstances1, ...self.glControl.modelInstances2].forEach(modelInstanceItem => {
+			self.glControl.modelInstances.forEach(modelInstanceItem => {
 				modelInstanceItem.modelRatation.z = +this.value
 			})
 			self.isRender = true
 		})
 		modelOffsetRangeXElement.addEventListener('input', function (e) {
 			modelOffsetRangeXShowSpanElement.textContent = +this.value
-			;[...self.glControl.modelInstances1, ...self.glControl.modelInstances2].forEach(modelInstanceItem => {
+			self.glControl.modelInstances.forEach(modelInstanceItem => {
 				modelInstanceItem.modelOffset.x = +this.value
 			})
 			self.isRender = true
 		})
 		modelOffsetRangeYElement.addEventListener('input', function (e) {
 			modelOffsetRangeYShowSpanElement.textContent = +this.value
-			;[...self.glControl.modelInstances1, ...self.glControl.modelInstances2].forEach(modelInstanceItem => {
+			self.glControl.modelInstances.forEach(modelInstanceItem => {
 				modelInstanceItem.modelOffset.y = +this.value
 			})
 			self.isRender = true
 		})
 		modelOffsetRangeZElement.addEventListener('input', function (e) {
 			modelOffsetRangeZShowSpanElement.textContent = +this.value
-			;[...self.glControl.modelInstances1, ...self.glControl.modelInstances2].forEach(modelInstanceItem => {
+			self.glControl.modelInstances.forEach(modelInstanceItem => {
 				modelInstanceItem.modelOffset.z = +this.value
 			})
 			self.isRender = true
 		})
 		modelScaleRangeElement.addEventListener('input', function (e) {
 			modelScaleRangeShowSpanElement.textContent = +this.value
-			;[...self.glControl.modelInstances1, ...self.glControl.modelInstances2].forEach(modelInstanceItem => {
+			self.glControl.modelInstances.forEach(modelInstanceItem => {
 				modelInstanceItem.modelScale.x = +this.value
 				modelInstanceItem.modelScale.y = +this.value
 				modelInstanceItem.modelScale.z = +this.value
@@ -407,6 +434,16 @@ class Program3 {
 		persProjectionFarRangeElement.addEventListener('input', function (e) {
 			persProjectionFarShowSpanElement.textContent = self.profile.persProjection.far = +this.value
 			console.log('persProjection:', JSON.stringify(self.profile.persProjection))
+			self.isRender = true
+		})
+		orthoProjectionNearRangeElement.addEventListener('input', function (e) {
+			orthoProjectionNearShowSpanElement.textContent = self.profile.orthoProjection.near = +this.value
+			console.log('orthoProjection:', JSON.stringify(self.profile.orthoProjection))
+			self.isRender = true
+		})
+		orthoProjectionFarRangeElement.addEventListener('input', function (e) {
+			orthoProjectionFarShowSpanElement.textContent = self.profile.orthoProjection.far = +this.value
+			console.log('orthoProjection:', JSON.stringify(self.profile.orthoProjection))
 			self.isRender = true
 		})
 		lookAtMatrix4EyePositionXRangeElement.addEventListener('input', function (e) {
@@ -448,6 +485,14 @@ class Program3 {
 			console.log('light.color:', JSON.stringify(self.profile.light.color))
 			self.isRender = true
 		})
+		lightIlluTypeRadioElements.forEach(itemElement => {
+			itemElement.addEventListener('change', function (e) {
+				self.profile.light.illuType = +this.value
+				self.toggleLightIlluTypeView()
+				console.log('light.illuType:', self.profile.light.illuType)
+				self.isRender = true
+			})
+		})
 		lightPositionRangeXRangeElement.addEventListener('input', function (e) {
 			lightPositionRangeXShowElement.textContent = self.profile.light.position.x = +this.value
 			console.log('light.position:', JSON.stringify(self.profile.light.position))
@@ -463,27 +508,116 @@ class Program3 {
 			console.log('light.position:', JSON.stringify(self.profile.light.position))
 			self.isRender = true
 		})
+		lightDirectionRangeXRangeElement.addEventListener('input', function (e) {
+			lightDirectionRangeXShowElement.textContent = self.profile.light.direction.x = +this.value
+			console.log('light.direction:', JSON.stringify(self.profile.light.direction))
+			self.isRender = true
+		})
+		lightDirectionRangeYRangeElement.addEventListener('input', function (e) {
+			lightDirectionRangeYShowElement.textContent = self.profile.light.direction.y = +this.value
+			console.log('light.direction:', JSON.stringify(self.profile.light.direction))
+			self.isRender = true
+		})
+		lightDirectionRangeZRangeElement.addEventListener('input', function (e) {
+			lightDirectionRangeZShowElement.textContent = self.profile.light.direction.z = +this.value
+			console.log('light.direction:', JSON.stringify(self.profile.light.direction))
+			self.isRender = true
+		})
+		ambientLightRangeRRangeElement.addEventListener('input', function (e) {
+			ambientLightRShowSpanElement.textContent = self.profile.light.ambient.r = +this.value
+			console.log('light.ambient:', JSON.stringify(self.profile.light.ambient))
+			self.isRender = true
+		})
+		ambientLightRangeGRangeElement.addEventListener('input', function (e) {
+			ambientLightRangeGShowSpanElement.textContent = self.profile.light.ambient.g = +this.value
+			console.log('light.ambient:', JSON.stringify(self.profile.light.ambient))
+			self.isRender = true
+		})
+		ambientLightRangeBRangeElement.addEventListener('input', function (e) {
+			ambientLightRangeBShowSpanElement.textContent = self.profile.light.ambient.b = +this.value
+			console.log('light.ambient:', JSON.stringify(self.profile.light.ambient))
+			self.isRender = true
+		})
+		lightIntensityGainRangeRangeElement.addEventListener('input', function (e) {
+			lightIntensityGainRangeShowSpanElement.textContent = self.profile.light.intensityGain = +this.value
+			console.log('light.intensityGain:', self.profile.light.intensityGain)
+			self.isRender = true
+		})
 		autoTransformationCheckboxElement.addEventListener('change', function (e) {
 			self.profile.autoTransformation = this.checked
 			self.isRender = true
 		})
 	}
 
-	static initModelModelDatas() {
-		this.glControl.modelInstances1 = [new Triangle3()]
-		this.glControl.modelInstances1.forEach(modelInstanceItem => {
+	static toggleLightIlluTypeView() {
+		const lightPositionRangeXRangeElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeX"]`)
+		const lightPositionRangeYRangeElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeY"]`)
+		const lightPositionRangeZRangeElement = this.containerElement.querySelector(`[data-tag-name="lightPositionRangeZ"]`)
+		const lightDirectionRangeXRangeElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeX"]`)
+		const lightDirectionRangeYRangeElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeY"]`)
+		const lightDirectionRangeZRangeElement = this.containerElement.querySelector(`[data-tag-name="lightDirectionRangeZ"]`)
+		if (this.profile.light.illuType === 1) {
+			lightPositionRangeXRangeElement.parentElement.style.display = 'none'
+			lightPositionRangeYRangeElement.parentElement.style.display = 'none'
+			lightPositionRangeZRangeElement.parentElement.style.display = 'none'
+			lightDirectionRangeXRangeElement.parentElement.style.display = 'flex'
+			lightDirectionRangeYRangeElement.parentElement.style.display = 'flex'
+			lightDirectionRangeZRangeElement.parentElement.style.display = 'flex'
+		}
+		if (this.profile.light.illuType === 2) {
+			lightDirectionRangeXRangeElement.parentElement.style.display = 'none'
+			lightDirectionRangeYRangeElement.parentElement.style.display = 'none'
+			lightDirectionRangeZRangeElement.parentElement.style.display = 'none'
+			lightPositionRangeXRangeElement.parentElement.style.display = 'flex'
+			lightPositionRangeYRangeElement.parentElement.style.display = 'flex'
+			lightPositionRangeZRangeElement.parentElement.style.display = 'flex'
+		}
+	}
+
+	static toggleProjectionTypeView() {
+		const persProjectionFovyRangeElement = this.containerElement.querySelector(`[data-tag-name="persProjectionFovy"]`)
+		const persProjectionNearRangeElement = this.containerElement.querySelector(`[data-tag-name="persProjectionNear"]`)
+		const persProjectionFarRangeElement = this.containerElement.querySelector(`[data-tag-name="persProjectionFar"]`)
+		const orthoProjectionNearRangeElement = this.containerElement.querySelector(`[data-tag-name="orthoProjectionNear"]`)
+		const orthoProjectionFarRangeElement = this.containerElement.querySelector(`[data-tag-name="orthoProjectionFar"]`)
+		if (this.profile.projectionType === 1) {
+			orthoProjectionNearRangeElement.parentElement.style.display = 'none'
+			orthoProjectionFarRangeElement.parentElement.style.display = 'none'
+			persProjectionFovyRangeElement.parentElement.style.display = 'flex'
+			persProjectionNearRangeElement.parentElement.style.display = 'flex'
+			persProjectionFarRangeElement.parentElement.style.display = 'flex'
+		}
+		if (this.profile.projectionType === 2) {
+			persProjectionFovyRangeElement.parentElement.style.display = 'none'
+			persProjectionNearRangeElement.parentElement.style.display = 'none'
+			persProjectionFarRangeElement.parentElement.style.display = 'none'
+			orthoProjectionNearRangeElement.parentElement.style.display = 'flex'
+			orthoProjectionFarRangeElement.parentElement.style.display = 'flex'
+		}
+	}
+
+	static toggleModelModelDatas(modelType) {
+		this.glControl.modelInstances = []
+		switch (modelType) {
+			case 'model1': {
+				break
+			}
+		}
+		this.glControl.modelInstances.forEach(modelInstanceItem => {
+			modelInstanceItem.normalBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
 			modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
-			modelInstanceItem.modelMatrix = Ven$CanvasMatrix4.initMatrix()
+			modelInstanceItem.texCoordBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
 		})
-		this.glControl.vertexFeatureSize1 = this.getVertexFeatureSize(this.glControl.modelInstances1)
-		/* ... */
-		// this.glControl.modelInstances2 = [new ShereModel3(1.0, 50, 50)]
-		this.glControl.modelInstances2 = [new Plane3()]
-		this.glControl.modelInstances2.forEach(modelInstanceItem => {
-			modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
-			modelInstanceItem.modelMatrix = Ven$CanvasMatrix4.initMatrix()
-		})
-		this.glControl.vertexFeatureSize2 = this.getVertexFeatureSize(this.glControl.modelInstances2)
+		this.glControl.vertexFeatureSize = this.getVertexFeatureSize(this.glControl.modelInstances)
+	}
+
+	static createtCubeModelDatas(width, length, depth, offsetX = 0, offsetY = 0, offsetZ = 0, color = '#ffffff') {
+		const modelInstances = []
+		const model1 = new CubeModel1(width, length, depth, color, 0 + offsetX, 0 + offsetY, 0 + offsetZ)
+		modelInstances.push(model1)
+		return {
+			modelInstances,
+		}
 	}
 
 	static getVertexFeatureSize(modelInstances) {
@@ -495,143 +629,123 @@ class Program3 {
 	}
 }
 
-function drawCanvas3(containerElement) {
+function drawCanvas1(containerElement) {
 	const canvasElement = containerElement.querySelector('canvas')
-	Program3.glControl.gl = ven$initWebGLContext(canvasElement)
-	Program3.init(containerElement)
+	Program1.glControl.gl = ven$initWebGLContext(canvasElement)
+	Program1.init(containerElement)
 
-	/**
-	 * 阴影绘制着色器
-	 *
-	 * 		gl_FragCoord.z = (gl_Position.xyz / gl_Position.w) / 2.0 + 0.5 归一化至 [0.0, 1.0]
-	 */
-	const SHADOW_VERTEX_SHADER = `
-		precision highp float;
+	const COMMON_VERTEX_SHADER = `
+		precision mediump float;
 		varying vec4 v_Color;
+		varying vec3 v_Normal;
+		varying vec3 v_Position;
+		varying float v_Dist;
 		// 顶点配置(组)
 		attribute vec3 a_Position;
 		attribute vec4 a_Color;
+		attribute vec3 a_Normal;
 		// 变换矩阵(组)
+		uniform mat4 u_NormalMatrix;
 		uniform mat4 u_ModelMatrix;
 		uniform mat4 u_ViewMatrix;
 		uniform mat4 u_ProjMatrix;
-		void main() {
-			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
-			v_Color = a_Color;
-		}
-	`
-	const SHADOW_FRAGMENT_SHADER = `
-		precision highp float;
-		void main() {
-			const vec4 bitShift = vec4(1.0, 256.0, 256.0 * 256.0, 256.0 * 256.0 * 256.0);
-			const vec4 bitMask = vec4(1.0 / 256.0, 1.0 / 256.0, 1.0 / 256.0, 0.0);
-			vec4 rgbaDepth = fract(gl_FragCoord.z * bitShift);
-			rgbaDepth -= rgbaDepth.gbaa * bitMask;
-			gl_FragColor = rgbaDepth;
-		}
-	`
-	/**
-	 * 正常绘制着色器
-	 */
-	const MAIN_VERTEX_SHADER = `
-		precision highp float;
-		varying vec4 v_Color;
-		varying vec4 v_PositionFromLight;
-		// 顶点配置(组)
-		attribute vec3 a_Position;
-		attribute vec4 a_Color;
-		// 变换矩阵(组)
-		uniform mat4 u_ModelMatrix;
-		uniform mat4 u_ViewMatrix;
-		uniform mat4 u_ProjMatrix;
-		uniform mat4 u_ModelMatrixFromLight;
-		uniform mat4 u_ViewMatrixFromLight;
-		uniform mat4 u_ProjMatrixFromLight;
-		void main() {
-			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
-			v_PositionFromLight = u_ProjMatrixFromLight * u_ViewMatrixFromLight * u_ModelMatrixFromLight * vec4(a_Position, 1.0);
-			v_Color = a_Color;
-		}
-	`
-	const MAIN_FRAGMENT_SHADER = `
-		precision highp float;
-		varying vec4 v_PositionFromLight;
-		varying vec4 v_Color;
 		// 参数(组)
-		uniform sampler2D u_ShadowMap;
-		float unpackDepth(const in vec4 rgbaDepth) {
-			const vec4 bitShift = vec4(1.0, 1.0 / 256.0, 1.0 / (256.0 * 256.0), 1.0 / (256.0 * 256.0 * 256.0));
-			float depth = dot(rgbaDepth, bitShift);
-			return depth;
-		}
+		uniform vec3 u_Eye;
 		void main() {
-			vec3 shadowCoord = (v_PositionFromLight.xyz / v_PositionFromLight.w) / 2.0 + 0.5;
-			vec4 rgbaDepth = texture2D(u_ShadowMap, shadowCoord.xy);
-			float depth = unpackDepth(rgbaDepth);
-			float visibility = (shadowCoord.z > depth + 0.0015) ? 0.7 : 1.0;
-			gl_FragColor = vec4(v_Color.rgb * visibility, v_Color.a);
+			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
+			// 计算顶点的世界坐标
+			v_Position = vec3(u_ModelMatrix * vec4(a_Position, 1.0));
+			// 根据法线变换矩阵重新计算法线坐标并归一化
+			v_Normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1.0)));
+			v_Color = a_Color;
+			// 计算顶点(世界坐标系)到视点的距离
+			// v_Dist = distance(u_ModelMatrix * vec4(a_Position, 1.0), vec4(u_Eye, 1.0));
+			v_Dist = gl_Position.w;
+		}
+	`
+	const COMMON_FRAGMENT_SHADER = `
+		precision mediump float;
+		varying vec4 v_Color;
+		varying vec3 v_Normal;
+		varying vec3 v_Position;
+		// 参数(组)
+		uniform float u_lightIntensityGain;
+		uniform float u_illuType;
+		// 点光配置(组)
+		uniform vec3 u_LightPosition;
+		uniform vec3 u_LightDirection;
+		uniform vec3 u_LightColor;
+		uniform vec3 u_AmbientLightColor;
+		void main() {
+			float nDotL;
+			vec3 normal;
+			vec3 diffuse;
+			vec3 lightDirection;
+			vec3 ambientMixinColor;
+			if (u_illuType == 1.0) {  // 平行光
+				normal = normalize(v_Normal);
+				// 计算光线方向与法线的点积
+				nDotL = max(dot(u_LightDirection, normal), 0.0);
+				// 计算漫反射光和环境光的色值
+				diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
+				gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
+				// ambientMixinColor = diffuse + u_AmbientLightColor * v_Color.rgb;;
+				// fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
+				// gl_FragColor = vec4(fogMixinColor, v_Color.a);
+			} else {  // 点光
+				normal = normalize(v_Normal);
+				// 计算光线方向并归一化
+				lightDirection = normalize(u_LightPosition - v_Position);
+				// 计算光线方向与法线的点积
+				nDotL = max(dot(lightDirection, normal), 0.0);
+				// 计算漫反射光和环境光的色值
+				diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
+				gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
+				// ambientMixinColor = diffuse + u_AmbientLightColor * v_Color.rgb;
+				// fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
+				// gl_FragColor = vec4(fogMixinColor, v_Color.a);
+			}
 		}
 	`
 
-	Program3.glControl.gl.clearColor(
-		Program3.profile.clearColor.r / 255,
-		Program3.profile.clearColor.g / 255,
-		Program3.profile.clearColor.b / 255,
+	Program1.glControl.gl.clearColor(
+		Program1.profile.clearColor.r / 255,
+		Program1.profile.clearColor.g / 255,
+		Program1.profile.clearColor.b / 255,
 		1.0
 	)
-	Program3.glControl.gl.clear(Program3.glControl.gl.COLOR_BUFFER_BIT | Program3.glControl.gl.DEPTH_BUFFER_BIT)
-	Program3.glControl.gl.enable(Program3.glControl.gl.BLEND)
-	Program3.glControl.gl.enable(Program3.glControl.gl.CULL_FACE)
-	Program3.glControl.gl.enable(Program3.glControl.gl.DEPTH_TEST)
-	Program3.glControl.gl.enable(Program3.glControl.gl.POLYGON_OFFSET_FILL)
-	Program3.glControl.gl.polygonOffset(1.0, 1.0)
-	// Program3.glControl.gl.blendFunc(Program3.glControl.gl.SRC_ALPHA, Program3.glControl.gl.ONE_MINUS_SRC_ALPHA)
+	Program1.glControl.gl.clear(Program1.glControl.gl.COLOR_BUFFER_BIT | Program1.glControl.gl.DEPTH_BUFFER_BIT)
+	Program1.glControl.gl.enable(Program1.glControl.gl.BLEND)
+	Program1.glControl.gl.enable(Program1.glControl.gl.CULL_FACE)
+	Program1.glControl.gl.enable(Program1.glControl.gl.DEPTH_TEST)
+	Program1.glControl.gl.enable(Program1.glControl.gl.POLYGON_OFFSET_FILL)
+	Program1.glControl.gl.polygonOffset(1.0, 1.0)
+	// Program1.glControl.gl.blendFunc(Program1.glControl.gl.SRC_ALPHA, Program1.glControl.gl.ONE_MINUS_SRC_ALPHA)
 
-	Program3.glControl.shadow = {
-		glAttributes: {},
-		glUniforms: {},
-		program: null,
-	}
-	Program3.glControl.main = {
-		isLoadTexture: false,
+	Program1.glControl.commonLight = {
 		glAttributes: {},
 		glUniforms: {},
 		program: null,
 	}
 
-	Program3.glControl.shadow.program = ven$createProgram(Program3.glControl.gl, SHADOW_VERTEX_SHADER, SHADOW_FRAGMENT_SHADER)
-	const commonWebGLVariableLocation = ven$getWebGLVariableLocation(Program3.glControl.gl, Program3.glControl.shadow.program, {
-		glAttributes: ['a_Position', 'a_Color'],
-		glUniforms: ['u_ModelMatrix', 'u_ViewMatrix', 'u_ProjMatrix'],
-	})
-	Program3.glControl.shadow.glAttributes = commonWebGLVariableLocation.glAttributes
-	Program3.glControl.shadow.glUniforms = commonWebGLVariableLocation.glUniforms
-
-	Program3.glControl.main.program = ven$createProgram(Program3.glControl.gl, MAIN_VERTEX_SHADER, MAIN_FRAGMENT_SHADER)
-	const textureWebGLVariableLocation = ven$getWebGLVariableLocation(Program3.glControl.gl, Program3.glControl.main.program, {
-		glAttributes: ['a_Position', 'a_Color'],
+	Program1.glControl.commonLight.program = ven$createProgram(Program1.glControl.gl, COMMON_VERTEX_SHADER, COMMON_FRAGMENT_SHADER)
+	const commonWebGLVariableLocation = ven$getWebGLVariableLocation(Program1.glControl.gl, Program1.glControl.commonLight.program, {
+		glAttributes: ['a_Normal', 'a_Position', 'a_Color'],
 		glUniforms: [
+			'u_illuType',
+			'u_LightColor',
+			'u_LightPosition',
+			'u_LightDirection',
+			'u_AmbientLightColor',
+			'u_lightIntensityGain',
+			'u_NormalMatrix',
 			'u_ModelMatrix',
 			'u_ViewMatrix',
 			'u_ProjMatrix',
-			'u_ModelMatrixFromLight',
-			'u_ViewMatrixFromLight',
-			'u_ProjMatrixFromLight',
-			'u_ShadowMap',
 		],
 	})
-	Program3.glControl.main.glAttributes = textureWebGLVariableLocation.glAttributes
-	Program3.glControl.main.glUniforms = textureWebGLVariableLocation.glUniforms
-
-	const { frameBuffer: frameBuffer, texture: frameTexture } = ven$initFramebufferObject(
-		Program3.glControl.gl,
-		Program3.profile.offscreenWidth,
-		Program3.profile.offscreenHeight
-	)
-	Program3.glControl.main.frameBuffer = frameBuffer
-	Program3.glControl.main.frameTexture = frameTexture
-	Program3.glControl.gl.activeTexture(Program3.glControl.gl.TEXTURE0)
-	Program3.glControl.gl.bindTexture(Program3.glControl.gl.TEXTURE_2D, Program3.glControl.main.frameTexture)
+	Program1.glControl.commonLight.glAttributes = commonWebGLVariableLocation.glAttributes
+	Program1.glControl.commonLight.glUniforms = commonWebGLVariableLocation.glUniforms
 
 	const canvas = {
 		status: null,
@@ -644,75 +758,89 @@ function drawCanvas3(containerElement) {
 			gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer)
 		},
 		clear(gl) {
-			if (this.status === 'FRAME_BUFFER') {
-				gl.viewport(0, 0, Program3.profile.offscreenWidth, Program3.profile.offscreenHeight)
-				gl.clearColor(0.0, 0.0, 0.0, 1.0)
-				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-			} else {
-				gl.viewport(0, 0, canvasElement.width, canvasElement.height)
-				gl.clearColor(0.0, 0.0, 0.0, 1.0)
-				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-			}
+			gl.viewport(0, 0, canvasElement.width, canvasElement.height)
+			gl.clearColor(0.0, 0.0, 0.0, 1.0)
+			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		},
 		setProfile(gl, itemProgramControl) {
 			const { glUniforms } = itemProgramControl
 
-			let projectionMatrix4 = Ven$CanvasMatrix4.initMatrix()
-			let lookAtMatrix4 = Ven$CanvasMatrix4.initMatrix()
-			if (this.status === 'FRAME_BUFFER') {
-				projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
-					Program3.profile.persProjection.fovy * 2,
-					Program3.profile.offscreenWidth / Program3.profile.offscreenHeight,
-					Program3.profile.persProjection.near,
-					Program3.profile.persProjection.far
+			const projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
+				Program1.profile.persProjection.fovy,
+				Program1.profile.persProjection.aspect,
+				Program1.profile.persProjection.near,
+				Program1.profile.persProjection.far
+			)
+			const orthoMatrix4 = Ven$CanvasMatrix4.setOrtho(
+				Program1.profile.orthoProjection.left,
+				Program1.profile.orthoProjection.right,
+				Program1.profile.orthoProjection.bottom,
+				Program1.profile.orthoProjection.top,
+				Program1.profile.orthoProjection.near,
+				Program1.profile.orthoProjection.far
+			)
+			const lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
+				new Ven$Vector3(Program1.profile.lookAt.eyePosition.x, Program1.profile.lookAt.eyePosition.y, Program1.profile.lookAt.eyePosition.z),
+				new Ven$Vector3(Program1.profile.lookAt.atPosition.x, Program1.profile.lookAt.atPosition.y, Program1.profile.lookAt.atPosition.z),
+				new Ven$Vector3(0, 1, 0)
+			)
+
+			gl.uniform1f(glUniforms.u_illuType, Program1.profile.light.illuType)
+			if (Program1.profile.light.illuType === 1) {
+				const lightDirection = new Ven$Vector3(
+					Program1.profile.light.direction.x,
+					Program1.profile.light.direction.y,
+					Program1.profile.light.direction.z
 				)
-				lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
-					new Ven$Vector3(Program3.profile.light.position.x, Program3.profile.light.position.y, Program3.profile.light.position.z),
-					new Ven$Vector3(Program3.profile.lookAt.atPosition.x, Program3.profile.lookAt.atPosition.y, Program3.profile.lookAt.atPosition.z),
-					new Ven$Vector3(0, 1, 0)
-				)
-			} else {
-				projectionMatrix4 = Ven$CanvasMatrix4.setPerspective(
-					Program3.profile.persProjection.fovy,
-					canvasElement.width / canvasElement.height,
-					Program3.profile.persProjection.near,
-					Program3.profile.persProjection.far
-				)
-				lookAtMatrix4 = Ven$CanvasMatrix4.setLookAt(
-					new Ven$Vector3(
-						Program3.profile.lookAt.eyePosition.x,
-						Program3.profile.lookAt.eyePosition.y,
-						Program3.profile.lookAt.eyePosition.z
-					),
-					new Ven$Vector3(Program3.profile.lookAt.atPosition.x, Program3.profile.lookAt.atPosition.y, Program3.profile.lookAt.atPosition.z),
-					new Ven$Vector3(0, 1, 0)
+				const lightNormalizeDirection = lightDirection.normalize()
+				gl.uniform3fv(
+					glUniforms.u_LightDirection,
+					new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z])
 				)
 			}
-
+			if (Program1.profile.light.illuType === 2) {
+				gl.uniform3fv(
+					glUniforms.u_LightPosition,
+					new Float32Array([Program1.profile.light.position.x, Program1.profile.light.position.y, Program1.profile.light.position.z])
+				)
+			}
+			gl.uniform3f(
+				glUniforms.u_LightColor,
+				Program1.profile.light.color.r / 255,
+				Program1.profile.light.color.g / 255,
+				Program1.profile.light.color.b / 255
+			)
+			gl.uniform1f(glUniforms.u_lightIntensityGain, Program1.profile.light.intensityGain)
+			gl.uniform3f(
+				glUniforms.u_AmbientLightColor,
+				Program1.profile.light.ambient.r,
+				Program1.profile.light.ambient.g,
+				Program1.profile.light.ambient.b
+			)
 			gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
-			gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
-			return {
-				projectionMatrix4,
-				lookAtMatrix4,
+			if (Program1.profile.projectionType === 1) {
+				gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
+			}
+			if (Program1.profile.projectionType === 2) {
+				gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(orthoMatrix4.data))
 			}
 		},
 		render(gl, vertexFeatureSize, modelInstances, itemProgramControl) {
-			const { glUniforms } = itemProgramControl
-
-			if (this.status === 'CANVAS') {
-				gl.uniform1i(glUniforms.u_ShadowMap, 0)
-			}
 			modelInstances.forEach(modelInstanceItem => {
-				const modelEffectMatrix4 = this.applyModelMatrix(gl, modelInstanceItem, itemProgramControl)
-				modelInstanceItem.modelMatrix = modelEffectMatrix4
+				this.applyModelMatrix(gl, modelInstanceItem, itemProgramControl)
 				this.drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl)
 			})
 		},
 		drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl) {
-			const { featureBuffer, vertexDatas } = modelInstanceItem
-			const { vertexFeature: featureData } = vertexDatas
-			const { glAttributes, frameTexture } = itemProgramControl
+			const { normalBuffer, featureBuffer, texCoordBuffer, vertexDatas } = modelInstanceItem
+			const { vertexNormals: normalData, vertexFeature: featureData, vertexCoordinate: texCoordData } = vertexDatas
+			const { glAttributes } = itemProgramControl
 
+			gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer)
+			gl.bufferData(gl.ARRAY_BUFFER, normalData, gl.STATIC_DRAW)
+			ven$initAttributeVariable(gl, glAttributes.a_Normal, normalBuffer, {
+				size: 3,
+			})
 			gl.bindBuffer(gl.ARRAY_BUFFER, featureBuffer)
 			gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
 			ven$initAttributeVariable(gl, glAttributes.a_Position, featureBuffer, {
@@ -724,7 +852,6 @@ function drawCanvas3(containerElement) {
 				stride: 28,
 				offset: 12,
 			})
-
 			gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
 		},
 		applyModelMatrix(gl, modelInstance, itemProgramControl) {
@@ -754,80 +881,40 @@ function drawCanvas3(containerElement) {
 				.multiply4(modelRotationZMatrix4)
 				.multiply4(modelScaleMatrix4)
 				.multiply4(modelOffsetMatrix4)
+			const modelEffectInverseMatrix4 = Ven$CanvasMatrix4.setInverse(modelEffectMatrix4)
+			const modelEffectInverseTransposeMatrix4 = Ven$CanvasMatrix4.setTranspose(modelEffectInverseMatrix4)
+			const normalMatrix4 = modelEffectInverseTransposeMatrix4
 
 			gl.uniformMatrix4fv(glUniforms.u_ModelMatrix, false, new Float32Array(modelEffectMatrix4.data))
-			return modelEffectMatrix4
+			gl.uniformMatrix4fv(glUniforms.u_NormalMatrix, false, new Float32Array(normalMatrix4.data))
 		},
 	}
 
 	const stepControl = new Ven$StepControl(0, 45, 360)
 	let angle = 0
 	const exec = () => {
-		if (!Program3.isRender) {
+		if (!Program1.isRender) {
 			window.requestAnimationFrame(exec)
 			stepControl.updateLastStamp()
 			return
 		}
-
-		const { glUniforms: shadowGlUniforms } = Program3.glControl.shadow
-		const { glUniforms: mainGlUniforms } = Program3.glControl.main
-
-		if (Program3.profile.autoTransformation) {
+		Program1.isRender = false
+		if (Program1.profile.autoTransformation) {
 			angle = stepControl.getNextValue() % 360
-			Program3.glControl.modelInstances1.forEach(modelInstanceItem => {
+			Program1.glControl.modelInstances.forEach(modelInstanceItem => {
 				modelInstanceItem.modelRatation.y = angle
 			})
-		} else {
-			Program3.isRender = false
+			Program1.isRender = true
 		}
-
-		/**
-		 * 使用帧缓冲区绘制纹理贴图
-		 * 		建立视点在光源处的综合变换矩阵(pvmMatrixFromLight)
-		 * 		利用片元着色器计算并保存各片元在光源坐标系下的 z 坐标值(深度值)
-		 * 		可以保存到颜色向量中的任意分量(例如 R 分量)中
-		 */
-		canvas.init('FRAME_BUFFER', Program3.glControl.gl, Program3.glControl.main.frameBuffer)
-		canvas.clear(Program3.glControl.gl)
-		Program3.glControl.gl.useProgram(Program3.glControl.shadow.program)
-		const { projectionMatrix4: s1ProjectionMatrix4, lookAtMatrix4: s1LookAtMatrix4 } = canvas.setProfile(
-			Program3.glControl.gl,
-			Program3.glControl.shadow
-		)
-		canvas.render(Program3.glControl.gl, Program3.glControl.vertexFeatureSize1, Program3.glControl.modelInstances1, Program3.glControl.shadow)
-		const m1 = Ven$CanvasMatrix4.copyMatrix(Program3.glControl.modelInstances1[0].modelMatrix)
-		canvas.render(Program3.glControl.gl, Program3.glControl.vertexFeatureSize2, Program3.glControl.modelInstances2, Program3.glControl.shadow)
-		const m2 = Ven$CanvasMatrix4.copyMatrix(Program3.glControl.modelInstances2[0].modelMatrix)
-
-		/**
-		 * 使用颜色缓冲区绘制输出画面
-		 * 		读取上述纹理贴图对象(在光源坐标系场景下生成)的像素值(rgbaDepth)
-		 * 			通过内置的 texture2D 函数, 传入帧缓冲区中的纹理贴图对象和视点在光源处的综合变换矩阵(pvmMatrixFromLight)和各顶点坐标, 获取像素值(rgbaDepth)
-		 * 		在正常视角下, 使用片元着色器计算各片元的颜色值
-		 * 			判断阴影位置
-		 * 				需要获取当前片元在光源坐标系下的坐标值, 取 z 值(深度值)与 rgbaDepth 中 R 分量进行对比
-		 * 					依据传入的视点在光源处的综合变换矩阵(pvmMatrixFromLight)和当前片元所处的坐标, 计算出变换后的坐标
-		 * 					归一化至 [0.0, 1.0] 区间
-		 * 			设置阴影区颜色与照射区颜色
-		 */
-		canvas.init('CANVAS', Program3.glControl.gl, null)
-		canvas.clear(Program3.glControl.gl)
-		Program3.glControl.gl.useProgram(Program3.glControl.main.program)
-		Program3.glControl.gl.uniformMatrix4fv(mainGlUniforms.u_ViewMatrixFromLight, false, new Float32Array(s1LookAtMatrix4.data))
-		Program3.glControl.gl.uniformMatrix4fv(mainGlUniforms.u_ProjMatrixFromLight, false, new Float32Array(s1ProjectionMatrix4.data))
-		const { projectionMatrix4: s2ProjectionMatrix4, lookAtMatrix4: s2LookAtMatrix4 } = canvas.setProfile(
-			Program3.glControl.gl,
-			Program3.glControl.main
-		)
-		Program3.glControl.gl.uniformMatrix4fv(mainGlUniforms.u_ModelMatrixFromLight, false, new Float32Array(m1.data))
-		canvas.render(Program3.glControl.gl, Program3.glControl.vertexFeatureSize1, Program3.glControl.modelInstances1, Program3.glControl.main)
-		Program3.glControl.gl.uniformMatrix4fv(mainGlUniforms.u_ModelMatrixFromLight, false, new Float32Array(m2.data))
-		canvas.render(Program3.glControl.gl, Program3.glControl.vertexFeatureSize2, Program3.glControl.modelInstances2, Program3.glControl.main)
-
+		canvas.init('CANVAS', Program1.glControl.gl, null)
+		Program1.glControl.gl.useProgram(Program1.glControl.commonLight.program)
+		canvas.clear(Program1.glControl.gl)
+		canvas.setProfile(Program1.glControl.gl, Program1.glControl.commonLight)
+		canvas.render(Program1.glControl.gl, Program1.glControl.vertexFeatureSize, Program1.glControl.modelInstances, Program1.glControl.commonLight)
 		stepControl.updateLastStamp()
 		window.requestAnimationFrame(exec)
 	}
 	exec()
 
-	console.log(Program3.glControl)
+	console.log(Program1.glControl)
 }

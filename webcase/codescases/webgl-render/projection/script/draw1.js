@@ -519,7 +519,7 @@ function drawCanvas1(containerElement) {
 		Program1.isRender = false
 		canvas.init('CANVAS', Program1.glControl.gl, null)
 		Program1.glControl.gl.useProgram(Program1.glControl.commonLight.program)
-		canvas.clear()
+		canvas.clear(Program1.glControl.gl)
 		canvas.setProfile(Program1.glControl.gl, Program1.glControl.commonLight)
 		canvas.render(Program1.glControl.gl, Program1.glControl.vertexFeatureSize, Program1.glControl.modelInstances, Program1.glControl.commonLight)
 		window.requestAnimationFrame(exec)

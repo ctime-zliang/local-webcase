@@ -171,7 +171,6 @@ class Program {
 		sceneLeftDownY: -1,
 	}
 	static profile = {
-		enableTexture: false,
 		autoTransformation: false,
 		/**
 		 * 视图矩阵参数
@@ -335,7 +334,6 @@ class Program {
 		const lightIntensityGainRangeRangeElement = this.containerElement.querySelector(`[data-tag-name="lightIntensityGainRange"]`)
 		const lightIntensityGainRangeShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lightIntensityGainRangeShow"]`)
 		const autoTransformationCheckboxElement = this.containerElement.querySelector(`[data-tag-name="autoTransformation"]`)
-		const enableTextureCheckboxElement = this.containerElement.querySelector(`[data-tag-name="enableTexture"]`)
 		const fogStartDistRangeElement = this.containerElement.querySelector(`[data-tag-name="fogStartDist"]`)
 		const fogStartDistShowShowSpanElement = this.containerElement.querySelector(`[data-tag-name="fogStartDistShow"]`)
 		const fogEndDistRangeElement = this.containerElement.querySelector(`[data-tag-name="fogEndDist"]`)
@@ -381,7 +379,6 @@ class Program {
 		ambientLightRangeBShowSpanElement.textContent = ambientLightRangeBRangeElement.value = self.profile.light.ambient.b
 		lightIntensityGainRangeShowSpanElement.textContent = lightIntensityGainRangeRangeElement.value = self.profile.light.intensityGain
 		autoTransformationCheckboxElement.checked = self.profile.autoTransformation
-		enableTextureCheckboxElement.checked = self.profile.enableTexture
 		fogStartDistShowShowSpanElement.textContent = fogStartDistRangeElement.value = self.profile.fog.dist.distOfStartAndEye
 		fogEndDistShowShowSpanElement.textContent = fogEndDistRangeElement.value = self.profile.fog.dist.distOfEndAndEye
 
@@ -455,7 +452,6 @@ class Program {
 		const lightIntensityGainRangeRangeElement = this.containerElement.querySelector(`[data-tag-name="lightIntensityGainRange"]`)
 		const lightIntensityGainRangeShowSpanElement = this.containerElement.querySelector(`[data-tag-name="lightIntensityGainRangeShow"]`)
 		const autoTransformationCheckboxElement = this.containerElement.querySelector(`[data-tag-name="autoTransformation"]`)
-		const enableTextureCheckboxElement = this.containerElement.querySelector(`[data-tag-name="enableTexture"]`)
 		const fogStartDistRangeElement = this.containerElement.querySelector(`[data-tag-name="fogStartDist"]`)
 		const fogStartDistShowShowSpanElement = this.containerElement.querySelector(`[data-tag-name="fogStartDistShow"]`)
 		const fogEndDistRangeElement = this.containerElement.querySelector(`[data-tag-name="fogEndDist"]`)
@@ -883,10 +879,6 @@ class Program {
 			self.profile.autoTransformation = this.checked
 			self.isRender = true
 		})
-		enableTextureCheckboxElement.addEventListener('change', function (e) {
-			self.profile.enableTexture = this.checked
-			self.isRender = true
-		})
 		fogStartDistRangeElement.addEventListener('input', function (e) {
 			fogStartDistShowShowSpanElement.textContent = self.profile.fog.dist.distOfStartAndEye = +this.value
 			console.log('light.fog.dist:', self.profile.light.intensityGain)
@@ -1258,7 +1250,7 @@ function drawCanvas(containerElement) {
 	Program.glControl.gl.enable(Program.glControl.gl.DEPTH_TEST)
 	Program.glControl.gl.enable(Program.glControl.gl.POLYGON_OFFSET_FILL)
 	Program.glControl.gl.polygonOffset(1.0, 1.0)
-	Program.glControl.gl.blendFunc(Program.glControl.gl.SRC_ALPHA, Program.glControl.gl.ONE_MINUS_SRC_ALPHA)
+	// Program.glControl.gl.blendFunc(Program.glControl.gl.SRC_ALPHA, Program.glControl.gl.ONE_MINUS_SRC_ALPHA)
 
 	Program.glControl.commonLight = {
 		glAttributes: {},
@@ -1320,16 +1312,6 @@ function drawCanvas(containerElement) {
 	const setWebGLRenderNormalStatus = () => {}
 	Program.glControl.setWebGLRenderClickedStatus = setWebGLRenderClickedStatus
 	Program.glControl.setWebGLRenderNormalStatus = setWebGLRenderNormalStatus
-
-	const loadTextureAction = (gl, itemProgramControl, callback) => {
-		const { glUniforms } = itemProgramControl
-		ven$loadImageResourceTexture(gl, '../common/images/demo-1024x1024.jpg', (gl, texture) => {
-			gl.uniform1i(glUniforms.u_Sampler, 0)
-			gl.activeTexture(gl.TEXTURE0)
-			// gl.bindTexture(gl.TEXTURE_2D, null)
-			callback && callback()
-		})
-	}
 
 	const canvas = {
 		status: null,
@@ -1424,14 +1406,14 @@ function drawCanvas(containerElement) {
 				gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(orthoMatrix4.data))
 			}
 		},
-		render(gl, vertexFeatureSize, modelInstances, itemProgramControl, enableTexture) {
+		render(gl, vertexFeatureSize, modelInstances, itemProgramControl) {
 			modelInstances.forEach(modelInstanceItem => {
 				this.applyModelMatrix(gl, modelInstanceItem, itemProgramControl)
-				this.drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture)
+				this.drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl)
 			})
 		},
-		drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl, enableTexture) {
-			const { normalBuffer, featureBuffer, texCoordBuffer, vertexDatas } = modelInstanceItem
+		drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl) {
+			const { normalBuffer, featureBuffer, vertexDatas } = modelInstanceItem
 			const { vertexNormals: normalData, vertexFeature: featureData, vertexCoordinate: texCoordData } = vertexDatas
 			const { glAttributes } = itemProgramControl
 
@@ -1451,13 +1433,6 @@ function drawCanvas(containerElement) {
 				stride: 28,
 				offset: 12,
 			})
-			if (enableTexture) {
-				gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer)
-				gl.bufferData(gl.ARRAY_BUFFER, texCoordData, gl.STATIC_DRAW)
-				ven$initAttributeVariable(gl, glAttributes.a_TexCoord, texCoordBuffer, {
-					size: 2,
-				})
-			}
 			gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
 		},
 		applyModelMatrix(gl, modelInstance, itemProgramControl) {
@@ -1528,27 +1503,7 @@ function drawCanvas(containerElement) {
 		}
 		canvas.init('CANVAS', Program.glControl.gl, null)
 		Program.glControl.gl.useProgram(Program.glControl.commonLight.program)
-		if (Program.profile.enableTexture) {
-			if (!Program.glControl.textureLight.isLoadTexture) {
-				Program.glControl.textureLight.isLoadTexture = true
-				loadTextureAction(Program.glControl.gl, Program.glControl.textureLight, () => {
-					Program.isRender = true
-				})
-			}
-			canvas.clear()
-			canvas.setProfile(Program.glControl.gl, Program.glControl.textureLight)
-			canvas.render(
-				Program.glControl.gl,
-				Program.glControl.vertexFeatureSize,
-				Program.glControl.modelInstances,
-				Program.glControl.textureLight,
-				true
-			)
-			stepControl.updateLastStamp()
-			window.requestAnimationFrame(exec)
-			return
-		}
-		canvas.clear()
+		canvas.clear(Program.glControl.gl)
 		canvas.setProfile(Program.glControl.gl, Program.glControl.commonLight)
 		canvas.render(
 			Program.glControl.gl,

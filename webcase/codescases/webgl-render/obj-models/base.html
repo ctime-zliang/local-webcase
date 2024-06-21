@@ -15,7 +15,7 @@
 
 	<body style="display: flex; justify-content: space-between; flex-wrap: wrap; background-color: rgba(200, 200, 200, 1)">
 		<div
-			id="appContainer"
+			id="appContainer1"
 			class="app-container"
 			style="
 				height: fit-content;
@@ -40,9 +40,7 @@
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model: </label>
 					<select data-tag-name="modelSelector" value="model1" style="width: 300px; cursor: pointer">
-						<option value="model1">Humanoid</option>
-						<option value="model2">Cube</option>
-						<option value="model3">Shere</option>
+						<option value="model1">Cube</option>
 					</select>
 				</div>
 				<br />
@@ -661,59 +659,6 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Fog Start Dist: </label>
-					<span>1</span>
-					<input
-						type="range"
-						value="0"
-						data-tag-name="fogStartDist"
-						min="1"
-						max="150"
-						step="0.1"
-						disabled="disabled"
-						style="width: 300px; cursor: pointer"
-					/>
-					<span>150</span>
-					<strong>&nbsp;(<span data-tag-name="fogStartDistShow">1</span>)</strong>
-				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Fog End Dist: </label>
-					<span>1</span>
-					<input
-						type="range"
-						value="0"
-						data-tag-name="fogEndDist"
-						min="1"
-						max="150"
-						step="0.1"
-						disabled="disabled"
-						style="width: 300px; cursor: pointer"
-					/>
-					<span>150</span>
-					<strong>&nbsp;(<span data-tag-name="fogEndDistShow">1</span>)</strong>
-				</div>
-				<br />
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Projection Type: </label>
 					<input type="radio" data-tag-name="projectionType" value="1" style="width: 20px; height: 20px; cursor: pointer" />
 					<span>Perspective Projection</span>
@@ -861,7 +806,6 @@
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Auto Transformation: </label>
 					<input type="checkbox" value="1" data-tag-name="autoTransformation" style="width: 20px; height: 20px" />
 				</div>
-				<div data-tagitem="model-infomation" style="padding: 5px 0"></div>
 			</div>
 			<div style="position: relative; width: 512px; height: 512px">
 				<canvas width="512" height="512" style="background-color: transparent; border: 1px dashed #888888"></canvas>
@@ -889,6 +833,6 @@
 	<script type="text/javascript" src="../common/utils/createCubeDatas.js"></script>
 	<script type="text/javascript" src="../common/utils/createShereDatas.js"></script>
 	<!-- ... -->
-	<script type="text/javascript" src="./script/draw.js"></script>
+	<script type="text/javascript" src="./script/draw1.js"></script>
 	<script type="text/javascript" src="./script/base.js"></script>
 </html>

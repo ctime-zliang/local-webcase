@@ -832,7 +832,6 @@ function drawCanvas1(containerElement) {
 		// 参数(组)
 		uniform float u_lightIntensityGain;
 		uniform float u_illuType;
-		uniform bool u_Clicked;
 		uniform sampler2D u_Sampler;
 		// 点光配置(组)
 		uniform vec3 u_LightPosition;
@@ -846,32 +845,28 @@ function drawCanvas1(containerElement) {
 			vec3 diffuse;
 			vec3 lightDirection;
 			vec3 ambientMixinColor;
-			if (u_Clicked) {
-				gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-			} else {
-				if (u_illuType == 1.0) {  // 平行光
-					normal = normalize(v_Normal);
-					// 计算光线方向与法线的点积
-					nDotL = max(dot(u_LightDirection, normal), 0.0);
-					// 计算漫反射光和环境光的色值
-					diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;					
-					// gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
-					v_NdotL = max(dot(normal, u_LightDirection), 0.0);
-					vec4 color = texture2D(u_Sampler, v_TexCoord);
-					gl_FragColor = vec4(color.rgb * v_NdotL, color.a);
-				} else {  // 点光
-					normal = normalize(v_Normal);
-					// 计算光线方向并归一化
-					lightDirection = normalize(u_LightPosition - v_Position);
-					// 计算光线方向与法线的点积
-					nDotL = max(dot(lightDirection, normal), 0.0);
-					// 计算漫反射光和环境光的色值
-					diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
-					// gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
-					v_NdotL = max(dot(normal, lightDirection), 0.0);
-					vec4 color = texture2D(u_Sampler, v_TexCoord);
-					gl_FragColor = vec4(color.rgb * v_NdotL, color.a);
-				}
+			if (u_illuType == 1.0) {  // 平行光
+				normal = normalize(v_Normal);
+				// 计算光线方向与法线的点积
+				nDotL = max(dot(u_LightDirection, normal), 0.0);
+				// 计算漫反射光和环境光的色值
+				diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;					
+				// gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
+				v_NdotL = max(dot(normal, u_LightDirection), 0.0);
+				vec4 color = texture2D(u_Sampler, v_TexCoord);
+				gl_FragColor = vec4(color.rgb * v_NdotL, color.a);
+			} else {  // 点光
+				normal = normalize(v_Normal);
+				// 计算光线方向并归一化
+				lightDirection = normalize(u_LightPosition - v_Position);
+				// 计算光线方向与法线的点积
+				nDotL = max(dot(lightDirection, normal), 0.0);
+				// 计算漫反射光和环境光的色值
+				diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
+				// gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
+				v_NdotL = max(dot(normal, lightDirection), 0.0);
+				vec4 color = texture2D(u_Sampler, v_TexCoord);
+				gl_FragColor = vec4(color.rgb * v_NdotL, color.a);
 			}
 		}
 	`
