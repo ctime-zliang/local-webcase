@@ -1,5 +1,6 @@
 class Model1 {
 	constructor() {
+		this._vertexDatas = null
 		this._modelParam = null
 		this._modelRatation = {
 			x: 0,
@@ -38,6 +39,13 @@ class Model1 {
 
 	get modelScale() {
 		return this._modelScale
+	}
+
+	get vertexDatas() {
+		return this._vertexDatas
+	}
+	set vertexDatas(value) {
+		this._vertexDatas = value
 	}
 
 	get vertexBuffer() {
@@ -639,7 +647,6 @@ function drawCanvas1(containerElement) {
 		varying vec4 v_Color;
 		varying vec3 v_Normal;
 		varying vec3 v_Position;
-		varying float v_Dist;
 		// 顶点配置(组)
 		attribute vec3 a_Position;
 		attribute vec4 a_Color;
@@ -658,9 +665,6 @@ function drawCanvas1(containerElement) {
 			// 根据法线变换矩阵重新计算法线坐标并归一化
 			v_Normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1.0)));
 			v_Color = a_Color;
-			// 计算顶点(世界坐标系)到视点的距离
-			// v_Dist = distance(u_ModelMatrix * vec4(a_Position, 1.0), vec4(u_Eye, 1.0));
-			v_Dist = gl_Position.w;
 		}
 	`
 	const COMMON_FRAGMENT_SHADER = `
@@ -681,7 +685,6 @@ function drawCanvas1(containerElement) {
 			vec3 normal;
 			vec3 diffuse;
 			vec3 lightDirection;
-			vec3 ambientMixinColor;
 			if (u_illuType == 1.0) {  // 平行光
 				normal = normalize(v_Normal);
 				// 计算光线方向与法线的点积
@@ -689,9 +692,7 @@ function drawCanvas1(containerElement) {
 				// 计算漫反射光和环境光的色值
 				diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
 				gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
-				// ambientMixinColor = diffuse + u_AmbientLightColor * v_Color.rgb;;
-				// fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
-				// gl_FragColor = vec4(fogMixinColor, v_Color.a);
+				gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 			} else {  // 点光
 				normal = normalize(v_Normal);
 				// 计算光线方向并归一化
@@ -701,10 +702,35 @@ function drawCanvas1(containerElement) {
 				// 计算漫反射光和环境光的色值
 				diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
 				gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
-				// ambientMixinColor = diffuse + u_AmbientLightColor * v_Color.rgb;
-				// fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
-				// gl_FragColor = vec4(fogMixinColor, v_Color.a);
+				gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 			}
+		}
+	`
+
+	const VSHADER_SOURCE = `
+		attribute vec3 a_Position;
+		attribute vec4 a_Color;
+		attribute vec3 a_Normal;
+		uniform mat4 u_ModelMatrix;
+		uniform mat4 u_ViewMatrix;
+		uniform mat4 u_ProjMatrix;
+		uniform mat4 u_NormalMatrix;
+		varying vec4 v_Color;
+		void main() {
+			vec3 lightDirection = vec3(-0.35, 0.35, 0.87);
+			gl_Position =  u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
+			vec3 normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1.0)));
+			float nDotL = max(dot(normal, lightDirection), 0.0);
+			v_Color = vec4(a_Color.rgb * nDotL, a_Color.a);
+		}
+	`
+	const FSHADER_SOURCE = `
+		#ifdef GL_ES
+		precision mediump float;
+		#endif
+		varying vec4 v_Color;
+		void main() {
+			gl_FragColor = v_Color;
 		}
 	`
 
@@ -728,7 +754,7 @@ function drawCanvas1(containerElement) {
 		program: null,
 	}
 
-	Program1.glControl.commonLight.program = ven$createProgram(Program1.glControl.gl, COMMON_VERTEX_SHADER, COMMON_FRAGMENT_SHADER)
+	Program1.glControl.commonLight.program = ven$createProgram(Program1.glControl.gl, VSHADER_SOURCE, FSHADER_SOURCE)
 	const commonWebGLVariableLocation = ven$getWebGLVariableLocation(Program1.glControl.gl, Program1.glControl.commonLight.program, {
 		glAttributes: ['a_Normal', 'a_Position', 'a_Color'],
 		glUniforms: [
@@ -751,11 +777,26 @@ function drawCanvas1(containerElement) {
 		const xhr = new XMLHttpRequest()
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4 && xhr.status !== 404) {
-				console.log(xhr.responseText)
 				const objDoc = new Ven$ModelObjInsDoc(filePath)
 				const result = objDoc.parse(xhr.responseText, scale, reverse)
 				const drawingInfo = objDoc.getDrawingInfo()
-				console.log(drawingInfo)
+				const objModel = new ObjModel1()
+				objModel.vertexDatas = {
+					colors: drawingInfo.colors,
+					vertices: drawingInfo.vertices,
+					normals: drawingInfo.normals,
+					indices: drawingInfo.indices,
+				}
+				Program1.glControl.modelInstances = [objModel]
+				Program1.glControl.modelInstances.forEach(modelInstanceItem => {
+					modelInstanceItem.normalBuffer = ven$initArrayBufferForLaterUse(Program1.glControl.gl)
+					modelInstanceItem.vertexBuffer = ven$initArrayBufferForLaterUse(Program1.glControl.gl)
+					modelInstanceItem.colorBuffer = ven$initArrayBufferForLaterUse(Program1.glControl.gl)
+					modelInstanceItem.indexBuffer = ven$initElementArrayBufferForLaterUse(Program1.glControl.gl)
+					modelInstanceItem.texCoordBuffer = ven$initArrayBufferForLaterUse(Program1.glControl.gl)
+				})
+				console.log(Program1.glControl.modelInstances)
+				Program1.isRender = true
 			}
 		}
 		xhr.open('GET', filePath, true)
@@ -842,34 +883,36 @@ function drawCanvas1(containerElement) {
 				gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(orthoMatrix4.data))
 			}
 		},
-		render(gl, vertexFeatureSize, modelInstances, itemProgramControl) {
+		render(gl, modelInstances, itemProgramControl) {
 			modelInstances.forEach(modelInstanceItem => {
 				this.applyModelMatrix(gl, modelInstanceItem, itemProgramControl)
-				this.drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl)
+				this.drawBuffer(gl, modelInstanceItem, itemProgramControl)
 			})
 		},
-		drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl) {
-			const { normalBuffer, featureBuffer, texCoordBuffer, vertexDatas } = modelInstanceItem
-			const { vertexNormals: normalData, vertexFeature: featureData, vertexCoordinate: texCoordData } = vertexDatas
+		drawBuffer(gl, modelInstanceItem, itemProgramControl) {
+			const { normalBuffer, vertexBuffer, colorBuffer, indexBuffer, texCoordBuffer, vertexDatas } = modelInstanceItem
+			const { colors, vertices, normals, indices } = vertexDatas
 			const { glAttributes } = itemProgramControl
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, normalData, gl.STATIC_DRAW)
+			gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW)
 			ven$initAttributeVariable(gl, glAttributes.a_Normal, normalBuffer, {
 				size: 3,
 			})
-			gl.bindBuffer(gl.ARRAY_BUFFER, featureBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
-			ven$initAttributeVariable(gl, glAttributes.a_Position, featureBuffer, {
+			gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
+			gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
+			ven$initAttributeVariable(gl, glAttributes.a_Position, normalBuffer, {
 				size: 3,
-				stride: 28,
 			})
-			ven$initAttributeVariable(gl, glAttributes.a_Color, featureBuffer, {
+			gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer)
+			gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW)
+			ven$initAttributeVariable(gl, glAttributes.a_Color, normalBuffer, {
 				size: 4,
-				stride: 28,
-				offset: 12,
 			})
-			gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
+			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW)
+
+			gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0)
 		},
 		applyModelMatrix(gl, modelInstance, itemProgramControl) {
 			const { glUniforms } = itemProgramControl
@@ -927,7 +970,7 @@ function drawCanvas1(containerElement) {
 		Program1.glControl.gl.useProgram(Program1.glControl.commonLight.program)
 		canvas.clear(Program1.glControl.gl)
 		canvas.setProfile(Program1.glControl.gl, Program1.glControl.commonLight)
-		canvas.render(Program1.glControl.gl, Program1.glControl.vertexFeatureSize, Program1.glControl.modelInstances, Program1.glControl.commonLight)
+		canvas.render(Program1.glControl.gl, Program1.glControl.modelInstances, Program1.glControl.commonLight)
 		stepControl.updateLastStamp()
 		window.requestAnimationFrame(exec)
 	}

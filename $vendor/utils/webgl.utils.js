@@ -62,7 +62,7 @@ function ven$initArrayBufferForLaterUse(gl, data = new Float32Array([])) {
 	return buffer
 }
 
-function ven$initElementArrayBufferForLaterUse(gl, data) {
+function ven$initElementArrayBufferForLaterUse(gl, data = new Float32Array([])) {
 	const buffer = gl.createBuffer()
 	if (!buffer) {
 		console.error('failed to create the buffer object.')
