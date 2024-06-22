@@ -747,6 +747,23 @@ function drawCanvas1(containerElement) {
 	Program1.glControl.commonLight.glAttributes = commonWebGLVariableLocation.glAttributes
 	Program1.glControl.commonLight.glUniforms = commonWebGLVariableLocation.glUniforms
 
+	const loadObjData = function (filePath, scale, reverse) {
+		const xhr = new XMLHttpRequest()
+		xhr.onreadystatechange = function () {
+			if (xhr.readyState === 4 && xhr.status !== 404) {
+				console.log(xhr.responseText)
+				const objDoc = new Ven$ModelObjInsDoc(filePath)
+				const result = objDoc.parse(xhr.responseText, scale, reverse)
+				const drawingInfo = objDoc.getDrawingInfo()
+				console.log(drawingInfo)
+			}
+		}
+		xhr.open('GET', filePath, true)
+		xhr.send()
+	}
+
+	loadObjData('../common/model-files/cube.obj', 60, true)
+
 	const canvas = {
 		status: null,
 		init(status, gl, frameBuffer) {

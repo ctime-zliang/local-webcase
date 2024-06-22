@@ -1,11 +1,12 @@
 function Ven$ModelObj_getWordLength(str, start) {
-	for (let i = start, len = str.length; i < len; i++) {
-		const c = str.charAt(i)
+	let idx = 0
+	for (idx = start; idx < str.length; idx++) {
+		const c = str.charAt(idx)
 		if (c == '\t' || c == ' ' || c == '(' || c == ')' || c == '"') {
 			break
 		}
 	}
-	return i - start
+	return idx - start
 }
 
 function Ven$ModelObj_calcNormal(p0, p1, p2) {
@@ -30,9 +31,9 @@ function Ven$ModelObj_readMTLFile(fileString, mtl) {
 	let index = 0
 	let line
 	let name = ''
-	let sp = new StringParser()
+	let sp = new Ven$ModelObjStringParser()
 	while ((line = lines[index++]) != null) {
-		sp.init(line)
+		sp.reset(line)
 		let command = sp.getWord()
 		if (command == null) {
 			continue
@@ -68,20 +69,32 @@ class Ven$ModelObjStringParser {
 	get str() {
 		return this._str
 	}
+	set str(value) {
+		this._str = value
+	}
 
 	get index() {
 		return this._index
 	}
+	set index(value) {
+		this._index = value
+	}
+
+	reset(str) {
+		this._str = str
+		this._index = 0
+	}
 
 	skipDelimiters() {
-		for (let i = this._index, len = this._str.length; i < len; i++) {
-			const c = this._str.charAt(i)
+		let idx = this._index
+		for (; idx < this._str.length; idx++) {
+			const c = this._str.charAt(idx)
 			if (c == '\t' || c == ' ' || c == '(' || c == ')' || c == '"') {
 				continue
 			}
 			break
 		}
-		this._index = i
+		this._index = idx
 	}
 
 	skipToNextWord() {
@@ -123,13 +136,22 @@ class Ven$ModelObjFace {
 	get materialName() {
 		return this._materialName
 	}
+	set materialName(value) {
+		this._materialName = value
+	}
 
 	get vIndices() {
 		return this._vIndices
 	}
+	set vIndices(value) {
+		this._vIndices = value
+	}
 
 	get nIndices() {
 		return this._nIndices
+	}
+	set nIndices(value) {
+		this._nIndices = value
 	}
 }
 
@@ -144,17 +166,29 @@ class Ven$ModelObjDrawingInfo {
 	get vertices() {
 		return this._vertices
 	}
+	set vertices(value) {
+		this._vertices = value
+	}
 
 	get normals() {
 		return this._normals
+	}
+	set normals(value) {
+		this._normals = value
 	}
 
 	get colors() {
 		return this._colors
 	}
+	set colors(value) {
+		this._colors = value
+	}
 
 	get indices() {
 		return this._indices
+	}
+	set indices(value) {
+		this._indices = value
 	}
 }
 
@@ -168,13 +202,27 @@ class Ven$ModelObjInsObject {
 	get name() {
 		return this._name
 	}
+	set name(value) {
+		this._name = value
+	}
 
 	get faces() {
 		return this._faces
 	}
+	set faces(value) {
+		this._faces = value
+	}
 
 	get numIndices() {
 		return this._numIndices
+	}
+	set numIndices(value) {
+		this._numIndices = value
+	}
+
+	addFace(face) {
+		this._faces.push(face)
+		this._numIndices += face.numIndices
 	}
 }
 
@@ -189,17 +237,29 @@ class Ven$ModelObjColor {
 	get r() {
 		return this._r
 	}
+	set r(value) {
+		this._r = value
+	}
 
 	get g() {
 		return this._g
+	}
+	set g(value) {
+		this._g = value
 	}
 
 	get b() {
 		return this._b
 	}
+	set b(value) {
+		this._b = value
+	}
 
 	get a() {
 		return this._a
+	}
+	set a(value) {
+		this._a = value
 	}
 }
 
@@ -213,13 +273,22 @@ class Ven$ModelObjNormal {
 	get x() {
 		return this._x
 	}
+	set x(value) {
+		this._x = value
+	}
 
 	get y() {
 		return this._y
 	}
+	set y(value) {
+		this._y = value
+	}
 
 	get z() {
 		return this._z
+	}
+	set z(value) {
+		this._z = value
 	}
 }
 
@@ -233,13 +302,22 @@ class Ven$ModelObjVertex {
 	get x() {
 		return this._x
 	}
+	set x(value) {
+		this._x = value
+	}
 
 	get y() {
 		return this._y
 	}
+	set y(value) {
+		this._y = value
+	}
 
 	get z() {
 		return this._z
+	}
+	set z(value) {
+		this._z = value
 	}
 }
 
@@ -252,9 +330,15 @@ class Ven$ModelObjMaterial {
 	get name() {
 		return this._name
 	}
+	set name(value) {
+		this._name = value
+	}
 
 	get color() {
 		return this._color
+	}
+	set color(value) {
+		this._color = value
 	}
 }
 
@@ -262,6 +346,20 @@ class Ven$ModelObjMTLDoc {
 	constructor() {
 		this._complete = false
 		this._materials = []
+	}
+
+	get complete() {
+		return this._complete
+	}
+	set complete(value) {
+		this._complete = value
+	}
+
+	get materials() {
+		return this._materials
+	}
+	set materials(value) {
+		this._materials = value
 	}
 
 	parseNewmtl(sp) {
@@ -288,21 +386,36 @@ class Ven$ModelObjInsDoc {
 	get fileName() {
 		return this._fileName
 	}
+	set fileName(value) {
+		this._fileName = value
+	}
 
 	get mtls() {
 		return this._mtls
+	}
+	set mtls(value) {
+		this._mtls = value
 	}
 
 	get objects() {
 		return this._objects
 	}
+	set objects(value) {
+		this._objects = value
+	}
 
 	get vertices() {
 		return this._vertices
 	}
+	set vertices(value) {
+		this._vertices = value
+	}
 
 	get normals() {
 		return this._normals
+	}
+	set normals(value) {
+		this._normals = value
 	}
 
 	parse(fileString, scale, reverse) {
@@ -314,7 +427,7 @@ class Ven$ModelObjInsDoc {
 		let currentMaterialName = ''
 		let line
 		while ((line = lines[index++]) != null) {
-			sp.init(line)
+			sp.reset(line)
 			const command = sp.getWord()
 			if (command == null) {
 				continue
@@ -327,18 +440,18 @@ class Ven$ModelObjInsDoc {
 					const path = this.parseMtllib(sp, this.fileName)
 					const mtl = new Ven$ModelObjMTLDoc()
 					this._mtls.push(mtl)
-					const request = new XMLHttpRequest()
-					request.onreadystatechange = function () {
-						if (request.readyState == 4) {
-							if (request.status != 404) {
-								Ven$ModelObj_readMTLFile(request.responseText, mtl)
+					const xhr = new XMLHttpRequest()
+					xhr.onreadystatechange = function () {
+						if (xhr.readyState == 4) {
+							if (xhr.status != 404) {
+								Ven$ModelObj_readMTLFile(xhr.responseText, mtl)
 							} else {
 								mtl.complete = true
 							}
 						}
 					}
-					request.open('GET', path, true)
-					request.send()
+					xhr.open('GET', path, true)
+					xhr.send()
 					continue
 				}
 				case 'o':
@@ -429,7 +542,7 @@ class Ven$ModelObjInsDoc {
 		if (normal == null) {
 			if (face.vIndices.length >= 4) {
 				let v3 = [vertices[face.vIndices[3]].x, vertices[face.vIndices[3]].y, vertices[face.vIndices[3]].z]
-				normal = calcNormal(v1, v2, v3)
+				normal = Ven$ModelObj_calcNormal(v1, v2, v3)
 			}
 			if (normal == null) {
 				normal = [0.0, 1.0, 0.0]
@@ -440,7 +553,7 @@ class Ven$ModelObjInsDoc {
 			normal[1] = -normal[1]
 			normal[2] = -normal[2]
 		}
-		face.normal = new Normal(normal[0], normal[1], normal[2])
+		face.normal = new Ven$ModelObjNormal(normal[0], normal[1], normal[2])
 		if (face.vIndices.length > 3) {
 			const n = face.vIndices.length - 2
 			const newVIndices = new Array(n * 3)
