@@ -713,8 +713,6 @@ function drawCanvas3(containerElement) {
 			const { vertexFeature: featureData } = vertexDatas
 			const { glAttributes, frameTexture } = itemProgramControl
 
-			gl.bindBuffer(gl.ARRAY_BUFFER, featureBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
 			ven$initAttributeVariable(gl, glAttributes.a_Position, featureBuffer, {
 				size: 3,
 				stride: 28,
@@ -724,6 +722,7 @@ function drawCanvas3(containerElement) {
 				stride: 28,
 				offset: 12,
 			})
+			gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
 
 			gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
 		},

@@ -535,8 +535,6 @@ function drawCanvas2(containerElement) {
 			const { vertexFeature: featureData, vertexCoordinate: texCoordData } = vertexDatas
 			const { glAttributes, frameTexture, cubeTexture } = itemProgramControl
 
-			gl.bindBuffer(gl.ARRAY_BUFFER, featureBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
 			ven$initAttributeVariable(gl, glAttributes.a_Position, featureBuffer, {
 				size: 3,
 				stride: 28,
@@ -546,11 +544,18 @@ function drawCanvas2(containerElement) {
 				stride: 28,
 				offset: 12,
 			})
-			gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, texCoordData, gl.STATIC_DRAW)
-			ven$initAttributeVariable(gl, glAttributes.a_TexCoord, texCoordBuffer, {
-				size: 2,
-			})
+			gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
+			ven$initAttributeVariable(
+				gl,
+				glAttributes.a_TexCoord,
+				texCoordBuffer,
+				{
+					size: 2,
+				},
+				{
+					data: texCoordData,
+				}
+			)
 
 			if (this.status === 'FRAME_BUFFER') {
 				gl.activeTexture(gl.TEXTURE0)

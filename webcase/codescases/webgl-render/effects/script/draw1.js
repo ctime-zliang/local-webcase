@@ -1035,13 +1035,17 @@ function drawCanvas1(containerElement) {
 			const { vertexNormals: normalData, vertexFeature: featureData, vertexCoordinate: texCoordData } = vertexDatas
 			const { glAttributes } = itemProgramControl
 
-			gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, normalData, gl.STATIC_DRAW)
-			ven$initAttributeVariable(gl, glAttributes.a_Normal, normalBuffer, {
-				size: 3,
-			})
-			gl.bindBuffer(gl.ARRAY_BUFFER, featureBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
+			ven$initAttributeVariable(
+				gl,
+				glAttributes.a_Normal,
+				normalBuffer,
+				{
+					size: 3,
+				},
+				{
+					data: normalData,
+				}
+			)
 			ven$initAttributeVariable(gl, glAttributes.a_Position, featureBuffer, {
 				size: 3,
 				stride: 28,
@@ -1051,12 +1055,19 @@ function drawCanvas1(containerElement) {
 				stride: 28,
 				offset: 12,
 			})
+			gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
 			if (enableTexture) {
-				gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer)
-				gl.bufferData(gl.ARRAY_BUFFER, texCoordData, gl.STATIC_DRAW)
-				ven$initAttributeVariable(gl, glAttributes.a_TexCoord, texCoordBuffer, {
-					size: 2,
-				})
+				ven$initAttributeVariable(
+					gl,
+					glAttributes.a_TexCoord,
+					texCoordBuffer,
+					{
+						size: 2,
+					},
+					{
+						data: texCoordData,
+					}
+				)
 			}
 			gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
 		},

@@ -41,14 +41,17 @@ function ven$createProgram(gl, vertexShaderSource, fragmentShaderSource) {
 }
 
 function ven$initAttributeVariable(gl, a_attribute, buffer, optional, bufferData = {}) {
+	if (a_attribute <= -1) {
+		return
+	}
 	const { size, type = gl.FLOAT, normalize = false, stride = 0, offset = 0 } = optional
 	const { target = gl.ARRAY_BUFFER, data, usage = gl.STATIC_DRAW } = bufferData || {}
 	gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
-	gl.vertexAttribPointer(a_attribute, size, type, normalize, stride, offset)
-	gl.enableVertexAttribArray(a_attribute)
 	if (data) {
 		gl.bufferData(target, data, usage)
 	}
+	gl.vertexAttribPointer(a_attribute, size, type, normalize, stride, offset)
+	gl.enableVertexAttribArray(a_attribute)
 }
 
 function ven$initArrayBufferForLaterUse(gl, data = new Float32Array([])) {

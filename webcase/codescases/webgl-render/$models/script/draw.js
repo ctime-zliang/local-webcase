@@ -1417,13 +1417,17 @@ function drawCanvas(containerElement) {
 			const { vertexNormals: normalData, vertexFeature: featureData, vertexCoordinate: texCoordData } = vertexDatas
 			const { glAttributes } = itemProgramControl
 
-			gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, normalData, gl.STATIC_DRAW)
-			ven$initAttributeVariable(gl, glAttributes.a_Normal, normalBuffer, {
-				size: 3,
-			})
-			gl.bindBuffer(gl.ARRAY_BUFFER, featureBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
+			ven$initAttributeVariable(
+				gl,
+				glAttributes.a_Normal,
+				normalBuffer,
+				{
+					size: 3,
+				},
+				{
+					data: normalData,
+				}
+			)
 			ven$initAttributeVariable(gl, glAttributes.a_Position, featureBuffer, {
 				size: 3,
 				stride: 28,
@@ -1433,6 +1437,7 @@ function drawCanvas(containerElement) {
 				stride: 28,
 				offset: 12,
 			})
+			gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
 			gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
 		},
 		applyModelMatrix(gl, modelInstance, itemProgramControl) {

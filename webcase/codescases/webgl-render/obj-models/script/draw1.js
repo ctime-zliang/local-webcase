@@ -3,7 +3,7 @@ class Model1 {
 		this._vertexDatas = null
 		this._modelParam = null
 		this._modelRatation = {
-			x: 0,
+			x: 30,
 			y: 0,
 			z: 0,
 		}
@@ -107,9 +107,9 @@ class Program1 {
 		 */
 		lookAt: {
 			eyePosition: {
-				x: 4,
-				y: 5,
-				z: 6,
+				x: 400,
+				y: 400,
+				z: 400,
 			},
 			atPosition: {
 				x: 0,
@@ -125,7 +125,7 @@ class Program1 {
 			fovy: 30,
 			aspect: 1,
 			near: 1,
-			far: 300,
+			far: 5000,
 		},
 		/**
 		 * 正交投影矩阵参数
@@ -706,7 +706,6 @@ function drawCanvas1(containerElement) {
 			}
 		}
 	`
-
 	const VSHADER_SOURCE = `
 		attribute vec3 a_Position;
 		attribute vec4 a_Color;
@@ -718,7 +717,7 @@ function drawCanvas1(containerElement) {
 		varying vec4 v_Color;
 		void main() {
 			vec3 lightDirection = vec3(-0.35, 0.35, 0.87);
-			gl_Position =  u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
+			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
 			vec3 normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1.0)));
 			float nDotL = max(dot(normal, lightDirection), 0.0);
 			v_Color = vec4(a_Color.rgb * nDotL, a_Color.a);
@@ -843,38 +842,38 @@ function drawCanvas1(containerElement) {
 				new Ven$Vector3(0, 1, 0)
 			)
 
-			gl.uniform1f(glUniforms.u_illuType, Program1.profile.light.illuType)
-			if (Program1.profile.light.illuType === 1) {
-				const lightDirection = new Ven$Vector3(
-					Program1.profile.light.direction.x,
-					Program1.profile.light.direction.y,
-					Program1.profile.light.direction.z
-				)
-				const lightNormalizeDirection = lightDirection.normalize()
-				gl.uniform3fv(
-					glUniforms.u_LightDirection,
-					new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z])
-				)
-			}
-			if (Program1.profile.light.illuType === 2) {
-				gl.uniform3fv(
-					glUniforms.u_LightPosition,
-					new Float32Array([Program1.profile.light.position.x, Program1.profile.light.position.y, Program1.profile.light.position.z])
-				)
-			}
-			gl.uniform3f(
-				glUniforms.u_LightColor,
-				Program1.profile.light.color.r / 255,
-				Program1.profile.light.color.g / 255,
-				Program1.profile.light.color.b / 255
-			)
-			gl.uniform1f(glUniforms.u_lightIntensityGain, Program1.profile.light.intensityGain)
-			gl.uniform3f(
-				glUniforms.u_AmbientLightColor,
-				Program1.profile.light.ambient.r,
-				Program1.profile.light.ambient.g,
-				Program1.profile.light.ambient.b
-			)
+			// gl.uniform1f(glUniforms.u_illuType, Program1.profile.light.illuType)
+			// if (Program1.profile.light.illuType === 1) {
+			// 	const lightDirection = new Ven$Vector3(
+			// 		Program1.profile.light.direction.x,
+			// 		Program1.profile.light.direction.y,
+			// 		Program1.profile.light.direction.z
+			// 	)
+			// 	const lightNormalizeDirection = lightDirection.normalize()
+			// 	gl.uniform3fv(
+			// 		glUniforms.u_LightDirection,
+			// 		new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z])
+			// 	)
+			// }
+			// if (Program1.profile.light.illuType === 2) {
+			// 	gl.uniform3fv(
+			// 		glUniforms.u_LightPosition,
+			// 		new Float32Array([Program1.profile.light.position.x, Program1.profile.light.position.y, Program1.profile.light.position.z])
+			// 	)
+			// }
+			// gl.uniform3f(
+			// 	glUniforms.u_LightColor,
+			// 	Program1.profile.light.color.r / 255,
+			// 	Program1.profile.light.color.g / 255,
+			// 	Program1.profile.light.color.b / 255
+			// )
+			// gl.uniform1f(glUniforms.u_lightIntensityGain, Program1.profile.light.intensityGain)
+			// gl.uniform3f(
+			// 	glUniforms.u_AmbientLightColor,
+			// 	Program1.profile.light.ambient.r,
+			// 	Program1.profile.light.ambient.g,
+			// 	Program1.profile.light.ambient.b
+			// )
 			gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 			if (Program1.profile.projectionType === 1) {
 				gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
@@ -894,24 +893,41 @@ function drawCanvas1(containerElement) {
 			const { colors, vertices, normals, indices } = vertexDatas
 			const { glAttributes } = itemProgramControl
 
-			gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW)
-			ven$initAttributeVariable(gl, glAttributes.a_Normal, normalBuffer, {
-				size: 3,
-			})
-			gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
-			ven$initAttributeVariable(gl, glAttributes.a_Position, normalBuffer, {
-				size: 3,
-			})
-			gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer)
-			gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW)
-			ven$initAttributeVariable(gl, glAttributes.a_Color, normalBuffer, {
-				size: 4,
-			})
+			ven$initAttributeVariable(
+				gl,
+				glAttributes.a_Normal,
+				normalBuffer,
+				{
+					size: 3,
+				},
+				{
+					data: normals,
+				}
+			)
+			ven$initAttributeVariable(
+				gl,
+				glAttributes.a_Position,
+				vertexBuffer,
+				{
+					size: 3,
+				},
+				{
+					data: vertices,
+				}
+			)
+			ven$initAttributeVariable(
+				gl,
+				glAttributes.a_Color,
+				colorBuffer,
+				{
+					size: 4,
+				},
+				{
+					data: colors,
+				}
+			)
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
 			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW)
-
 			gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0)
 		},
 		applyModelMatrix(gl, modelInstance, itemProgramControl) {
