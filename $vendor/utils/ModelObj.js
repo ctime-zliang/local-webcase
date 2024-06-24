@@ -22,7 +22,7 @@ function Ven$ModelObj_calcNormal(p0, p1, p2) {
 	c[2] = v0[0] * v1[1] - v0[1] * v1[0]
 	const v = new Ven$Vector3(c[0], c[1], c[2])
 	v.normalize()
-	return v.elements
+	return [v.x, v.y, v.z]
 }
 
 function Ven$ModelObj_readMTLFile(fileString, mtl) {
@@ -131,6 +131,7 @@ class Ven$ModelObjFace {
 		}
 		this._vIndices = []
 		this._nIndices = []
+		this._normal = null
 	}
 
 	get materialName() {
@@ -152,6 +153,13 @@ class Ven$ModelObjFace {
 	}
 	set nIndices(value) {
 		this._nIndices = value
+	}
+
+	get normal() {
+		return this._normal
+	}
+	set normal(value) {
+		this._normal = value
 	}
 }
 

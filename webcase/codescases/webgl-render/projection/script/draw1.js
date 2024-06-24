@@ -408,7 +408,7 @@ function drawCanvas1(containerElement) {
 		},
 		clear(gl) {
 			gl.viewport(0, 0, canvasElement.width, canvasElement.height)
-			gl.clearColor(0.0, 0.0, 0.0, 1.0)
+			gl.clearColor(Program1.profile.clearColor.r / 255, Program1.profile.clearColor.g / 255, Program1.profile.clearColor.b / 255, 1.0)
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		},
 		setProfile(gl, itemProgramControl) {

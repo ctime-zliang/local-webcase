@@ -650,7 +650,7 @@ function drawCanvas3(containerElement) {
 				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 			} else {
 				gl.viewport(0, 0, canvasElement.width, canvasElement.height)
-				gl.clearColor(0.0, 0.0, 0.0, 1.0)
+				gl.clearColor(Program3.profile.clearColor.r / 255, Program3.profile.clearColor.g / 255, Program3.profile.clearColor.b / 255, 1.0)
 				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 			}
 		},

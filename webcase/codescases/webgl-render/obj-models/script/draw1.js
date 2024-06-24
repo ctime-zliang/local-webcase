@@ -3,7 +3,7 @@ class Model1 {
 		this._vertexDatas = null
 		this._modelParam = null
 		this._modelRatation = {
-			x: 30,
+			x: 0,
 			y: 0,
 			z: 0,
 		}
@@ -135,8 +135,8 @@ class Program1 {
 			right: 1,
 			bottom: -1,
 			top: 1,
-			near: -100,
-			far: 100,
+			near: 0,
+			far: 1000,
 		},
 		/**
 		 * 光照参数
@@ -150,9 +150,9 @@ class Program1 {
 				z: 4.0,
 			},
 			position: {
-				x: 1.0,
-				y: 2.0,
-				z: 1.5,
+				x: 150,
+				y: 250,
+				z: 100,
 			},
 			color: {
 				r: 255,
@@ -160,15 +160,15 @@ class Program1 {
 				b: 255,
 			},
 			ambient: {
-				r: 0.1,
-				g: 0.1,
-				b: 0.1,
+				r: 0.2,
+				g: 0.2,
+				b: 0.2,
 			},
 		},
 		clearColor: {
-			r: 0,
-			g: 0,
-			b: 0,
+			r: 30,
+			g: 30,
+			b: 30,
 		},
 	}
 
@@ -179,7 +179,6 @@ class Program1 {
 		this.glControl = {
 			gl: this.glControl.gl || null,
 			modelInstances: [],
-			vertexFeatureSize: 0,
 		}
 		this.initFormView()
 		this.eventHandle()
@@ -611,29 +610,18 @@ class Program1 {
 				break
 			}
 		}
+	}
+
+	static setModelInstances(objModels) {
+		this.glControl.modelInstances = [...objModels]
 		this.glControl.modelInstances.forEach(modelInstanceItem => {
 			modelInstanceItem.normalBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
-			modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
+			modelInstanceItem.vertexBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
+			modelInstanceItem.colorBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
+			modelInstanceItem.indexBuffer = ven$initElementArrayBufferForLaterUse(this.glControl.gl)
 			modelInstanceItem.texCoordBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
 		})
-		this.glControl.vertexFeatureSize = this.getVertexFeatureSize(this.glControl.modelInstances)
-	}
-
-	static createtCubeModelDatas(width, length, depth, offsetX = 0, offsetY = 0, offsetZ = 0, color = '#ffffff') {
-		const modelInstances = []
-		const model1 = new CubeModel1(width, length, depth, color, 0 + offsetX, 0 + offsetY, 0 + offsetZ)
-		modelInstances.push(model1)
-		return {
-			modelInstances,
-		}
-	}
-
-	static getVertexFeatureSize(modelInstances) {
-		let len = 0
-		modelInstances.forEach(modelInstanceItem => {
-			len += modelInstanceItem.vertexDatas.vertexFeature.length
-		})
-		return len
+		this.isRender = true
 	}
 }
 
@@ -692,7 +680,6 @@ function drawCanvas1(containerElement) {
 				// 计算漫反射光和环境光的色值
 				diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
 				gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
-				gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 			} else {  // 点光
 				normal = normalize(v_Normal);
 				// 计算光线方向并归一化
@@ -702,34 +689,7 @@ function drawCanvas1(containerElement) {
 				// 计算漫反射光和环境光的色值
 				diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
 				gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
-				gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 			}
-		}
-	`
-	const VSHADER_SOURCE = `
-		attribute vec3 a_Position;
-		attribute vec4 a_Color;
-		attribute vec3 a_Normal;
-		uniform mat4 u_ModelMatrix;
-		uniform mat4 u_ViewMatrix;
-		uniform mat4 u_ProjMatrix;
-		uniform mat4 u_NormalMatrix;
-		varying vec4 v_Color;
-		void main() {
-			vec3 lightDirection = vec3(-0.35, 0.35, 0.87);
-			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
-			vec3 normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1.0)));
-			float nDotL = max(dot(normal, lightDirection), 0.0);
-			v_Color = vec4(a_Color.rgb * nDotL, a_Color.a);
-		}
-	`
-	const FSHADER_SOURCE = `
-		#ifdef GL_ES
-		precision mediump float;
-		#endif
-		varying vec4 v_Color;
-		void main() {
-			gl_FragColor = v_Color;
 		}
 	`
 
@@ -753,7 +713,7 @@ function drawCanvas1(containerElement) {
 		program: null,
 	}
 
-	Program1.glControl.commonLight.program = ven$createProgram(Program1.glControl.gl, VSHADER_SOURCE, FSHADER_SOURCE)
+	Program1.glControl.commonLight.program = ven$createProgram(Program1.glControl.gl, COMMON_VERTEX_SHADER, COMMON_FRAGMENT_SHADER)
 	const commonWebGLVariableLocation = ven$getWebGLVariableLocation(Program1.glControl.gl, Program1.glControl.commonLight.program, {
 		glAttributes: ['a_Normal', 'a_Position', 'a_Color'],
 		glUniforms: [
@@ -786,16 +746,7 @@ function drawCanvas1(containerElement) {
 					normals: drawingInfo.normals,
 					indices: drawingInfo.indices,
 				}
-				Program1.glControl.modelInstances = [objModel]
-				Program1.glControl.modelInstances.forEach(modelInstanceItem => {
-					modelInstanceItem.normalBuffer = ven$initArrayBufferForLaterUse(Program1.glControl.gl)
-					modelInstanceItem.vertexBuffer = ven$initArrayBufferForLaterUse(Program1.glControl.gl)
-					modelInstanceItem.colorBuffer = ven$initArrayBufferForLaterUse(Program1.glControl.gl)
-					modelInstanceItem.indexBuffer = ven$initElementArrayBufferForLaterUse(Program1.glControl.gl)
-					modelInstanceItem.texCoordBuffer = ven$initArrayBufferForLaterUse(Program1.glControl.gl)
-				})
-				console.log(Program1.glControl.modelInstances)
-				Program1.isRender = true
+				Program1.setModelInstances([objModel])
 			}
 		}
 		xhr.open('GET', filePath, true)
@@ -816,7 +767,7 @@ function drawCanvas1(containerElement) {
 		},
 		clear(gl) {
 			gl.viewport(0, 0, canvasElement.width, canvasElement.height)
-			gl.clearColor(0.0, 0.0, 0.0, 1.0)
+			gl.clearColor(Program1.profile.clearColor.r / 255, Program1.profile.clearColor.g / 255, Program1.profile.clearColor.b / 255, 1.0)
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		},
 		setProfile(gl, itemProgramControl) {
@@ -842,38 +793,38 @@ function drawCanvas1(containerElement) {
 				new Ven$Vector3(0, 1, 0)
 			)
 
-			// gl.uniform1f(glUniforms.u_illuType, Program1.profile.light.illuType)
-			// if (Program1.profile.light.illuType === 1) {
-			// 	const lightDirection = new Ven$Vector3(
-			// 		Program1.profile.light.direction.x,
-			// 		Program1.profile.light.direction.y,
-			// 		Program1.profile.light.direction.z
-			// 	)
-			// 	const lightNormalizeDirection = lightDirection.normalize()
-			// 	gl.uniform3fv(
-			// 		glUniforms.u_LightDirection,
-			// 		new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z])
-			// 	)
-			// }
-			// if (Program1.profile.light.illuType === 2) {
-			// 	gl.uniform3fv(
-			// 		glUniforms.u_LightPosition,
-			// 		new Float32Array([Program1.profile.light.position.x, Program1.profile.light.position.y, Program1.profile.light.position.z])
-			// 	)
-			// }
-			// gl.uniform3f(
-			// 	glUniforms.u_LightColor,
-			// 	Program1.profile.light.color.r / 255,
-			// 	Program1.profile.light.color.g / 255,
-			// 	Program1.profile.light.color.b / 255
-			// )
-			// gl.uniform1f(glUniforms.u_lightIntensityGain, Program1.profile.light.intensityGain)
-			// gl.uniform3f(
-			// 	glUniforms.u_AmbientLightColor,
-			// 	Program1.profile.light.ambient.r,
-			// 	Program1.profile.light.ambient.g,
-			// 	Program1.profile.light.ambient.b
-			// )
+			gl.uniform1f(glUniforms.u_illuType, Program1.profile.light.illuType)
+			if (Program1.profile.light.illuType === 1) {
+				const lightDirection = new Ven$Vector3(
+					Program1.profile.light.direction.x,
+					Program1.profile.light.direction.y,
+					Program1.profile.light.direction.z
+				)
+				const lightNormalizeDirection = lightDirection.normalize()
+				gl.uniform3fv(
+					glUniforms.u_LightDirection,
+					new Float32Array([lightNormalizeDirection.x, lightNormalizeDirection.y, lightNormalizeDirection.z])
+				)
+			}
+			if (Program1.profile.light.illuType === 2) {
+				gl.uniform3fv(
+					glUniforms.u_LightPosition,
+					new Float32Array([Program1.profile.light.position.x, Program1.profile.light.position.y, Program1.profile.light.position.z])
+				)
+			}
+			gl.uniform3f(
+				glUniforms.u_LightColor,
+				Program1.profile.light.color.r / 255,
+				Program1.profile.light.color.g / 255,
+				Program1.profile.light.color.b / 255
+			)
+			gl.uniform1f(glUniforms.u_lightIntensityGain, Program1.profile.light.intensityGain)
+			gl.uniform3f(
+				glUniforms.u_AmbientLightColor,
+				Program1.profile.light.ambient.r,
+				Program1.profile.light.ambient.g,
+				Program1.profile.light.ambient.b
+			)
 			gl.uniformMatrix4fv(glUniforms.u_ViewMatrix, false, new Float32Array(lookAtMatrix4.data))
 			if (Program1.profile.projectionType === 1) {
 				gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))

@@ -423,7 +423,7 @@ function drawCanvas2(containerElement) {
 		},
 		clear(gl) {
 			gl.viewport(0, 0, canvasElement.width, canvasElement.height)
-			gl.clearColor(0.0, 0.0, 0.0, 1.0)
+			gl.clearColor(Program2.profile.clearColor.r / 255, Program2.profile.clearColor.g / 255, Program2.profile.clearColor.b / 255, 1.0)
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		},
 		setProfile(gl, itemProgramControl) {
@@ -451,9 +451,6 @@ function drawCanvas2(containerElement) {
 			gl.uniformMatrix4fv(glUniforms.u_ProjMatrix, false, new Float32Array(projectionMatrix4.data))
 		},
 		render(gl, vertexFeatureSize, modelInstances, itemProgramControl) {
-			gl.viewport(0, 0, canvasElement.width, canvasElement.height)
-			gl.clearColor(0.0, 0.0, 0.0, 1.0)
-			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 			modelInstances.forEach(modelInstanceItem => {
 				this.applyModelMatrix(gl, modelInstanceItem, itemProgramControl)
 				this.drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl)
