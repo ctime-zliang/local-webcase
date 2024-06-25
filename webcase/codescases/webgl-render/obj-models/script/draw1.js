@@ -107,9 +107,9 @@ class Program1 {
 		 */
 		lookAt: {
 			eyePosition: {
-				x: 400,
-				y: 400,
-				z: 400,
+				x: 100,
+				y: 110,
+				z: 120,
 			},
 			atPosition: {
 				x: 0,
@@ -150,9 +150,9 @@ class Program1 {
 				z: 4.0,
 			},
 			position: {
-				x: 150,
-				y: 250,
-				z: 100,
+				x: 25,
+				y: 60,
+				z: 35,
 			},
 			color: {
 				r: 255,
@@ -732,12 +732,12 @@ function drawCanvas1(containerElement) {
 	Program1.glControl.commonLight.glAttributes = commonWebGLVariableLocation.glAttributes
 	Program1.glControl.commonLight.glUniforms = commonWebGLVariableLocation.glUniforms
 
-	const loadObjData = function (filePath, scale, reverse) {
+	const loadObjData = function (filePath) {
 		const xhr = new XMLHttpRequest()
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4 && xhr.status !== 404) {
 				const objDoc = modelObj.generate(filePath)
-				const result = objDoc.parse(xhr.responseText, scale, reverse)
+				const result = objDoc.parse(xhr.responseText, 20, true)
 				const drawingInfo = objDoc.getDrawingInfo()
 				const objModel = new ObjModel1()
 				objModel.vertexDatas = {
@@ -753,7 +753,7 @@ function drawCanvas1(containerElement) {
 		xhr.send()
 	}
 
-	loadObjData('../common/model-files/cube.obj', 60, true)
+	loadObjData('../common/model-files/cube.obj')
 
 	const canvas = {
 		status: null,
