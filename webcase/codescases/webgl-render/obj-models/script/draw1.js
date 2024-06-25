@@ -736,7 +736,7 @@ function drawCanvas1(containerElement) {
 		const xhr = new XMLHttpRequest()
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4 && xhr.status !== 404) {
-				const objDoc = new Ven$ModelObjInsDoc(filePath)
+				const objDoc = modelObj.generate(filePath)
 				const result = objDoc.parse(xhr.responseText, scale, reverse)
 				const drawingInfo = objDoc.getDrawingInfo()
 				const objModel = new ObjModel1()
