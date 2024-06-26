@@ -1,8 +1,6 @@
 ;(function () {
 	'use strict'
 
-	const Vector3 = Ven$Vector3
-
 	const STRING_TAG_T = `\t`
 	const STRING_TAG_BLANK = ` `
 	const STRING_TAG_LEFT_BRACKETS = `(`
@@ -15,7 +13,7 @@
 	/**
 	 * 获取两个相邻分隔符之间的内容字符串的长度
 	 */
-	function getContentStringLength(str, start) {
+	function getContentWordLength(str, start) {
 		let idx = 0
 		for (idx = start; idx < str.length; idx++) {
 			const c = str.charAt(idx)
@@ -54,10 +52,53 @@
 	/****************************************************************************************************/
 	/****************************************************************************************************/
 
+	class Vector3 {
+		constructor(x = 0, y = 0, z = 0) {
+			this._x = x
+			this._y = y
+			this._z = z
+		}
+
+		get x() {
+			return this._x
+		}
+		set x(value) {
+			this._x = value
+		}
+
+		get y() {
+			return this._y
+		}
+		set y(value) {
+			this._y = value
+		}
+
+		get z() {
+			return this._z
+		}
+		set z(value) {
+			this._z = value
+		}
+
+		get length() {
+			return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z)
+		}
+
+		normalize() {
+			if (this.x === 0 && this.y === 0 && this.z === 0) {
+				return new Vector3(0, 0, 0)
+			}
+			const sx = this.x / this.length
+			const sy = this.y / this.length
+			const sz = this.z / this.length
+			return new Vector3(sx, sy, sz)
+		}
+	}
+
 	class StringParser {
 		constructor(str) {
 			this._str = str
-			this._index = -1
+			this._index = 0
 		}
 
 		get str() {
@@ -81,18 +122,18 @@
 
 		skipToNextWord() {
 			this._skipDelimiters()
-			const len = getContentStringLength(this._str, this._index)
-			this._index += len + 1
+			const len = getContentWordLength(this.str, this.index)
+			this.index += len + 1
 		}
 
 		getWord() {
 			this._skipDelimiters()
-			const len = getContentStringLength(this._str, this._index)
+			const len = getContentWordLength(this.str, this.index)
 			if (len === 0) {
 				return null
 			}
-			const word = this._str.substr(this._index, len)
-			this._index += len + 1
+			const word = this.str.substr(this.index, len)
+			this.index += len + 1
 			return word
 		}
 
@@ -105,9 +146,9 @@
 		}
 
 		_skipDelimiters() {
-			let idx = this._index
-			for (; idx < this._str.length; idx++) {
-				const c = this._str.charAt(idx)
+			let idx = this.index
+			for (; idx < this.str.length; idx++) {
+				const c = this.str.charAt(idx)
 				if (
 					c === STRING_TAG_T ||
 					c === STRING_TAG_BLANK ||
@@ -119,7 +160,7 @@
 				}
 				break
 			}
-			this._index = idx
+			this.index = idx
 		}
 	}
 
@@ -160,7 +201,7 @@
 		}
 	}
 
-	class ObjObject {
+	class OBJObject {
 		constructor(name) {
 			this._name = name
 			this._faces = []
@@ -189,8 +230,8 @@
 		}
 
 		addFace(face) {
-			this._faces.push(face)
-			this._numIndices += face.numIndices
+			this.faces.push(face)
+			this.numIndices += face.numIndices
 		}
 	}
 
@@ -391,19 +432,19 @@
 	}
 
 	class OBJDoc {
-		constructor(fileName) {
-			this._fileName = fileName
+		constructor(objFilePath) {
+			this._objFilePath = objFilePath
 			this._mtls = []
 			this._objects = []
 			this._vertices = []
 			this._normals = []
 		}
 
-		get fileName() {
-			return this._fileName
+		get objFilePath() {
+			return this._objFilePath
 		}
-		set fileName(value) {
-			this._fileName = value
+		set objFilePath(value) {
+			this._objFilePath = value
 		}
 
 		get mtls() {
@@ -458,9 +499,9 @@
 					 * 		加载材质文件
 					 */
 					case 'mtllib': {
-						const path = this._parseMtllib(sp, this.fileName)
+						const path = this._parseMtllib(sp, this.objFilePath)
 						const mtl = new MTLDoc()
-						this._mtls.push(mtl)
+						this.mtls.push(mtl)
 						const xhr = new XMLHttpRequest()
 						xhr.onreadystatechange = function () {
 							if (xhr.readyState === 4) {
@@ -481,7 +522,7 @@
 					case 'o':
 					case 'g': {
 						const object = this._parseObjectName(sp)
-						this._objects.push(object)
+						this.objects.push(object)
 						currentObject = object
 						continue
 					}
@@ -490,12 +531,12 @@
 					 */
 					case 'v': {
 						const vertex = this._parseVertex(sp, scale)
-						this._vertices.push(vertex)
+						this.vertices.push(vertex)
 						continue
 					}
 					case 'vn': {
 						const normal = this._parseNormal(sp)
-						this._normals.push(normal)
+						this.normals.push(normal)
 						continue
 					}
 					/**
@@ -506,10 +547,10 @@
 						continue
 					}
 					/**
-					 * 解析模型面
+					 * 解析模型表面
 					 */
 					case 'f': {
-						const face = this._parseFace(sp, currentMaterialName, this._vertices, reverse)
+						const face = this._parseFace(sp, currentMaterialName, this.vertices, reverse)
 						currentObject.addFace(face)
 						continue
 					}
@@ -519,26 +560,33 @@
 		}
 
 		getDrawingInfo() {
+			/**
+			 * 计算顶点索引的总个数
+			 */
 			let numIndices = 0
-			for (let i = 0; i < this._objects.length; i++) {
-				numIndices += this._objects[i].numIndices
+			for (let i = 0; i < this.objects.length; i++) {
+				numIndices += this.objects[i].numIndices
 			}
-			const numVertices = numIndices
-			const vertices = new Array(numVertices * 3)
-			const normals = new Array(numVertices * 3)
-			const colors = new Array(numVertices * 4)
+			const vertices = new Array(numIndices * 3)
+			const normals = new Array(numIndices * 3)
+			const colors = new Array(numIndices * 4)
 			const indices = new Array(numIndices)
+			/**
+			 * 遍历模型个数 this.objects
+			 * 		遍历每个模型的所有表面
+			 * 			遍历每个表面的所有顶点
+			 * 				- 尝试通过当前表面绑定的材质名称从材质列表中匹配颜色数据
+			 * 				- 解析并填充顶点/法线/颜色/索引
+			 */
 			let indexIndices = 0
-			for (let i = 0; i < this._objects.length; i++) {
-				const object = this._objects[i]
+			for (let i = 0; i < this.objects.length; i++) {
+				const object = this.objects[i]
 				for (let j = 0; j < object.faces.length; j++) {
 					const face = object.faces[j]
 					const color = this._findColor(face.materialName)
-					const faceNormal = face.normal
 					for (let k = 0; k < face.vIndices.length; k++) {
 						indices[indexIndices] = indexIndices
-						const vIdx = face.vIndices[k]
-						const vertex = this._vertices[vIdx]
+						const vertex = this.vertices[face.vIndices[k]]
 						vertices[indexIndices * 3 + 0] = vertex.x
 						vertices[indexIndices * 3 + 1] = vertex.y
 						vertices[indexIndices * 3 + 2] = vertex.z
@@ -548,14 +596,14 @@
 						colors[indexIndices * 4 + 3] = color.a
 						let nIdx = face.nIndices[k]
 						if (nIdx >= 0) {
-							let normal = this._normals[nIdx]
+							let normal = this.normals[nIdx]
 							normals[indexIndices * 3 + 0] = normal.x
 							normals[indexIndices * 3 + 1] = normal.y
 							normals[indexIndices * 3 + 2] = normal.z
 						} else {
-							normals[indexIndices * 3 + 0] = faceNormal.x
-							normals[indexIndices * 3 + 1] = faceNormal.y
-							normals[indexIndices * 3 + 2] = faceNormal.z
+							normals[indexIndices * 3 + 0] = face.normal.x
+							normals[indexIndices * 3 + 1] = face.normal.y
+							normals[indexIndices * 3 + 2] = face.normal.z
 						}
 						indexIndices++
 					}
@@ -568,7 +616,7 @@
 			let lines = fileString.split('\n')
 			lines.push(null)
 			let index = 0
-			let line
+			let line = undefined
 			let name = ''
 			let sp = new StringParser()
 			while ((line = lines[index++]) != null) {
@@ -599,17 +647,17 @@
 			mtl.complete = true
 		}
 
-		_parseMtllib(sp, fileName) {
-			const i = fileName.lastIndexOf('/')
+		_parseMtllib(sp, objFilePath) {
+			const idx = objFilePath.lastIndexOf('/')
 			let dirPath = ''
-			if (i > 0) {
-				dirPath = fileName.substr(0, i + 1)
+			if (idx > 0) {
+				dirPath = objFilePath.substr(0, idx + 1)
 			}
 			return dirPath + sp.getWord()
 		}
 
 		_parseObjectName(sp) {
-			return new ObjObject(sp.getWord())
+			return new OBJObject(sp.getWord())
 		}
 
 		_parseVertex(sp, scale) {
@@ -694,11 +742,11 @@
 		}
 
 		_isMTLComplete() {
-			if (this._mtls.length === 0) {
+			if (this.mtls.length === 0) {
 				return true
 			}
-			for (let i = 0; i < this._mtls.length; i++) {
-				if (!this._mtls[i].complete) {
+			for (let i = 0; i < this.mtls.length; i++) {
+				if (!this.mtls[i].complete) {
 					return false
 				}
 			}
@@ -706,10 +754,10 @@
 		}
 
 		_findColor(name) {
-			for (let i = 0; i < this._mtls.length; i++) {
-				for (let j = 0; j < this._mtls[i].materials.length; j++) {
-					if (this._mtls[i].materials[j].name === name) {
-						return this._mtls[i].materials[j].color
+			for (let i = 0; i < this.mtls.length; i++) {
+				for (let j = 0; j < this.mtls[i].materials.length; j++) {
+					if (this.mtls[i].materials[j].name === name) {
+						return this.mtls[i].materials[j].color
 					}
 				}
 			}
@@ -726,8 +774,8 @@
 	class modelObj {
 		static version = '1.2.1'
 
-		static generate(fileName) {
-			return new OBJDoc(fileName)
+		static generate(objFilePath) {
+			return new OBJDoc(objFilePath)
 		}
 	}
 

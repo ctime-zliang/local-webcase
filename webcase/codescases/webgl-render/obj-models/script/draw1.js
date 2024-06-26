@@ -738,6 +738,7 @@ function drawCanvas1(containerElement) {
 			if (xhr.readyState === 4 && xhr.status !== 404) {
 				const objDoc = modelObj.generate(filePath)
 				const result = objDoc.parse(xhr.responseText, 20, true)
+				console.log(objDoc)
 				const drawingInfo = objDoc.getDrawingInfo()
 				const objModel = new ObjModel1()
 				objModel.vertexDatas = {
