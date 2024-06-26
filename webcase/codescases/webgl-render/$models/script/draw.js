@@ -212,7 +212,7 @@ class Program {
 		 * 光照参数
 		 */
 		light: {
-			illuType: 1,
+			illuType: 2,
 			intensityGain: 1.0,
 			direction: {
 				x: 0.5,
@@ -462,6 +462,7 @@ class Program {
 			e.stopPropagation()
 		})
 		canvasElement.addEventListener('mousedown', function (e) {
+			e.target.style.cursor = 'grabbing'
 			const canvasRect = this.getBoundingClientRect().toJSON()
 			self.mouseInfo.isLeftDown = self.mouseInfo.isMiddleDown = self.mouseInfo.isRightDown = false
 			self.mouseInfo.nativeLeftDownX = self.mouseInfo.nativeMiddleDownX = self.mouseInfo.nativeRightDownX = -1
@@ -509,6 +510,7 @@ class Program {
 			self.mouseInfo.moveLastNativeY = nowY
 		})
 		document.addEventListener('mouseup', function (e) {
+			e.target.style.cursor = 'default'
 			if (self.mouseInfo.isLeftDown && !self.mouseInfo.hasLeftDownMove) {
 				self.canvasElementClickedAction.call(self, e)
 			}
@@ -974,13 +976,8 @@ class Program {
 		switch (modelType) {
 			case 'model1': {
 				const humanoidModelDatas1 = this.createHumanoidModelDatas()
-				const humanoidModelDatas2 = this.createHumanoidModelDatas(1.5, 0, -4.0)
-				const shereModelDatas1 = this.createShereModelDatas(0.65, 30, 30, -1.0, 0, 2.0)
-				this.glControl.modelInstances = [
-					...humanoidModelDatas1.modelInstances,
-					...humanoidModelDatas2.modelInstances,
-					...shereModelDatas1.modelInstances,
-				]
+				const humanoidModelDatas2 = this.createHumanoidModelDatas(1.5, 0, -2.0)
+				this.glControl.modelInstances = [...humanoidModelDatas1.modelInstances, ...humanoidModelDatas2.modelInstances]
 				break
 			}
 			case 'model2': {
