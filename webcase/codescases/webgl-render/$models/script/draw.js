@@ -172,6 +172,7 @@ class Program {
 	}
 	static profile = {
 		autoTransformation: false,
+		rotationCalculationType: 1,
 		/**
 		 * 视图矩阵参数
 		 */
@@ -273,6 +274,7 @@ class Program {
 	static initFormView() {
 		const self = this
 		const modelSelectorSelectElement = this.containerElement.querySelector(`[data-tag-name="modelSelector"]`)
+		const rotationCalculationTypeRadioElements = this.containerElement.querySelectorAll(`[data-tag-name="rotationCalculationType"]`)
 		const modelRotationRangeXElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeX"]`)
 		const modelRotationXShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeXShow"]`)
 		const modelRotationRangeYElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeY"]`)
@@ -339,6 +341,11 @@ class Program {
 		const fogEndDistRangeElement = this.containerElement.querySelector(`[data-tag-name="fogEndDist"]`)
 		const fogEndDistShowShowSpanElement = this.containerElement.querySelector(`[data-tag-name="fogEndDistShow"]`)
 
+		rotationCalculationTypeRadioElements.forEach(itemElement => {
+			const name = this.containerElement.id + '_' + itemElement.getAttribute('data-tag-name')
+			itemElement.setAttribute('name', name)
+			itemElement.checked = itemElement.value === String(self.profile.rotationCalculationType)
+		})
 		modelRotationXShowSpanElement.textContent = modelRotationRangeXElement.value = 0
 		modelRotationYShowSpanElement.textContent = modelRotationRangeYElement.value = 0
 		modelRotationZShowSpanElement.textContent = modelRotationRangeZElement.value = 0
@@ -391,6 +398,7 @@ class Program {
 		const self = this
 		const canvasElement = this.containerElement.querySelector(`canvas`)
 		const modelSelectorSelectElement = this.containerElement.querySelector(`[data-tag-name="modelSelector"]`)
+		const rotationCalculationTypeRadioElements = this.containerElement.querySelectorAll(`[data-tag-name="rotationCalculationType"]`)
 		const modelRotationRangeXElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeX"]`)
 		const modelRotationRangeXShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeXShow"]`)
 		const modelRotationRangeYElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeY"]`)
@@ -689,11 +697,18 @@ class Program {
 			self.toggleModelModelDatas(this.value)
 			self.isRender = true
 		})
-		projectionTypeRadioElements.forEach(itemElement => {
+		rotationCalculationTypeRadioElements.forEach(itemElement => {
 			itemElement.addEventListener('change', function (e) {
-				self.profile.projectionType = +this.value
-				self.toggleProjectionTypeView()
-				console.log('projectionType:', self.profile.projectionType)
+				self.profile.rotationCalculationType = +this.value
+				console.log('rotationCalculationType:', self.profile.rotationCalculationType)
+				modelRotationRangeXShowSpanElement.textContent = modelRotationRangeXElement.value = 0
+				modelRotationRangeYShowSpanElement.textContent = modelRotationRangeYElement.value = 0
+				modelRotationRangeZShowSpanElement.textContent = modelRotationRangeZElement.value = 0
+				self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+					modelInstanceItem.modelRatation.x = 0
+					modelInstanceItem.modelRatation.y = 0
+					modelInstanceItem.modelRatation.z = 0
+				})
 				self.isRender = true
 			})
 		})
@@ -754,6 +769,14 @@ class Program {
 			})
 			self.isRender = true
 			self.renderModelInfomationView(self.glControl.modelInstances)
+		})
+		projectionTypeRadioElements.forEach(itemElement => {
+			itemElement.addEventListener('change', function (e) {
+				self.profile.projectionType = +this.value
+				self.toggleProjectionTypeView()
+				console.log('projectionType:', self.profile.projectionType)
+				self.isRender = true
+			})
 		})
 		persProjectionFovyRangeElement.addEventListener('input', function (e) {
 			persProjectionFovyShowSpanElement.textContent = self.profile.persProjection.fovy = +this.value
@@ -1442,18 +1465,46 @@ function drawCanvas(containerElement) {
 			/**
 			 * 创建旋转矩阵
 			 */
-			const modelRotationXMatrix4 = Ven$CanvasMatrix4.setRotate(
-				Ven$Angles.degreeToRadian(modelInstance.modelRatation.x),
-				new Ven$Vector3(1, 0, 0)
-			)
-			const modelRotationYMatrix4 = Ven$CanvasMatrix4.setRotate(
-				Ven$Angles.degreeToRadian(modelInstance.modelRatation.y),
-				new Ven$Vector3(0, 1, 0)
-			)
-			const modelRotationZMatrix4 = Ven$CanvasMatrix4.setRotate(
-				Ven$Angles.degreeToRadian(modelInstance.modelRatation.z),
-				new Ven$Vector3(0, 0, 1)
-			)
+			let modelRotationXMatrix4 = Ven$CanvasMatrix4.initMatrix()
+			let modelRotationYMatrix4 = Ven$CanvasMatrix4.initMatrix()
+			let modelRotationZMatrix4 = Ven$CanvasMatrix4.initMatrix()
+			let modelRotationMatrix4 = Ven$CanvasMatrix4.initMatrix()
+			if (Program.profile.rotationCalculationType === 1) {
+				modelRotationXMatrix4 = Ven$CanvasMatrix4.setRotate(
+					Ven$Angles.degreeToRadian(modelInstance.modelRatation.x),
+					new Ven$Vector3(1, 0, 0)
+				)
+				modelRotationYMatrix4 = Ven$CanvasMatrix4.setRotate(
+					Ven$Angles.degreeToRadian(modelInstance.modelRatation.y),
+					new Ven$Vector3(0, 1, 0)
+				)
+				modelRotationZMatrix4 = Ven$CanvasMatrix4.setRotate(
+					Ven$Angles.degreeToRadian(modelInstance.modelRatation.z),
+					new Ven$Vector3(0, 0, 1)
+				)
+				modelRotationMatrix4 = modelRotationXMatrix4.multiply4(modelRotationYMatrix4).multiply4(modelRotationZMatrix4)
+			}
+			if (Program.profile.rotationCalculationType === 3) {
+				let len = Math.sqrt(
+					modelInstance.modelRatation.x * modelInstance.modelRatation.x +
+						modelInstance.modelRatation.y * modelInstance.modelRatation.y +
+						modelInstance.modelRatation.z * modelInstance.modelRatation.z
+				)
+				let tempQ =
+					len === 0
+						? Ven$Quaternion.initQuaternion()
+						: Ven$Quaternion.fromRotation(
+								len,
+								new Ven$Vector3(
+									modelInstance.modelRatation.x / len,
+									modelInstance.modelRatation.y / len,
+									modelInstance.modelRatation.z / len
+								)
+						  )
+				let currentQ = Ven$Quaternion.multiplyQuaternions(tempQ, Ven$Quaternion.initQuaternion())
+				let currentMatrixData = Ven$Quaternion.makeRotationFromQuaternion(currentQ)
+				modelRotationMatrix4 = Ven$CanvasMatrix4.setFromArray(currentMatrixData)
+			}
 			/**
 			 * 创建平移矩阵
 			 */
@@ -1469,11 +1520,7 @@ function drawCanvas(containerElement) {
 			/**
 			 * 生成模型变换矩阵
 			 */
-			const modelEffectMatrix4 = modelRotationXMatrix4
-				.multiply4(modelRotationYMatrix4)
-				.multiply4(modelRotationZMatrix4)
-				.multiply4(modelScaleMatrix4)
-				.multiply4(modelOffsetMatrix4)
+			const modelEffectMatrix4 = modelRotationMatrix4.multiply4(modelScaleMatrix4).multiply4(modelOffsetMatrix4)
 			/**
 			 * 创建法线变换矩阵
 			 */

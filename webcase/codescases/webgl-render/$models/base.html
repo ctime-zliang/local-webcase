@@ -57,6 +57,33 @@
 						padding: 3px 0;
 					"
 				>
+					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Rotation Calculation Type: </label>
+					<input type="radio" data-tag-name="rotationCalculationType" value="1" style="width: 20px; height: 20px; cursor: pointer" />
+					<span>Matrix Rotation</span>
+					<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+					<input
+						type="radio"
+						data-tag-name="rotationCalculationType"
+						value="2"
+						disabled="disabled"
+						style="width: 20px; height: 20px; cursor: pointer"
+					/>
+					<span>Euler Rotation</span>
+					<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+					<input type="radio" data-tag-name="rotationCalculationType" value="3" style="width: 20px; height: 20px; cursor: pointer" />
+					<span>Quaternion Rotation</span>
+				</div>
+				<div
+					style="
+						width: fit-content;
+						font-size: 12px;
+						display: flex;
+						flex-wrap: nowrap;
+						align-items: center;
+						align-content: center;
+						padding: 3px 0;
+					"
+				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Rotation X: </label>
 					<span>-360</span>
 					<input
@@ -874,6 +901,8 @@
 	<script type="text/javascript" src="../../../../$vendor/utils/color.js"></script>
 	<script type="text/javascript" src="../../../../$vendor/utils/StepControl.js"></script>
 	<script type="text/javascript" src="../../../../$vendor/utils/webgl.utils.js"></script>
+	<script type="text/javascript" src="../../../../$vendor/algorithm/common/Euler.js"></script>
+	<script type="text/javascript" src="../../../../$vendor/algorithm/common/Quaternion.js"></script>
 	<script type="text/javascript" src="../../../../$vendor/algorithm/common/Decimals.js"></script>
 	<script type="text/javascript" src="../../../../$vendor/algorithm/common/DoubleKit.js"></script>
 	<script type="text/javascript" src="../../../../$vendor/algorithm/common/Math.js"></script>

@@ -1,4 +1,8 @@
 class Ven$Quaternion {
+	static initQuaternion() {
+		return new Ven$Quaternion()
+	}
+
 	/**
 	 * @description 欧拉角转四元数
 	 * @function setFromEuler
@@ -124,7 +128,7 @@ class Ven$Quaternion {
 		const { x, y, z } = axisVector3
 		const cos = Math.cos(radian / 2)
 		const sin = Math.sin(radian / 2)
-		return new Ven$Quaternion()(x * sin, y * sin, z * sin, cos)
+		return new Ven$Quaternion(x * sin, y * sin, z * sin, cos)
 	}
 
 	static multiplyQuaternions(quaternion1, quaternion2) {
@@ -142,7 +146,7 @@ class Ven$Quaternion {
 		quaternion.y = qay * qbw + qaw * qby + qaz * qbx - qax * qbz
 		quaternion.z = qaz * qbw + qaw * qbz + qax * qby - qay * qbx
 		quaternion.w = qaw * qbw - qax * qbx - qay * qby - qaz * qbz
-		return target
+		return quaternion
 	}
 
 	static makeRotationFromQuaternion(quaternion) {

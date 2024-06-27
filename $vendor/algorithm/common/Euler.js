@@ -1,4 +1,8 @@
 class Ven$Euler {
+	static initEuler() {
+		return new Ven$Euler()
+	}
+
 	static setFromRotationMatrix(matrix4, order) {
 		const euler = new Ven$Euler()
 		const clamp = (value, min, max) => {

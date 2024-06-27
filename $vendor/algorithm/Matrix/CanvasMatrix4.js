@@ -3,6 +3,17 @@ class Ven$CanvasMatrix4 {
 		return new Ven$Matrix4()
 	}
 
+	static setFromArray(array) {
+		if (array.length !== 16) {
+			return new Ven$Matrix4()
+		}
+		const matrix4 = new Ven$Matrix4()
+		for (let i = 0; i < 16; i++) {
+			matrix4.data[i] = array[i]
+		}
+		return matrix4
+	}
+
 	static copyMatrix(refMatrix4) {
 		const matrix4 = new Ven$Matrix4()
 		for (let i = 0; i < refMatrix4.data.length; i++) {
