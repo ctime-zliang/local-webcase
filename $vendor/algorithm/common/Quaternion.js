@@ -207,7 +207,7 @@ class Ven$Quaternion {
 		return this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w
 	}
 
-	reset(quaternion) {
+	resetBy(quaternion) {
 		this.x = quaternion.x
 		this.y = quaternion.y
 		this.z = quaternion.z
@@ -299,7 +299,7 @@ class Ven$Quaternion {
 			quaternion.z = -q.z
 			cosHalfTheta = -cosHalfTheta
 		} else {
-			quaternion.reset(q)
+			quaternion.resetBy(q)
 		}
 		if (cosHalfTheta >= 1.0) {
 			quaternion.w = w
@@ -326,6 +326,10 @@ class Ven$Quaternion {
 		quaternion.y = y * ratioA + quaternion.y * ratioB
 		quaternion.z = z * ratioA + quaternion.z * ratioB
 		return quaternion
+	}
+
+	toString() {
+		return `Quaternion(${this.x}, ${this.y}, ${this.z}, ${this.w})`
 	}
 }
 

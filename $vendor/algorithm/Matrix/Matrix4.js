@@ -247,6 +247,12 @@ class Ven$Matrix4 extends Ven$Matrix {
 		return new Ven$Matrix3([this.data[0], this.data[1], 0, this.data[4], this.data[5], 0, this.data[12], this.data[13], 1])
 	}
 
+	resetBy(matrix4) {
+		for (let i = 0; i < matrix4.data.length; i++) {
+			this.data[i] = matrix4.data[i]
+		}
+	}
+
 	/**
 	 * 矩阵转置
 	 */

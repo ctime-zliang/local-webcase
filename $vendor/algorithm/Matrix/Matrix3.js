@@ -159,6 +159,12 @@ class Ven$Matrix3 extends Ven$Matrix {
 		return this.det() < 0
 	}
 
+	resetBy(matrix3) {
+		for (let i = 0; i < matrix3.data.length; i++) {
+			this.data[i] = matrix3.data[i]
+		}
+	}
+
 	/**
 	 * 矩阵转置
 	 */

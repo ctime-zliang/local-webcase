@@ -114,7 +114,6 @@ class Ven$Matrix {
 		 * 矩阵列数
 		 */
 		this._n = n
-		const cnt = this._m * this._n
 		this._data = data
 	}
 

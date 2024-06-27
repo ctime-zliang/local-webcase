@@ -114,4 +114,15 @@ class Ven$Euler {
 	set order(value) {
 		this._order = value
 	}
+
+	resetBy(euler) {
+		this.x = euler.x
+		this.y = euler.y
+		this.z = euler.z
+		this.order = euler.order
+	}
+
+	toString() {
+		return `Euler(${this.x}, ${this.y}, ${this.z}, ${this.order})`
+	}
 }

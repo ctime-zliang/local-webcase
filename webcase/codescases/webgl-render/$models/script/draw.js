@@ -2,6 +2,7 @@ class Model1 {
 	constructor() {
 		this._vertexDatas = null
 		this._modelParam = null
+		this._modeControl = {}
 		this._modelRatation = {
 			x: 0,
 			y: 0,
@@ -25,6 +26,10 @@ class Model1 {
 
 	get modelParam() {
 		return this._modelParam
+	}
+
+	get modeControl() {
+		return this._modeControl
 	}
 
 	get modelRatation() {
@@ -169,7 +174,9 @@ class Program {
 		sceneMiddleDownY: -1,
 		sceneLeftDownX: -1,
 		sceneLeftDownY: -1,
+		extensions: {},
 	}
+	static canvasElementRect = null
 	static profile = {
 		autoTransformation: false,
 		rotationCalculationType: 1,
@@ -266,6 +273,8 @@ class Program {
 			modelInstances: [],
 			vertexFeatureSize: 0,
 		}
+		const canvasElement = this.containerElement.querySelector(`canvas`)
+		this.canvasElementRect = canvasElement.getBoundingClientRect().toJSON()
 		this.syncFogColor2ClearColor()
 		this.initFormView()
 		this.eventHandle()
@@ -344,7 +353,7 @@ class Program {
 		rotationCalculationTypeRadioElements.forEach(itemElement => {
 			const name = this.containerElement.id + '_' + itemElement.getAttribute('data-tag-name')
 			itemElement.setAttribute('name', name)
-			itemElement.checked = itemElement.value === String(self.profile.rotationCalculationType)
+			itemElement.checked = itemElement.value === String(this.profile.rotationCalculationType)
 		})
 		modelRotationXShowSpanElement.textContent = modelRotationRangeXElement.value = 0
 		modelRotationYShowSpanElement.textContent = modelRotationRangeYElement.value = 0
@@ -373,7 +382,7 @@ class Program {
 		lightIlluTypeRadioElements.forEach(itemElement => {
 			const name = this.containerElement.id + '_' + itemElement.getAttribute('data-tag-name')
 			itemElement.setAttribute('name', name)
-			itemElement.checked = itemElement.value === String(self.profile.light.illuType)
+			itemElement.checked = itemElement.value === String(this.profile.light.illuType)
 		})
 		lightPositionRangeXShowElement.textContent = lightPositionRangeXRangeElement.value = self.profile.light.position.x
 		lightPositionRangeYShowElement.textContent = lightPositionRangeYRangeElement.value = self.profile.light.position.y
@@ -471,42 +480,69 @@ class Program {
 		})
 		canvasElement.addEventListener('mousedown', function (e) {
 			e.target.style.cursor = 'grabbing'
-			const canvasRect = this.getBoundingClientRect().toJSON()
+			const mouseClientX = e.clientX - self.canvasElementRect.left
+			const mouseClientY = e.clientY - self.canvasElementRect.top
 			self.mouseInfo.isLeftDown = self.mouseInfo.isMiddleDown = self.mouseInfo.isRightDown = false
-			self.mouseInfo.nativeLeftDownX = self.mouseInfo.nativeMiddleDownX = self.mouseInfo.nativeRightDownX = -1
-			self.mouseInfo.nativeLeftDownY = self.mouseInfo.nativeMiddleDownY = self.mouseInfo.nativeRightDownY = -1
+			self.mouseInfo.nativeLeftDownX = self.mouseInfo.nativeMiddleDownX = self.mouseInfo.nativeRightDownX = 0
+			self.mouseInfo.nativeLeftDownY = self.mouseInfo.nativeMiddleDownY = self.mouseInfo.nativeRightDownY = 0
 			self.mouseInfo.hasMoved = false
 			if (e.button === 0) {
 				self.mouseInfo.isLeftDown = true
-				self.mouseInfo.nativeLeftDownX = e.clientX - canvasRect.left
-				self.mouseInfo.nativeLeftDownY = e.clientY - canvasRect.top
+				self.mouseInfo.nativeLeftDownX = mouseClientX
+				self.mouseInfo.nativeLeftDownY = mouseClientY
 			}
 			if (e.button === 1) {
 				self.mouseInfo.isMiddleDown = true
-				self.mouseInfo.nativeMiddleDownX = e.clientX - canvasRect.left
-				self.mouseInfo.nativeMiddleDownY = e.clientY - canvasRect.top
+				self.mouseInfo.nativeMiddleDownX = mouseClientX
+				self.mouseInfo.nativeMiddleDownY = mouseClientY
 			}
 			if (e.button === 2) {
 				self.mouseInfo.isRightDown = true
-				self.mouseInfo.nativeRightDownX = e.clientX - canvasRect.left
-				self.mouseInfo.nativeRightDownY = e.clientY - canvasRect.top
+				self.mouseInfo.nativeRightDownX = mouseClientX
+				self.mouseInfo.nativeRightDownY = mouseClientY
 			}
+			rotationCalculationTypeRadioElements.forEach(itemElement => {
+				const name = self.containerElement.id + '_' + itemElement.getAttribute('data-tag-name')
+				itemElement.setAttribute('name', name)
+				self.profile.rotationCalculationType = 3
+				itemElement.checked = itemElement.value === String(self.profile.rotationCalculationType)
+			})
+			self.getModelInstances(self.glControl.modelInstances).forEach(modelInstanceItem => {
+				if (!modelInstanceItem.modeControl.lastQuaternion) {
+					modelInstanceItem.modeControl.lastQuaternion = Ven$Quaternion.initQuaternion()
+				}
+			})
 		})
 		document.addEventListener('mousemove', function (e) {
-			const nowX = e.clientX
-			const nowY = e.clientY
-			const distNativeX = nowX - self.mouseInfo.moveLastNativeX
-			const distNativeY = nowY - self.mouseInfo.moveLastNativeY
+			const mouseClientX = e.clientX - self.canvasElementRect.left
+			const mouseClientY = e.clientY - self.canvasElementRect.top
+			const itemDistNativeX = mouseClientX - self.mouseInfo.moveLastNativeX
+			const itemDistNativeY = mouseClientY - self.mouseInfo.moveLastNativeY
+			const totalDistNativeX = mouseClientX - self.mouseInfo.nativeLeftDownX
+			const totalDistNativeY = mouseClientY - self.mouseInfo.nativeLeftDownY
 			if (self.mouseInfo.isLeftDown) {
 				self.mouseInfo.hasLeftDownMove = true
-				const ratioDistX = 0.65 * distNativeX
-				const ratioDistY = 0.65 * distNativeY
+				const ratioDistX = 0.65 * itemDistNativeX
+				const ratioDistY = 0.65 * itemDistNativeY
+				const len = Math.sqrt(totalDistNativeX * totalDistNativeX + totalDistNativeY * totalDistNativeY)
+				const ratationQuaternion =
+					len === 0
+						? Ven$Quaternion.initQuaternion()
+						: Ven$Quaternion.fromRotation({ x: totalDistNativeY / len, y: totalDistNativeX / len, z: 0 }, len)
 				self.getModelInstances(self.glControl.modelInstances).forEach(modelInstanceItem => {
+					modelInstanceItem.modeControl.currentQuaternion = Ven$Quaternion.multiplyQuaternions(
+						ratationQuaternion,
+						modelInstanceItem.modeControl.lastQuaternion
+					)
+					modelInstanceItem.modeControl.currentMatrixData = Ven$Quaternion.makeRotationFromQuaternion(
+						modelInstanceItem.modeControl.currentQuaternion
+					)
+					/* ... */
 					modelInstanceItem.modelRatation.y += ratioDistX
 					modelInstanceItem.modelRatation.x += ratioDistY
 				})
-				self.isRender = true
 				self.renderModelInfomationView(self.glControl.modelInstances)
+				self.isRender = true
 			}
 			if (self.mouseInfo.isRightDown) {
 				self.mouseInfo.hasRightDownMove = true
@@ -514,18 +550,23 @@ class Program {
 			if (self.mouseInfo.isMiddleDown) {
 				self.mouseInfo.hasMiddleDownMove = true
 			}
-			self.mouseInfo.moveLastNativeX = nowX
-			self.mouseInfo.moveLastNativeY = nowY
+			self.mouseInfo.moveLastNativeX = mouseClientX
+			self.mouseInfo.moveLastNativeY = mouseClientY
 		})
 		document.addEventListener('mouseup', function (e) {
 			e.target.style.cursor = 'default'
 			if (self.mouseInfo.isLeftDown && !self.mouseInfo.hasLeftDownMove) {
 				self.canvasElementClickedAction.call(self, e)
 			}
+			if (self.mouseInfo.isLeftDown) {
+				self.getModelInstances(self.glControl.modelInstances).forEach(modelInstanceItem => {
+					modelInstanceItem.modeControl.lastQuaternion.resetBy(modelInstanceItem.modeControl.currentQuaternion)
+				})
+			}
 			self.mouseInfo.hasLeftDownMove = self.mouseInfo.hasRightDownMove = self.mouseInfo.hasMiddleDownMove = false
 			self.mouseInfo.isLeftDown = self.mouseInfo.isMiddleDown = self.mouseInfo.isRightDown = false
-			self.mouseInfo.nativeLeftDownX = self.mouseInfo.nativeMiddleDownX = self.mouseInfo.nativeRightDownX = -1
-			self.mouseInfo.nativeLeftDownY = self.mouseInfo.nativeMiddleDownY = self.mouseInfo.nativeRightDownY = -1
+			self.mouseInfo.nativeLeftDownX = self.mouseInfo.nativeMiddleDownX = self.mouseInfo.nativeRightDownX = 0
+			self.mouseInfo.nativeLeftDownY = self.mouseInfo.nativeMiddleDownY = self.mouseInfo.nativeRightDownY = 0
 		})
 		document.addEventListener('keydown', function (e) {
 			e.preventDefault()
@@ -1465,45 +1506,52 @@ function drawCanvas(containerElement) {
 			/**
 			 * 创建旋转矩阵
 			 */
-			let modelRotationXMatrix4 = Ven$CanvasMatrix4.initMatrix()
-			let modelRotationYMatrix4 = Ven$CanvasMatrix4.initMatrix()
-			let modelRotationZMatrix4 = Ven$CanvasMatrix4.initMatrix()
 			let modelRotationMatrix4 = Ven$CanvasMatrix4.initMatrix()
 			if (Program.profile.rotationCalculationType === 1) {
-				modelRotationXMatrix4 = Ven$CanvasMatrix4.setRotate(
+				/**
+				 * 矩阵旋转
+				 */
+				const modelRotationXMatrix4 = Ven$CanvasMatrix4.setRotate(
 					Ven$Angles.degreeToRadian(modelInstance.modelRatation.x),
 					new Ven$Vector3(1, 0, 0)
 				)
-				modelRotationYMatrix4 = Ven$CanvasMatrix4.setRotate(
+				const modelRotationYMatrix4 = Ven$CanvasMatrix4.setRotate(
 					Ven$Angles.degreeToRadian(modelInstance.modelRatation.y),
 					new Ven$Vector3(0, 1, 0)
 				)
-				modelRotationZMatrix4 = Ven$CanvasMatrix4.setRotate(
+				const modelRotationZMatrix4 = Ven$CanvasMatrix4.setRotate(
 					Ven$Angles.degreeToRadian(modelInstance.modelRatation.z),
 					new Ven$Vector3(0, 0, 1)
 				)
 				modelRotationMatrix4 = modelRotationXMatrix4.multiply4(modelRotationYMatrix4).multiply4(modelRotationZMatrix4)
 			}
 			if (Program.profile.rotationCalculationType === 3) {
-				let len = Math.sqrt(
-					modelInstance.modelRatation.x * modelInstance.modelRatation.x +
-						modelInstance.modelRatation.y * modelInstance.modelRatation.y +
-						modelInstance.modelRatation.z * modelInstance.modelRatation.z
-				)
-				let tempQ =
-					len === 0
-						? Ven$Quaternion.initQuaternion()
-						: Ven$Quaternion.fromRotation(
-								len,
-								new Ven$Vector3(
-									modelInstance.modelRatation.x / len,
-									modelInstance.modelRatation.y / len,
-									modelInstance.modelRatation.z / len
-								)
-						  )
-				let currentQ = Ven$Quaternion.multiplyQuaternions(tempQ, Ven$Quaternion.initQuaternion())
-				let currentMatrixData = Ven$Quaternion.makeRotationFromQuaternion(currentQ)
-				modelRotationMatrix4 = Ven$CanvasMatrix4.setFromArray(currentMatrixData)
+				/**
+				 * 四元数旋转
+				 */
+				if (Program.mouseInfo.isLeftDown) {
+					modelRotationMatrix4 = Ven$CanvasMatrix4.setFromArray(Program.glControl.modelInstances[0].modeControl.currentMatrixData)
+				} else {
+					const len = Math.sqrt(
+						modelInstance.modelRatation.x * modelInstance.modelRatation.x +
+							modelInstance.modelRatation.y * modelInstance.modelRatation.y +
+							modelInstance.modelRatation.z * modelInstance.modelRatation.z
+					)
+					const ratationQuaternion =
+						len === 0
+							? Ven$Quaternion.initQuaternion()
+							: Ven$Quaternion.fromRotation(
+									Ven$Angles.degreeToRadian(len),
+									new Ven$Vector3(
+										modelInstance.modelRatation.x / len,
+										modelInstance.modelRatation.y / len,
+										modelInstance.modelRatation.z / len
+									)
+							  )
+					const currentQuaternion = Ven$Quaternion.multiplyQuaternions(ratationQuaternion, Ven$Quaternion.initQuaternion())
+					const currentMatrixData = Ven$Quaternion.makeRotationFromQuaternion(currentQuaternion)
+					modelRotationMatrix4 = Ven$CanvasMatrix4.setFromArray(currentMatrixData)
+				}
 			}
 			/**
 			 * 创建平移矩阵
