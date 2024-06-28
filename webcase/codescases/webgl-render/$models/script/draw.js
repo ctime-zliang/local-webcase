@@ -210,7 +210,7 @@ class Program {
 	static profile = {
 		autoTransformation: false,
 		rotationCalculationType: 1,
-		modelSourceType: 1,
+		modelSourceType: 2,
 		/**
 		 * 视图矩阵参数
 		 */
@@ -447,7 +447,9 @@ class Program {
 		this.toggleLightIlluTypeView()
 		this.toggleProjectionTypeView()
 		this.toggleModelSourceTypeView()
-		this.toggleModelModelDatas(modelPresetListSelectorSelectElement.value)
+		if (this.profile.modelSourceType === 1) {
+			this.toggleModelModelDatas(modelPresetListSelectorSelectElement.value)
+		}
 	}
 
 	static eventHandle() {
