@@ -19,7 +19,10 @@ class Model1 {
 			z: 1,
 		}
 		this._featureBuffer = null
+		this._vertexBuffer = null
 		this._normalBuffer = null
+		this._colorBuffer = null
+		this._indexBuffer = null
 		this._texCoordBuffer = null
 		this._modelMatrix = null
 	}
@@ -58,11 +61,32 @@ class Model1 {
 		this._featureBuffer = value
 	}
 
+	get vertexBuffer() {
+		return this._vertexBuffer
+	}
+	set vertexBuffer(value) {
+		this._vertexBuffer = value
+	}
+
 	get normalBuffer() {
 		return this._normalBuffer
 	}
 	set normalBuffer(value) {
 		this._normalBuffer = value
+	}
+
+	get colorBuffer() {
+		return this._colorBuffer
+	}
+	set colorBuffer(value) {
+		this._colorBuffer = value
+	}
+
+	get indexBuffer() {
+		return this._indexBuffer
+	}
+	set indexBuffer(value) {
+		this._indexBuffer = value
 	}
 
 	get texCoordBuffer() {
@@ -148,6 +172,12 @@ class ShereModel1 extends Model1 {
 	}
 }
 
+class ObjModel1 extends Model1 {
+	constructor() {
+		super()
+	}
+}
+
 class Program {
 	static isRender = true
 	static containerElement
@@ -180,6 +210,7 @@ class Program {
 	static profile = {
 		autoTransformation: false,
 		rotationCalculationType: 1,
+		modelSourceType: 1,
 		/**
 		 * 视图矩阵参数
 		 */
@@ -258,9 +289,9 @@ class Program {
 			},
 		},
 		clearColor: {
-			r: 0,
-			g: 0,
-			b: 0,
+			r: 40,
+			g: 40,
+			b: 40,
 		},
 	}
 
@@ -275,14 +306,24 @@ class Program {
 		}
 		const canvasElement = this.containerElement.querySelector(`canvas`)
 		this.canvasElementRect = canvasElement.getBoundingClientRect().toJSON()
-		this.syncFogColor2ClearColor()
+		// this.syncFogColor2ClearColor()
 		this.initFormView()
 		this.eventHandle()
+		window.setTimeout(() => {
+			const modelSourceTypeRadioElements = this.containerElement.querySelectorAll(`[data-tag-name="modelSourceType"]`)
+			const protocol = window.location.protocol
+			if (protocol !== 'http:' && protocol !== 'https:') {
+				modelSourceTypeRadioElements.forEach(itemElement => {
+					itemElement.disabled = true
+				})
+			}
+		})
 	}
 
 	static initFormView() {
 		const self = this
-		const modelSelectorSelectElement = this.containerElement.querySelector(`[data-tag-name="modelSelector"]`)
+		const modelSourceTypeRadioElements = this.containerElement.querySelectorAll(`[data-tag-name="modelSourceType"]`)
+		const modelPresetListSelectorSelectElement = this.containerElement.querySelector(`[data-tag-name="modelPresetListSelector"]`)
 		const rotationCalculationTypeRadioElements = this.containerElement.querySelectorAll(`[data-tag-name="rotationCalculationType"]`)
 		const modelRotationRangeXElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeX"]`)
 		const modelRotationXShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeXShow"]`)
@@ -350,6 +391,11 @@ class Program {
 		const fogEndDistRangeElement = this.containerElement.querySelector(`[data-tag-name="fogEndDist"]`)
 		const fogEndDistShowShowSpanElement = this.containerElement.querySelector(`[data-tag-name="fogEndDistShow"]`)
 
+		modelSourceTypeRadioElements.forEach(itemElement => {
+			const name = this.containerElement.id + '_' + itemElement.getAttribute('data-tag-name')
+			itemElement.setAttribute('name', name)
+			itemElement.checked = itemElement.value === String(this.profile.modelSourceType)
+		})
 		rotationCalculationTypeRadioElements.forEach(itemElement => {
 			const name = this.containerElement.id + '_' + itemElement.getAttribute('data-tag-name')
 			itemElement.setAttribute('name', name)
@@ -400,13 +446,16 @@ class Program {
 
 		this.toggleLightIlluTypeView()
 		this.toggleProjectionTypeView()
-		this.toggleModelModelDatas(modelSelectorSelectElement.value)
+		this.toggleModelSourceTypeView()
+		this.toggleModelModelDatas(modelPresetListSelectorSelectElement.value)
 	}
 
 	static eventHandle() {
 		const self = this
 		const canvasElement = this.containerElement.querySelector(`canvas`)
-		const modelSelectorSelectElement = this.containerElement.querySelector(`[data-tag-name="modelSelector"]`)
+		const modelSourceTypeRadioElements = this.containerElement.querySelectorAll(`[data-tag-name="modelSourceType"]`)
+		const modelFileSelectorFileElement = this.containerElement.querySelector(`[data-tag-name="modelFileSelector"]`)
+		const modelPresetListSelectorSelectElement = this.containerElement.querySelector(`[data-tag-name="modelPresetListSelector"]`)
 		const rotationCalculationTypeRadioElements = this.containerElement.querySelectorAll(`[data-tag-name="rotationCalculationType"]`)
 		const modelRotationRangeXElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeX"]`)
 		const modelRotationRangeXShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeXShow"]`)
@@ -717,7 +766,38 @@ class Program {
 				self.downNumberKeys.delete(+e.key)
 			}
 		})
-		modelSelectorSelectElement.addEventListener('change', function (e) {
+		modelSourceTypeRadioElements.forEach(itemElement => {
+			itemElement.addEventListener('change', function (e) {
+				self.profile.modelSourceType = +this.value
+				self.clearView()
+				if (self.profile.modelSourceType === 1) {
+					self.toggleModelModelDatas('model1')
+				}
+				if (self.profile.modelSourceType === 2) {
+				}
+				self.toggleModelSourceTypeView()
+				self.isRender = true
+			})
+		})
+		modelFileSelectorFileElement.addEventListener('input', function (e) {
+			const fileReader = new FileReader()
+			const fileItem = this.files[0]
+			fileReader.onload = function () {
+				const objDoc = modelObj.generate(fileItem.name)
+				const result = objDoc.parse(fileReader.result, 20, true)
+				const drawingInfo = objDoc.getDrawingInfo()
+				const objModel = new ObjModel1()
+				objModel.vertexDatas = {
+					colors: drawingInfo.colors,
+					vertices: drawingInfo.vertices,
+					normals: drawingInfo.normals,
+					indices: drawingInfo.indices,
+				}
+				Program.setFileModelInstances([objModel])
+			}
+			fileReader.readAsText(fileItem, 'utf-8')
+		})
+		modelPresetListSelectorSelectElement.addEventListener('change', function (e) {
 			self.toggleModelModelDatas(this.value)
 			self.isRender = true
 		})
@@ -1067,6 +1147,19 @@ class Program {
 		}
 	}
 
+	static toggleModelSourceTypeView() {
+		const modelFileSelectorFileElement = this.containerElement.querySelector(`[data-tag-name="modelFileSelector"]`)
+		const modelPresetListSelectorSelectElement = this.containerElement.querySelector(`[data-tag-name="modelPresetListSelector"]`)
+		if (this.profile.modelSourceType === 1) {
+			modelPresetListSelectorSelectElement.parentElement.style.display = 'flex'
+			modelFileSelectorFileElement.parentElement.style.display = 'none'
+		}
+		if (this.profile.modelSourceType === 2) {
+			modelPresetListSelectorSelectElement.parentElement.style.display = 'none'
+			modelFileSelectorFileElement.parentElement.style.display = 'flex'
+		}
+	}
+
 	static toggleModelModelDatas(modelType) {
 		console.time(`CreateModelData`)
 		this.glControl.modelInstances = []
@@ -1169,6 +1262,48 @@ class Program {
 		})
 		return len
 	}
+
+	static clearView() {
+		const modelRotationRangeXElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeX"]`)
+		const modelRotationXShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeXShow"]`)
+		const modelRotationRangeYElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeY"]`)
+		const modelRotationYShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeYShow"]`)
+		const modelRotationRangeZElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeZ"]`)
+		const modelRotationZShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelRotationRangeZShow"]`)
+		const modelOffsetRangeXElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeX"]`)
+		const modelOffsetXShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeXShow"]`)
+		const modelOffsetRangeYElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeY"]`)
+		const modelOffsetYShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeYShow"]`)
+		const modelOffsetRangeZElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeZ"]`)
+		const modelOffsetZShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelOffsetRangeZShow"]`)
+		const modelScaleRangeElement = this.containerElement.querySelector(`[data-tag-name="modelScaleRange"]`)
+		const modelScaleRangeShowSpanElement = this.containerElement.querySelector(`[data-tag-name="modelScaleRangeShow"]`)
+		modelRotationXShowSpanElement.textContent = modelRotationRangeXElement.value = 0
+		modelRotationYShowSpanElement.textContent = modelRotationRangeYElement.value = 0
+		modelRotationZShowSpanElement.textContent = modelRotationRangeZElement.value = 0
+		modelOffsetXShowSpanElement.textContent = modelOffsetRangeXElement.value = 0
+		modelOffsetYShowSpanElement.textContent = modelOffsetRangeYElement.value = 0
+		modelOffsetZShowSpanElement.textContent = modelOffsetRangeZElement.value = 0
+		modelScaleRangeShowSpanElement.textContent = modelScaleRangeElement.value = 1
+		this.glControl.modelInstances = []
+		this.glControl.vertexFeatureSize = 0
+		this.isRender = true
+	}
+
+	static setFileModelInstances(objModels) {
+		this.glControl.modelInstances = [...objModels]
+		this.glControl.modelInstances.forEach(modelInstanceItem => {
+			modelInstanceItem.normalBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
+			modelInstanceItem.vertexBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
+			modelInstanceItem.colorBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
+			modelInstanceItem.indexBuffer = ven$initElementArrayBufferForLaterUse(this.glControl.gl)
+			modelInstanceItem.texCoordBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
+			if (!modelInstanceItem.modeControl.lastQuaternion) {
+				modelInstanceItem.modeControl.lastQuaternion = Ven$Quaternion.initQuaternion()
+			}
+		})
+		this.isRender = true
+	}
 }
 
 function drawCanvas(containerElement) {
@@ -1253,6 +1388,7 @@ function drawCanvas(containerElement) {
 					// 计算漫反射光和环境光的色值
 					diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
 					gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
+					// gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 					// ambientMixinColor = diffuse + u_AmbientLightColor * v_Color.rgb;
 					// fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
 					// gl_FragColor = vec4(fogMixinColor, v_Color.a);
@@ -1460,7 +1596,7 @@ function drawCanvas(containerElement) {
 			gl.uniform1f(glUniforms.u_illuType, Program.profile.light.illuType)
 			if (Program.profile.light.illuType === 1) {
 				/**
-				 * 平行光方
+				 * 平行光
 				 */
 				const lightDirection = new Ven$Vector3(
 					Program.profile.light.direction.x,
@@ -1510,32 +1646,73 @@ function drawCanvas(containerElement) {
 			})
 		},
 		drawBuffer(gl, vertexFeatureSize, modelInstanceItem, itemProgramControl) {
-			const { normalBuffer, featureBuffer, vertexDatas } = modelInstanceItem
+			const { normalBuffer, featureBuffer, vertexBuffer, colorBuffer, indexBuffer, texCoordBuffer, vertexDatas } = modelInstanceItem
 			const { vertexNormals: normalData, vertexFeature: featureData, vertexCoordinate: texCoordData } = vertexDatas
+			const { colors, vertices, normals, indices } = vertexDatas
 			const { glAttributes } = itemProgramControl
 
-			ven$initAttributeVariable(
-				gl,
-				glAttributes.a_Normal,
-				normalBuffer,
-				{
+			if (Program.profile.modelSourceType === 1) {
+				ven$initAttributeVariable(
+					gl,
+					glAttributes.a_Normal,
+					normalBuffer,
+					{
+						size: 3,
+					},
+					{
+						data: normalData,
+					}
+				)
+				ven$initAttributeVariable(gl, glAttributes.a_Position, featureBuffer, {
 					size: 3,
-				},
-				{
-					data: normalData,
-				}
-			)
-			ven$initAttributeVariable(gl, glAttributes.a_Position, featureBuffer, {
-				size: 3,
-				stride: 28,
-			})
-			ven$initAttributeVariable(gl, glAttributes.a_Color, featureBuffer, {
-				size: 4,
-				stride: 28,
-				offset: 12,
-			})
-			gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
-			gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
+					stride: 28,
+				})
+				ven$initAttributeVariable(gl, glAttributes.a_Color, featureBuffer, {
+					size: 4,
+					stride: 28,
+					offset: 12,
+				})
+				gl.bufferData(gl.ARRAY_BUFFER, featureData, gl.STATIC_DRAW)
+				gl.drawArrays(gl.TRIANGLES, 0, vertexFeatureSize / 7)
+			}
+			if (Program.profile.modelSourceType === 2) {
+				ven$initAttributeVariable(
+					gl,
+					glAttributes.a_Normal,
+					normalBuffer,
+					{
+						size: 3,
+					},
+					{
+						data: normals,
+					}
+				)
+				ven$initAttributeVariable(
+					gl,
+					glAttributes.a_Position,
+					vertexBuffer,
+					{
+						size: 3,
+					},
+					{
+						data: vertices,
+					}
+				)
+				ven$initAttributeVariable(
+					gl,
+					glAttributes.a_Color,
+					colorBuffer,
+					{
+						size: 4,
+					},
+					{
+						data: colors,
+					}
+				)
+				gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
+				gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW)
+				gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0)
+			}
 		},
 		applyModelMatrix(gl, modelInstance, itemProgramControl) {
 			const { glUniforms } = itemProgramControl
@@ -1606,8 +1783,8 @@ function drawCanvas(containerElement) {
 			stepControl.updateLastStamp()
 			return
 		}
-		Program.renderModelInfomationView(Program.glControl.modelInstances)
 		Program.isRender = false
+		Program.renderModelInfomationView(Program.glControl.modelInstances)
 		if (Program.profile.autoTransformation) {
 			angle = stepControl.getNextValue() % 360
 			Program.getModelInstances(Program.glControl.modelInstances).forEach(modelInstanceItem => {
