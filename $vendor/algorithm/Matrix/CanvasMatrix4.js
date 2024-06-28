@@ -23,6 +23,48 @@ class Ven$CanvasMatrix4 {
 	}
 
 	/**
+	 * @description 创建变换矩阵: 基于欧拉角
+	 * @function setFromEuler
+	 * @param {Ven$Euler} euler 欧拉角
+	 * @return {Ven$Matrix4}
+	 */
+	static setFromEuler(euler) {
+		const matrix4 = new Ven$Matrix4()
+		const { x, y, z, order } = euler
+		const cx = Math.cos(x)
+		const sx = Math.sin(x)
+		const cy = Math.cos(y)
+		const sy = Math.sin(y)
+		const cz = Math.cos(z)
+		const sz = Math.sin(z)
+		const sxsz = sx * sz
+		const cxcz = cx * cz
+		const cxsz = cx * sz
+		const sxcz = sx * cz
+
+		matrix4.data[0] = cy * cz
+		matrix4.data[1] = sxcz * sy + cxsz
+		matrix4.data[2] = sxsz - cxcz * sy
+		matrix4.data[3] = 0
+
+		matrix4.data[4] = -cy * sz
+		matrix4.data[5] = cxcz - sxsz * sy
+		matrix4.data[6] = sxcz + cxsz * sy
+		matrix4.data[7] = 0
+
+		matrix4.data[8] = sy
+		matrix4.data[9] = -sx * cy
+		matrix4.data[10] = cx * cy
+		matrix4.data[11] = 0
+
+		matrix4.data[12] = 0
+		matrix4.data[13] = 0
+		matrix4.data[14] = 0
+		matrix4.data[15] = 1
+		return matrix4
+	}
+
+	/**
 	 * @description 创建变换矩阵: 旋转矩阵
 	 * @function setRotate
 	 * @param {number} radian 旋转弧度
