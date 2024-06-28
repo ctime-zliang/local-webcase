@@ -507,11 +507,6 @@ class Program {
 				self.profile.rotationCalculationType = 3
 				itemElement.checked = itemElement.value === String(self.profile.rotationCalculationType)
 			})
-			self.getModelInstances(self.glControl.modelInstances).forEach(modelInstanceItem => {
-				if (!modelInstanceItem.modeControl.lastQuaternion) {
-					modelInstanceItem.modeControl.lastQuaternion = Ven$Quaternion.initQuaternion()
-				}
-			})
 		})
 		document.addEventListener('mousemove', function (e) {
 			const mouseClientX = e.clientX - self.canvasElementRect.left
@@ -528,7 +523,10 @@ class Program {
 				const ratationQuaternion =
 					len === 0
 						? Ven$Quaternion.initQuaternion()
-						: Ven$Quaternion.fromRotation({ x: totalDistNativeY / len, y: totalDistNativeX / len, z: 0 }, len)
+						: Ven$Quaternion.fromRotation(
+								Ven$Angles.degreeToRadian(len),
+								new Ven$Vector3(totalDistNativeY / len, totalDistNativeX / len, 0)
+						  )
 				self.getModelInstances(self.glControl.modelInstances).forEach(modelInstanceItem => {
 					modelInstanceItem.modeControl.currentQuaternion = Ven$Quaternion.multiplyQuaternions(
 						ratationQuaternion,
@@ -541,7 +539,6 @@ class Program {
 					modelInstanceItem.modelRatation.y += ratioDistX
 					modelInstanceItem.modelRatation.x += ratioDistY
 				})
-				self.renderModelInfomationView(self.glControl.modelInstances)
 				self.isRender = true
 			}
 			if (self.mouseInfo.isRightDown) {
@@ -585,7 +582,6 @@ class Program {
 							modelInstanceItem.modelScale.z -= 0.025
 						})
 						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					break
@@ -599,7 +595,6 @@ class Program {
 							modelInstanceItem.modelScale.z += 0.025
 						})
 						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					break
@@ -611,7 +606,6 @@ class Program {
 							modelInstanceItem.modelOffset.z -= 0.05
 						})
 						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
@@ -619,7 +613,6 @@ class Program {
 							modelInstanceItem.modelRatation.z -= 1
 						})
 						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					break
@@ -631,7 +624,6 @@ class Program {
 							modelInstanceItem.modelOffset.z += 0.05
 						})
 						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
@@ -639,7 +631,6 @@ class Program {
 							modelInstanceItem.modelRatation.z += 1
 						})
 						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					break
@@ -651,7 +642,6 @@ class Program {
 							modelInstanceItem.modelOffset.y += 0.05
 						})
 						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
@@ -659,7 +649,6 @@ class Program {
 							modelInstanceItem.modelRatation.y += 1
 						})
 						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					break
@@ -671,7 +660,6 @@ class Program {
 							modelInstanceItem.modelOffset.x += 0.05
 						})
 						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
@@ -679,7 +667,6 @@ class Program {
 							modelInstanceItem.modelRatation.x += 1
 						})
 						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					break
@@ -691,7 +678,6 @@ class Program {
 							modelInstanceItem.modelOffset.y -= 0.05
 						})
 						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
@@ -699,7 +685,6 @@ class Program {
 							modelInstanceItem.modelRatation.y -= 1
 						})
 						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					break
@@ -711,7 +696,6 @@ class Program {
 							modelInstanceItem.modelOffset.x -= 0.05
 						})
 						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					if (e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false) {
@@ -719,7 +703,6 @@ class Program {
 							modelInstanceItem.modelRatation.x -= 1
 						})
 						self.isRender = true
-						self.renderModelInfomationView(self.glControl.modelInstances)
 						break
 					}
 					break
@@ -749,33 +732,87 @@ class Program {
 					modelInstanceItem.modelRatation.x = 0
 					modelInstanceItem.modelRatation.y = 0
 					modelInstanceItem.modelRatation.z = 0
+					modelInstanceItem.modeControl.currentQuaternion = Ven$Quaternion.initQuaternion()
+					modelInstanceItem.modeControl.lastQuaternion = Ven$Quaternion.initQuaternion()
+					modelInstanceItem.modeControl.currentMatrixData = Ven$CanvasMatrix4.initMatrix()
 				})
 				self.isRender = true
 			})
 		})
 		modelRotationRangeXElement.addEventListener('input', function (e) {
 			modelRotationRangeXShowSpanElement.textContent = +this.value
+			const len = Math.sqrt(+this.value * +this.value)
+			const ratationQuaternion =
+				len === 0
+					? Ven$Quaternion.initQuaternion()
+					: Ven$Quaternion.fromRotation(Ven$Angles.degreeToRadian(len), new Ven$Vector3(+this.value / len, 0, 0))
 			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+				modelInstanceItem.modeControl.currentQuaternion = Ven$Quaternion.multiplyQuaternions(
+					ratationQuaternion,
+					modelInstanceItem.modeControl.lastQuaternion
+				)
+				modelInstanceItem.modeControl.currentMatrixData = Ven$Quaternion.makeRotationFromQuaternion(
+					modelInstanceItem.modeControl.currentQuaternion
+				)
+				/* ... */
 				modelInstanceItem.modelRatation.x = +this.value
 			})
 			self.isRender = true
-			self.renderModelInfomationView(self.glControl.modelInstances)
+		})
+		modelRotationRangeXElement.addEventListener('change', function (e) {
+			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+				modelInstanceItem.modeControl.lastQuaternion = modelInstanceItem.modeControl.currentQuaternion
+			})
 		})
 		modelRotationRangeYElement.addEventListener('input', function (e) {
 			modelRotationRangeYShowSpanElement.textContent = +this.value
+			const len = Math.sqrt(+this.value * +this.value)
+			const ratationQuaternion =
+				len === 0
+					? Ven$Quaternion.initQuaternion()
+					: Ven$Quaternion.fromRotation(Ven$Angles.degreeToRadian(len), new Ven$Vector3(0, +this.value / len, 0))
 			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+				modelInstanceItem.modeControl.currentQuaternion = Ven$Quaternion.multiplyQuaternions(
+					ratationQuaternion,
+					modelInstanceItem.modeControl.lastQuaternion
+				)
+				modelInstanceItem.modeControl.currentMatrixData = Ven$Quaternion.makeRotationFromQuaternion(
+					modelInstanceItem.modeControl.currentQuaternion
+				)
+				/* ... */
 				modelInstanceItem.modelRatation.y = +this.value
 			})
 			self.isRender = true
-			self.renderModelInfomationView(self.glControl.modelInstances)
+		})
+		modelRotationRangeYElement.addEventListener('change', function (e) {
+			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+				modelInstanceItem.modeControl.lastQuaternion = modelInstanceItem.modeControl.currentQuaternion
+			})
 		})
 		modelRotationRangeZElement.addEventListener('input', function (e) {
 			modelRotationRangeZShowSpanElement.textContent = +this.value
+			const len = Math.sqrt(+this.value * +this.value)
+			const ratationQuaternion =
+				len === 0
+					? Ven$Quaternion.initQuaternion()
+					: Ven$Quaternion.fromRotation(Ven$Angles.degreeToRadian(len), new Ven$Vector3(0, 0, +this.value / len))
 			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+				modelInstanceItem.modeControl.currentQuaternion = Ven$Quaternion.multiplyQuaternions(
+					ratationQuaternion,
+					modelInstanceItem.modeControl.lastQuaternion
+				)
+				modelInstanceItem.modeControl.currentMatrixData = Ven$Quaternion.makeRotationFromQuaternion(
+					modelInstanceItem.modeControl.currentQuaternion
+				)
+				/* ... */
 				modelInstanceItem.modelRatation.z = +this.value
 			})
 			self.isRender = true
-			self.renderModelInfomationView(self.glControl.modelInstances)
+		})
+		modelRotationRangeZElement.addEventListener('change', function (e) {
+			self.getModelInstances(self.glControl.modelInstances, self.downNumberKeys).forEach(modelInstanceItem => {
+				modelInstanceItem.modeControl.lastQuaternion = modelInstanceItem.modeControl.currentQuaternion
+			})
 		})
 		modelOffsetRangeXElement.addEventListener('input', function (e) {
 			modelOffsetRangeXShowSpanElement.textContent = +this.value
@@ -783,7 +820,6 @@ class Program {
 				modelInstanceItem.modelOffset.x = +this.value
 			})
 			self.isRender = true
-			self.renderModelInfomationView(self.glControl.modelInstances)
 		})
 		modelOffsetRangeYElement.addEventListener('input', function (e) {
 			modelOffsetRangeYShowSpanElement.textContent = +this.value
@@ -791,7 +827,6 @@ class Program {
 				modelInstanceItem.modelOffset.y = +this.value
 			})
 			self.isRender = true
-			self.renderModelInfomationView(self.glControl.modelInstances)
 		})
 		modelOffsetRangeZElement.addEventListener('input', function (e) {
 			modelOffsetRangeZShowSpanElement.textContent = +this.value
@@ -799,7 +834,6 @@ class Program {
 				modelInstanceItem.modelOffset.z = +this.value
 			})
 			self.isRender = true
-			self.renderModelInfomationView(self.glControl.modelInstances)
 		})
 		modelScaleRangeElement.addEventListener('input', function (e) {
 			modelScaleRangeShowSpanElement.textContent = +this.value
@@ -809,7 +843,6 @@ class Program {
 				modelInstanceItem.modelScale.z = +this.value
 			})
 			self.isRender = true
-			self.renderModelInfomationView(self.glControl.modelInstances)
 		})
 		projectionTypeRadioElements.forEach(itemElement => {
 			itemElement.addEventListener('change', function (e) {
@@ -1059,6 +1092,9 @@ class Program {
 			modelInstanceItem.normalBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
 			modelInstanceItem.featureBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
 			modelInstanceItem.texCoordBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
+			if (!modelInstanceItem.modeControl.lastQuaternion) {
+				modelInstanceItem.modeControl.lastQuaternion = Ven$Quaternion.initQuaternion()
+			}
 		})
 		this.glControl.vertexFeatureSize = this.getVertexFeatureSize(this.glControl.modelInstances)
 		console.timeEnd(`CreateModelData`)
@@ -1529,27 +1565,8 @@ function drawCanvas(containerElement) {
 				/**
 				 * 四元数旋转
 				 */
-				if (Program.mouseInfo.isLeftDown) {
-					modelRotationMatrix4 = Ven$CanvasMatrix4.setFromArray(Program.glControl.modelInstances[0].modeControl.currentMatrixData)
-				} else {
-					const len = Math.sqrt(
-						modelInstance.modelRatation.x * modelInstance.modelRatation.x +
-							modelInstance.modelRatation.y * modelInstance.modelRatation.y +
-							modelInstance.modelRatation.z * modelInstance.modelRatation.z
-					)
-					const ratationQuaternion =
-						len === 0
-							? Ven$Quaternion.initQuaternion()
-							: Ven$Quaternion.fromRotation(
-									Ven$Angles.degreeToRadian(len),
-									new Ven$Vector3(
-										modelInstance.modelRatation.x / len,
-										modelInstance.modelRatation.y / len,
-										modelInstance.modelRatation.z / len
-									)
-							  )
-					const currentQuaternion = Ven$Quaternion.multiplyQuaternions(ratationQuaternion, Ven$Quaternion.initQuaternion())
-					const currentMatrixData = Ven$Quaternion.makeRotationFromQuaternion(currentQuaternion)
+				const currentMatrixData = Program.glControl.modelInstances[0].modeControl.currentMatrixData
+				if (currentMatrixData) {
 					modelRotationMatrix4 = Ven$CanvasMatrix4.setFromArray(currentMatrixData)
 				}
 			}
@@ -1589,6 +1606,7 @@ function drawCanvas(containerElement) {
 			stepControl.updateLastStamp()
 			return
 		}
+		Program.renderModelInfomationView(Program.glControl.modelInstances)
 		Program.isRender = false
 		if (Program.profile.autoTransformation) {
 			angle = stepControl.getNextValue() % 360
@@ -1596,7 +1614,6 @@ function drawCanvas(containerElement) {
 				modelInstanceItem.modelRatation.y = angle
 			})
 			Program.isRender = true
-			Program.renderModelInfomationView(Program.glControl.modelInstances)
 		}
 		canvas.init('CANVAS', Program.glControl.gl, null)
 		Program.glControl.gl.useProgram(Program.glControl.commonLight.program)
