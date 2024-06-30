@@ -293,16 +293,16 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-EyePosition X: </label>
-					<span>-100</span>
+					<span>-500</span>
 					<input
 						type="range"
 						data-tag-name="lookAtMatrix4EyePositionX"
-						min="-100"
-						max="100"
-						step="0.1"
+						min="-500"
+						max="500"
+						step="1"
 						style="width: 300px; cursor: pointer"
 					/>
-					<span>100</span>
+					<span>500</span>
 					<strong>&nbsp;(<span data-tag-name="lookAtMatrix4EyePositionXShow">0</span>)</strong>
 				</div>
 				<div
@@ -317,16 +317,16 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-EyePosition Y: </label>
-					<span>-100</span>
+					<span>-500</span>
 					<input
 						type="range"
 						data-tag-name="lookAtMatrix4EyePositionY"
-						min="-100"
-						max="100"
-						step="0.1"
+						min="-500"
+						max="500"
+						step="1"
 						style="width: 300px; cursor: pointer"
 					/>
-					<span>100</span>
+					<span>500</span>
 					<strong>&nbsp;(<span data-tag-name="lookAtMatrix4EyePositionYShow">0</span>)</strong>
 				</div>
 				<div
@@ -341,16 +341,16 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">LookAt-EyePosition Z: </label>
-					<span>-100</span>
+					<span>-500</span>
 					<input
 						type="range"
 						data-tag-name="lookAtMatrix4EyePositionZ"
-						min="-100"
-						max="100"
-						step="0.1"
+						min="-500"
+						max="500"
+						step="1"
 						style="width: 300px; cursor: pointer"
 					/>
-					<span>100</span>
+					<span>500</span>
 					<strong>&nbsp;(<span data-tag-name="lookAtMatrix4EyePositionZShow">0</span>)</strong>
 				</div>
 				<div
@@ -500,9 +500,9 @@
 						type="range"
 						value="0"
 						data-tag-name="lightPositionRangeX"
-						min="-10"
-						max="10"
-						step="0.01"
+						min="-200"
+						max="200"
+						step="0.1"
 						style="width: 300px; cursor: pointer"
 					/>
 					<span>10</span>
@@ -525,12 +525,12 @@
 						type="range"
 						value="0"
 						data-tag-name="lightPositionRangeY"
-						min="-10"
-						max="10"
-						step="0.01"
+						min="-200"
+						max="200"
+						step="0.1"
 						style="width: 300px; cursor: pointer"
 					/>
-					<span>10</span>
+					<span>200</span>
 					<strong>&nbsp;(<span data-tag-name="lightPositionRangeYShow">0</span>)</strong>
 				</div>
 				<div
@@ -550,12 +550,12 @@
 						type="range"
 						value="0"
 						data-tag-name="lightPositionRangeZ"
-						min="-10"
-						max="10"
-						step="0.01"
+						min="-200"
+						max="200"
+						step="0.1"
 						style="width: 300px; cursor: pointer"
 					/>
-					<span>10</span>
+					<span>200</span>
 					<strong>&nbsp;(<span data-tag-name="lightPositionRangeZShow">0</span>)</strong>
 				</div>
 				<div
@@ -823,11 +823,11 @@
 						value="0"
 						data-tag-name="persProjectionNear"
 						min="1"
-						max="50"
-						step="0.1"
+						max="1000"
+						step="1"
 						style="width: 300px; cursor: pointer"
 					/>
-					<span>50</span>
+					<span>1000</span>
 					<strong>&nbsp;(<span data-tag-name="persProjectionNearShow">0</span>)</strong>
 				</div>
 				<div
@@ -848,11 +848,11 @@
 						value="0"
 						data-tag-name="persProjectionFar"
 						min="1"
-						max="300"
-						step="0.1"
+						max="1000"
+						step="1"
 						style="width: 300px; cursor: pointer"
 					/>
-					<span>300</span>
+					<span>1000</span>
 					<strong>&nbsp;(<span data-tag-name="persProjectionFarShow">0</span>)</strong>
 				</div>
 				<div
@@ -955,6 +955,8 @@
 	<script type="text/javascript" src="../common/utils/createCubeDatas.js"></script>
 	<script type="text/javascript" src="../common/utils/createShereDatas.js"></script>
 	<!-- ... -->
+	<script type="text/javascript" src="./script/model.js"></script>
+	<script type="text/javascript" src="./script/program.js"></script>
 	<script type="text/javascript" src="./script/draw.js"></script>
 	<script type="text/javascript" src="./script/base.js"></script>
 </html>
