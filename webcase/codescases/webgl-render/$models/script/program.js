@@ -395,7 +395,7 @@ class Program {
 					len === 0
 						? Ven$Quaternion.initQuaternion()
 						: Ven$Quaternion.fromRotation(
-								Ven$Angles.degreeToRadian(len),
+								Ven$Angles.degreeToRadian(len * 0.65),
 								new Ven$Vector3(totalDistNativeY / len, totalDistNativeX / len, 0)
 						  )
 				self.getModelInstances(self.glControl.modelInstances).forEach(modelInstanceItem => {
@@ -881,6 +881,12 @@ class Program {
 		autoTransformationCheckboxElement.addEventListener('change', function (e) {
 			self.profile.autoTransformation = this.checked
 			self.isRender = true
+			if (self.profile.autoTransformation) {
+				self.profile.rotationCalculationType = 1
+				rotationCalculationTypeRadioElements.forEach(itemElement => {
+					itemElement.checked = itemElement.value === String(self.profile.rotationCalculationType)
+				})
+			}
 		})
 		fogStartDistRangeElement.addEventListener('input', function (e) {
 			fogStartDistShowShowSpanElement.textContent = self.profile.fog.dist.distOfStartAndEye = +this.value
@@ -974,6 +980,9 @@ class Program {
 	static toggleModelSourceTypeView() {
 		const modelFileSelectorFileElement = this.containerElement.querySelector(`[data-tag-name="modelFileSelector"]`)
 		const modelPresetListSelectorSelectElement = this.containerElement.querySelector(`[data-tag-name="modelPresetListSelector"]`)
+		const autoTransformationCheckboxElement = this.containerElement.querySelector(`[data-tag-name="autoTransformation"]`)
+		autoTransformationCheckboxElement.checked = false
+		this.profile.autoTransformation = false
 		if (this.profile.modelSourceType === 1) {
 			modelPresetListSelectorSelectElement.parentElement.style.display = 'flex'
 			modelFileSelectorFileElement.parentElement.style.display = 'none'

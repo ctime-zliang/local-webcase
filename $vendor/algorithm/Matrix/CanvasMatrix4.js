@@ -23,38 +23,170 @@ class Ven$CanvasMatrix4 {
 	}
 
 	/**
-	 * @description 创建变换矩阵: 基于欧拉角
-	 * @function setFromEuler
+	 * @description 创建旋转变换矩阵: 基于欧拉角
+	 * @function setRotationFromEuler
 	 * @param {Ven$Euler} euler 欧拉角
 	 * @return {Ven$Matrix4}
 	 */
-	static setFromEuler(euler) {
+	static setRotationFromEuler(euler) {
 		const matrix4 = new Ven$Matrix4()
 		const { x, y, z, order } = euler
-		const cx = Math.cos(x)
-		const sx = Math.sin(x)
-		const cy = Math.cos(y)
-		const sy = Math.sin(y)
-		const cz = Math.cos(z)
-		const sz = Math.sin(z)
-		const sxsz = sx * sz
-		const cxcz = cx * cz
-		const cxsz = cx * sz
-		const sxcz = sx * cz
+		const a = Math.cos(x)
+		const b = Math.sin(x)
+		const c = Math.cos(y)
+		const d = Math.sin(y)
+		const e = Math.cos(z)
+		const f = Math.sin(z)
+		if (order === 'XYZ') {
+			const ae = a * e
+			const af = a * f
+			const be = b * e
+			const bf = b * f
 
-		matrix4.data[0] = cy * cz
-		matrix4.data[1] = sxcz * sy + cxsz
-		matrix4.data[2] = sxsz - cxcz * sy
+			matrix4.data[0] = c * e
+			matrix4.data[4] = -c * f
+			matrix4.data[8] = d
+
+			matrix4.data[1] = af + be * d
+			matrix4.data[5] = ae - bf * d
+			matrix4.data[9] = -b * c
+
+			matrix4.data[2] = bf - ae * d
+			matrix4.data[6] = be + af * d
+			matrix4.data[10] = a * c
+		} else if (order === 'YXZ') {
+			const ce = c * e
+			const cf = c * f
+			const de = d * e
+			const df = d * f
+
+			matrix4.data[0] = ce + df * b
+			matrix4.data[4] = de * b - cf
+			matrix4.data[8] = a * d
+
+			matrix4.data[1] = a * f
+			matrix4.data[5] = a * e
+			matrix4.data[9] = -b
+
+			matrix4.data[2] = cf * b - de
+			matrix4.data[6] = df + ce * b
+			matrix4.data[10] = a * c
+		} else if (order === 'ZXY') {
+			const ce = c * e
+			const cf = c * f
+			const de = d * e
+			const df = d * f
+
+			matrix4.data[0] = ce - df * b
+			matrix4.data[4] = -a * f
+			matrix4.data[8] = de + cf * b
+
+			matrix4.data[1] = cf + de * b
+			matrix4.data[5] = a * e
+			matrix4.data[9] = df - ce * b
+
+			matrix4.data[2] = -a * d
+			matrix4.data[6] = b
+			matrix4.data[10] = a * c
+		} else if (order === 'ZYX') {
+			const ae = a * e
+			const af = a * f
+			const be = b * e
+			const bf = b * f
+
+			matrix4.data[0] = c * e
+			matrix4.data[4] = be * d - af
+			matrix4.data[8] = ae * d + bf
+
+			matrix4.data[1] = c * f
+			matrix4.data[5] = bf * d + ae
+			matrix4.data[9] = af * d - be
+
+			matrix4.data[2] = -d
+			matrix4.data[6] = b * c
+			matrix4.data[10] = a * c
+		} else if (order === 'YZX') {
+			const ac = a * c
+			const ad = a * d
+			const bc = b * c
+			const bd = b * d
+
+			matrix4.data[0] = c * e
+			matrix4.data[4] = bd - ac * f
+			matrix4.data[8] = bc * f + ad
+
+			matrix4.data[1] = f
+			matrix4.data[5] = a * e
+			matrix4.data[9] = -b * e
+
+			matrix4.data[2] = -d * e
+			matrix4.data[6] = ad * f + bc
+			matrix4.data[10] = ac - bd * f
+		} else if (order === 'XZY') {
+			const ac = a * c
+			const ad = a * d
+			const bc = b * c
+			const bd = b * d
+
+			matrix4.data[0] = c * e
+			matrix4.data[4] = -f
+			matrix4.data[8] = d * e
+
+			matrix4.data[1] = ac * f + bd
+			matrix4.data[5] = a * e
+			matrix4.data[9] = ad * f - bc
+
+			matrix4.data[2] = bc * f - ad
+			matrix4.data[6] = b * e
+			matrix4.data[10] = bd * f + ac
+		}
+
+		matrix4.data[3] = 0
+		matrix4.data[7] = 0
+		matrix4.data[11] = 0
+
+		matrix4.data[12] = 0
+		matrix4.data[13] = 0
+		matrix4.data[14] = 0
+		matrix4.data[15] = 1
+		return matrix4
+	}
+
+	/**
+	 * @description 创建旋转变换矩阵: 基于四元数
+	 * @function setRotationFromQuaternion
+	 * @param {Ven$Quaternion} quaternion 四元数
+	 * @return {Ven$Matrix4}
+	 */
+	static setRotationFromQuaternion(quaternion) {
+		const matrix4 = new Ven$Matrix4()
+		const { x, y, z, w } = quaternion
+		const x2 = 2 * x
+		const y2 = 2 * y
+		const z2 = 2 * z
+		const xx = x * x2
+		const xy = x * y2
+		const xz = x * z2
+		const yy = y * y2
+		const yz = y * z2
+		const zz = z * z2
+		const wx = w * x2
+		const wy = w * y2
+		const wz = w * z2
+
+		matrix4.data[0] = 1 - (yy + zz)
+		matrix4.data[1] = xy + wz
+		matrix4.data[2] = xz - wy
 		matrix4.data[3] = 0
 
-		matrix4.data[4] = -cy * sz
-		matrix4.data[5] = cxcz - sxsz * sy
-		matrix4.data[6] = sxcz + cxsz * sy
+		matrix4.data[4] = xy - wz
+		matrix4.data[5] = 1 - (xx + zz)
+		matrix4.data[6] = yz + wx
 		matrix4.data[7] = 0
 
-		matrix4.data[8] = sy
-		matrix4.data[9] = -sx * cy
-		matrix4.data[10] = cx * cy
+		matrix4.data[8] = xz + wy
+		matrix4.data[9] = yz - wx
+		matrix4.data[10] = 1 - (xx + yy)
 		matrix4.data[11] = 0
 
 		matrix4.data[12] = 0

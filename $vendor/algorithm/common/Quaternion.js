@@ -124,6 +124,63 @@ class Ven$Quaternion {
 		return quaternion
 	}
 
+	/**
+	 * @description 求 qs 到 qe 的四元数球面差值
+	 * @function setSlerp
+	 * @param {Ven$Quaternion} qs 起始四元数
+	 * @param {Ven$Quaternion} qe 结束四元数
+	 * @param {number} t 差值比率
+	 * @return {Ven$Quaternion}
+	 */
+	static setSlerp(qs, qe, t) {
+		const quaternion = qs.copy()
+		if (t === 0) {
+			return quaternion
+		}
+		if (t === 1) {
+			return Ven$Quaternion.copyBy(qe)
+		}
+		const x = quaternion.x
+		const y = quaternion.y
+		const z = quaternion.z
+		const w = quaternion.w
+		let cosHalfTheta = w * qe.w + x * qe.x + y * qe.y + z * qe.z
+		if (cosHalfTheta < 0) {
+			quaternion.w = -qe.w
+			quaternion.x = -qe.x
+			quaternion.y = -qe.y
+			quaternion.z = -qe.z
+			cosHalfTheta = -cosHalfTheta
+		} else {
+			quaternion.resetBy(qe)
+		}
+		if (cosHalfTheta >= 1) {
+			quaternion.w = w
+			quaternion.x = x
+			quaternion.y = y
+			quaternion.z = z
+			return quaternion
+		}
+		const sqrSinHalfTheta = 1 - cosHalfTheta * cosHalfTheta
+		if (sqrSinHalfTheta <= Number.EPSILON) {
+			const s = 1 - t
+			quaternion.w = s * w + t * quaternion.w
+			quaternion.x = s * x + t * quaternion.x
+			quaternion.y = s * y + t * quaternion.y
+			quaternion.z = s * z + t * quaternion.z
+			return quaternion.normalize()
+		}
+		const sinHalfTheta = Math.sqrt(sqrSinHalfTheta)
+		const halfTheta = Math.atan2(sinHalfTheta, cosHalfTheta)
+		const ratioA = Math.sin((1 - t) * halfTheta) / sinHalfTheta
+		const ratioB = Math.sin(t * halfTheta) / sinHalfTheta
+		quaternion.w = w * ratioA + quaternion.w * ratioB
+		quaternion.x = x * ratioA + quaternion.x * ratioB
+		quaternion.y = y * ratioA + quaternion.y * ratioB
+		quaternion.z = z * ratioA + quaternion.z * ratioB
+		return quaternion
+	}
+
 	static fromRotation(radian, axisVector3) {
 		const { x, y, z } = axisVector3
 		const cos = Math.cos(radian / 2)
@@ -273,58 +330,6 @@ class Ven$Quaternion {
 		quaternion.y = this.y
 		quaternion.z = this.z
 		quaternion.w = this.w
-		return quaternion
-	}
-
-	/**
-	 * 四元数球面插值
-	 */
-	slerp(q, t, qt) {
-		const quaternion = this.copy()
-		if (t == 0) {
-			return quaternion
-		}
-		if (t == 1) {
-			return qt.copy(q)
-		}
-		let x = quaternion.x
-		let y = quaternion.y
-		let z = quaternion.z
-		let w = quaternion.w
-		let cosHalfTheta = w * q.w + x * q.x + y * q.y + z * q.z
-		if (cosHalfTheta < 0) {
-			quaternion.w = -q.w
-			quaternion.x = -q.x
-			quaternion.y = -q.y
-			quaternion.z = -q.z
-			cosHalfTheta = -cosHalfTheta
-		} else {
-			quaternion.resetBy(q)
-		}
-		if (cosHalfTheta >= 1.0) {
-			quaternion.w = w
-			quaternion.x = x
-			quaternion.y = y
-			quaternion.z = z
-			return quaternion
-		}
-		let sqrSinHalfTheta = 1 - cosHalfTheta * cosHalfTheta
-		if (sqrSinHalfTheta <= Number.EPSILON) {
-			const s = 1 - t
-			quaternion.w = s * w + t * quaternion.w
-			quaternion.x = s * x + t * quaternion.x
-			quaternion.y = s * y + t * quaternion.y
-			quaternion.z = s * z + t * quaternion.z
-			return quaternion.normalize()
-		}
-		let sinHalfTheta = Math.sqrt(sqrSinHalfTheta)
-		let halfTheta = Math.atan2(sinHalfTheta, cosHalfTheta)
-		let ratioA = Math.sin((1 - t) * halfTheta) / sinHalfTheta
-		let ratioB = Math.sin(t * halfTheta) / sinHalfTheta
-		quaternion.w = w * ratioA + quaternion.w * ratioB
-		quaternion.x = x * ratioA + quaternion.x * ratioB
-		quaternion.y = y * ratioA + quaternion.y * ratioB
-		quaternion.z = z * ratioA + quaternion.z * ratioB
 		return quaternion
 	}
 
