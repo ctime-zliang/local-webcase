@@ -15,7 +15,7 @@
 
 	<body style="display: flex; justify-content: space-between; flex-wrap: wrap; background-color: rgba(200, 200, 200, 1)">
 		<div
-			id="appContainer"
+			id="appContainer1"
 			class="app-container"
 			style="
 				height: fit-content;
@@ -38,73 +38,12 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Source Type: </label>
-					<input type="radio" data-tag-name="modelSourceType" value="1" style="width: 20px; height: 20px; cursor: pointer" />
-					<span>Preset List Selector</span>
-					<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-					<input type="radio" data-tag-name="modelSourceType" value="2" style="width: 20px; height: 20px; cursor: pointer" />
-					<span>File Selector</span>
-				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model: </label>
-					<select data-tag-name="modelPresetListSelector" value="model1" style="width: 300px; cursor: pointer">
-						<option value="model1">Humanoid</option>
-						<option value="model2">Cube</option>
-						<option value="model3">Shere</option>
+					<select data-tag-name="modelSelector" disabled="disabled" value="model1" style="width: 300px; cursor: pointer">
+						<option value="model1">Cube</option>
 					</select>
 				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model: </label>
-					<input type="file" data-tag-name="modelFileSelector" style="height: 30px; cursor: pointer" />
-				</div>
 				<br />
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Rotation Calculation Type: </label>
-					<input type="radio" data-tag-name="rotationCalculationType" value="1" style="width: 20px; height: 20px; cursor: pointer" />
-					<span>Matrix Rotation</span>
-					<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-					<input
-						type="radio"
-						data-tag-name="rotationCalculationType"
-						value="2"
-						disabled="disabled"
-						style="width: 20px; height: 20px; cursor: pointer"
-					/>
-					<span>Euler Rotation</span>
-					<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-					<input type="radio" data-tag-name="rotationCalculationType" value="3" style="width: 20px; height: 20px; cursor: pointer" />
-					<span>Quaternion Rotation</span>
-				</div>
 				<div
 					style="
 						width: fit-content;
@@ -192,17 +131,17 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Offset X: </label>
-					<span>-100</span>
+					<span>-10</span>
 					<input
 						type="range"
 						value="0"
 						data-tag-name="modelOffsetRangeX"
-						min="-100"
-						max="100"
-						step="0.1"
+						min="-10"
+						max="10"
+						step="0.01"
 						style="width: 300px; cursor: pointer"
 					/>
-					<span>100</span>
+					<span>10</span>
 					<strong>&nbsp;(<span data-tag-name="modelOffsetRangeXShow">0</span>)</strong>
 				</div>
 				<div
@@ -217,17 +156,17 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Offset Y: </label>
-					<span>-100</span>
+					<span>-10</span>
 					<input
 						type="range"
 						value="0"
 						data-tag-name="modelOffsetRangeY"
-						min="-100"
-						max="100"
-						step="0.1"
+						min="-10"
+						max="10"
+						step="0.01"
 						style="width: 300px; cursor: pointer"
 					/>
-					<span>100</span>
+					<span>10</span>
 					<strong>&nbsp;(<span data-tag-name="modelOffsetRangeYShow">0</span>)</strong>
 				</div>
 				<div
@@ -242,17 +181,17 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Model Offset Z: </label>
-					<span>-100</span>
+					<span>-10</span>
 					<input
 						type="range"
 						value="0"
 						data-tag-name="modelOffsetRangeZ"
-						min="-100"
-						max="100"
-						step="0.1"
+						min="-10"
+						max="10"
+						step="0.01"
 						style="width: 300px; cursor: pointer"
 					/>
-					<span>100</span>
+					<span>10</span>
 					<strong>&nbsp;(<span data-tag-name="modelOffsetRangeZShow">0</span>)</strong>
 				</div>
 				<div
@@ -273,11 +212,11 @@
 						value="0"
 						data-tag-name="modelScaleRange"
 						min="0.01"
-						max="10"
+						max="5"
 						step="0.1"
 						style="width: 300px; cursor: pointer"
 					/>
-					<span>10</span>
+					<span>5</span>
 					<strong>&nbsp;(<span data-tag-name="modelScaleRangeShow">0</span>)</strong>
 				</div>
 				<br />
@@ -495,14 +434,14 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Position X: </label>
-					<span>-10</span>
+					<span>-200</span>
 					<input
 						type="range"
 						value="0"
 						data-tag-name="lightPositionRangeX"
 						min="-200"
 						max="200"
-						step="0.1"
+						step="1"
 						style="width: 300px; cursor: pointer"
 					/>
 					<span>200</span>
@@ -520,14 +459,14 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Position Y: </label>
-					<span>-10</span>
+					<span>-200</span>
 					<input
 						type="range"
 						value="0"
 						data-tag-name="lightPositionRangeY"
 						min="-200"
 						max="200"
-						step="0.1"
+						step="1"
 						style="width: 300px; cursor: pointer"
 					/>
 					<span>200</span>
@@ -545,14 +484,14 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Light Position Z: </label>
-					<span>-10</span>
+					<span>-200</span>
 					<input
 						type="range"
 						value="0"
 						data-tag-name="lightPositionRangeZ"
 						min="-200"
 						max="200"
-						step="0.1"
+						step="1"
 						style="width: 300px; cursor: pointer"
 					/>
 					<span>200</span>
@@ -720,59 +659,6 @@
 						padding: 3px 0;
 					"
 				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Fog Start Dist: </label>
-					<span>1</span>
-					<input
-						type="range"
-						value="0"
-						data-tag-name="fogStartDist"
-						min="1"
-						max="150"
-						step="0.1"
-						disabled="disabled"
-						style="width: 300px; cursor: pointer"
-					/>
-					<span>150</span>
-					<strong>&nbsp;(<span data-tag-name="fogStartDistShow">1</span>)</strong>
-				</div>
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
-					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Fog End Dist: </label>
-					<span>1</span>
-					<input
-						type="range"
-						value="0"
-						data-tag-name="fogEndDist"
-						min="1"
-						max="150"
-						step="0.1"
-						disabled="disabled"
-						style="width: 300px; cursor: pointer"
-					/>
-					<span>150</span>
-					<strong>&nbsp;(<span data-tag-name="fogEndDistShow">1</span>)</strong>
-				</div>
-				<br />
-				<div
-					style="
-						width: fit-content;
-						font-size: 12px;
-						display: flex;
-						flex-wrap: nowrap;
-						align-items: center;
-						align-content: center;
-						padding: 3px 0;
-					"
-				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Projection Type: </label>
 					<input type="radio" data-tag-name="projectionType" value="1" style="width: 20px; height: 20px; cursor: pointer" />
 					<span>Perspective Projection</span>
@@ -817,17 +703,17 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Perspective Projection Near: </label>
-					<span>1</span>
+					<span>0</span>
 					<input
 						type="range"
 						value="0"
 						data-tag-name="persProjectionNear"
-						min="1"
-						max="1000"
-						step="1"
+						min="0"
+						max="100"
+						step="0.1"
 						style="width: 300px; cursor: pointer"
 					/>
-					<span>1000</span>
+					<span>100</span>
 					<strong>&nbsp;(<span data-tag-name="persProjectionNearShow">0</span>)</strong>
 				</div>
 				<div
@@ -842,17 +728,17 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Perspective Projection Far: </label>
-					<span>1</span>
+					<span>1000</span>
 					<input
 						type="range"
 						value="0"
 						data-tag-name="persProjectionFar"
-						min="1"
-						max="1000"
+						min="1000"
+						max="10000"
 						step="1"
 						style="width: 300px; cursor: pointer"
 					/>
-					<span>1000</span>
+					<span>10000</span>
 					<strong>&nbsp;(<span data-tag-name="persProjectionFarShow">0</span>)</strong>
 				</div>
 				<div
@@ -867,17 +753,17 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ortho Projection Near: </label>
-					<span>-120</span>
+					<span>0</span>
 					<input
 						type="range"
 						value="0"
 						data-tag-name="orthoProjectionNear"
-						min="-120"
-						max="120"
-						step="0.1"
+						min="0"
+						max="500"
+						step="1"
 						style="width: 300px; cursor: pointer"
 					/>
-					<span>120</span>
+					<span>500</span>
 					<strong>&nbsp;(<span data-tag-name="orthoProjectionNearShow">0</span>)</strong>
 				</div>
 				<div
@@ -892,17 +778,17 @@
 					"
 				>
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Ortho Projection Far: </label>
-					<span>-120</span>
+					<span>500</span>
 					<input
 						type="range"
 						value="0"
 						data-tag-name="orthoProjectionFar"
-						min="-120"
-						max="120"
-						step="0.1"
+						min="500"
+						max="1000"
+						step="1"
 						style="width: 300px; cursor: pointer"
 					/>
-					<span>120</span>
+					<span>1000</span>
 					<strong>&nbsp;(<span data-tag-name="orthoProjectionFarShow">0</span>)</strong>
 				</div>
 				<br />
@@ -920,7 +806,6 @@
 					<label style="padding-right: 10px; margin: 0; max-width: 150px; min-width: 150px">Auto Transformation: </label>
 					<input type="checkbox" value="1" data-tag-name="autoTransformation" style="width: 20px; height: 20px" />
 				</div>
-				<div data-tagitem="model-infomation" style="padding: 5px 0"></div>
 			</div>
 			<div style="position: relative; width: 512px; height: 512px">
 				<canvas width="512" height="512" style="background-color: transparent; border: 1px dashed #888888"></canvas>
@@ -933,15 +818,11 @@
 			</div>
 		</div>
 	</body>
-	<script type="text/javascript" src="../../../../$vendor/utils/fps.js"></script>
-	<!-- ... -->
 	<script type="text/javascript" src="../../../../$vendor/utils/utils.js"></script>
 	<script type="text/javascript" src="../../../../$vendor/utils/color.js"></script>
 	<script type="text/javascript" src="../../../../$vendor/utils/StepControl.js"></script>
-	<script type="text/javascript" src="../../../../$vendor/utils/webgl.utils.js"></script>
 	<script type="text/javascript" src="../../../../$vendor/utils/modelObj.js"></script>
-	<script type="text/javascript" src="../../../../$vendor/algorithm/common/Euler.js"></script>
-	<script type="text/javascript" src="../../../../$vendor/algorithm/common/Quaternion.js"></script>
+	<script type="text/javascript" src="../../../../$vendor/utils/webgl.utils.js"></script>
 	<script type="text/javascript" src="../../../../$vendor/algorithm/common/Decimals.js"></script>
 	<script type="text/javascript" src="../../../../$vendor/algorithm/common/DoubleKit.js"></script>
 	<script type="text/javascript" src="../../../../$vendor/algorithm/common/Math.js"></script>
@@ -957,8 +838,6 @@
 	<script type="text/javascript" src="../common/utils/createCubeDatas.js"></script>
 	<script type="text/javascript" src="../common/utils/createShereDatas.js"></script>
 	<!-- ... -->
-	<script type="text/javascript" src="./script/model.js"></script>
-	<script type="text/javascript" src="./script/program.js"></script>
-	<script type="text/javascript" src="./script/draw.js"></script>
+	<script type="text/javascript" src="./script/draw1.js"></script>
 	<script type="text/javascript" src="./script/base.js"></script>
 </html>
