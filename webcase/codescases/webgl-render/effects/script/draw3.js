@@ -26,6 +26,9 @@ class Model3 {
 	get modelParam() {
 		return this._modelParam
 	}
+	set modelParam(value) {
+		this._modelParam = value
+	}
 
 	get modelRatation() {
 		return this._modelRatation
@@ -78,7 +81,7 @@ class Model3 {
 class Triangle3 extends Model3 {
 	constructor() {
 		super()
-		this._modelParam = {}
+		this.modelParam = {}
 		this.vertexDatas = this._createVertexData()
 	}
 
@@ -97,7 +100,7 @@ class Triangle3 extends Model3 {
 class Plane3 extends Model3 {
 	constructor() {
 		super()
-		this._modelParam = {}
+		this.modelParam = {}
 		this.vertexDatas = this._createVertexData()
 	}
 
@@ -119,7 +122,7 @@ class Plane3 extends Model3 {
 class ShereModel3 extends Model3 {
 	constructor(radius, meridianCount, latitudeCount, color = '#ffffff', offsetX = 0, offsetY = 0, offsetZ = 0) {
 		super()
-		this._modelParam = {
+		this.modelParam = {
 			radius,
 			meridianCount,
 			latitudeCount,
@@ -132,23 +135,23 @@ class ShereModel3 extends Model3 {
 	}
 
 	_createVertexData() {
-		this._modelParam
-		const colorSetting = this._modelParam.rgba
+		this.modelParam
+		const colorSetting = this.modelParam.rgba
 			? {
-					redRange: [this._modelParam.rgba.r, this._modelParam.rgba.r],
-					greenRange: [this._modelParam.rgba.g, this._modelParam.rgba.g],
-					blueRange: [this._modelParam.rgba.b, this._modelParam.rgba.b],
+					redRange: [this.modelParam.rgba.r, this.modelParam.rgba.r],
+					greenRange: [this.modelParam.rgba.g, this.modelParam.rgba.g],
+					blueRange: [this.modelParam.rgba.b, this.modelParam.rgba.b],
 					alphaRange: [1, 1],
 			  }
 			: undefined
 		return createShereDatas(
-			this._modelParam.radius,
-			this._modelParam.meridianCount,
-			this._modelParam.latitudeCount,
+			this.modelParam.radius,
+			this.modelParam.meridianCount,
+			this.modelParam.latitudeCount,
 			colorSetting,
-			this._modelParam.offsetX,
-			this._modelParam.offsetY,
-			this._modelParam.offsetZ
+			this.modelParam.offsetX,
+			this.modelParam.offsetY,
+			this.modelParam.offsetZ
 		)
 	}
 }

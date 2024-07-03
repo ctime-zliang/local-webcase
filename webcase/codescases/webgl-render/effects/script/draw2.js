@@ -1,6 +1,7 @@
 class Model2 {
 	constructor() {
 		this._vertexDatas = null
+		this._modelParam = null
 		this._modelRatation = {
 			x: 0,
 			y: 0,
@@ -20,6 +21,13 @@ class Model2 {
 		this._normalBuffer = null
 		this._texCoordBuffer = null
 		this._modelMatrix = null
+	}
+
+	get modelParam() {
+		return this._modelParam
+	}
+	set modelParam(value) {
+		this._modelParam = value
 	}
 
 	get modelRatation() {
@@ -73,7 +81,7 @@ class Model2 {
 class CubeModel2 extends Model2 {
 	constructor(width, length, depth, color = '#ffffff', offsetX = 0, offsetY = 0, offsetZ = 0) {
 		super()
-		this._modelParam = {
+		this.modelParam = {
 			width,
 			length,
 			depth,
@@ -87,20 +95,20 @@ class CubeModel2 extends Model2 {
 
 	_createVertexData() {
 		return createCubeDatas(
-			this._modelParam.width,
-			this._modelParam.length,
-			this._modelParam.depth,
+			this.modelParam.width,
+			this.modelParam.length,
+			this.modelParam.depth,
 			{
-				up: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				bottom: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				front: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				back: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				right: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				left: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
+				up: [this.modelParam.rgba.r, this.modelParam.rgba.g, this.modelParam.rgba.b, 1],
+				bottom: [this.modelParam.rgba.r, this.modelParam.rgba.g, this.modelParam.rgba.b, 1],
+				front: [this.modelParam.rgba.r, this.modelParam.rgba.g, this.modelParam.rgba.b, 1],
+				back: [this.modelParam.rgba.r, this.modelParam.rgba.g, this.modelParam.rgba.b, 1],
+				right: [this.modelParam.rgba.r, this.modelParam.rgba.g, this.modelParam.rgba.b, 1],
+				left: [this.modelParam.rgba.r, this.modelParam.rgba.g, this.modelParam.rgba.b, 1],
 			},
-			this._modelParam.offsetX,
-			this._modelParam.offsetY,
-			this._modelParam.offsetZ
+			this.modelParam.offsetX,
+			this.modelParam.offsetY,
+			this.modelParam.offsetZ
 		)
 	}
 }
@@ -108,7 +116,7 @@ class CubeModel2 extends Model2 {
 class PlaneModel2 extends Model2 {
 	constructor() {
 		super()
-		this._modelParam = {}
+		this.modelParam = {}
 		this.vertexDatas = this._createVertexData()
 	}
 

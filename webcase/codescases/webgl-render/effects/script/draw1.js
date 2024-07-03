@@ -26,6 +26,9 @@ class Model1 {
 	get modelParam() {
 		return this._modelParam
 	}
+	set modelParam(value) {
+		this._modelParam = value
+	}
 
 	get modelRatation() {
 		return this._modelRatation
@@ -78,7 +81,7 @@ class Model1 {
 class CubeModel1 extends Model1 {
 	constructor(width, length, depth, color = '#ffffff', offsetX = 0, offsetY = 0, offsetZ = 0) {
 		super()
-		this._modelParam = {
+		this.modelParam = {
 			width,
 			length,
 			depth,
@@ -92,20 +95,20 @@ class CubeModel1 extends Model1 {
 
 	_createVertexData() {
 		return createCubeDatas(
-			this._modelParam.width,
-			this._modelParam.length,
-			this._modelParam.depth,
+			this.modelParam.width,
+			this.modelParam.length,
+			this.modelParam.depth,
 			{
-				up: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				bottom: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				front: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				back: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				right: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				left: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
+				up: [this.modelParam.rgba.r, this.modelParam.rgba.g, this.modelParam.rgba.b, 1],
+				bottom: [this.modelParam.rgba.r, this.modelParam.rgba.g, this.modelParam.rgba.b, 1],
+				front: [this.modelParam.rgba.r, this.modelParam.rgba.g, this.modelParam.rgba.b, 1],
+				back: [this.modelParam.rgba.r, this.modelParam.rgba.g, this.modelParam.rgba.b, 1],
+				right: [this.modelParam.rgba.r, this.modelParam.rgba.g, this.modelParam.rgba.b, 1],
+				left: [this.modelParam.rgba.r, this.modelParam.rgba.g, this.modelParam.rgba.b, 1],
 			},
-			this._modelParam.offsetX,
-			this._modelParam.offsetY,
-			this._modelParam.offsetZ
+			this.modelParam.offsetX,
+			this.modelParam.offsetY,
+			this.modelParam.offsetZ
 		)
 	}
 }
@@ -113,7 +116,7 @@ class CubeModel1 extends Model1 {
 class ShereModel1 extends Model1 {
 	constructor(radius, meridianCount, latitudeCount, color = '#ffffff', offsetX = 0, offsetY = 0, offsetZ = 0) {
 		super()
-		this._modelParam = {
+		this.modelParam = {
 			radius,
 			meridianCount,
 			latitudeCount,
@@ -126,23 +129,23 @@ class ShereModel1 extends Model1 {
 	}
 
 	_createVertexData() {
-		this._modelParam
-		const colorSetting = this._modelParam.rgba
+		this.modelParam
+		const colorSetting = this.modelParam.rgba
 			? {
-					redRange: [this._modelParam.rgba.r, this._modelParam.rgba.r],
-					greenRange: [this._modelParam.rgba.g, this._modelParam.rgba.g],
-					blueRange: [this._modelParam.rgba.b, this._modelParam.rgba.b],
+					redRange: [this.modelParam.rgba.r, this.modelParam.rgba.r],
+					greenRange: [this.modelParam.rgba.g, this.modelParam.rgba.g],
+					blueRange: [this.modelParam.rgba.b, this.modelParam.rgba.b],
 					alphaRange: [1, 1],
 			  }
 			: undefined
 		return createShereDatas(
-			this._modelParam.radius,
-			this._modelParam.meridianCount,
-			this._modelParam.latitudeCount,
+			this.modelParam.radius,
+			this.modelParam.meridianCount,
+			this.modelParam.latitudeCount,
 			colorSetting,
-			this._modelParam.offsetX,
-			this._modelParam.offsetY,
-			this._modelParam.offsetZ
+			this.modelParam.offsetX,
+			this.modelParam.offsetY,
+			this.modelParam.offsetZ
 		)
 	}
 }

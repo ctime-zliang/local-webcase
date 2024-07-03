@@ -3,6 +3,26 @@ function drawCanvas(containerElement) {
 	Program.glControl.gl = ven$initWebGLContext(canvasElement)
 	Program.init(containerElement)
 
+	/**
+	 * WebGL 坐标系变换
+	 * 		模型坐标系 (a_ObjPosition)
+	 * 			| (模型变换 u_ModelMatrix)
+	 * 		世界坐标系 (v_ObjPosition)
+	 * 			| (视图变换 u_ViewMatrix)
+	 * 		观察坐标系
+	 * 			| (投影变换 u_ProjMatrix)
+	 * 		裁剪坐标系
+	 * 			| (透视除法)
+	 * 		NDC 坐标系
+	 * 			| (视口变换)
+	 * 		屏幕坐标系
+	 */
+	/**
+	 * 光源漫反射
+	 * 		光源漫反射颜色
+	 * 			= 入射光颜色 x 物体表面基底色 x cos(表面法线向量与入射光反方向向量的夹角)
+	 * 			= 入射光颜色 x 物体表面基底色 x (表面法线向量 {点乘} 入射光反方向向量)
+	 */
 	const COMMON_VERTEX_SHADER = `
 		precision mediump float;
 		varying vec4 v_Color;
@@ -24,7 +44,8 @@ function drawCanvas(containerElement) {
 			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_ObjPosition, 1.0);
 			// 计算顶点的世界坐标
 			v_ObjPosition = vec3(u_ModelMatrix * vec4(a_ObjPosition, 1.0));
-			// 根据法线变换矩阵重新计算法线坐标
+			// 根据法线变换矩阵更新法线坐标
+			// 即计算法线的世界坐标
 			v_Normal = vec3(u_NormalMatrix * vec4(a_Normal, 1.0));
 			v_Color = a_Color;
 			// 计算顶点(世界坐标系)到视点的距离
@@ -56,7 +77,8 @@ function drawCanvas(containerElement) {
 				float fogFactor = clamp((u_FogDist.y - v_Dist) / (u_FogDist.y - u_FogDist.x), 0.0, 1.0);
 				if (u_illuType == 1.0) {  // 平行光
 					vec3 normal = normalize(v_Normal);
-					vec3 lightDirection = normalize(u_LightDirection);
+					// 对于平行光, 此处需要传入入射光反方向归一化向量
+					vec3 lightDirection = u_LightDirection;
 					// 计算光线方向与法线的点积
 					float nDotL = max(dot(lightDirection, normal), 0.0);
 					// 计算漫反射光和环境光的色值
@@ -67,7 +89,8 @@ function drawCanvas(containerElement) {
 					// gl_FragColor = vec4(fogMixinColor, v_Color.a);
 				} else {  // 点光
 					vec3 normal = normalize(v_Normal);
-					// 计算光线相对于物体顶点的方向并归一化(即物体表面到光源的方向)
+					// 计算点光源相对于物体顶点(表面)的方向, 记作光线方向
+					// 归一化此向量
 					vec3 lightDirection = normalize(u_LightPosition - v_ObjPosition);
 					// 计算光线方向与法线的点积
 					float nDotL = max(dot(lightDirection, normal), 0.0);
@@ -183,9 +206,9 @@ function drawCanvas(containerElement) {
 				 * 平行光
 				 */
 				const lightDirection = new Ven$Vector3(
-					Program.profile.light.direction.x,
-					Program.profile.light.direction.y,
-					Program.profile.light.direction.z
+					-Program.profile.light.direction.x,
+					-Program.profile.light.direction.y,
+					-Program.profile.light.direction.z
 				)
 				const lightNormalizeDirection = lightDirection.normalize()
 				gl.uniform3fv(

@@ -30,6 +30,9 @@ class BaseModel1 {
 	get modelParam() {
 		return this._modelParam
 	}
+	set modelParam(value) {
+		this._modelParam = value
+	}
 
 	get modeControl() {
 		return this._modeControl
@@ -107,7 +110,7 @@ class BaseModel1 {
 class RectangularModel1 extends BaseModel1 {
 	constructor(width, length, depth, color = '#ffffff', offsetX = 0, offsetY = 0, offsetZ = 0) {
 		super()
-		this._modelParam = {
+		this.modelParam = {
 			width,
 			length,
 			depth,
@@ -121,20 +124,20 @@ class RectangularModel1 extends BaseModel1 {
 
 	_createVertexData() {
 		return createCubeDatas(
-			this._modelParam.width,
-			this._modelParam.length,
-			this._modelParam.depth,
+			this.modelParam.width,
+			this.modelParam.length,
+			this.modelParam.depth,
 			{
-				up: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				bottom: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				front: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				back: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				right: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
-				left: [this._modelParam.rgba.r, this._modelParam.rgba.g, this._modelParam.rgba.b, 1],
+				up: [this.modelParam.rgba.r, this.modelParam.rgba.g, this.modelParam.rgba.b, 1],
+				bottom: [this.modelParam.rgba.r, this.modelParam.rgba.g, this.modelParam.rgba.b, 1],
+				front: [this.modelParam.rgba.r, this.modelParam.rgba.g, this.modelParam.rgba.b, 1],
+				back: [this.modelParam.rgba.r, this.modelParam.rgba.g, this.modelParam.rgba.b, 1],
+				right: [this.modelParam.rgba.r, this.modelParam.rgba.g, this.modelParam.rgba.b, 1],
+				left: [this.modelParam.rgba.r, this.modelParam.rgba.g, this.modelParam.rgba.b, 1],
 			},
-			this._modelParam.offsetX,
-			this._modelParam.offsetY,
-			this._modelParam.offsetZ
+			this.modelParam.offsetX,
+			this.modelParam.offsetY,
+			this.modelParam.offsetZ
 		)
 	}
 }
@@ -142,7 +145,7 @@ class RectangularModel1 extends BaseModel1 {
 class ShereModel1 extends BaseModel1 {
 	constructor(radius, meridianCount, latitudeCount, color = '#ffffff', offsetX = 0, offsetY = 0, offsetZ = 0) {
 		super()
-		this._modelParam = {
+		this.modelParam = {
 			radius,
 			meridianCount,
 			latitudeCount,
@@ -156,18 +159,18 @@ class ShereModel1 extends BaseModel1 {
 
 	_createVertexData() {
 		return createShereDatas(
-			this._modelParam.radius,
-			this._modelParam.meridianCount,
-			this._modelParam.latitudeCount,
+			this.modelParam.radius,
+			this.modelParam.meridianCount,
+			this.modelParam.latitudeCount,
 			{
-				redRange: [this._modelParam.rgba.r, this._modelParam.rgba.r],
-				greenRange: [this._modelParam.rgba.g, this._modelParam.rgba.g],
-				blueRange: [this._modelParam.rgba.b, this._modelParam.rgba.b],
+				redRange: [this.modelParam.rgba.r, this.modelParam.rgba.r],
+				greenRange: [this.modelParam.rgba.g, this.modelParam.rgba.g],
+				blueRange: [this.modelParam.rgba.b, this.modelParam.rgba.b],
 				alphaRange: [1, 1],
 			},
-			this._modelParam.offsetX,
-			this._modelParam.offsetY,
-			this._modelParam.offsetZ
+			this.modelParam.offsetX,
+			this.modelParam.offsetY,
+			this.modelParam.offsetZ
 		)
 	}
 }
@@ -175,5 +178,79 @@ class ShereModel1 extends BaseModel1 {
 class ObjModel1 extends BaseModel1 {
 	constructor() {
 		super()
+	}
+}
+
+class ZPlane1 extends BaseModel1 {
+	constructor(width, length, zDist, color = '#ffffff', offsetX = 0, offsetY = 0, offsetZ = 0) {
+		super()
+		this.modelParam = {
+			width,
+			length,
+			zDist,
+			rgba: ven$hex2Rgba(color),
+			offsetX,
+			offsetY,
+			offsetZ,
+		}
+		this.vertexDatas = this._createVertexData()
+	}
+
+	_createVertexData() {
+		return {
+			vertexFeature: new Float32Array([
+				-this.modelParam.width / 2 + this.modelParam.offsetX,
+				this.modelParam.zDist + this.modelParam.offsetY,
+				-this.modelParam.length / 2 + this.modelParam.offsetZ,
+				this.modelParam.rgba.r / 255,
+				this.modelParam.rgba.g / 255,
+				this.modelParam.rgba.b / 255,
+				1.0,
+				-this.modelParam.width / 2 + this.modelParam.offsetX,
+				this.modelParam.zDist + this.modelParam.offsetY,
+				this.modelParam.length / 2 + this.modelParam.offsetZ,
+				this.modelParam.rgba.r / 255,
+				this.modelParam.rgba.g / 255,
+				this.modelParam.rgba.b / 255,
+				1.0,
+				this.modelParam.width / 2 + this.modelParam.offsetX,
+				this.modelParam.zDist + this.modelParam.offsetY,
+				this.modelParam.length / 2 + this.modelParam.offsetZ,
+				this.modelParam.rgba.r / 255,
+				this.modelParam.rgba.g / 255,
+				this.modelParam.rgba.b / 255,
+				1.0,
+				-this.modelParam.width / 2 + this.modelParam.offsetX,
+				this.modelParam.zDist + this.modelParam.offsetY,
+				-this.modelParam.length / 2 + this.modelParam.offsetZ,
+				this.modelParam.rgba.r / 255,
+				this.modelParam.rgba.g / 255,
+				this.modelParam.rgba.b / 255,
+				1.0,
+				this.modelParam.width / 2 + this.modelParam.offsetX,
+				this.modelParam.zDist + this.modelParam.offsetY,
+				this.modelParam.length / 2 + this.modelParam.offsetZ,
+				this.modelParam.rgba.r / 255,
+				this.modelParam.rgba.g / 255,
+				this.modelParam.rgba.b / 255,
+				1.0,
+				this.modelParam.width / 2 + this.modelParam.offsetX,
+				this.modelParam.zDist + this.modelParam.offsetY,
+				-this.modelParam.length / 2 + this.modelParam.offsetZ,
+				this.modelParam.rgba.r / 255,
+				this.modelParam.rgba.g / 255,
+				this.modelParam.rgba.b / 255,
+				1.0,
+			]),
+			// prettier-ignore
+			vertexNormals: new Float32Array([
+				0, 1, 0,
+				0, 1, 0,
+				0, 1, 0,
+				0, 1, 0,
+				0, 1, 0,
+				0, 1, 0,
+			]),
+		}
 	}
 }

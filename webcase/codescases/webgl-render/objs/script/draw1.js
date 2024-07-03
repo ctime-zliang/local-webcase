@@ -28,6 +28,9 @@ class Model1 {
 	get modelParam() {
 		return this._modelParam
 	}
+	set modelParam(value) {
+		this._modelParam = value
+	}
 
 	get modelRatation() {
 		return this._modelRatation

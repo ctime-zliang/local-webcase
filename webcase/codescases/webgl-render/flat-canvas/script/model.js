@@ -1,6 +1,7 @@
 class Model1 {
 	constructor() {
 		this._vertexDatas = null
+		this._modelParam = null
 		this._modelRatation = {
 			x: 0,
 			y: 0,
@@ -20,6 +21,13 @@ class Model1 {
 		this._normalBuffer = null
 		this._texCoordBuffer = null
 		this._modelMatrix = null
+	}
+
+	get modelParam() {
+		return this._modelParam
+	}
+	set modelParam(value) {
+		this._modelParam = value
 	}
 
 	get modelRatation() {

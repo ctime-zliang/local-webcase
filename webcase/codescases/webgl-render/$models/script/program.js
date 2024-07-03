@@ -71,12 +71,12 @@ class Program {
 		 * 光照参数
 		 */
 		light: {
-			illuType: 2,
+			illuType: 1,
 			intensityGain: 1.0,
 			direction: {
-				x: 0.5,
-				y: 3.0,
-				z: 4.0,
+				x: -1.0,
+				y: -3.0,
+				z: -4.0,
 			},
 			position: {
 				x: 25,
@@ -617,6 +617,7 @@ class Program {
 					indices: drawingInfo.indices,
 				}
 				Program.setFileModelInstances([objModel])
+				console.log(Program.glControl)
 				console.timeEnd(`ImportModelData`)
 			}
 			fileReader.readAsText(fileItem, 'utf-8')
@@ -1013,6 +1014,11 @@ class Program {
 				this.glControl.modelInstances = [...shereModelDatas1.modelInstances]
 				break
 			}
+			case 'model4': {
+				const zplaneModelDatas1 = this.createZPlaneModelDatas(50, 50, 0)
+				this.glControl.modelInstances = [...zplaneModelDatas1.modelInstances]
+				break
+			}
 		}
 		this.glControl.modelInstances.forEach(modelInstanceItem => {
 			modelInstanceItem.normalBuffer = ven$initArrayBufferForLaterUse(this.glControl.gl)
@@ -1024,6 +1030,7 @@ class Program {
 		})
 		this.glControl.vertexFeatureSize = this.getVertexFeatureSize(this.glControl.modelInstances)
 		console.timeEnd(`CreateModelData`)
+		console.log(Program.glControl)
 		this.renderModelInfomationView(this.glControl.modelInstances)
 	}
 
@@ -1082,6 +1089,15 @@ class Program {
 	static createShereModelDatas(radius, meridianCount, latitudeCount, offsetX = 0, offsetY = 0, offsetZ = 0, color = '#ffffff') {
 		const modelInstances = []
 		const model1 = new ShereModel1(radius, meridianCount, latitudeCount, color, 0 + offsetX, 0 + offsetY, 0 + offsetZ)
+		modelInstances.push(model1)
+		return {
+			modelInstances,
+		}
+	}
+
+	static createZPlaneModelDatas(width, length, zDist, offsetX = 0, offsetY = 0, offsetZ = 0, color = '#ffffff') {
+		const modelInstances = []
+		const model1 = new ZPlane1(width, length, zDist, color, 0 + offsetX, 0 + offsetY, 0 + offsetZ)
 		modelInstances.push(model1)
 		return {
 			modelInstances,
