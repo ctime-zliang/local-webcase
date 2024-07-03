@@ -7,10 +7,10 @@ function drawCanvas(containerElement) {
 		precision mediump float;
 		varying vec4 v_Color;
 		varying vec3 v_Normal;
-		varying vec3 v_Position;
+		varying vec3 v_ObjPosition;
 		varying float v_Dist;
 		// 顶点配置(组)
-		attribute vec3 a_Position;
+		attribute vec3 a_ObjPosition;
 		attribute vec4 a_Color;
 		attribute vec3 a_Normal;
 		// 变换矩阵(组)
@@ -19,16 +19,16 @@ function drawCanvas(containerElement) {
 		uniform mat4 u_ViewMatrix;
 		uniform mat4 u_ProjMatrix;
 		// 参数(组)
-		uniform vec3 u_Eye;
+		uniform vec3 u_EyePosition;
 		void main() {
-			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
+			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_ObjPosition, 1.0);
 			// 计算顶点的世界坐标
-			v_Position = vec3(u_ModelMatrix * vec4(a_Position, 1.0));
-			// 根据法线变换矩阵重新计算法线坐标并归一化
-			v_Normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1.0)));
+			v_ObjPosition = vec3(u_ModelMatrix * vec4(a_ObjPosition, 1.0));
+			// 根据法线变换矩阵重新计算法线坐标
+			v_Normal = vec3(u_NormalMatrix * vec4(a_Normal, 1.0));
 			v_Color = a_Color;
 			// 计算顶点(世界坐标系)到视点的距离
-			// v_Dist = distance(u_ModelMatrix * vec4(a_Position, 1.0), vec4(u_Eye, 1.0));
+			// v_Dist = distance(u_ModelMatrix * vec4(a_ObjPosition, 1.0), vec4(u_EyePosition, 1.0));
 			v_Dist = gl_Position.w;
 		}
 	`
@@ -36,7 +36,7 @@ function drawCanvas(containerElement) {
 		precision mediump float;
 		varying vec4 v_Color;
 		varying vec3 v_Normal;
-		varying vec3 v_Position;
+		varying vec3 v_ObjPosition;
 		varying float v_Dist;
 		// 参数(组)
 		uniform float u_lightIntensityGain;
@@ -50,119 +50,34 @@ function drawCanvas(containerElement) {
 		uniform vec3 u_LightColor;
 		uniform vec3 u_AmbientLightColor;
 		void main() {
-			float nDotL;
-			float fogFactor;
-			vec3 normal;
-			vec3 diffuse;
-			vec3 lightDirection;
-			vec3 ambientMixinColor;
-			vec3 fogMixinColor;
 			if (u_Clicked) {
 				gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 			} else {
-				fogFactor = clamp((u_FogDist.y - v_Dist) / (u_FogDist.y - u_FogDist.x), 0.0, 1.0);
+				float fogFactor = clamp((u_FogDist.y - v_Dist) / (u_FogDist.y - u_FogDist.x), 0.0, 1.0);
 				if (u_illuType == 1.0) {  // 平行光
-					normal = normalize(v_Normal);
+					vec3 normal = normalize(v_Normal);
+					vec3 lightDirection = normalize(u_LightDirection);
 					// 计算光线方向与法线的点积
-					nDotL = max(dot(u_LightDirection, normal), 0.0);
+					float nDotL = max(dot(lightDirection, normal), 0.0);
 					// 计算漫反射光和环境光的色值
-					diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
+					vec3 diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
 					gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
-					// ambientMixinColor = diffuse + u_AmbientLightColor * v_Color.rgb;;
-					// fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
+					// vec3 ambientMixinColor = diffuse + u_AmbientLightColor * v_Color.rgb;;
+					// vec3 fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
 					// gl_FragColor = vec4(fogMixinColor, v_Color.a);
 				} else {  // 点光
-					normal = normalize(v_Normal);
-					// 计算光线方向并归一化
-					lightDirection = normalize(u_LightPosition - v_Position);
+					vec3 normal = normalize(v_Normal);
+					// 计算光线相对于物体顶点的方向并归一化(即物体表面到光源的方向)
+					vec3 lightDirection = normalize(u_LightPosition - v_ObjPosition);
 					// 计算光线方向与法线的点积
-					nDotL = max(dot(lightDirection, normal), 0.0);
+					float nDotL = max(dot(lightDirection, normal), 0.0);
 					// 计算漫反射光和环境光的色值
-					diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
+					vec3 diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
 					gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
 					// gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-					// ambientMixinColor = diffuse + u_AmbientLightColor * v_Color.rgb;
-					// fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
+					// vec3 ambientMixinColor = diffuse + u_AmbientLightColor * v_Color.rgb;
+					// vec3 fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
 					// gl_FragColor = vec4(fogMixinColor, v_Color.a);
-				}
-			}
-		}
-	`
-	const TEXTURE_VERTEX_SHADER = `
-		precision mediump float;
-		varying vec4 v_Color;
-		varying vec3 v_Normal;
-		varying vec3 v_Position;
-		varying vec2 v_TexCoord;
-		// 顶点配置(组)
-		attribute vec3 a_Position;
-		attribute vec4 a_Color;
-		attribute vec3 a_Normal;
-		attribute vec2 a_TexCoord;
-		// 变换矩阵(组)
-		uniform mat4 u_NormalMatrix;
-		uniform mat4 u_ModelMatrix;
-		uniform mat4 u_ViewMatrix;
-		uniform mat4 u_ProjMatrix;
-		void main() {
-			gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
-			// 计算顶点的世界坐标
-			v_Position = vec3(u_ModelMatrix * vec4(a_Position, 1.0));
-			// 根据法线变换矩阵重新计算法线坐标并归一化
-			v_Normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1.0)));
-			v_Color = a_Color;
-			v_TexCoord = a_TexCoord;
-		}
-	`
-	const TEXTURE_FRAGMENT_SHADER = `
-		precision mediump float;
-		varying vec4 v_Color;
-		varying vec3 v_Normal;
-		varying vec3 v_Position;
-		varying float v_Dist;
-		varying vec2 v_TexCoord;
-		// 参数(组)
-		uniform float u_lightIntensityGain;
-		uniform float u_illuType;
-		uniform bool u_Clicked;
-		uniform sampler2D u_Sampler;
-		// 点光配置(组)
-		uniform vec3 u_LightPosition;
-		uniform vec3 u_LightDirection;
-		uniform vec3 u_LightColor;
-		uniform vec3 u_AmbientLightColor;
-		void main() {
-			float nDotL;
-			float v_NdotL;
-			vec3 normal;
-			vec3 diffuse;
-			vec3 lightDirection;
-			vec3 ambientMixinColor;
-			if (u_Clicked) {
-				gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-			} else {
-				if (u_illuType == 1.0) {  // 平行光
-					normal = normalize(v_Normal);
-					// 计算光线方向与法线的点积
-					nDotL = max(dot(u_LightDirection, normal), 0.0);
-					// 计算漫反射光和环境光的色值
-					diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;					
-					// gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
-					v_NdotL = max(dot(normal, u_LightDirection), 0.0);
-					vec4 color = texture2D(u_Sampler, v_TexCoord);
-					gl_FragColor = vec4(color.rgb * v_NdotL, color.a);
-				} else {  // 点光
-					normal = normalize(v_Normal);
-					// 计算光线方向并归一化
-					lightDirection = normalize(u_LightPosition - v_Position);
-					// 计算光线方向与法线的点积
-					nDotL = max(dot(lightDirection, normal), 0.0);
-					// 计算漫反射光和环境光的色值
-					diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
-					// gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
-					v_NdotL = max(dot(normal, lightDirection), 0.0);
-					vec4 color = texture2D(u_Sampler, v_TexCoord);
-					gl_FragColor = vec4(color.rgb * v_NdotL, color.a);
 				}
 			}
 		}
@@ -182,16 +97,9 @@ function drawCanvas(containerElement) {
 		glUniforms: {},
 		program: null,
 	}
-	Program.glControl.textureLight = {
-		isLoadTexture: false,
-		glAttributes: {},
-		glUniforms: {},
-		program: null,
-	}
-
 	Program.glControl.commonLight.program = ven$createProgram(Program.glControl.gl, COMMON_VERTEX_SHADER, COMMON_FRAGMENT_SHADER)
 	const commonWebGLVariableLocation = ven$getWebGLVariableLocation(Program.glControl.gl, Program.glControl.commonLight.program, {
-		glAttributes: ['a_Normal', 'a_Position', 'a_Color'],
+		glAttributes: ['a_Normal', 'a_ObjPosition', 'a_Color'],
 		glUniforms: [
 			'u_illuType',
 			'u_LightColor',
@@ -204,34 +112,13 @@ function drawCanvas(containerElement) {
 			'u_ViewMatrix',
 			'u_ProjMatrix',
 			'u_Clicked',
-			'u_Eye',
+			'u_EyePosition',
 			'u_FogColor',
 			'u_FogDist',
 		],
 	})
 	Program.glControl.commonLight.glAttributes = commonWebGLVariableLocation.glAttributes
 	Program.glControl.commonLight.glUniforms = commonWebGLVariableLocation.glUniforms
-
-	Program.glControl.textureLight.program = ven$createProgram(Program.glControl.gl, TEXTURE_VERTEX_SHADER, TEXTURE_FRAGMENT_SHADER)
-	const textureWebGLVariableLocation = ven$getWebGLVariableLocation(Program.glControl.gl, Program.glControl.textureLight.program, {
-		glAttributes: ['a_Normal', 'a_Position', 'a_Color', 'a_TexCoord'],
-		glUniforms: [
-			'u_illuType',
-			'u_LightColor',
-			'u_LightPosition',
-			'u_LightDirection',
-			'u_AmbientLightColor',
-			'u_lightIntensityGain',
-			'u_NormalMatrix',
-			'u_ModelMatrix',
-			'u_ViewMatrix',
-			'u_ProjMatrix',
-			'u_Clicked',
-			'u_Sampler',
-		],
-	})
-	Program.glControl.textureLight.glAttributes = textureWebGLVariableLocation.glAttributes
-	Program.glControl.textureLight.glUniforms = textureWebGLVariableLocation.glUniforms
 
 	const setWebGLRenderClickedStatus = () => {}
 	const setWebGLRenderNormalStatus = () => {}
@@ -283,6 +170,11 @@ function drawCanvas(containerElement) {
 				new Ven$Vector3(Program.profile.lookAt.eyePosition.x, Program.profile.lookAt.eyePosition.y, Program.profile.lookAt.eyePosition.z),
 				new Ven$Vector3(Program.profile.lookAt.atPosition.x, Program.profile.lookAt.atPosition.y, Program.profile.lookAt.atPosition.z),
 				new Ven$Vector3(0, 1, 0)
+			)
+
+			gl.uniform3fv(
+				glUniforms.u_EyePosition,
+				new Float32Array([Program.profile.lookAt.eyePosition.x, Program.profile.lookAt.eyePosition.y, Program.profile.lookAt.eyePosition.z])
 			)
 
 			gl.uniform1f(glUniforms.u_illuType, Program.profile.light.illuType)
@@ -355,7 +247,7 @@ function drawCanvas(containerElement) {
 						data: normalData,
 					}
 				)
-				ven$initAttributeVariable(gl, glAttributes.a_Position, featureBuffer, {
+				ven$initAttributeVariable(gl, glAttributes.a_ObjPosition, featureBuffer, {
 					size: 3,
 					stride: 28,
 				})
@@ -381,7 +273,7 @@ function drawCanvas(containerElement) {
 				)
 				ven$initAttributeVariable(
 					gl,
-					glAttributes.a_Position,
+					glAttributes.a_ObjPosition,
 					vertexBuffer,
 					{
 						size: 3,
