@@ -36,9 +36,9 @@ class Program {
 		 */
 		lookAt: {
 			eyePosition: {
-				x: 60,
-				y: 50,
-				z: 80,
+				x: 0,
+				y: 60,
+				z: 120,
 			},
 			atPosition: {
 				x: 0,

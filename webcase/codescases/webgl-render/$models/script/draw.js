@@ -18,9 +18,22 @@ function drawCanvas(containerElement) {
 	 * 		屏幕坐标系
 	 */
 	/**
+	 * 物体表面光反射
+	 * 		在此光照模型(冯氏光照模型)中, 视点在可视范围内任意一点看到的物体表面反射的颜色和光强都是一样的
+	 * 		因此物体反光亮度只取决于入射光所在直线与物体表面法线所在直线的夹角, 在向量维度来讲, 则是入射光反方向向量与物体表面法线向量的夹角 θ
+	 * 			入射光垂直于物体表面照射时, 反光最亮
+	 * 			入射光平行于物体表面时, 没有反光
+	 * 		物体表面光反射颜色
+	 * 			= 环境光反射颜色 + 光源漫反射颜色
+	 *
+	 * 环境光反射
+	 * 		此处假设物体接收到的环境光入射光的方向和强度都是"均匀"的, 所以物体反射光的颜色和强度也都是"均匀"的
+	 * 		环境光反射颜色
+	 * 			= 入射光颜色 x 物体表面基底色
 	 * 光源漫反射
+	 * 		θ 即 表面法线向量与入射光反方向向量的夹角
 	 * 		光源漫反射颜色
-	 * 			= 入射光颜色 x 物体表面基底色 x cos(表面法线向量与入射光反方向向量的夹角)
+	 * 			= 入射光颜色 x 物体表面基底色 x cos(θ)
 	 * 			= 入射光颜色 x 物体表面基底色 x (表面法线向量 {点乘} 入射光反方向向量)
 	 */
 	const COMMON_VERTEX_SHADER = `
@@ -79,12 +92,12 @@ function drawCanvas(containerElement) {
 					vec3 normal = normalize(v_Normal);
 					// 对于平行光, 此处需要传入入射光反方向归一化向量
 					vec3 lightDirection = u_LightDirection;
-					// 计算光线方向与法线的点积
+					// 计算入射光反方向归一化向量与法线的点积
 					float nDotL = max(dot(lightDirection, normal), 0.0);
 					// 计算漫反射光和环境光的色值
 					vec3 diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
 					gl_FragColor = vec4(diffuse + u_AmbientLightColor * v_Color.rgb, v_Color.a);
-					// vec3 ambientMixinColor = diffuse + u_AmbientLightColor * v_Color.rgb;;
+					// vec3 ambientMixinColor = diffuse + u_AmbientLightColor * v_Color.rgb;
 					// vec3 fogMixinColor = mix(u_FogColor, vec3(ambientMixinColor), fogFactor);
 					// gl_FragColor = vec4(fogMixinColor, v_Color.a);
 				} else {  // 点光
@@ -92,7 +105,7 @@ function drawCanvas(containerElement) {
 					// 计算点光源相对于物体顶点(表面)的方向, 记作光线方向
 					// 归一化此向量
 					vec3 lightDirection = normalize(u_LightPosition - v_ObjPosition);
-					// 计算光线方向与法线的点积
+					// 计算入射光反方向归一化向量与法线的点积
 					float nDotL = max(dot(lightDirection, normal), 0.0);
 					// 计算漫反射光和环境光的色值
 					vec3 diffuse = u_LightColor * v_Color.rgb * nDotL * u_lightIntensityGain;
@@ -204,6 +217,7 @@ function drawCanvas(containerElement) {
 			if (Program.profile.light.illuType === 1) {
 				/**
 				 * 平行光
+				 * 		依据光照模型, 此处传给着色器的光源方向需要取反, 以便在着色器中正确求取入射光反方向向量与物体表面法线向量的夹角
 				 */
 				const lightDirection = new Ven$Vector3(
 					-Program.profile.light.direction.x,
