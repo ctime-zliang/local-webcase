@@ -1,5 +1,6 @@
 function main() {
-	fileReader()
+	// fileReader()
+	inputFilter()
 }
 
 window.addEventListener('DOMContentLoaded', function (e) {
