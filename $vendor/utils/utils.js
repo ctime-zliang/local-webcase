@@ -166,12 +166,12 @@ function ven$zoomImageByContainer(naturalWidth, naturalHeight, containerWidth, c
 	const containerRatio = containerWidth / containerHeight
 	let width = 0
 	let height = 0
-	let benchmark = 'width'
+	let benchmark = 'WIDTH'
 	if (imageRatio >= containerRatio) {
 		if (naturalWidth > containerWidth) {
 			width = containerWidth
 			height = (containerWidth / naturalWidth) * naturalHeight
-			benchmark = 'width'
+			benchmark = 'WIDTH'
 		} else {
 			width = naturalWidth
 			height = naturalHeight
@@ -180,7 +180,7 @@ function ven$zoomImageByContainer(naturalWidth, naturalHeight, containerWidth, c
 		if (naturalHeight > containerHeight) {
 			width = (containerHeight / naturalHeight) * naturalWidth
 			height = containerHeight
-			benchmark = 'height'
+			benchmark = 'HEIGHT'
 		} else {
 			width = naturalWidth
 			height = naturalHeight
@@ -190,7 +190,7 @@ function ven$zoomImageByContainer(naturalWidth, naturalHeight, containerWidth, c
 		width,
 		height,
 		naturalScale: width / naturalWidth,
-		containerScale: benchmark === 'width' ? height / containerHeight : width / containerWidth,
+		containerScale: benchmark === 'WIDTH' ? height / containerHeight : width / containerWidth,
 		naturalWidth,
 		naturalHeight,
 		containerWidth,
@@ -285,29 +285,29 @@ function ven$findList(list, key, value) {
  * @return {string}
  */
 function ven$createSelectOptionsHtmlString(dataList, option = {}, selectedValue = undefined) {
-	let optionsHtml = ''
-	const _option = option || {}
-	const v = _option.v || 'value'
-	const t = _option.t || 'text'
-	const offAutoFill = typeof _option.offAutoFill === 'undefined' ? false : !!_option.offAutoFill
-	const _dataList = JSON.parse(JSON.stringify(dataList))
+	const iOption = option || {}
+	const v = iOption.v || 'value'
+	const t = iOption.t || 'text'
+	const offAutoFill = typeof iOption.offAutoFill === 'undefined' ? false : !!iOption.offAutoFill
+	const iDataList = JSON.parse(JSON.stringify(dataList))
 	let isIn = false
 	if (typeof selectedValue !== 'undefined') {
-		for (let i = 0; i < _dataList.length; i++) {
-			if (String(_dataList[i][v]) === String(selectedValue)) {
-				_dataList[i]['selected'] = true
+		for (let i = 0; i < iDataList.length; i++) {
+			if (iDataList[i][v] === selectedValue) {
+				iDataList[i]['selected'] = true
 				isIn = true
 			}
 		}
-		if (!offAutoFill && typeof selectedValue !== 'undefined' && (!isIn || !_dataList.length)) {
-			_dataList.unshift({
+		if (!offAutoFill && typeof selectedValue !== 'undefined' && (!isIn || !iDataList.length)) {
+			iDataList.unshift({
 				[v]: selectedValue,
 				[t]: selectedValue,
 			})
 		}
 	}
-	for (let i = 0; i < _dataList.length; i++) {
-		const itemData = _dataList[i]
+	let optionsHtml = ''
+	for (let i = 0; i < iDataList.length; i++) {
+		const itemData = iDataList[i]
 		const selected = itemData['selected'] || false
 		const disabled = itemData['disabled'] || false
 		const value = itemData[v]
@@ -346,12 +346,10 @@ function ven$accurateSetTimeout(callback, options = null, interval = (1 / 60) * 
 		const idealTimeStamp = loopCount++ * interval
 		const realTimeStamp = performance.now() - startTimeStamp
 		const timeStampDifference = realTimeStamp - idealTimeStamp
-
 		const result = callback(options, { idealTimeStamp, realTimeStamp, timeStampDifference })
 		if (result === false) {
 			return
 		}
-
 		window.setTimeout(() => {
 			instance()
 		}, interval - timeStampDifference)
@@ -367,9 +365,9 @@ function ven$accurateSetTimeout(callback, options = null, interval = (1 / 60) * 
  * @return {void}
  */
 function ven$importScript(src) {
-	const iScriptElement = document.createElement('script')
-	iScriptElement.src = src
-	iScriptElement.type = 'text/javascript'
-	const tScriptElement = document.getElementsByTagName('script')[0]
-	tScriptElement.parentNode.insertBefore(iScriptElement, tScriptElement)
+	const newScriptElement = document.createElement('script')
+	newScriptElement.src = src
+	newScriptElement.type = 'text/javascript'
+	const nScriptElement = document.getElementsByTagName('script')[0]
+	nScriptElement.parentNode.insertBefore(newScriptElement, nScriptElement)
 }

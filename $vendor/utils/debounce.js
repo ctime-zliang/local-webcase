@@ -6,10 +6,8 @@
  * @param {object} option 配置项
  *      option.immediate = true & option.trailing = false
  * 			在高频事件第一次触发时执行一次回调, 事件触发终止 delay 毫秒后也不会再执行回调
- *
  *      option.immediate = true & option.trailing = true
  * 			在高频事件第一次触发时执行一次回调, 事件触发终止 delay 毫秒后会再执行一次回调
- *
  *      option.immediate = false
  * 			在事件触发终止 delay 毫秒后会执行一次回调
  * 			trailing 设置将失效
